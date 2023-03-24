@@ -25,22 +25,13 @@ import { CanceledOperationError, CentralizedApiNotGrantedError } from 'types/err
 const usePromptRequestCentralizedAPIsPermissions = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const activeAccountAddress = useActiveAccountAddress()!;
-  const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
-    activeAccountAddress,
-    true,
-  );
+  const fetchAuthorizations = useGetAuthorizationInformation(activeAccountAddress);
   const { config } = useButterConfig();
 
   return React.useCallback(
     async (_: EncodeObject[]) => {
-      const fetchAuthorizationsResult = await fetchAuthorizations();
-      if (fetchAuthorizationsResult.isErr()) {
-        return err(fetchAuthorizationsResult.error);
-      }
-
+      const { authzGrants, feeGrants } = await fetchAuthorizations();
       return new Promise<Result<EncodeObject[], Error>>(resolve => {
-        const { authzGrants, feeGrants } = fetchAuthorizationsResult.value;
-
         // Ideally, what could be done, is mapping each message to its type and ask the
         // permission only for such message. However, right now we ask for all permissions
         // for all messages here, in order to be coherent with that is done inside the

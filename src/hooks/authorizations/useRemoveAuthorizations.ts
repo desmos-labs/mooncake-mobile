@@ -11,7 +11,7 @@ import React from 'react';
  * @param accountAddress - User's account address.
  */
 const useRemoveAuthorizations = (accountAddress: string) => {
-  const { refetch } = useGetAuthorizations(accountAddress, true);
+  const getAuthorizations = useGetAuthorizations(accountAddress);
   const { config: butterConfig } = useButterConfig();
   const broadcastTx = useBroadcastTx();
 
@@ -26,11 +26,7 @@ const useRemoveAuthorizations = (accountAddress: string) => {
       }
 
       // Fetch the current configurations.
-      const fetchAuthorizationsResult = await refetch();
-      if (fetchAuthorizationsResult.isErr()) {
-        return err(fetchAuthorizationsResult.error);
-      }
-      const { feeGrants } = fetchAuthorizationsResult.value;
+      const { feeGrants } = await getAuthorizations();
       const msgs: EncodeObject[] = [];
 
       // Push the messages to update the fee-grant.
@@ -53,7 +49,7 @@ const useRemoveAuthorizations = (accountAddress: string) => {
         onChain: true,
       });
     },
-    [butterConfig, refetch, broadcastTx, accountAddress],
+    [butterConfig, getAuthorizations, accountAddress, broadcastTx],
   );
 };
 

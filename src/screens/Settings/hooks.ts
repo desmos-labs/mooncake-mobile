@@ -70,22 +70,23 @@ export const useManageAppLinks = () => {
  * have access to use the simplified tx broadcasting logic.
  */
 export const useToggleSimplifiedTxBroadcast = (requiredPermissions: string[]) => {
-  const activeAccountAddress = useActiveAccountAddress()!;
-  const [state, setState] = React.useState(false);
-  const { feeGrants, authzGrants, loading } = useGetAuthorizationInformation(activeAccountAddress);
+  const activeAccountAddress = useActiveAccountAddress();
+  if (!activeAccountAddress) {
+    throw new Error('Cannot toggle simplified tx broadcast without an active account');
+  }
+
+  // Local state
+  const [loading, setLoading] = React.useState(true);
+  const [permissionsEnabled, setPermissionsEnabled] = React.useState(false);
+
+  // Hooks
+  const getAuthorizations = useGetAuthorizationInformation(activeAccountAddress);
   const addAuthorizations = useAddAuthorizations(activeAccountAddress);
   const removeAuthorizations = useRemoveAuthorizations(activeAccountAddress);
 
-  React.useEffect(() => {
-    if (!loading && feeGrants !== undefined && authzGrants !== undefined) {
-      const missingFeeGrants = getMissingFeeGrantPermissions(requiredPermissions, feeGrants);
-      const missingAuthzGrants = getMissingAuthzPermissions(requiredPermissions, authzGrants);
-      setState(missingFeeGrants.length === 0 && missingAuthzGrants.length === 0);
-    }
-  }, [authzGrants, feeGrants, loading, requiredPermissions]);
-
+  // Callback used to toggle the simplified tx broadcasting
   const toggleSimplifiedTxBroadcast = React.useCallback(async () => {
-    const newState = !state;
+    const newState = !permissionsEnabled;
 
     const result = newState
       ? await addAuthorizations(requiredPermissions)
@@ -93,16 +94,33 @@ export const useToggleSimplifiedTxBroadcast = (requiredPermissions: string[]) =>
 
     // TX ok, toggle the state.
     if (result.isOk()) {
-      setState(newState);
+      setPermissionsEnabled(newState);
     }
+  }, [permissionsEnabled, addAuthorizations, removeAuthorizations, requiredPermissions]);
 
-    return result;
-  }, [state, addAuthorizations, removeAuthorizations, requiredPermissions]);
+  // Callback used to refetch the permissions
+  const refetchPermissions = React.useCallback(async () => {
+    setLoading(true);
+
+    // Get the fee grants
+    const { feeGrants, authzGrants } = await getAuthorizations();
+
+    // Update the permissions state
+    const missingFeeGrants = getMissingFeeGrantPermissions(requiredPermissions, feeGrants ?? []);
+    const missingAuthzGrants = getMissingAuthzPermissions(requiredPermissions, authzGrants ?? []);
+    setPermissionsEnabled(missingFeeGrants.length === 0 && missingAuthzGrants.length === 0);
+    setLoading(false);
+  }, [getAuthorizations, requiredPermissions]);
+
+  // As soon as the component is mounted, refetch the permissions
+  React.useEffect(() => {
+    refetchPermissions();
+  }, [refetchPermissions]);
 
   return {
     loading,
+    permissionsEnabled,
     toggleSimplifiedTxBroadcast,
-    state,
   };
 };
 

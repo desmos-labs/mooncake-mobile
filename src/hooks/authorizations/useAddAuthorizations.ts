@@ -17,7 +17,7 @@ import React from 'react';
  * @param accountAddress - User's account address.
  */
 const useAddAuthorizations = (accountAddress: string) => {
-  const { refetch } = useGetAuthorizations(accountAddress, true);
+  const getAuthorizations = useGetAuthorizations(accountAddress);
   const { config: butterConfig } = useButterConfig();
   const broadcastTx = useBroadcastTx();
 
@@ -32,11 +32,8 @@ const useAddAuthorizations = (accountAddress: string) => {
       }
 
       // Fetch the current configurations.
-      const fetchAuthorizationsResult = await refetch();
-      if (fetchAuthorizationsResult.isErr()) {
-        return err(fetchAuthorizationsResult.error);
-      }
-      const { feeGrants, authzGrants } = fetchAuthorizationsResult.value;
+      const { feeGrants, authzGrants } = await getAuthorizations();
+
       // Compute the missing permissions from the current one.
       const missingFeeGrants = getMissingFeeGrantPermissions(authorizations, feeGrants);
       const missingAuthzGrants = getMissingAuthzPermissions(authorizations, authzGrants);
@@ -65,7 +62,7 @@ const useAddAuthorizations = (accountAddress: string) => {
         onChain: true,
       });
     },
-    [butterConfig, refetch, broadcastTx, accountAddress],
+    [butterConfig, getAuthorizations, accountAddress, broadcastTx],
   );
 };
 

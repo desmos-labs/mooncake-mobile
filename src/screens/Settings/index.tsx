@@ -30,37 +30,52 @@ import {
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
-const Settings: React.FC<NavProps> = props => {
-  const {
-    navigation: { navigate },
-  } = props;
-  const activeAccount = useActiveAccount()!;
-  const theme = useTheme();
+/**
+ * Screen that allows the user to view their settings.
+ * @constructor
+ */
+const Settings = (props: NavProps) => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
+  const theme = useTheme();
 
-  // Account section hooks
+  const { navigation } = props;
+  const { navigate } = navigation;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const activeAccount = useActiveAccount();
+  const formatDateToTZ = useFormatDateToTZ();
+  const formattedAccountCreationDate = React.useMemo(() => {
+    if (!activeAccount) {
+      // TODO: Improve this for guests
+      return 'Account not on chain';
+    }
+    return formatDateToTZ(activeAccount?.creationDate?.toISOString(), 'MMM dd yyyy');
+  }, [activeAccount, formatDateToTZ]);
+
   const { canShowPrivateKey, showPrivateKey } = useShowPrivateKey();
 
-  // Security sections hooks.
   const {
     loading: loadingSimplifiedTxBroadcast,
-    state: simplifiedTxBroadcast,
+    permissionsEnabled: simplifiedTxBroadcast,
     toggleSimplifiedTxBroadcast,
   } = useToggleSimplifiedTxBroadcast(RequiredMessageTypesGrant);
+
   const changePassword = useChangePassword();
   const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
 
-  // Other section hooks.
   const openNotificationsSettings = useOpenNotificationsSettings();
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
   const sendFeedback = useSendFeedback();
   const showAboutInfo = useShowAboutInfo();
   const signOut = useSignOut();
-  const formatDateToTZ = useFormatDateToTZ();
-
-  const formattedAccountCreationDate = React.useMemo(() => {
-    return formatDateToTZ(activeAccount.creationDate.toISOString(), 'MMM dd yyyy');
-  }, [activeAccount.creationDate, formatDateToTZ]);
 
   const openConfirmSignOutModal = useCallback(() => {
     navigate({
@@ -80,6 +95,10 @@ const Settings: React.FC<NavProps> = props => {
       },
     });
   }, [signOut, navigate, t, theme.colors.butterOrange01]);
+
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView scrollable style={styles.root} topBar={<TopBar />}>
