@@ -17,8 +17,6 @@ export type AppSettings = {
   notifications: boolean;
   notificationsPermission: boolean;
   currentChain: ChainInfo;
-  newDiscPostNotification: boolean;
-  newFollowPostNotification: boolean;
 };
 
 /**

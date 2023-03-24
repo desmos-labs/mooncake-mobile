@@ -17,8 +17,6 @@ export const DefaultAppSettings: AppSettings = {
   notifications: false,
   notificationsPermission: false,
   currentChain: EnvConfig.CHAIN === 'mainnet' ? DesmosMainnet : DesmosTestnet,
-  newDiscPostNotification: true,
-  newFollowPostNotification: true,
 };
 
 /**
