@@ -28,7 +28,7 @@ const useGetPostByExternalID = () => {
           subspaceId,
           externalId,
           user: activeAddress,
-          reaction: getQueryReactionValue,
+          reaction: getQueryReactionValue(),
         },
       });
       if (!data) {
@@ -37,7 +37,7 @@ const useGetPostByExternalID = () => {
 
       return data.posts.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
-    [activeAddress, getPost, useGetQueryReactionValue],
+    [activeAddress, getPost, getQueryReactionValue],
   );
 };
 
