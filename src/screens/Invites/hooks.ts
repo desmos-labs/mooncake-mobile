@@ -4,7 +4,6 @@ import useButterConfig from 'hooks/config/useButterConfig';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import { ResultAsync } from 'neverthrow';
 import useGetActiveAccountInvites from 'hooks/invites/useInvites';
-import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
 
 export interface InvitesInfo {
   /**
@@ -15,14 +14,6 @@ export interface InvitesInfo {
    * Number of invites that can be generated from the user.
    */
   generableInvitesCount: number;
-  /**
-   * Amount of impact points required to generate an invite.
-   */
-  requiredImpactPoints: number;
-  /**
-   * Amount of impact points that currently the user have.
-   */
-  userImpactPoints: number;
 }
 
 /**
@@ -42,66 +33,34 @@ export const useGetActiveAccountInvitesInfo = () => {
     loading: loadingInvites,
     refetch: refetchInvites,
   } = useGetActiveAccountInvites();
-  const {
-    impactPoints,
-    loading: loadingImpactPoints,
-    refetch: refetchImpactPoints,
-  } = useAccountImpactPoints();
 
   // Merge the refetch functions.
   const refetch = React.useCallback(() => {
     refetchButterConfig();
     refetchInvites();
-    refetchImpactPoints();
-  }, [refetchButterConfig, refetchImpactPoints, refetchInvites]);
+  }, [refetchButterConfig, refetchInvites]);
 
   const invitesInfo = React.useMemo<InvitesInfo | undefined>(() => {
-    if (
-      loadingButterConfig ||
-      loadingInvites ||
-      loadingImpactPoints ||
-      butterConfig === undefined
-    ) {
+    if (loadingButterConfig || loadingInvites || butterConfig === undefined) {
       return undefined;
     }
 
-    // Impact points obtained from the user.
-    const userImpactPoints = impactPoints ?? 0;
-
     // Computes the number of invites generated from the user.
-    const generatedInvites = invitesData!.filter(
+    const generatedInvites = invitesData!?.filter(
       invite => invite.claimerAddress !== activeAddress,
     ).length;
 
     // Compute the number of invites that this user can generate.
-    const generableInvitesCount = butterConfig.invites.requiredImpactPoints.length;
-
-    // Get the points to generate an invite
-    let requiredImpactPoints: number;
-    if (generatedInvites < generableInvitesCount) {
-      requiredImpactPoints = butterConfig.invites.requiredImpactPoints[generatedInvites];
-    } else {
-      requiredImpactPoints = NaN;
-    }
+    const generableInvitesCount = 3;
 
     return {
       generatedInvites,
       generableInvitesCount,
-      requiredImpactPoints,
-      userImpactPoints,
     };
-  }, [
-    loadingInvites,
-    loadingButterConfig,
-    loadingImpactPoints,
-    impactPoints,
-    butterConfig,
-    invitesData,
-    activeAddress,
-  ]);
+  }, [loadingInvites, loadingButterConfig, butterConfig, invitesData, activeAddress]);
 
   return {
-    loading: loadingInvites || loadingButterConfig || loadingImpactPoints,
+    loading: loadingInvites || loadingButterConfig,
     invitesInfo,
     refetch,
   };

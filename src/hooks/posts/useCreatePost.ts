@@ -107,7 +107,7 @@ const useCreatePost = () => {
   const resetCreatePostState = useResetCreatePostState();
 
   const storePost = useStorePost(activeProfile.address);
-  const deletePost = useRemoveStoredPendingPost(activeProfile.address);
+  const deletePost = useRemoveStoredPendingPost();
 
   const uploadAssets = useUploadAssets();
   const broadcastTx = useBroadcastTx();
@@ -151,6 +151,13 @@ const useCreatePost = () => {
         author: activeProfile,
       };
 
+      // If the post has parent AKA is a comment/reply we should reset the recoil associated with the comment text box value
+      // if not the comment text box will not be cleared after clicking the post
+      // button waiting for the comment creation to be completed
+      if (parent) {
+        resetCreatePostState();
+      }
+
       // Store the post locally
       storePost(post);
 
@@ -162,14 +169,12 @@ const useCreatePost = () => {
       const result = await broadcastTx([msgCreatePost]);
       if (result.isErr()) {
         // If there is an error, delete the post from the local storage
-        deletePost(post.subspaceId, post.externalId);
+        deletePost(activeProfile.address, post.subspaceId, post.externalId);
         if (isCanceledOperationError(result.error)) {
           setState({ type: CreatePostStateType.CANCELED });
         }
         setState({ type: CreatePostStateType.ERROR, error: result.error });
       } else {
-        // If the post creation was successful, reset the state
-        resetCreatePostState();
         setState({ type: CreatePostStateType.SUCCESS });
       }
       return result;

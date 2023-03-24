@@ -50,7 +50,11 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     (data: any) => {
       if (!data) return;
 
-      const onChainComments = data.comments.map(convertGraphQLPost);
+      // Filter all the comments that were created by someone who later deleted their profile
+      const filteredComments = (data.comments as any[]).filter(comment => comment.author);
+
+      // Convert the comments to the in-app format
+      const onChainComments = filteredComments.map(convertGraphQLPost);
 
       // Update the comments
       setComments(currentComments => {
@@ -66,7 +70,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
       setRefreshing(false);
       setLoading(false);
     },
-    [updatePendingPosts],
+    [activeAccountAddress, updatePendingPosts],
   );
 
   // Query used to get the comments

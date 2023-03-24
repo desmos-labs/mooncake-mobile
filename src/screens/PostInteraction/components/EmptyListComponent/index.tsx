@@ -16,7 +16,7 @@ const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onStartShouldSetResponder={() => true}>
       <View style={styles.contentContainer}>
         <Image source={emptyListPlaceholder} style={styles.imageStyle} />
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
@@ -32,9 +32,8 @@ const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton
 
 const useStyles = makeStyle(theme => ({
   container: {
-    paddingVertical: theme.spacing.m,
     flex: 1,
-    justifyContent: 'center',
+    paddingVertical: theme.spacing.m,
   },
   contentContainer: {
     alignItems: 'center',
@@ -53,8 +52,8 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.l,
   },
   additionalButton: {
-    marginTop: theme.spacing.l,
     marginHorizontal: 100,
+    marginTop: theme.spacing.l,
   },
 }));
 

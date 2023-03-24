@@ -12,5 +12,6 @@
   "text": "Text",
   "totalReactions": "Total {{numReactions}} reactions",
   "totalTips": "Total {{numTips}} tips",
-  "writeSomething": "Write something..."
+  "writeSomething": "Write something...",
+  "errorWhileCreatingPost": "Something went wrong creating the post, please try again later"
 }

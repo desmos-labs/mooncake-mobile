@@ -10,5 +10,6 @@
   "unfollow": "Unfollow",
   "report": "Report",
   "share": "Share",
+  "failed to post comment": "Failed to post comment",
   "likes and tips": "{{likesCounter}} Likes and {{tipsCounter}} Tips"
 }

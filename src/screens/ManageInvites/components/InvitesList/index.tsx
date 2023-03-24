@@ -13,13 +13,12 @@ import {
   SectionListData,
   View,
 } from 'react-native';
-import { Box, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import InviteComponent from 'screens/ManageInvites/components/InviteComponent';
 import { Invite } from 'types/invites';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { NavProps } from 'screens/ManageInvites';
-import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 interface Props {
@@ -53,10 +52,10 @@ const InvitesList = ({
   const EmptyInvites = useMemo(() => {
     return (
       <View style={styles.container}>
-        <Box alignItems="center">
+        <View style={{ alignItems: 'center' }}>
           <Image source={emptyInvitesImage} style={styles.emptyImage} />
           <Typography.Body5>{t('no invites yet')}</Typography.Body5>
-        </Box>
+        </View>
 
         <Spacer paddingVertical="l" />
 
@@ -69,7 +68,14 @@ const InvitesList = ({
         </Button>
       </View>
     );
-  }, [navigate, styles.container, styles.emptyImage, t, theme.colors.surfaceBlack]);
+  }, [
+    navigate,
+    styles.container,
+    styles.emptyImage,
+    t,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+  ]);
 
   const inviteSections = React.useMemo(() => {
     const sections: SectionListData<Invite>[] = [];
@@ -88,8 +94,16 @@ const InvitesList = ({
   }, [claimedInvites, loading, pendingInvites, t]);
 
   const bottomComponent = useMemo(() => {
-    return totalInvites === maxInvitations ? (
-      <Typography.Body6 style={styles.sendAllText}>{t('sent all')}</Typography.Body6>
+    return totalInvites >= maxInvitations ? (
+      <Typography.Body6
+        style={{
+          color: theme.colors.grey01,
+          alignSelf: 'center',
+          textAlign: 'center',
+          marginTop: theme.spacing.m,
+        }}>
+        {t('sent all')}
+      </Typography.Body6>
     ) : (
       <Button
         onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
@@ -106,14 +120,15 @@ const InvitesList = ({
     t,
     theme.colors.grey01,
     theme.colors.surfaceBlack,
+    theme.colors.white,
     theme.spacing.m,
     totalInvites,
   ]);
 
   return (
-    <Box flex={1}>
+    <View style={{ flex: 1 }}>
       {loading ? (
-        <SafeAreaView style={styles.loaderContainer}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </SafeAreaView>
       ) : (
@@ -122,8 +137,11 @@ const InvitesList = ({
             keyExtractor={(item, index) => item.code.toString() + index}
             refreshing={loading}
             onRefresh={refetchInvites}
-            style={CommonStyles.flex[1]}
-            contentContainerStyle={styles.sectionListContentContainer}
+            style={{ flex: 1 }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingHorizontal: theme.spacing.m,
+            }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={EmptyInvites}
             sections={inviteSections}
@@ -137,7 +155,7 @@ const InvitesList = ({
           {totalInvites !== 0 && bottomComponent}
         </>
       )}
-    </Box>
+    </View>
   );
 };
 

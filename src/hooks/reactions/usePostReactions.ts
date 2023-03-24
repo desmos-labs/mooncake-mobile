@@ -100,14 +100,11 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
       setError(undefined);
       setRefreshing(true);
 
-      // We are refetching the whole list of reactions, so we need to clear the cache.
-      setReactions([]);
-
       // Get the new data by resetting the fetch offset to restart post fetching
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
-      setFetchingMore(false);
+      setRefreshing(false);
       setError(e.toString());
     }
   }, [onCompletedCallback, refetch]);

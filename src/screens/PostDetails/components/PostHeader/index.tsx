@@ -4,7 +4,7 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import Spacer from 'components/Spacer';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import { Divider } from 'native-base';
-import { Post } from 'types/posts';
+import { isRootPost, Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
@@ -17,6 +17,7 @@ import {
 } from 'screens/PostDetails/hooks';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useTranslation } from 'react-i18next';
+import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 
@@ -63,21 +64,46 @@ const PostHeader = ({ post }: Props) => {
    */
   const checkUserAndHandleSendTips = useCallback(() => {
     if (isCurrentUserAuthor) {
-      toast.errorNoRetry(t('common:cannot tip yourself'));
+      toast.success(t('common:cannot tip yourself'));
     } else {
       handlePressSendTips(post);
     }
   }, [handlePressSendTips, isCurrentUserAuthor, post, t, toast]);
 
+  const TopComponent = React.useMemo(() => {
+    if (isRootPost(post!)) {
+      return (
+        <>
+          <PostComponent post={post!} />
+          <PostActionButtonsBar
+            postLiked={hasReacted}
+            handleLikePress={() => handlePressReaction(post!)}
+            handleCommentPress={focusTextInputRef}
+            handleTipPress={checkUserAndHandleSendTips}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <CommentItem comment={post!} />
+          <Spacer paddingVertical={16} />
+          <Divider style={styles.divider} />
+        </>
+      );
+    }
+  }, [
+    checkUserAndHandleSendTips,
+    focusTextInputRef,
+    handlePressReaction,
+    hasReacted,
+    post,
+    styles.divider,
+  ]);
+
   return (
     <>
-      <PostComponent post={post!} />
-      <PostActionButtonsBar
-        postLiked={hasReacted}
-        handleLikePress={() => handlePressReaction(post!)}
-        handleCommentPress={focusTextInputRef}
-        handleTipPress={checkUserAndHandleSendTips}
-      />
+      {TopComponent}
       <Spacer paddingVertical={16}>
         <InteractionCountersBar
           loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}

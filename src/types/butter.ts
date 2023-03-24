@@ -15,7 +15,5 @@ export interface ButterConfig {
   /**
    * Invites configuration.
    */
-  readonly invites: {
-    readonly requiredImpactPoints: number[];
-  };
+  readonly invites: {};
 }

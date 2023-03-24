@@ -6,7 +6,7 @@ import MediaBottomPanel from 'components/MediaBottomPanel';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import Spacer from 'components/Spacer';
 import useImageFromDevice from 'hooks/useImageFromDevice';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Spinner, useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
 import {
@@ -48,11 +48,10 @@ export type Props = {
    */
   handlePostComment: () => void;
 
-  // TODO: marked for deletion
   /**
    * Is an action being processed? (block out interaction buttons)
    */
-  // loading?: boolean;
+  loading?: boolean;
 
   /**
    * A reference to the comment input box.
@@ -69,7 +68,7 @@ const EnterCommentBottomBar = (props: Props) => {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
 
-  const { author, onIconPress, handlePostComment, textInputRef } = props;
+  const { author, onIconPress, handlePostComment, textInputRef, loading } = props;
 
   // -------------------------------------------------------------------------------------
   // --- State
@@ -135,7 +134,22 @@ const EnterCommentBottomBar = (props: Props) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
+  const onIconPressWrapper = useCallback(() => {
+    requestAnimationFrame(() => {
+      onIconPress();
+    });
+  }, [onIconPress]);
+
+  const onPostCommentPressWrapper = useCallback(() => {
+    requestAnimationFrame(() => {
+      handlePostComment();
+    });
+  }, [handlePostComment]);
+
   const RightButtonComponent = useMemo(() => {
+    if (loading) {
+      return <Spinner />;
+    }
     return (
       <Button
         size={32}
@@ -144,16 +158,17 @@ const EnterCommentBottomBar = (props: Props) => {
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
         disabled={attachment ? false : comment.length === 0}
-        onPress={handlePostComment}>
+        onPress={onPostCommentPressWrapper}>
         {t('post')}
       </Button>
     );
   }, [
+    loading,
     theme.colors.white,
     theme.colors.butterOrange01,
     attachment,
     comment.length,
-    handlePostComment,
+    onPostCommentPressWrapper,
     t,
   ]);
 
@@ -205,7 +220,7 @@ const EnterCommentBottomBar = (props: Props) => {
               <ImageButton
                 style={styles.expandButton}
                 image={expandCommentIcon}
-                onPress={onIconPress}
+                onPress={onIconPressWrapper}
               />
             </View>
           </View>
