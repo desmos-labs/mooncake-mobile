@@ -62,7 +62,7 @@ const Button = ({
       // can ignore this error as variant has a default value of solid
       // @ts-ignore
       {...makeButtonStyle({ variant, backgroundColor, borderColor })}
-      py={size / 3}
+      py={`${size / 4}px`}
       isDisabled={rest.disabled || rest.isDisabled}
       _disabled={{
         backgroundColor: 'tabIconGrey',

@@ -152,7 +152,8 @@ const EnterCommentBottomBar = (props: Props) => {
     }
     return (
       <Button
-        size={32}
+        size={26}
+        p={0}
         width={71}
         ml={12}
         textColor={theme.colors.white}
