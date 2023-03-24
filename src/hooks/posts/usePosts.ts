@@ -8,10 +8,9 @@ import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { useAppStateValue } from '@recoil/appState';
 import { mergePosts } from 'lib/PostsUtils';
-import { getLikeReactionId } from 'types/desmos';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
-import { RegisteredReactionValueTypeUrl } from '@desmoslabs/desmjs';
 import sleep from 'lib/sleep';
+import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -63,8 +62,8 @@ const useQueryParams = (
  */
 const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): QueryOptions<any> => {
   const subspaceId = useAppStateValue('subspaceId');
-  const subspaceParams = useAppStateValue('subspaceParams');
 
+  const queryReactionValue = useQueryReactionValue();
   return React.useMemo(() => {
     switch (params.type) {
       case PostsQueryType.DISCOVERY:
@@ -73,10 +72,7 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
           variables: {
             subspaceId,
             user: params.user,
-            reaction: {
-              '@type': RegisteredReactionValueTypeUrl,
-              registered_reaction_id: getLikeReactionId(subspaceParams),
-            },
+            reaction: queryReactionValue,
             offset: 0,
             limit: postsPerPage,
           },
@@ -89,16 +85,13 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
             subspaceId,
             following: Array.from(params.followedUsers),
             user: params.user,
-            reaction: {
-              '@type': RegisteredReactionValueTypeUrl,
-              registered_reaction_id: getLikeReactionId(subspaceParams),
-            },
+            reaction: queryReactionValue,
             offset: 0,
             limit: postsPerPage,
           },
         };
     }
-  }, [params, postsPerPage, subspaceId, subspaceParams]);
+  }, [params, postsPerPage, queryReactionValue, subspaceId]);
 };
 
 /**

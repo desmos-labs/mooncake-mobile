@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import { Post } from 'types/posts';
 import { useQuery } from '@apollo/client';
 import GetPostComments from 'services/graphql/queries/GetPostComments';
-import { getLikeReactionId } from 'types/desmos';
-import { useAppStateValue } from '@recoil/appState';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { RegisteredReactionValueTypeUrl } from '@desmoslabs/desmjs';
 import { usePostCommentsToSync } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
+import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
 
 /**
  * Hook that allows to get the comments for a given post.
@@ -22,9 +20,6 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   if (!activeAccountAddress) {
     throw new Error('Trying to get post comments without active user');
   }
-
-  const subspaceParams = useAppStateValue('subspaceParams');
-  const updatePendingPosts = useUpdatePendingPosts();
 
   const [comments, setComments] = useState<Post[]>([]);
 
@@ -46,6 +41,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   const [error, setError] = useState<string | undefined>();
 
   // Callback that is used when some data is returned by the chain
+  const updatePendingPosts = useUpdatePendingPosts();
   const onCompletedCallback = React.useCallback(
     (data: any) => {
       if (!data) return;
@@ -74,15 +70,13 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   );
 
   // Query used to get the comments
+  const queryReactionValue = useQueryReactionValue();
   const { refetch, fetchMore } = useQuery(GetPostComments, {
     variables: {
       subspaceId: post.subspaceId,
       postId: post.id,
       user: activeAccountAddress,
-      reaction: {
-        '@type': RegisteredReactionValueTypeUrl,
-        registered_reaction_id: getLikeReactionId(subspaceParams),
-      },
+      reaction: queryReactionValue,
       offset: 0,
       limit: commentsPerPage,
     },

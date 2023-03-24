@@ -1,6 +1,5 @@
 import { loadingOrange } from 'assets/animations';
 import {
-  block,
   followBlackIcon,
   postLikedIcon,
   postToCommentIcon,
@@ -21,14 +20,14 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Center, HStack, useTheme } from 'native-base';
+import { VStack, HStack, Center, useTheme } from 'native-base';
 import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
@@ -54,10 +53,6 @@ interface PostCardProps {
    * What to do if the entire post is pressed.
    */
   onPressDetails: () => void;
-  /**
-   * What to do if the post like button is pressed.
-   */
-  onPressLike: () => void;
   /**
    * What to do if the post comment button is pressed.
    */
@@ -86,7 +81,6 @@ const PostCard = (props: PostCardProps) => {
     onPressAuthor,
     onPressFollow,
     onPressReport,
-    onPressLike,
     onPressComment,
     onPressTip,
     onPressDetails,
@@ -98,7 +92,6 @@ const PostCard = (props: PostCardProps) => {
 
   const activeAddress = useActiveAccountAddress();
   const isFollowing = useIsFollowing(post.author.address);
-  const hasReacted = useHasReacted(post);
   const { count: reactionsCount } = usePostReactionsCount(post);
   const { count: commentsCount } = usePostCommentsCount(post);
 
@@ -117,13 +110,6 @@ const PostCard = (props: PostCardProps) => {
         label: t('report'),
         onPress: onPressReport,
         icon: reportIcon,
-      },
-      {
-        label: t('home:block'),
-        onPress: () => {
-          // TODO: implement
-        },
-        icon: block,
       },
     ],
     [isFollowing, t, onPressFollow, onPressReport],
@@ -171,6 +157,7 @@ const PostCard = (props: PostCardProps) => {
   // -------------------------------------------------------------------------------------
   // --- Utility functions
   // -------------------------------------------------------------------------------------
+
   /**
    * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
    */
@@ -181,6 +168,18 @@ const PostCard = (props: PostCardProps) => {
       onPressTip();
     }
   }, [onPressTip, isCurrentUserAuthor, t, toast]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Handles
+  // -------------------------------------------------------------------------------------
+
+  const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
+  const onPressLike = useCallback(async () => {
+    if (isPostPending(post)) {
+      return toast.success(t('toast:postTxInProgress'));
+    }
+    addOrRemoveLike(post);
+  }, [addOrRemoveLike, post, t, toast]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -206,7 +205,7 @@ const PostCard = (props: PostCardProps) => {
       <View style={styles.profileInfoView}>
         <TouchableOpacity style={CommonStyles.flexDirection.row} onPress={onPressAuthor}>
           <FastImage source={getProfilePicture(post.author)} style={styles.profilePic} />
-          <View>
+          <VStack>
             <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
             <HStack>
               <Typography.Body6 style={{ color: theme.colors.midGrey }}>
@@ -220,7 +219,7 @@ const PostCard = (props: PostCardProps) => {
                 {!isPending && `· ${calculatedCreationDate}`}
               </Typography.Body6>
             </HStack>
-          </View>
+          </VStack>
         </TouchableOpacity>
         <Center justifyContent="flex-start">{PendingIndicator}</Center>
       </View>
@@ -243,14 +242,12 @@ const PostCard = (props: PostCardProps) => {
         <View style={styles.bottomBarInnerView}>
           <ImageButton
             onPress={onPressLike}
-            tintColor={hasReacted ? theme.colors.butterOrange01 : theme.colors.grey02}
-            image={hasReacted ? postLikedIcon : postToLikeIcon}
+            tintColor={liked ? theme.colors.butterOrange01 : theme.colors.grey02}
+            image={liked ? postLikedIcon : postToLikeIcon}
             style={styles.bottomBarIcon}
           />
           <Typography.Subtitle3
-            style={
-              hasReacted ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }
-            }>
+            style={liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }}>
             {reactionsCount}
           </Typography.Subtitle3>
           {/* I have completely removed the logic that changed the color of the button based on whether */}
@@ -274,7 +271,13 @@ const PostCard = (props: PostCardProps) => {
         {/* the user tipped the post or not. This has been done for the following reasons: */}
         {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
         {/* 2. It's extremely hard to implement, and completely useless in the first place */}
-        <TouchableOpacity onPress={checkUserAndHandleSendTips} style={styles.tipButton}>
+        <TouchableOpacity
+          onPress={checkUserAndHandleSendTips}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: theme.spacing.s,
+          }}>
           <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
           <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
             {t('tip')}
@@ -287,11 +290,11 @@ const PostCard = (props: PostCardProps) => {
     styles.bottomBarInnerView,
     styles.bottomBarIcon,
     styles.commentButton,
-    styles.tipButton,
     onPressLike,
-    hasReacted,
+    liked,
     theme.colors.butterOrange01,
     theme.colors.grey02,
+    theme.spacing.s,
     reactionsCount,
     onPressComment,
     commentsCount,

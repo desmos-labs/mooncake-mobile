@@ -15,7 +15,6 @@ import {
   useHandlePressComments,
   useHandlePressDetails,
   useHandlePressFollow,
-  useHandlePressReaction,
   useHandlePressReport,
   useHandlePressTip,
 } from 'screens/Home/hooks';
@@ -37,8 +36,8 @@ export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.
  * @constructor
  */
 const Home = () => {
-  const { t } = useTranslation('home');
   const toast = useCustomToast();
+  const { t } = useTranslation('home');
   const styles = useStyles();
   const theme = useTheme();
 
@@ -67,7 +66,6 @@ const Home = () => {
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollow = useHandlePressFollow();
   const handlePressDetails = useHandlePressDetails();
-  const handlePressReaction = useHandlePressReaction();
   const handlePressReport = useHandlePressReport();
   const handlePressComments = useHandlePressComments();
   const handlePressTip = useHandlePressTip();
@@ -143,32 +141,26 @@ const Home = () => {
           onPressAuthor={() => handleNavigateToProfile(item.author.address)}
           onPressDetails={() => {
             if (isPostPending(item)) {
-              return toast.errorNoRetry(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'));
             }
             handlePressDetails(item);
           }}
-          onPressLike={() => {
-            if (isPostPending(item)) {
-              return toast.errorNoRetry(t('toast:postTxInProgress'));
-            }
-            handlePressReaction(item);
-          }}
           onPressComment={() => {
             if (isPostPending(item)) {
-              return toast.errorNoRetry(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'));
             }
             handlePressComments(item);
           }}
           onPressTip={() => {
             if (isPostPending(item)) {
-              return toast.errorNoRetry(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'));
             }
             handlePressTip(item);
           }}
           onPressFollow={() => handlePressFollow(item.author)}
           onPressReport={() => {
             if (isPostPending(item) || !item.author) {
-              return toast.errorNoRetry(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'));
             }
             handlePressReport(item);
           }}
@@ -181,7 +173,6 @@ const Home = () => {
       handlePressDetails,
       toast,
       t,
-      handlePressReaction,
       handlePressComments,
       handlePressTip,
       handlePressFollow,
