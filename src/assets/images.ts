@@ -146,6 +146,8 @@ export const reportSuccessIcon = require('./images/reportSuccessIcon.png');
 export const communitiesBackgroundImage = require('./images/communities_background.png');
 export const emptyListPlaceholder = require('./images/emptyListsPlaceholders/emptyListPlaceholder.png');
 
+export const block = require('./images/block.png');
+
 // TX
 
 export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');

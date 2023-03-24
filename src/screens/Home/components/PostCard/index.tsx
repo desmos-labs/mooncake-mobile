@@ -1,5 +1,6 @@
 import { loadingOrange } from 'assets/animations';
 import {
+  block,
   followBlackIcon,
   postLikedIcon,
   postToCommentIcon,
@@ -116,6 +117,13 @@ const PostCard = (props: PostCardProps) => {
         label: t('report'),
         onPress: onPressReport,
         icon: reportIcon,
+      },
+      {
+        label: t('home:block'),
+        onPress: () => {
+          // TODO: implement
+        },
+        icon: block,
       },
     ],
     [isFollowing, t, onPressFollow, onPressReport],

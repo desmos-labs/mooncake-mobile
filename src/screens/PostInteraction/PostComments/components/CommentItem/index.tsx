@@ -1,5 +1,6 @@
 import { loadingOrange } from 'assets/animations';
 import {
+  block,
   commentIcon,
   commentLiked,
   commentLikeEmptyIcon,
@@ -128,6 +129,13 @@ const CommentItem = (props: CommentItemProps) => {
         label: t('home:report'),
         onPress: () => handlePressReport(comment),
         icon: reportIcon,
+      },
+      {
+        label: t('home:block'),
+        onPress: () => {
+          // TODO: implement
+        },
+        icon: block,
       },
     ];
 
