@@ -58,16 +58,16 @@ const Button = ({
 
   return (
     <NBButton
-      {...makeButtonTypography({ size, textColor })}
-      // can ignore this error as variant has a default value of solid
-      // @ts-ignore
-      {...makeButtonStyle({ variant, backgroundColor, borderColor })}
       py={`${size / 4}px`}
       isDisabled={rest.disabled || rest.isDisabled}
       _disabled={{
         backgroundColor: 'tabIconGrey',
       }}
-      {...rest}>
+      {...rest}
+      {...makeButtonTypography({ size, textColor })}
+      // can ignore this error as variant has a default value of solid
+      // @ts-ignore
+      {...makeButtonStyle({ variant, backgroundColor, borderColor })}>
       {children}
     </NBButton>
   );
