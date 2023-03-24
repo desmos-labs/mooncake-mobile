@@ -1,9 +1,9 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useLazyQuery } from '@apollo/client';
 import GetPostByID from 'services/graphql/queries/GetPostByID';
 import React from 'react';
 import { Post } from 'types/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 
 /**
@@ -16,9 +16,7 @@ const useGetPostByID = () => {
   }
 
   const getQueryReactionValue = useGetQueryReactionValue();
-  const [getPost] = useLazyQuery(GetPostByID, {
-    fetchPolicy: 'cache-first',
-  });
+  const getPost = useCustomLazyQuery(GetPostByID);
 
   return React.useCallback(
     async (subspaceId: number, postId: number): Promise<Post | undefined> => {
@@ -30,11 +28,8 @@ const useGetPostByID = () => {
           reaction: getQueryReactionValue(),
         },
       });
-      if (!data) {
-        return undefined;
-      }
 
-      return data.posts.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
+      return data?.posts?.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
     [activeAddress, getPost, getQueryReactionValue],
   );

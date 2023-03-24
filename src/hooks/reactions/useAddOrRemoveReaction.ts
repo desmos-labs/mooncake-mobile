@@ -15,12 +15,12 @@ import {
   MsgRemoveReactionTypeUrl,
 } from '@desmoslabs/desmjs';
 import Long from 'long';
-import { useLazyQuery } from '@apollo/client';
 import GetPostReactionsForUser from 'services/graphql/queries/GetPostReactionsForUser';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
 import { registeredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import { DataStatus } from 'types/cache';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 /**
  * Hook that allows to add a reaction both remotely and locally.
@@ -71,9 +71,7 @@ const useRemoveReaction = (activeAddress: string) => {
 
   const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
 
-  const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
-    fetchPolicy: 'network-only',
-  });
+  const getReaction = useCustomLazyQuery(GetPostReactionsForUser);
 
   return React.useCallback(
     async (post: Post) => {

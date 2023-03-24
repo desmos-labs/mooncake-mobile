@@ -1,7 +1,7 @@
 import React from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useLazyQuery } from '@apollo/client';
 import GetReportsByUser from 'services/graphql/queries/GetReportsByUser';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 /**
  * Hook that returns a function allowing to determine if the current application user has already reported a post.
@@ -12,8 +12,7 @@ const useHasReportedPost = () => {
     throw new Error('Trying to check if a post has been reported without an active account');
   }
 
-  const [getReportsByUser] = useLazyQuery(GetReportsByUser);
-
+  const getReportsByUser = useCustomLazyQuery(GetReportsByUser);
   return React.useCallback(
     async (subspaceId: number, postId: number) => {
       const { data } = await getReportsByUser({
