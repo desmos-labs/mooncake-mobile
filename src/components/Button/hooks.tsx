@@ -2,6 +2,7 @@ import React from 'react';
 import { useTheme, useToken, Button } from 'native-base';
 import { TypographyStyles } from 'components/Typography';
 import { StyleProp, StyleSheet, TextStyle } from 'react-native';
+import _ from 'lodash';
 
 export const useMakeButtonTypography = () => {
   const defaultTextColor = useToken('colors', ['surfaceBlack'][0]);
@@ -44,15 +45,18 @@ export const useMakeButtonStyle = () => {
       backgroundColor?: string;
       borderColor?: string;
     }) => {
+      const backgroundColorFromTheme = _.get(theme, `colors.${backgroundColor}`, backgroundColor);
+      const borderColorFromTheme = _.get(theme, `colors.${borderColor}`, borderColor);
+
       const variantStyleMap: { [index: string]: any } = {
         solid: {
-          backgroundColor: backgroundColor || theme.colors.primary,
+          backgroundColor: backgroundColorFromTheme || theme.colors.primary,
         },
         link: {
           textDecorationLine: 'none',
         },
         outlined: {
-          borderColor: borderColor || theme.colors.surfaceBlack,
+          borderColor: borderColorFromTheme || theme.colors.surfaceBlack,
           borderWidth: 1,
         },
       };

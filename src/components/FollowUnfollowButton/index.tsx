@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from 'components/Button';
-import { useTheme } from 'native-base';
 
 export interface FollowUnfollowButtonProps {
   /**
@@ -20,27 +19,26 @@ export interface FollowUnfollowButtonProps {
  */
 const FollowUnfollowButton = (props: FollowUnfollowButtonProps) => {
   const { t } = useTranslation('profile');
-  const theme = useTheme();
   const { isFollowing, onPress } = props;
 
   return isFollowing ? (
     <Button
       mt="s"
-      backgroundColor={theme.colors.surfaceGrey}
+      backgroundColor="surfaceGrey"
       minWidth="80px"
       size={32}
       onPress={onPress}
-      textColor={theme.colors.surfaceBlack}>
+      textColor="surfaceBlack">
       {t('following')}
     </Button>
   ) : (
     <Button
       mt="s"
-      backgroundColor={theme.colors.surfaceBlack}
+      backgroundColor="surfaceBlack"
       minWidth="80px"
       size={32}
       onPress={onPress}
-      textColor={theme.colors.white}>
+      textColor="white">
       {t('follow')}
     </Button>
   );
