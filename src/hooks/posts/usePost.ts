@@ -6,7 +6,7 @@ import { usePostByID, useRemovePost, useStorePost } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
-import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
+import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 
 /**
  * Hook that allows to get the details of a post, or refetch them if needed.
@@ -26,14 +26,14 @@ const usePost = (subspaceId: number, postId: number) => {
   const post = usePostByID(activeAddress, subspaceId, postId);
 
   // Query the post from the GraphQL server
-  const queryReactionValue = useQueryReactionValue();
+  const getQueryReactionValue = useGetQueryReactionValue();
   const { data, refetch, loading } = useQuery(GetPostByID, {
     refetchWritePolicy: 'overwrite',
     variables: {
       subspaceId,
       postId,
       user: activeAddress,
-      reaction: queryReactionValue,
+      reaction: getQueryReactionValue(),
     },
   });
 

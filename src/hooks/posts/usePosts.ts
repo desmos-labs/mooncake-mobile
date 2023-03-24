@@ -10,7 +10,7 @@ import { useAppStateValue } from '@recoil/appState';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 import sleep from 'lib/sleep';
-import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
+import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -63,7 +63,7 @@ const useQueryParams = (
 const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): QueryOptions<any> => {
   const subspaceId = useAppStateValue('subspaceId');
 
-  const queryReactionValue = useQueryReactionValue();
+  const getQueryReactionValue = useGetQueryReactionValue();
   return React.useMemo(() => {
     switch (params.type) {
       case PostsQueryType.DISCOVERY:
@@ -72,7 +72,7 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
           variables: {
             subspaceId,
             user: params.user,
-            reaction: queryReactionValue,
+            reaction: getQueryReactionValue(),
             offset: 0,
             limit: postsPerPage,
           },
@@ -85,13 +85,13 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
             subspaceId,
             following: Array.from(params.followedUsers),
             user: params.user,
-            reaction: queryReactionValue,
+            reaction: getQueryReactionValue(),
             offset: 0,
             limit: postsPerPage,
           },
         };
     }
-  }, [params, postsPerPage, queryReactionValue, subspaceId]);
+  }, [getQueryReactionValue, params, postsPerPage, subspaceId]);
 };
 
 /**
