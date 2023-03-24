@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import Typography from 'components/Typography';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import { DesmosProfile } from 'types/desmos';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
+import Button from 'components/Button';
 import useStyles from './useStyles';
 
 interface EditProfileSectionProps {
@@ -48,9 +48,9 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.editButton} onPress={handleSaveProfile}>
-        <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
-      </TouchableOpacity>
+      <Button size={32} flex={1} backgroundColor="surfaceGrey" onPress={handleSaveProfile}>
+        {t('edit profile')}
+      </Button>
     </View>
   );
 };
