@@ -67,49 +67,31 @@ const CustomToast = ({ type, message, options }: Props): JSX.Element => {
     [],
   );
 
-  /**
-   * A swipe right gesture that will clear the swiped toast.
-   */
-  const swipeRightGesture = React.useMemo(
-    () =>
-      Gesture.Fling()
-        .runOnJS(true)
-        .direction(Directions.RIGHT)
-        .onStart(() => {
-          Toast.close(options.id);
-        }),
-    // This warning can be ignored as options will never change after initial render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
   return (
-    <GestureDetector gesture={swipeRightGesture}>
-      <GestureDetector gesture={swipeUpGesture}>
-        <Shadow startColor="rgba(133, 133, 133, 0.06)" distance={12} offset={[0, 10]}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={options.handlePressToast}
-            style={styles.commonToastStyle}>
-            <Box flex={1}>
-              {type !== ToastConfig.SUCCESS && (
-                <Typography.Subtitle3>{t('common:oops')}</Typography.Subtitle3>
-              )}
-              <Typography.Body6 numberOfLines={2} style={{ color: theme.colors.surfaceBlack }}>
-                {message}
-              </Typography.Body6>
-            </Box>
+    <GestureDetector gesture={swipeUpGesture}>
+      <Shadow startColor="rgba(133, 133, 133, 0.06)" distance={12} offset={[0, 10]}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={options.handlePressToast}
+          style={styles.commonToastStyle}>
+          <Box flex={1}>
+            {type !== ToastConfig.SUCCESS && (
+              <Typography.Subtitle3>{t('common:oops')}</Typography.Subtitle3>
+            )}
+            <Typography.Body6 numberOfLines={2} style={{ color: theme.colors.surfaceBlack }}>
+              {message}
+            </Typography.Body6>
+          </Box>
 
-            {type === ToastConfig.ERROR ? (
-              <Box style={styles.button}>
-                <Button size={32} variant="link" onPress={options.handlePressRetry}>
-                  {t('toast:retry')}
-                </Button>
-              </Box>
-            ) : null}
-          </TouchableOpacity>
-        </Shadow>
-      </GestureDetector>
+          {type === ToastConfig.ERROR ? (
+            <Box style={styles.button}>
+              <Button size={32} variant="link" onPress={options.handlePressRetry}>
+                {t('toast:retry')}
+              </Button>
+            </Box>
+          ) : null}
+        </TouchableOpacity>
+      </Shadow>
     </GestureDetector>
   );
 };
