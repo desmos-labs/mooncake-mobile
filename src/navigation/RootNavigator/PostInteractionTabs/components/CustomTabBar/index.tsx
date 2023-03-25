@@ -61,13 +61,14 @@ const CustomTabBar = ({ state, descriptors, navigation, position }: any) => {
             onPress={onPress}
             onLongPress={onLongPress}
             style={styles.tabButton}>
-            <Box opacity={opacity} alignItems="center">
-              <Box mb="xs">
-                <Typography.Button2>{label}</Typography.Button2>
+            <Animated.View style={{ opacity }}>
+              <Box alignItems="center">
+                <Box mb="xs">
+                  <Typography.Button2>{label}</Typography.Button2>
+                </Box>
+                <Animated.View style={[styles.indicatorStyle, { opacity: indicatorOpacity }]} />
               </Box>
-
-              <Animated.View style={[styles.indicatorStyle, { opacity: indicatorOpacity }]} />
-            </Box>
+            </Animated.View>
           </TouchableOpacity>
         );
       })}
