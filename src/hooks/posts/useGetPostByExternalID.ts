@@ -4,7 +4,7 @@ import React from 'react';
 import { Post } from 'types/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import GetPostByExternalID from 'services/graphql/queries/GetPostByExternalID';
-import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
+import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 
 /**
  * Hook that allows to get the data of a post given its subspace id and external id.
@@ -12,7 +12,7 @@ import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
 const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
 
-  const queryReactionValue = useQueryReactionValue();
+  const getQueryReactionValue = useGetQueryReactionValue();
   const [getPost] = useLazyQuery(GetPostByExternalID, {
     fetchPolicy: 'network-only',
   });
@@ -28,7 +28,7 @@ const useGetPostByExternalID = () => {
           subspaceId,
           externalId,
           user: activeAddress,
-          reaction: queryReactionValue,
+          reaction: getQueryReactionValue(),
         },
       });
       if (!data) {
@@ -37,7 +37,7 @@ const useGetPostByExternalID = () => {
 
       return data.posts.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
-    [activeAddress, getPost, queryReactionValue],
+    [activeAddress, getPost, getQueryReactionValue],
   );
 };
 

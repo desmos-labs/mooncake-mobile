@@ -7,6 +7,7 @@ import EnvConfig from 'config/EnvConfig';
 import { DesmosMainnet } from '@desmoslabs/desmjs';
 import { findChainInfoByName } from 'lib/ChainsUtils';
 import { GasPrice } from '@cosmjs/stargate';
+import { activeAccountAddressState, useActiveAccountAddress } from '@recoil/accounts';
 
 /**
  * Default application settings
@@ -17,19 +18,15 @@ export const DefaultAppSettings: AppSettings = {
   notifications: false,
   notificationsPermission: false,
   currentChain: EnvConfig.CHAIN === 'mainnet' ? DesmosMainnet : DesmosTestnet,
-  newDiscPostNotification: true,
-  newFollowPostNotification: true,
 };
 
 /**
  * Recoil atom for the application settings
  */
-const settingsAppState = atom<AppSettings>({
+const settingsAppState = atom<Record<string, AppSettings>>({
   key: 'settingsAppState',
   default: (() => {
-    const savedSettings = getMMKV<AppSettings>(MMKVKEYS.APP_SETTINGS);
-
-    return savedSettings || DefaultAppSettings;
+    return getMMKV(MMKVKEYS.APP_SETTINGS) ?? {};
   })(),
   effects: [
     ({ onSet }) => {
@@ -48,8 +45,17 @@ const settingState = selectorFamily({
   get:
     (key: keyof AppSettings) =>
     ({ get }) => {
+      const activeAccountAddress = get(activeAccountAddressState);
+      if (!activeAccountAddress) {
+        return DefaultAppSettings;
+      }
+
       const settings = get(settingsAppState);
-      return settings[key];
+      const userSettings =
+        activeAccountAddress && settings[activeAccountAddress]
+          ? settings[activeAccountAddress]
+          : DefaultAppSettings;
+      return userSettings[key];
     },
 });
 
@@ -66,59 +72,62 @@ export const useSetting = <K extends keyof AppSettings>(settingKey: K) =>
  * @param settingKey - Key of the setting of interest.
  */
 export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
-  const setSettings = useSetSettings();
+  const activeAccountAddress = useActiveAccountAddress();
+  const setSettings = useSetRecoilState(settingsAppState);
   return React.useCallback(
     (setting: AppSettings[K] | ((value: AppSettings[K]) => AppSettings[K])) => {
       setSettings(currentValue => {
-        const newValue =
-          typeof setting === 'function' ? setting(currentValue[settingKey]) : setting;
+        if (!activeAccountAddress) {
+          throw new Error('Cannot set settings without active account');
+        }
 
-        if (newValue !== currentValue[settingKey]) {
+        const userSettings = currentValue[activeAccountAddress];
+        const currentSettingValue = userSettings[settingKey];
+
+        // Avoid updating the values if the given value is the same as the current one
+        const newValue = typeof setting === 'function' ? setting(currentSettingValue) : setting;
+        if (newValue !== currentSettingValue) {
           return currentValue;
         }
 
-        return { ...currentValue, [settingKey]: newValue };
+        // Update the user settings
+        const newUserSettings = {
+          ...userSettings,
+          [settingKey]: newValue,
+        };
+
+        // Update the application settings
+        return {
+          ...currentValue,
+          [activeAccountAddress]: newUserSettings,
+        };
       });
     },
-    [settingKey, setSettings],
+    [setSettings, activeAccountAddress, settingKey],
   );
 };
 
 /**
- * Hook that provides a function to update the entire set of application settings in one go.
- *
- * <b>Note</b>
- * By using this hook, you will trigger the refresh of all the hooks that rely even on a single setting key.
- * Please make sure you use this sparingly, and prefer {@link useSetSetting} whenever possible instead.
- */
-export const useSetSettings = () => useSetRecoilState(settingsAppState);
-
-/**
- * Hook that provides the application settings.
- */
-export const useSettings = () => useRecoilValue(settingsAppState);
-
-/**
  * Hook that provide the informations of the current selected chain.
  */
-export const useCurrentChainInfo = () => {
-  const settings = useSettings();
-  return React.useMemo(
-    () => findChainInfoByName(settings.currentChain.chainName)!,
-    [settings.currentChain],
-  );
+export const useGetCurrentChainInfo = () => {
+  const currentChain = useSetting('currentChain');
+  return React.useCallback(() => {
+    return findChainInfoByName(currentChain.chainName)!;
+  }, [currentChain.chainName]);
 };
 
 /**
  * Hook that provides the current chain gas price.
  */
-export const useCurrentChainGasPrice = () => {
-  const currentChainInfo = useCurrentChainInfo();
-  return React.useMemo(() => {
+export const useGetCurrentChainGasPrice = () => {
+  const getCurrentChainInfo = useGetCurrentChainInfo();
+  return React.useCallback(() => {
+    const currentChainInfo = getCurrentChainInfo();
     if (currentChainInfo === undefined) {
       return undefined;
     }
     // We support only Desmos at the moment so 0.1 is fine.
     return GasPrice.fromString(`0.1${currentChainInfo.stakeCurrency.coinMinimalDenom}`);
-  }, [currentChainInfo]);
+  }, [getCurrentChainInfo]);
 };

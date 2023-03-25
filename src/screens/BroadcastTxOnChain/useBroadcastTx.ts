@@ -3,12 +3,11 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import React from 'react';
 import { Wallet } from 'types/wallet';
 import { DesmosClient } from '@desmoslabs/desmjs';
-import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
+import { useGetCurrentChainInfo } from '@recoil/settings';
 import { SignerData } from '@cosmjs/stargate';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 import useSignTx from 'hooks/transactions/useSignTx';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import { useStoredAccounts } from '@recoil/accounts';
 import { PendingTransaction } from 'types/transactions';
 import { SyncBroadcastResponse } from '@desmoslabs/desmjs/build/types/responses';
 
@@ -45,50 +44,10 @@ const useGetSignerData = () => {
 };
 
 /**
- * Hook to estimate the fees of a transaction.
- */
-export const useEstimateFees = () => {
-  const { rpcUrl } = useCurrentChainInfo();
-  const gasPrice = useCurrentChainGasPrice();
-  const accounts = useStoredAccounts();
-
-  return React.useCallback(
-    async (accountAddress: string, messages: EncodeObject[], memo?: string) => {
-      const account = accounts[accountAddress];
-      if (account === undefined) {
-        return err(Error(`Can't find account with address ${accountAddress}`));
-      }
-
-      const clientResult = await ResultAsync.fromPromise(
-        DesmosClient.connect(rpcUrl, {
-          gasPrice,
-        }),
-        () => Error("Can't prepare client to estimate fees"),
-      );
-      if (clientResult.isErr()) {
-        return err(clientResult.error);
-      }
-
-      return ResultAsync.fromPromise(
-        clientResult.value.estimateTxFee(accountAddress, messages, {
-          memo,
-          publicKey: {
-            algo: account.algo,
-            bytes: account.pubKey,
-          },
-        }),
-        e => Error((<Partial<Error>>e)?.message ?? "Can't estimate fees"),
-      );
-    },
-    [accounts, rpcUrl, gasPrice],
-  );
-};
-
-/**
  * Hook that provides a function to sign a transaction.
  */
-export function useBroadcastTx() {
-  const chainInfo = useCurrentChainInfo();
+const useBroadcastTx = () => {
+  const getChainInfo = useGetCurrentChainInfo();
 
   const unlockWallet = useUnlockWallet();
   const getSignerData = useGetSignerData();
@@ -101,6 +60,7 @@ export function useBroadcastTx() {
       fees: StdFee,
       memo?: string,
     ): Promise<Result<PendingTransaction, Error>> => {
+      // Unlock the wallet
       let wallet: Wallet;
       if (typeof accountAddressOrWallet === 'string') {
         const walletUnlockResult = await unlockWallet(accountAddressOrWallet);
@@ -113,11 +73,13 @@ export function useBroadcastTx() {
         wallet = accountAddressOrWallet;
       }
 
+      // Get the chain data
+      const { rpcUrl } = getChainInfo();
+
       // Create an instance of DesmosClient that can be used to broadcast the
       // transaction and query data from the chain.
-      const clientResult = await ResultAsync.fromPromise(
-        DesmosClient.connect(chainInfo.rpcUrl),
-        () => Error('Error initializing the DesmosClient'),
+      const clientResult = await ResultAsync.fromPromise(DesmosClient.connect(rpcUrl), () =>
+        Error('Error initializing the DesmosClient'),
       );
       // An error occurred while connecting to the chain.
       if (clientResult.isErr()) {
@@ -127,6 +89,7 @@ export function useBroadcastTx() {
 
       // Get the sequence of the account that will be used to sign the transaction.
       const signerDataResult = await getSignerData(client, wallet);
+
       // An error occurred while getting the signer data.
       if (signerDataResult.isErr()) {
         return err(signerDataResult.error);
@@ -160,6 +123,8 @@ export function useBroadcastTx() {
         } as PendingTransaction;
       });
     },
-    [chainInfo.rpcUrl, getSignerData, signTx, unlockWallet],
+    [getChainInfo, getSignerData, signTx, unlockWallet],
   );
-}
+};
+
+export default useBroadcastTx;

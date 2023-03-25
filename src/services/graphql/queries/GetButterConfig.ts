@@ -8,7 +8,6 @@ const GetButterConfig = gql`
         port
         channel
       }
-      invites
     }
   }
 `;

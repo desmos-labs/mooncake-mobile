@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import { AccountWithWallet } from 'types/account';
 import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
-import {
-  DeliverTxResponse,
-  DoNotModify,
-  MsgSaveProfileEncodeObject,
-  MsgSaveProfileTypeUrl,
-} from '@desmoslabs/desmjs';
+import { DoNotModify, MsgSaveProfileEncodeObject, MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
 import { err, Result } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
 import { Wallet } from 'types/wallet';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useUploadProfilePictures from 'hooks/profiles/useUploadProfilePictures';
+import { PendingTransaction } from 'types/transactions';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -43,7 +39,7 @@ const useSaveProfileOnChain = () => {
     async (
       params: DesmosProfile,
       providedAccount: AccountWithWallet | undefined,
-    ): Promise<Result<DeliverTxResponse, Error>> => {
+    ): Promise<Result<PendingTransaction, Error>> => {
       let wallet: Wallet | undefined;
 
       if (providedAccount !== undefined) {

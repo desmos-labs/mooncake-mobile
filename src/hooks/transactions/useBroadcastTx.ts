@@ -133,12 +133,13 @@ const useBroadcastTx = () => {
       if (!broadcastOnChain) {
         const permissionsPromptResult = await promptAccountPermissions(msgs);
         if (permissionsPromptResult.isErr()) {
-          if (isCanceledOperationError(permissionsPromptResult.error)) {
-            // The user has canceled the operation, so do nothing
-            return err(permissionsPromptResult.error);
-          } else if (isCentralizedApiNotGrantedError(permissionsPromptResult.error)) {
+          if (isCentralizedApiNotGrantedError(permissionsPromptResult.error)) {
             // The user rejected, just proceed with the normal broadcast.
             broadcastOnChain = true;
+          } else {
+            // The user has canceled the operation, or some other errors have happened
+            // We need to return such error
+            return err(permissionsPromptResult.error);
           }
         } else if (permissionsPromptResult.isOk() && permissionsPromptResult.value.length > 0) {
           // User accepted to give us the permissions, extends the broadcast

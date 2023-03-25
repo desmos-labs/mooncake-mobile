@@ -210,7 +210,7 @@ export const useSubmitForm = (
 
       return ok({});
     },
-    [account, profile, storeProfile, saveOnChain, saveProfile],
+    [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile],
   );
 
   return {
