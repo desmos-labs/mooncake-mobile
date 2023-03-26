@@ -1,19 +1,16 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Spinner, useTheme } from 'native-base';
-import useStyles from './useStyles';
+import { Center } from 'native-base';
+import StyledSpinner from 'components/StyledSpinner';
 
 /**
  * Component that renders a loading indicator.
  * @constructor
  */
 const Loading = () => {
-  const styles = useStyles();
-  const theme = useTheme();
   return (
-    <View style={styles.loadingContainer}>
-      <Spinner color={theme.colors.surfaceBlack} />
-    </View>
+    <Center flexGrow={1} backgroundColor="white" py="50px">
+      <StyledSpinner />
+    </Center>
   );
 };
 

@@ -6,9 +6,9 @@ import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { SafeAreaView } from 'react-native';
-import { Spinner, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
@@ -25,6 +25,7 @@ import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 import { useHandleCreateComment, useHandleExpandCommentView } from './hooks';
 
@@ -162,7 +163,7 @@ const PostDetails = () => {
     // If the post is loading, show the loading screen
     if (isPostLoading) {
       // TODO: Improve this in order to show the proper loading screen
-      return <Spinner />;
+      return <StyledSpinner />;
     }
 
     // TODO: It's best to show an error here or something, as it means the post does not exist anymore
@@ -173,7 +174,7 @@ const PostDetails = () => {
   if (initialLoading) {
     return (
       <SafeAreaView style={styles.emptyView}>
-        <Spinner />
+        <StyledSpinner />
       </SafeAreaView>
     );
   }

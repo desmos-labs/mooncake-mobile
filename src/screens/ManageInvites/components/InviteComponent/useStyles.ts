@@ -42,6 +42,14 @@ const useStyles = makeStyle(theme => ({
     padding: theme.spacing.m,
     borderRadius: theme.roundness,
   },
+  buttonStyle: {
+    alignSelf: 'center',
+    marginLeft: 6,
+  },
+  buttonImage: {
+    width: 16,
+    height: 16,
+  },
 }));
 
 export default useStyles;

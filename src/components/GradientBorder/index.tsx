@@ -15,6 +15,8 @@ const GradientBorder = ({ colors, height = 50 }: Props) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       colors={colors || [theme.colors.background, addAlphaToHex(theme.colors.background, 0.2)]}
+      // ignored as this is a trivial case
+      /* eslint-disable-next-line react-native/no-inline-styles */
       style={{ height, width: '100%' }}
     />
   );

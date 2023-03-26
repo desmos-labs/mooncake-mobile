@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import DView from 'components/DView';
 import { ScrollView, TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
@@ -12,7 +12,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import { Spinner, useTheme } from 'native-base';
+import { Center, useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
 import {
@@ -22,9 +22,10 @@ import {
   useResetCreatePostState,
   useSetCreatePostValue,
 } from '@recoil/screens/createPostState';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import SelectedPostImage from 'components/SelectedPostImage';
-import { useToast } from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
+import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -49,7 +50,7 @@ const CreatePost = () => {
   const { t } = useTranslation('postInteraction');
   const styles = useStyles();
   const theme = useTheme();
-  const toast = useToast();
+  const toast = useCustomToast();
   const navigation = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const parent = params?.parent;
@@ -95,9 +96,7 @@ const CreatePost = () => {
 
     if (result.isErr()) {
       console.log('Error while creating post', result.error.message);
-      return toast.show(t('errorWhileCreatingPost'), {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      return toast.errorNoRetry(t('errorWhileCreatingPost'));
     }
 
     navigation.goBack();
@@ -115,18 +114,18 @@ const CreatePost = () => {
 
   const TopBarRightElement = React.useMemo(() => {
     if (loading) {
-      return <Spinner />;
+      return <StyledSpinner />;
     }
 
     return (
       <Button
-        mode={ButtonMode.CONTAINED}
+        isLoading={loading}
+        size={26}
+        width={58}
         backgroundColor={theme.colors.primary}
         textColor={theme.colors.white}
-        size={ButtonSize.S}
         disabled={!canCreatePost}
-        onPress={onCreatePostPressWrapper}
-        additionalStyle={styles.postButton}>
+        onPress={onCreatePostPressWrapper}>
         {t('post')}
       </Button>
     );
@@ -134,7 +133,6 @@ const CreatePost = () => {
     canCreatePost,
     onCreatePostPressWrapper,
     loading,
-    styles.postButton,
     t,
     theme.colors.primary,
     theme.colors.white,
@@ -143,7 +141,10 @@ const CreatePost = () => {
   const TopBarCenterElement = React.useMemo(() => {
     if (!parent) return undefined;
     return (
-      <Typography.Body7 numberOfLines={1} ellipsizeMode="tail" style={{ textAlign: 'center' }}>
+      <Typography.Body7
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={CommonStyles.textAlign.center}>
         {t('replyTo', { replyTo: `@${parent?.author.dTag}` })}
       </Typography.Body7>
     );
@@ -190,14 +191,16 @@ const CreatePost = () => {
               textAlignVertical="top"
             />
             {/* TODO: Allow to select multiple attachments */}
-            <SelectedPostImage
-              source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
-              dimensions={{
-                width: postAttachments.length > 0 ? postAttachments[0].width : undefined,
-                height: postAttachments.length > 0 ? postAttachments[0].height : undefined,
-              }}
-              handlePress={source => removePostAttachment(source)}
-            />
+            <Center>
+              <SelectedPostImage
+                source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
+                dimensions={{
+                  width: postAttachments.length > 0 ? postAttachments[0].width : undefined,
+                  height: postAttachments.length > 0 ? postAttachments[0].height : undefined,
+                }}
+                handlePress={source => removePostAttachment(source)}
+              />
+            </Center>
           </ScrollView>
         </View>
       </DView>

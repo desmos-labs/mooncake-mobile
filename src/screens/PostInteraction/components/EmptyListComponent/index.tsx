@@ -1,25 +1,18 @@
 import { emptyListPlaceholder } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import React from 'react';
-import { Image, StyleProp, View, ViewStyle } from 'react-native';
+import { Image, View } from 'react-native';
 
 type Props = {
   label: string;
   additionalButton?: boolean;
   buttonLabel?: string;
   handleButton?: () => void;
-  additionalButtonStyle?: StyleProp<ViewStyle>;
 };
 
-const EmptyListComponent = ({
-  label,
-  additionalButton,
-  buttonLabel,
-  handleButton,
-  additionalButtonStyle,
-}: Props) => {
+const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton }: Props) => {
   const styles = useStyles();
 
   return (
@@ -29,11 +22,7 @@ const EmptyListComponent = ({
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
       </View>
       {additionalButton && handleButton && (
-        <Button
-          size={ButtonSize.M}
-          additionalStyle={[styles.additionalButton, additionalButtonStyle]}
-          mode={ButtonMode.OUTLINED}
-          onPress={() => handleButton()}>
+        <Button size={44} textColor="white" onPress={handleButton} mt="xl" mx="80px">
           {buttonLabel}
         </Button>
       )}

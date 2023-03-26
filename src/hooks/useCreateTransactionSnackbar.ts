@@ -1,15 +1,16 @@
 import React from 'react';
-import ToastConfig from 'config/ToastConfig';
 import { NotificationType, TransactionNotificationData } from 'types/notifications';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import { useGetPendingTransaction } from '@recoil/transactions';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Hook to create a snackbar for a transaction notification.
  */
 const useCreateTransactionSnackbar = () => {
-  const toast = useToast();
+  const toast = useCustomToast();
+  const { t } = useTranslation();
 
   const broadcastTx = useBroadcastTx();
   const getPendingTransaction = useGetPendingTransaction();
@@ -18,16 +19,12 @@ const useCreateTransactionSnackbar = () => {
     async (data: TransactionNotificationData) => {
       switch (data.type) {
         case NotificationType.TransactionSuccess:
-          toast.show('Transaction success!', {
-            type: ToastConfig.SUCCESS,
-          });
+          toast.success(t('toast:transactionSuccess'));
           break;
 
         case NotificationType.TransactionFail:
-          toast.show('Transaction failed!', {
-            type: ToastConfig.ERROR,
-            // @ts-ignore - TODO: Investigate this
-            onPressRetry: async () => {
+          toast.error(t('toast:transactionFailed'), {
+            handlePressRetry: async () => {
               // Find the matching txHash and rebroadcast its message
               const pendingTx = getPendingTransaction(data.txHash);
               if (pendingTx) {

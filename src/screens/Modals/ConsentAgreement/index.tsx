@@ -1,5 +1,5 @@
 import React from 'react';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import Typography from 'components/Typography';
 import { useTranslation } from 'react-i18next';
 import Spacer from 'components/Spacer';
@@ -67,7 +67,6 @@ const ConsentAgreement = () => {
         size={44}
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
-        mode={ButtonMode.CONTAINED}
         onPress={handlePressContinue}>
         {t('common:continue')}
       </Button>

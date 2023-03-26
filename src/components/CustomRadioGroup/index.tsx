@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import { View } from 'react-native';
-import { useTheme } from 'native-base';
+import { HStack, useTheme } from 'native-base';
 import { RadioButtonInput } from 'react-native-simple-radio-button';
 
 /**
@@ -41,7 +41,7 @@ const CustomRadioGroup = (props: Props) => {
     <View>
       {values.map((value, index) => {
         return (
-          <View style={{ flexDirection: 'row' }} key={`${value.value}`}>
+          <HStack key={`${value.value}`}>
             <RadioButtonInput
               accessibilityLabel={`${value.value}-radio-button`}
               buttonStyle={{ marginBottom: theme.spacing.m }}
@@ -62,7 +62,7 @@ const CustomRadioGroup = (props: Props) => {
             <Typography.Body6 style={{ marginLeft: theme.spacing.m }}>
               {value.label}
             </Typography.Body6>
-          </View>
+          </HStack>
         );
       })}
     </View>

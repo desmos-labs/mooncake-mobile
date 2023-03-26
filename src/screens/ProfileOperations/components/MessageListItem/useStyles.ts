@@ -17,22 +17,15 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     maxWidth: '50%',
   },
-  followButton: {
-    minWidth: 86,
-    height: 34,
-    justifyContent: 'center',
-  },
-  buttonView: {
-    marginLeft: 'auto',
-    right: 1,
-    justifyContent: 'center',
+  formattedDate: {
+    color: theme.colors.grey02,
+    marginTop: 2,
   },
   feesText: {
     right: 0,
     marginLeft: 'auto',
     color: theme.colors.red01,
   },
-  flexRowView: { flexDirection: 'row', alignItems: 'center' },
 }));
 
 export default useStyles;

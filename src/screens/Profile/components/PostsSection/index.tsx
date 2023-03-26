@@ -5,19 +5,14 @@ import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  FlatList,
-  ListRenderItemInfo,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, ListRenderItemInfo, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Center, useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export interface PostsSectionProps {
@@ -93,15 +88,10 @@ const PostsSection = (props: PostsSectionProps) => {
   // Component to be rendered when the list is empty
   const EmptyComponent = useMemo(
     () => (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <Center flex={1}>
         <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
         <Typography.Body7 style={{ color: theme.colors.midGrey }}>{t('no posts')}</Typography.Body7>
-      </View>
+      </Center>
     ),
     [styles.emptyImage, t, theme.colors.midGrey],
   );
@@ -136,7 +126,7 @@ const PostsSection = (props: PostsSectionProps) => {
         />
       ) : (
         <View style={styles.activityIndicatorView}>
-          <ActivityIndicator color={theme.colors.surfaceBlack} />
+          <StyledSpinner />
         </View>
       )}
 

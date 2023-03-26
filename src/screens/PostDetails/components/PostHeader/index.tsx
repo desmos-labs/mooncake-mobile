@@ -11,11 +11,10 @@ import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import { useHandlePressCounters, useHandlePressSendTips } from 'screens/PostDetails/hooks';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useToast } from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
 import { useTranslation } from 'react-i18next';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 
 interface Props {
@@ -32,7 +31,7 @@ const PostHeader = ({ post }: Props) => {
   const { t } = useTranslation('postDetails');
   const { focusTextInputRef } = useFocusTextInputOnNavigate();
   const activeAddress = useActiveAccountAddress();
-  const toast = useToast();
+  const toast = useCustomToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -67,9 +66,7 @@ const PostHeader = ({ post }: Props) => {
    */
   const checkUserAndHandleSendTips = useCallback(() => {
     if (isCurrentUserAuthor) {
-      toast.show(t('common:cannot tip yourself'), {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      toast.errorNoRetry(t('common:cannot tip yourself'));
     } else {
       handlePressSendTips(post);
     }

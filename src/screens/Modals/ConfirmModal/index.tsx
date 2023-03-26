@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 // dismiss button
 // import {iconCross} from 'assets/images';
 import Typography from 'components/Typography';
@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import { useTheme } from 'native-base';
 import Spacer from 'components/Spacer';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -41,11 +42,11 @@ export type ConfirmModalParams = {
   /**
    * Label of the primary button.
    */
-  primaryButtonLabel?: string | ReactNode;
+  primaryButtonLabel?: string;
   /**
    * Label of the secondary button.
    */
-  secondaryButtonLabel?: string | ReactNode;
+  secondaryButtonLabel?: string;
   /**
    * What to do when the user presses the close button.
    */
@@ -67,13 +68,13 @@ export type ConfirmModalParams = {
    * The mode of the primary button.
    * @default contained
    */
-  primaryButtonMode?: ButtonMode;
+  primaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
 
   /**
    * The mode of the secondary button.
    * @default text
    */
-  secondaryButtonMode?: ButtonMode;
+  secondaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -91,8 +92,8 @@ const ConfirmModal = () => {
       onPressSecondary,
       removeModalAfterButtonPress,
       image,
-      primaryButtonMode = ButtonMode.CONTAINED,
-      secondaryButtonMode = ButtonMode.TEXT,
+      primaryButtonMode = 'solid',
+      secondaryButtonMode = 'link',
     },
   } = useRoute<NavProps['route']>();
 
@@ -131,7 +132,7 @@ const ConfirmModal = () => {
         {image && <Image source={image} style={styles.imageStyle} />}
 
         <Spacer paddingBottom={16}>
-          <Typography.H5 style={{ textAlign: 'center' }}>{title}</Typography.H5>
+          <Typography.H5 style={CommonStyles.textAlign.center}>{title}</Typography.H5>
         </Spacer>
 
         <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
@@ -151,8 +152,8 @@ const ConfirmModal = () => {
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}
-              additionalStyle={styles.primaryButton}
-              mode={primaryButtonMode}
+              alignSelf="stretch"
+              variant={primaryButtonMode as any}
               onPress={onPressPrimaryButton}>
               {primaryButtonLabel}
             </Button>
@@ -161,8 +162,9 @@ const ConfirmModal = () => {
             <Spacer paddingTop={theme.spacing.m}>
               <Button
                 size={44}
-                additionalStyle={styles.secondaryButton}
-                mode={secondaryButtonMode as any}
+                mb="s"
+                alignSelf="stretch"
+                variant={secondaryButtonMode as any}
                 onPress={onPressSecondaryButton}>
                 {secondaryButtonLabel}
               </Button>

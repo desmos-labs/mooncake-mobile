@@ -33,6 +33,11 @@ const useStyles = makeStyle(theme => ({
   postButtonText: {
     color: theme.colors.white,
   },
+  textInput: {
+    flex: 1,
+    alignSelf: 'stretch',
+    color: theme.colors.surfaceBlack,
+  },
 }));
 
 export default useStyles;

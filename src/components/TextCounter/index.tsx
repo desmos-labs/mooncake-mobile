@@ -1,7 +1,6 @@
 import React from 'react';
 import Typography from 'components/Typography';
-import { View } from 'react-native';
-import { useTheme } from 'native-base';
+import { HStack, useTheme } from 'native-base';
 
 type Props = {
   maxChar: number;
@@ -16,17 +15,12 @@ type Props = {
 const TextCounter = ({ maxChar, textToCount }: Props) => {
   const theme = useTheme();
   return (
-    <View
-      style={{
-        marginTop: theme.spacing.xs,
-        flexDirection: 'row',
-        alignSelf: 'flex-end',
-      }}>
+    <HStack mt="xs" alignSelf="flex-end">
       <Typography.Body7
         style={{
           color: textToCount.length > maxChar ? theme.colors.error : theme.colors.grey02,
         }}>{`${textToCount.length}/${maxChar}`}</Typography.Body7>
-    </View>
+    </HStack>
   );
 };
 

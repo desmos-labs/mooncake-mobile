@@ -10,7 +10,7 @@ import {
   invitesBanner,
   inviteUserIcon,
 } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -19,14 +19,14 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Image, Share, TouchableOpacity, View } from 'react-native';
+import { Image, Share, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
-import { useToast } from 'react-native-toast-notifications';
+import { Box, useTheme } from 'native-base';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import { useGenerateInvite, useGetActiveAccountInvitesInfo } from 'screens/Invites/hooks';
-import ToastConfig from 'config/ToastConfig';
 import { ResultAsync } from 'neverthrow';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_INVITES>;
@@ -38,7 +38,7 @@ const Invites = () => {
   const { t } = useTranslation('invites');
   const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
-  const toast = useToast();
+  const toast = useCustomToast();
   const generateInvite = useGenerateInvite();
   const { refetch, invitesInfo } = useGetActiveAccountInvitesInfo();
 
@@ -78,9 +78,7 @@ const Invites = () => {
           // dismissed
         }
       } else {
-        toast.show(shareResult.error.message, {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
+        toast.errorNoRetry(shareResult.error.message);
       }
     }
   }, [inviteLink, toast]);
@@ -91,9 +89,7 @@ const Invites = () => {
     if (generateInviteResult.isOk()) {
       setInviteLink(generateInviteResult.value);
     } else {
-      toast.show(generateInviteResult.error.message, {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      toast.errorNoRetry(generateInviteResult.error.message);
     }
     setGeneratingInvite(false);
   }, [generateInvite, toast]);
@@ -133,9 +129,8 @@ const Invites = () => {
           size={44}
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
-          additionalStyle={{ marginHorizontal: theme.spacing.m }}
-          loading={generatingInvite}
-          mode={ButtonMode.CONTAINED}>
+          mx={theme.spacing.xs}
+          isLoading={generatingInvite}>
           {t('generate invite')}
         </Button>
       ) : (
@@ -152,9 +147,8 @@ const Invites = () => {
             </TouchableOpacity>
           </View>
           <Button
-            mode={ButtonMode.CONTAINED}
             backgroundColor={theme.colors.surfaceBlack}
-            size={ButtonSize.M}
+            size={44}
             textColor={theme.colors.white}
             onPress={onShare}>
             {t('share')}
@@ -164,7 +158,7 @@ const Invites = () => {
 
       <Spacer paddingVertical={theme.spacing.s} />
 
-      <View style={{ alignItems: 'center' }}>
+      <Box alignItems="center">
         {/* Shows the number of generated invitation links */}
         <View style={styles.rowCenter}>
           <Image source={inviteUserIcon} style={styles.iconRight} />
@@ -176,10 +170,10 @@ const Invites = () => {
               })}
             </Typography.Body6>
           ) : (
-            <ActivityIndicator color={theme.colors.surfaceBlack} />
+            <StyledSpinner />
           )}
         </View>
-      </View>
+      </Box>
 
       <Spacer paddingVertical={16} />
       <View style={{ paddingHorizontal: theme.spacing.m }}>

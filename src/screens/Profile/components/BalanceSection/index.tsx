@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Divider, useTheme } from 'native-base';
 import { verticalScale } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,6 +10,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { formatCoins, formatNumber } from 'lib/FormatUtils';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfileOperations';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export interface BalanceSectionProps {
@@ -80,7 +81,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
 
           {/* Fiat amount (USD, EUR, etc) */}
           {isFiatAmountLoading ? (
-            <ActivityIndicator color={theme.colors.surfaceBlack} />
+            <StyledSpinner />
           ) : (
             <Typography.Body6 style={{ color: theme.colors.midGrey }}>
               {currencySymbol}
@@ -114,7 +115,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
         </View>
       ) : (
         <View style={styles.container}>
-          <ActivityIndicator color={theme.colors.surfaceBlack} />
+          <StyledSpinner />
         </View>
       )}
     </View>

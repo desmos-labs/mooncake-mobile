@@ -1,20 +1,23 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
-import ToastConfig from 'config/ToastConfig';
 import { clearMMKV } from 'lib/MMKVStorage';
 import { resetSecureStorage } from 'lib/SecureStorage';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { FC, useCallback } from 'react';
-import { Alert, FlatList, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { useToast } from 'react-native-toast-notifications';
+import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Box, HStack, VStack } from 'native-base';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.SAVE_PROFILE,
+  ROUTES.IMPACT_POINTS_MODAL,
   ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT,
   ROUTES.ACTIVITIES,
   ROUTES.ONBOARDING,
@@ -57,7 +60,8 @@ type DevScreenProps = StackScreenProps<RootNavigatorParamList, ROUTES.DEV_SCREEN
 
 const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const { navigate } = navigation;
-  const toast = useToast();
+
+  const toast = useCustomToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -70,23 +74,9 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   // -------------------------------------------------------------------------------------
 
   const showToast = () => {
-    toast.show('I am a toast', {
-      type: ToastConfig.SUCCESS,
-      onPress() {
-        console.log('test');
-      },
-    });
-    toast.show('I am a toast', {
-      type: ToastConfig.ERROR,
-      onPress() {
-        console.log('test');
-      },
-    });
-    toast.show('I am a toast', {
-      type: ToastConfig.ERROR_NO_RETRY,
-      onPress() {
-        console.log('test');
-      },
+    toast.error('hello world', {
+      handlePressToast: () => console.log('hello world'),
+      handlePressRetry: () => console.log('retry'),
     });
   };
 
@@ -140,46 +130,43 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   return (
     <DView>
       <FlatList
-        style={{ flex: 1 }}
+        style={CommonStyles.flex[1]}
         contentContainerStyle={styles.flatList}
         data={routesToRender}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
       <Spacer paddingVertical={4} />
-      <View style={{ marginHorizontal: 10 }}>
+      <Box mx="s">
         <Button
-          backgroundColor="green"
+          backgroundColor="rgb(0,140,0)"
           textColor="white"
-          mode={ButtonMode.CONTAINED}
           size={44}
           onPress={() => navigate(ROUTES.LANDING)}>
           Continue to Landing screen
         </Button>
         <Spacer paddingVertical={4} />
         <Button
-          backgroundColor="orange"
+          backgroundColor="primary"
           textColor="white"
-          mode={ButtonMode.CONTAINED}
           size={44}
           onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}>
           Continue to Home screen
         </Button>
         <Spacer paddingVertical={8} />
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flexDirection: 'column', flex: 0.5 }}>
-            <Button onPress={showToast} mode={ButtonMode.OUTLINED} size={32}>
+        <HStack>
+          <VStack flex={0.5}>
+            <Button onPress={showToast} size={32}>
               Show toast
             </Button>
             <Spacer paddingVertical={4} />
-            <Button onPress={redeemAnInvite} mode={ButtonMode.OUTLINED} size={32}>
+            <Button onPress={redeemAnInvite} size={32}>
               Accept invite
             </Button>
-          </View>
+          </VStack>
           <Spacer paddingHorizontal={4} />
-          <View style={{ flexDirection: 'column', flex: 0.5 }}>
+          <VStack flex={0.5}>
             <Button
-              mode={ButtonMode.OUTLINED}
               size={32}
               onPress={() => {
                 Alert.alert('Are you sure?', 'This will revoke all grants on chain.', [
@@ -198,7 +185,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             </Button>
             <Spacer paddingVertical={4} />
             <Button
-              mode={ButtonMode.OUTLINED}
               size={32}
               onPress={() => {
                 Alert.alert(
@@ -220,9 +206,9 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               }}>
               Reset MMKV storage & Secure Storage
             </Button>
-          </View>
-        </View>
-      </View>
+          </VStack>
+        </HStack>
+      </Box>
     </DView>
   );
 };

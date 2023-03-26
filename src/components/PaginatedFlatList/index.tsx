@@ -4,8 +4,7 @@ import {
   FlashListProps,
   ListRenderItemInfo as FlashListRenderItemInfo,
 } from '@shopify/flash-list';
-import { useTheme } from 'native-base';
-import { ActivityIndicator } from 'react-native';
+import StyledSpinner from 'components/StyledSpinner';
 
 export type ListRenderItemInfo<T> = FlashListRenderItemInfo<T>;
 
@@ -27,7 +26,6 @@ const PaginatedFlatList = (props: PaginatedFlashListProps<any>) => {
   const [loading, setLoading] = useState(false);
   const [currentOffset, setCurrentOffset] = useState(0);
   const [data, setData] = useState<any[]>([]);
-  const theme = useTheme();
 
   const fetchNextPage = useCallback(async () => {
     setLoading(true);
@@ -77,14 +75,7 @@ const PaginatedFlatList = (props: PaginatedFlashListProps<any>) => {
       {...props}
       data={data}
       onEndReached={onPageEndReached}
-      ListFooterComponent={
-        <ActivityIndicator
-          style={{ paddingBottom: theme.spacing.s }}
-          animating={loading}
-          hidesWhenStopped
-          size="small"
-        />
-      }
+      ListFooterComponent={<StyledSpinner animating={loading} hidesWhenStopped pb="s" />}
     />
   );
 };

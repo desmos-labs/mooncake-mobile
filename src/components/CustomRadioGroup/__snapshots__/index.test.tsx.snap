@@ -3,6 +3,7 @@
 exports[`component: CustomRadioGroup renders 1`] = `
 <View>
   <View
+    dataSet={{}}
     style={
       {
         "flexDirection": "row",
@@ -78,6 +79,10 @@ exports[`component: CustomRadioGroup renders 1`] = `
         />
       </View>
     </View>
+    <View
+      dataSet={{}}
+      style={{}}
+    />
     <Text
       style={
         [
@@ -104,6 +109,7 @@ exports[`component: CustomRadioGroup renders 1`] = `
     </Text>
   </View>
   <View
+    dataSet={{}}
     style={
       {
         "flexDirection": "row",
@@ -169,6 +175,10 @@ exports[`component: CustomRadioGroup renders 1`] = `
         />
       </View>
     </View>
+    <View
+      dataSet={{}}
+      style={{}}
+    />
     <Text
       style={
         [
@@ -195,6 +205,7 @@ exports[`component: CustomRadioGroup renders 1`] = `
     </Text>
   </View>
   <View
+    dataSet={{}}
     style={
       {
         "flexDirection": "row",
@@ -260,6 +271,10 @@ exports[`component: CustomRadioGroup renders 1`] = `
         />
       </View>
     </View>
+    <View
+      dataSet={{}}
+      style={{}}
+    />
     <Text
       style={
         [

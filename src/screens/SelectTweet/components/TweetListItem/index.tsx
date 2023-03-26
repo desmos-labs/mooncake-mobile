@@ -4,8 +4,8 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import React from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Image, TouchableOpacity } from 'react-native';
+import { HStack, useTheme, VStack } from 'native-base';
 import { TwitterTweet, TwitterUser } from 'types/twitter';
 import useStyles from './useStyles';
 
@@ -43,19 +43,14 @@ const TweetListItem = (props: TweetListItemProps) => {
           },
           selected && { backgroundColor: theme.colors.butterOrange05 },
         ]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <HStack alignItems="center">
           <Image source={{ uri: user.profileImageUrl }} style={styles.profilePic} />
-          <View
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'center',
-              marginLeft: theme.spacing.s,
-            }}>
+          <VStack justifyContent="center" ml="m">
             <Typography.Subtitle3>{user?.name}</Typography.Subtitle3>
             <Typography.Body7>@{user?.username}</Typography.Body7>
-          </View>
+          </VStack>
           <Image source={twitterIcon} style={styles.image} />
-        </View>
+        </HStack>
         <Spacer paddingBottom={theme.spacing.m} />
         <Typography.Body6>{tweet.text}</Typography.Body6>
         <Spacer paddingVertical={theme.spacing.s} />

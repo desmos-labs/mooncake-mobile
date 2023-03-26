@@ -13,7 +13,7 @@ const useStyles = makeStyle(theme => ({
     top: theme.spacing.s,
     right: theme.spacing.s,
     fontSize: 8,
-    color: theme.colors.text,
+    color: theme.colors.midGrey,
   },
 }));
 

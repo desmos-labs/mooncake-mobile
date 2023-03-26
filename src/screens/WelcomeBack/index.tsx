@@ -1,5 +1,5 @@
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
-import { Text, useTheme } from 'native-base';
+import { Box, Text, useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 /**
@@ -31,10 +31,8 @@ const WelcomeBack = () => {
         {t('description')}
       </Text>
       <Spacer paddingVertical={20} />
-      <View style={{ alignSelf: 'stretch' }}>
-        <Typography.Subtitle2 style={{ color: theme.colors.white, marginBottom: 6 }}>
-          {t('inputLabel')}
-        </Typography.Subtitle2>
+      <Box alignSelf="stretch">
+        <Typography.Subtitle2 style={styles.inputLabel}>{t('inputLabel')}</Typography.Subtitle2>
 
         <DSecureTextInput
           placeholder={t('inputPlaceholder')}
@@ -44,17 +42,17 @@ const WelcomeBack = () => {
 
         <Spacer paddingVertical={theme.spacing.l}>
           <Button
-            size={ButtonSize.M}
+            size={44}
             textColor={theme.colors.white}
-            additionalStyle={{ borderColor: theme.colors.white }}
-            mode={ButtonMode.OUTLINED}>
+            borderColor={theme.colors.white}
+            variant="outlined">
             {t('common:confirm')}
           </Button>
         </Spacer>
-      </View>
+      </Box>
 
       <View style={styles.forgotPwGroup}>
-        <Button mode={ButtonMode.TEXT} size={ButtonSize.M} textColor={theme.colors.white}>
+        <Button variant="link" size={44} textColor={theme.colors.white}>
           {t('forgotPw')}
         </Button>
       </View>

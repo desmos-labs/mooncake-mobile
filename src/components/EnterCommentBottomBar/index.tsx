@@ -1,5 +1,5 @@
 import { expandCommentIcon } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
 import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Spinner, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
 import {
@@ -30,6 +30,7 @@ import {
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import usePostsParams from 'hooks/posts/usePostsParams';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -148,16 +149,17 @@ const EnterCommentBottomBar = (props: Props) => {
 
   const RightButtonComponent = useMemo(() => {
     if (loading) {
-      return <Spinner />;
+      return <StyledSpinner />;
     }
     return (
       <Button
-        mode={ButtonMode.CONTAINED}
-        size={32}
+        size={26}
+        p={0}
+        width={71}
+        ml="12px"
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
         disabled={attachment ? false : comment.length === 0}
-        additionalStyle={styles.postButton}
         onPress={onPostCommentPressWrapper}>
         {t('post')}
       </Button>
@@ -168,7 +170,6 @@ const EnterCommentBottomBar = (props: Props) => {
     theme.colors.butterOrange01,
     attachment,
     comment.length,
-    styles.postButton,
     onPostCommentPressWrapper,
     t,
   ]);

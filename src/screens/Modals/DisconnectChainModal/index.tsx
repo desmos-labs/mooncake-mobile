@@ -3,7 +3,7 @@ import { Image, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Typography from 'components/Typography';
 import { desmosIcon, disconnectIcon, dummyAvatar, errorImage, modalSuccess } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -19,6 +19,7 @@ import {
 import { isCanceledOperationError } from 'types/error';
 import LinkableChains from 'config/LinkableChains';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.DISCONNECT_CHAIN_MODAL>;
@@ -29,6 +30,7 @@ export type DisconnectChainParams = {
 
 const DisconnectChainModal = () => {
   const { t } = useTranslation('disconnectChain');
+  const theme = useTheme();
   const styles = useStyles();
 
   const { goBack, navigate } = useNavigation<NavProps['navigation']>();
@@ -87,7 +89,8 @@ const DisconnectChainModal = () => {
         }),
         primaryButtonLabel: t('common:retry') as string,
         onPressPrimary: handlePressYes,
-        secondaryButtonMode: 'outlined',
+        // TODO: how to properly type this?
+        secondaryButtonMode: 'outlined' as any,
         secondaryButtonLabel: t('resultModal:goToProfile') as string,
         onPressSecondary: navigateToProfile,
       });
@@ -125,14 +128,13 @@ const DisconnectChainModal = () => {
         <Button
           size={44}
           style={styles.confirmButton}
-          mode={ButtonMode.CONTAINED}
           backgroundColor={theme.colors.surfaceBlack}
           textColor={theme.colors.white}
           onPress={handlePressYes}>
           {t('common:yes')}
         </Button>
 
-        <Button mode={ButtonMode.OUTLINED} size={44} style={styles.cancelButton} onPress={goBack}>
+        <Button variant="outlined" size={44} style={styles.cancelButton} onPress={goBack}>
           {t('common:no')}
         </Button>
       </View>

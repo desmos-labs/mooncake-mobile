@@ -12,7 +12,7 @@ import React from 'react';
 import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -57,7 +57,7 @@ const NftDetails = () => {
   });
 
   return (
-    <SafeAreaView style={{ backgroundColor: theme.colors.white, flex: 1 }}>
+    <SafeAreaView style={styles.safeAreaView}>
       <>
         <Animated.View style={animatedOpacityStyle}>
           <View style={styles.imageAbsolute}>
@@ -74,7 +74,7 @@ const NftDetails = () => {
           reducedTransparencyFallbackColor="white"
         />
       </>
-      <View style={{ flex: 1, marginTop: theme.spacing.s }}>
+      <Box flex={1} mt="s">
         <ImageButton image={profileBack} style={styles.backImage} onPress={goBack} />
         <Animated.ScrollView
           style={styles.container}
@@ -89,14 +89,11 @@ const NftDetails = () => {
             }}>
             <Image
               source={{ uri: nftData.image }}
-              style={{
-                width: '100%',
-                height: 332,
-              }}
+              style={styles.nftImageContainer}
               imageStyle={styles.nftImage}
             />
           </DropShadowWrapper>
-          <View style={{ margin: theme.spacing.m, flex: 1 }}>
+          <Box m="m" flex={1}>
             <Spacer paddingTop={theme.spacing.m} paddingBottom={theme.spacing.l}>
               <Typography.H5>
                 {nftData.name}
@@ -130,9 +127,9 @@ const NftDetails = () => {
             </Typography.Subtitle3>
             <PropertiesSection nftData={nftData} />
             <Spacer paddingBottom={20} />
-          </View>
+          </Box>
         </Animated.ScrollView>
-      </View>
+      </Box>
     </SafeAreaView>
   );
 };

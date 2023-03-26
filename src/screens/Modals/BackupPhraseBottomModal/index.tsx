@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -30,7 +30,6 @@ const BackupPhraseBottomModal = () => {
           <Typography.Body5>{t('backup phrase text')}</Typography.Body5>
         </Spacer>
         <Button
-          mode={ButtonMode.CONTAINED}
           size={44}
           backgroundColor={theme.colors.surfaceBlack}
           textColor={theme.colors.white}

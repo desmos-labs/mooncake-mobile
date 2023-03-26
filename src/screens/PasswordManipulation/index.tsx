@@ -2,7 +2,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import PasswordReqGroup from 'components/PasswordReqGroup';
@@ -18,9 +18,11 @@ import ROUTES from 'navigation/routes';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
-import { Spinner, useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import * as Yup from 'yup';
 import { AccountWithWallet } from 'types/account';
+import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -100,7 +102,7 @@ const PasswordManipulation = () => {
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}>
+        style={CommonStyles.flex[1]}>
         <Formik
           initialValues={initialFormValues}
           onSubmit={handleFormSubmit}
@@ -108,7 +110,10 @@ const PasswordManipulation = () => {
           {({ handleSubmit, values, errors, setFieldValue }) => {
             return (
               <>
-                <ScrollView ref={scrollViewRef} keyboardDismissMode="on-drag" style={{ flex: 1 }}>
+                <ScrollView
+                  ref={scrollViewRef}
+                  keyboardDismissMode="on-drag"
+                  style={CommonStyles.flex[1]}>
                   <View style={styles.labelGroup}>
                     <Typography.Subtitle2>{t(pwInputLabel)}</Typography.Subtitle2>
 
@@ -164,9 +169,9 @@ const PasswordManipulation = () => {
                   )}
                 </ScrollView>
                 {loading ? (
-                  <View style={styles.loadingView}>
-                    <Spinner color={theme.colors.surfaceBlack} />
-                  </View>
+                  <Box alignItems="center" py="m">
+                    <StyledSpinner />
+                  </Box>
                 ) : (
                   <Button
                     size={44}
@@ -178,8 +183,7 @@ const PasswordManipulation = () => {
                       values.confirmPassword.length === 0 ||
                       values.newPassword.length === 0 ||
                       _.flatten(Object.values(errors)).length > 0
-                    }
-                    mode={ButtonMode.CONTAINED}>
+                    }>
                     {t(buttonLabel)}
                   </Button>
                 )}

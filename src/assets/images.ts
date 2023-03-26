@@ -28,8 +28,6 @@ export const copyIcon = require('./images/copy.png');
 
 export const modalSuccess = require('./images/modalSuccess.png');
 
-export const placeholderIcon = require('./images/placeholderIcon.png');
-
 export const iconCrossBlack = require('./images/iconCrossBlack.png');
 
 export const ledgerIcon = require('./images/ledgerIcon.png');
@@ -70,8 +68,6 @@ export const editProfilePic = require('./images/editProfilePic.png');
 
 export const backButton = require('./images/backButton.png');
 
-export const cameraButton = require('./images/cameraButton.png');
-
 export const landingBG = require('./images/landingBG.png');
 
 export const dummyAvatar = require('./images/dummyAvatar.png');
@@ -86,10 +82,6 @@ export const noMorePosts = require('./images/noMorePosts.png');
 
 export const homeInviteIcon = require('./images/homeInviteIcon.png');
 
-export const connectIcon = require('./images/connectIcon.png');
-
-export const commentMore = require('./images/commentMore.png');
-
 export const commentLiked = require('./images/commentLiked.png');
 
 export const reportIcon = require('./images/report.png');
@@ -100,19 +92,9 @@ export const galleryIcon = require('./images/galleryIcon.png');
 
 export const cameraIcon = require('./images/cameraIcon.png');
 
-export const tagIcon = require('./images/tagIcon.png');
-
-export const imagePostIcon = require('./images/imagePost.png');
-
-export const textPostIcon = require('./images/textPost.png');
-
-export const whiteCross = require('./images/whiteCross.png');
-
-export const shareBlackIcon = require('./images/shareBlackIcon.png');
+export const deleteButton = require('./images/delete.png');
 
 export const expandCommentIcon = require('./images/expandComment.png');
-
-export const checkBlackIcon = require('./images/checkBlack.png');
 
 export const addNewProfileIcon = require('./images/addNewProfileIcon.png');
 
@@ -137,23 +119,6 @@ export const onboarding3 = require('./images/onboarding/onboarding3.png');
 export const onboarding4 = require('./images/onboarding/onboarding4.png');
 export const bgonboarding = require('./images/onboarding/backgroundOnboarding.png');
 
-// array of images
-export const postBG = [
-  require('./images/postBG/postBG1.png'),
-  require('./images/postBG/postBG2.png'),
-  require('./images/postBG/postBG3.png'),
-  require('./images/postBG/postBG4.png'),
-  require('./images/postBG/postBG5.png'),
-  require('./images/postBG/postBG6.png'),
-  require('./images/postBG/postBG7.png'),
-  require('./images/postBG/postBG8.png'),
-  require('./images/postBG/postBG9.png'),
-  require('./images/postBG/postBG10.png'),
-  require('./images/postBG/postBG11.png'),
-];
-
-export const profileScan = require('./images/profileScan.png');
-
 export const profileBack = require('./images/profileBack.png');
 
 export const profileSettings = require('./images/profileSettings.png');
@@ -175,19 +140,17 @@ export const accountCreatedBg = require('./images/accountCreatedBg.png');
 export const accountCreatedIcon = require('./images/accountCreatedIcon.png');
 
 export const connectTwitterProfileIcon = require('./images/connectTwitterProfile.png');
-export const connectWalletProfileIcon = require('./images/connectWalletProfile.png');
 export const manageConnectedTwitterProfileIcon = require('./images/manageConnectedTwitterProfile.png');
-export const manageConnectedWalletsProfileIcon = require('./images/manageConnectedWalletProfile.png');
 export const addProfileIcon = require('./images/addProfileIcon.png');
 export const reportSuccessIcon = require('./images/reportSuccessIcon.png');
 export const communitiesBackgroundImage = require('./images/communities_background.png');
 export const emptyListPlaceholder = require('./images/emptyListsPlaceholders/emptyListPlaceholder.png');
 
+export const block = require('./images/block.png');
+
 // TX
 
-export const sendTipsTxIcon = require('./images/txIcons/sendTipsTx.png');
 export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');
-export const claimBadgeTxIcon = require('./images/txIcons/claimBadgeTx.png');
 export const createPostTxIcon = require('./images/txIcons/createPostTx.png');
 export const addReactionTxIcon = require('./images/txIcons/addReactionTx.png');
 export const sendReportTxIcon = require('./images/txIcons/sendReportTx.png');
@@ -206,9 +169,7 @@ export const middleButtonIcon = require('./images/bottomBarIcons/middleButton.pn
 
 // Post icons
 
-export const postCommentedIcon = require('./images/homePostIcons/postCommentedIcon.png');
 export const postToCommentIcon = require('./images/homePostIcons/postToCommentIcon.png');
 export const postLikedIcon = require('./images/homePostIcons/postLikedIcon.png');
 export const postToLikeIcon = require('./images/homePostIcons/postToLikeIcon.png');
-export const postTippedIcon = require('./images/homePostIcons/postTippedIcon.png');
 export const postToTipIcon = require('./images/homePostIcons/postToTipIcon.png');

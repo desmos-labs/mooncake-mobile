@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';
@@ -8,7 +8,7 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { useTheme } from 'native-base';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
@@ -19,7 +19,9 @@ import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
 import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
 import useConnectChain from 'screens/ManageConnectedChains/useHooks';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
@@ -29,7 +31,7 @@ const ManageConnectedChains = () => {
   const styles = useStyles();
   const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
-  const toast = useToast();
+  const toast = useCustomToast();
   const { chainLinks, loading, refetch } = useChainLinksGivenAddress();
   const connectChain = useConnectChain(chainLinks);
 
@@ -66,7 +68,7 @@ const ManageConnectedChains = () => {
           address={info.item.externalAddress}
           onPressDisconnect={handlePressDisconnectChainLink(info.item)}
           showSnackBar={() => {
-            toast.show(t('common:addressCopied'));
+            toast.success(t('common:addressCopied'));
           }}
         />
       );
@@ -81,11 +83,10 @@ const ManageConnectedChains = () => {
 
         <View style={styles.buttonContainer}>
           <Button
-            size={ButtonSize.M}
+            size={44}
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
-            onPress={handleConnectChain}
-            mode={ButtonMode.CONTAINED}>
+            onPress={handleConnectChain}>
             {t('profile:connectAddress')}
           </Button>
         </View>
@@ -112,7 +113,7 @@ const ManageConnectedChains = () => {
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
           <View style={styles.headerTextGroup}>
-            <Typography.H4 style={{ flex: 1 }}>{t('connectedAddresses')}</Typography.H4>
+            <Typography.H4 style={CommonStyles.flex[1]}>{t('connectedAddresses')}</Typography.H4>
 
             <ImageButton
               onPress={handleConnectChain}
@@ -128,7 +129,7 @@ const ManageConnectedChains = () => {
       </View>
 
       {loading ? (
-        <ActivityIndicator />
+        <StyledSpinner />
       ) : (
         <FlatList
           data={chainLinks}
@@ -136,7 +137,7 @@ const ManageConnectedChains = () => {
           ListEmptyComponent={ListEmptyComponent}
           contentContainerStyle={styles.flatListContainer}
           ItemSeparatorComponent={ItemSeparatorComponent}
-          style={{ overflow: 'visible' }}
+          style={CommonStyles.overflow.visible}
         />
       )}
     </DView>

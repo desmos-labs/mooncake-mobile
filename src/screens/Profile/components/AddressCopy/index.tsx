@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
-import { useTheme } from 'native-base';
 import { copyIcon } from 'assets/images';
 import Clipboard from '@react-native-clipboard/clipboard';
+import useStyles from './useStyles';
 
 export interface AddressCopyProps {
   /**
@@ -24,7 +24,7 @@ export interface AddressCopyProps {
  * @constructor
  */
 const AddressCopy = (props: AddressCopyProps) => {
-  const theme = useTheme();
+  const styles = useStyles();
 
   const { address, externalCallback } = props;
 
@@ -43,28 +43,12 @@ const AddressCopy = (props: AddressCopyProps) => {
 
   // This is a simple component, so styles are left inline
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-      <Typography.Body7
-        numberOfLines={1}
-        ellipsizeMode="middle"
-        style={{ maxWidth: '35%', color: theme.colors.darkGrey }}>
+    <TouchableOpacity onPress={handlePress} style={styles.container}>
+      <Typography.Body7 numberOfLines={1} ellipsizeMode="middle" style={styles.addressText}>
         {address}
       </Typography.Body7>
 
-      <Image
-        source={copyIcon}
-        style={{
-          marginLeft: 6,
-          width: 16,
-          height: 16,
-          resizeMode: 'contain',
-        }}
-      />
+      <Image source={copyIcon} style={styles.copyIcon} />
     </TouchableOpacity>
   );
 };

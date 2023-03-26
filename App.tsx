@@ -1,42 +1,16 @@
 import { ApolloProvider } from '@apollo/client';
 import { NavigationContainer } from '@react-navigation/native';
-import CustomToast from 'components/CustomToast';
 import { NativeBaseProvider } from 'native-base';
-import ToastConfig from 'config/ToastConfig';
 import RootNavigator from 'navigation/RootNavigator';
 import React from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ToastProvider } from 'react-native-toast-notifications';
 import { RecoilRoot } from 'recoil';
 import useClient from 'services/graphql/useClient';
 import { ViewProps } from 'react-native';
 import lightTheme from 'config/theme/LightTheme';
-
-/**
- * Provider that allows to easily get the context allowing to show
- * custom toasts if needed.
- * @constructor
- */
-const ButterToastProvider = (props: ViewProps) => {
-  const { children } = props;
-  return (
-    <ToastProvider
-      animationType="zoom-in"
-      placement="top"
-      offsetTop={30}
-      duration={3000}
-      renderType={{
-        [ToastConfig.SUCCESS]: toast => <CustomToast type={ToastConfig.SUCCESS} toast={toast} />,
-        [ToastConfig.ERROR]: toast => <CustomToast type={ToastConfig.ERROR} toast={toast} />,
-        [ToastConfig.ERROR_NO_RETRY]: toast => (
-          <CustomToast type={ToastConfig.ERROR_NO_RETRY} toast={toast} />
-        ),
-      }}>
-      {children}
-    </ToastProvider>
-  );
-};
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import CommonStyles from 'config/theme/CommonStyles';
 
 /**
  * Context provider that allows to properly instantiate an Apollo client that
@@ -51,19 +25,19 @@ const ButterApolloClientProvider = (props: ViewProps) => {
 
 function App(): JSX.Element {
   return (
-    <SafeAreaProvider>
-      <RecoilRoot>
-        <NativeBaseProvider theme={lightTheme}>
-          <ButterToastProvider>
+    <GestureHandlerRootView style={CommonStyles.flex[1]}>
+      <SafeAreaProvider>
+        <RecoilRoot>
+          <NativeBaseProvider theme={lightTheme}>
             <ButterApolloClientProvider>
               <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>
                 <RootNavigator />
               </NavigationContainer>
             </ButterApolloClientProvider>
-          </ButterToastProvider>
-        </NativeBaseProvider>
-      </RecoilRoot>
-    </SafeAreaProvider>
+          </NativeBaseProvider>
+        </RecoilRoot>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

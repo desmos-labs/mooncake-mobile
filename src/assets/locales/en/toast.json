@@ -6,5 +6,8 @@
   "errorAuthRequired": "[PLACEHOLDER]Authorization is required.",
   "successProcessFollow": "[PLACEHOLDER]Processing follow user.",
   "successProcessUnfollow": "[PLACEHOLDER]Processing unfollow user.",
-  "postTxInProgress": "Posting... Please wait!"
+  "postTxInProgress": "Posting... Please wait!",
+  "retry": "Retry",
+  "transactionSuccess": "Transaction success!",
+  "transactionFailed": "Transaction failed!"
 }

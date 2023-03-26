@@ -11,10 +11,6 @@ const useStyles = makeStyleWithProps(
     theme,
   ) => {
     return {
-      postButton: {
-        width: 71,
-        marginLeft: 12,
-      },
       shadow: {
         backgroundColor: theme.colors.white,
         paddingHorizontal: 20,

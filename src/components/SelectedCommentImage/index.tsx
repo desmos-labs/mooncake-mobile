@@ -8,11 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { whiteCross } from 'assets/images';
+import { deleteButton } from 'assets/images';
 import { makeStyle } from 'config/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'native-base';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
+import CommonStyles from 'config/theme/CommonStyles';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {
   source: UploadAssetType | undefined;
@@ -41,12 +42,12 @@ const SelectedCommentImage = (props: Props) => {
       {/* Invisible view acts as a placeholder, otherwise the component will appear */}
       {/* underneath the keyboard if an image is selected while the keyboard is expanded */}
       {!rest.source ? (
-        <View style={{ opacity: 0 }} />
+        <View style={CommonStyles.opacity[0]} />
       ) : (
         <TouchableOpacity style={styles.container} onPress={() => handlePress(rest.source!)}>
           <Image {...rest} style={styles.imageStyle} source={rest.source} />
           <View style={styles.closeButtonContainer}>
-            <Image style={styles.closeButton} source={whiteCross} />
+            <Image style={styles.closeButton} source={deleteButton} />
           </View>
         </TouchableOpacity>
       )}

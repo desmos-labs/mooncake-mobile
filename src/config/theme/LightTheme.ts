@@ -1,18 +1,23 @@
 import { extendTheme } from 'native-base';
 import { addAlphaToHex } from 'config/theme/index';
 
+export const baseSpacing = {
+  xs: 4,
+  s: 8,
+  m: 16,
+  l: 24,
+  xl: 32,
+};
+
 /**
  * A custom theme created by extending native-base base theme. Some colors retain their material-ui names as they were
  * imported from the previous material-ui stylesheet.
  */
 const lightTheme = extendTheme({
-  spacing: {
-    xs: 4,
-    s: 8,
-    m: 16,
-    l: 24,
-    xl: 32,
-  },
+  // legacy spacing keys for styles that still use react-native-paper naming
+  spacing: baseSpacing,
+  // duplicated spacings for native-base compatibility
+  space: baseSpacing,
   roundness: 14,
   colors: {
     primary: '#FEB027',
@@ -88,6 +93,20 @@ const lightTheme = extendTheme({
     pinkGradient: [addAlphaToHex('#F359A8', 0.24)],
     whiteGradient01: [addAlphaToHex('#FFFFFF', 0.1), '#ABC1FB'],
     blackGradient01: [addAlphaToHex('#000000', 0.4), addAlphaToHex('#FFFFFF', 0.1)],
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        _pressed: {
+          opacity: 0.4,
+        },
+        _hover: {
+          opacity: 0.8,
+        },
+        opacity: 1,
+        rounded: 14,
+      },
+    },
   },
 });
 

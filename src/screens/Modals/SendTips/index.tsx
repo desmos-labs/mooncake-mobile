@@ -1,6 +1,6 @@
 import { infoIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -9,7 +9,7 @@ import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { Spinner, useTheme } from 'native-base';
+import { HStack, useTheme } from 'native-base';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -17,6 +17,8 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins } from 'lib/FormatUtils';
 import { TipTarget } from 'types/tips';
+import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 import {
   FormValues,
@@ -113,7 +115,7 @@ const SendTips = (props: NavProps) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={{ flex: 1 }}>
+      style={CommonStyles.flex[1]}>
       <BottomUpModalWrapper goBack={goBack} paddingHorizontal={0.1} paddingBottom={0.1}>
         <Formik
           initialValues={initialFormValues}
@@ -140,19 +142,23 @@ const SendTips = (props: NavProps) => {
                           values.amount === String(value) ? theme.colors.white : theme.colors.black
                         }
                         disabled={!canEdit || shouldDisableTipButton(value)}
-                        mode={
-                          values.amount === String(value)
-                            ? ButtonMode.CONTAINED
-                            : ButtonMode.OUTLINED
-                        }
-                        size={ButtonSize.M}
-                        additionalStyle={[
+                        size={44}
+                        style={[
+                          // can ignore this as it is part of the conditional style that requires the mapped value variable.
+                          // eslint-disable-next-line react-native/no-inline-styles
                           {
                             minWidth: 106,
+                            borderWidth: 1,
                           },
+                          // Use disabled style if user has lack of funds, otherwise show orange outline if the denomination
+                          // is selected, or black if unselected
                           shouldDisableTipButton(value)
                             ? {
                                 borderColor: theme.colors.tabIconGrey,
+                              }
+                            : values.amount === String(value)
+                            ? {
+                                borderColor: theme.colors.butterOrange01,
                               }
                             : {
                                 borderColor: theme.colors.surfaceBlack,
@@ -161,7 +167,7 @@ const SendTips = (props: NavProps) => {
                         onPress={() => {
                           setFieldValue('amount', String(value), true);
                         }}>
-                        {value} DSM
+                        {`${value} DSM`}
                       </Button>
                     );
                   })}
@@ -180,7 +186,7 @@ const SendTips = (props: NavProps) => {
                   rightElement={<Typography.Subtitle3 numberOfLines={1}>DSM</Typography.Subtitle3>}
                 />
                 {errors.amount && (
-                  <Typography.Caption1 style={{ marginTop: 6, color: theme.colors.pink01 }}>
+                  <Typography.Caption1 style={styles.amountErrorText}>
                     {errors.amount}
                   </Typography.Caption1>
                 )}
@@ -188,18 +194,14 @@ const SendTips = (props: NavProps) => {
 
                 {/* When we have the selected account properties, we will show the available balance and disable the buttons accordingly */}
                 {loadingBalance ? (
-                  <Spinner
-                    style={{ left: 0, marginRight: 'auto' }}
-                    size={16}
-                    color={theme.colors.surfaceBlack}
-                  />
+                  <StyledSpinner style={styles.spinnerPosition} />
                 ) : (
                   <Typography.Body7 style={{ color: theme.colors.accentGreen01 }}>
                     {formatCoins(balance)}
                   </Typography.Body7>
                 )}
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image source={infoIcon} style={{ width: 16, height: 16, marginRight: 4 }} />
+                <HStack alignItems="center">
+                  <Image source={infoIcon} style={styles.infoIcon} />
                   <Typography.Body7
                     style={{
                       color: theme.colors.surfaceBlack,
@@ -207,7 +209,7 @@ const SendTips = (props: NavProps) => {
                     }}>
                     {t('warning fee', { fee: tipFee })}
                   </Typography.Body7>
-                </View>
+                </HStack>
 
                 <Spacer paddingVertical={20}>
                   <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
@@ -223,8 +225,7 @@ const SendTips = (props: NavProps) => {
                 />
                 <Spacer paddingVertical={30}>
                   <Button
-                    loading={sendingTip}
-                    mode={ButtonMode.CONTAINED}
+                    isLoading={sendingTip}
                     size={44}
                     textColor={theme.colors.white}
                     backgroundColor={theme.colors.surfaceBlack}

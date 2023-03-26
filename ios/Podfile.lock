@@ -589,7 +589,7 @@ PODS:
     - FirebaseCoreExtension (= 10.6.0)
     - React-Core
     - RNFBApp
-  - RNFlashList (1.4.1):
+  - RNFlashList (1.4.2):
     - React-Core
   - RNGestureHandler (2.9.0):
     - React-Core
@@ -597,10 +597,10 @@ PODS:
     - React-Core
   - RNLocalize (2.2.4):
     - React-Core
-  - RNNotifee (7.4.0):
+  - RNNotifee (7.6.1):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.4.0)
-  - RNNotifee/NotifeeCore (7.4.0):
+    - RNNotifee/NotifeeCore (= 7.6.1)
+  - RNNotifee/NotifeeCore (7.6.1):
     - React-Core
   - RNPermissions (3.6.1):
     - React-Core
@@ -1038,11 +1038,11 @@ SPEC CHECKSUMS:
   RNFBApp: dd22a306a31189e99126a35962498c83b06520ab
   RNFBDynamicLinks: 31246d22f0bcda1b3022b89c97483fc079cc3025
   RNFBMessaging: 8c6192acc48b9daacbfe9da9cacca8bee740ce46
-  RNFlashList: 8ec7f7454721145fe84566bb9e88bcf58981c9fe
+  RNFlashList: 7fbca4fc075484a9426f1610d648dbea2de94eb0
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNLocalize: 0df7970cfc60389f00eb62fd7c097dc75af3fb4f
-  RNNotifee: da8dcf09f079ea22f46e239d7c406e10d4525a5f
+  RNNotifee: bdc064c29f4d558046f51f0c3ae02bab4fd3cd85
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb

@@ -110,18 +110,17 @@ const SettingsEnableBiometrics = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button
-                loading={loading}
-                color={
-                  !values.password || Object.values(errors).length > 0
-                    ? theme.colors.lightGrey02
-                    : theme.colors.surfaceBlack
-                }
+                isLoading={loading}
+                textColor="white"
+                // TODO: figure out this button's color behavior
+                // color={
+                //   !values.password || Object.values(errors).length > 0
+                //     ? theme.colors.lightGrey02
+                //     : theme.colors.surfaceBlack
+                // }
                 disabled={!values.password || Object.values(errors).length > 0}
-                onPress={handleSubmit}
-                mode="contained">
-                <Typography.Button1 style={styles.confirmButtonText}>
-                  {t('common:next')}
-                </Typography.Button1>
+                onPress={handleSubmit as any}>
+                {t('common:next')}
               </Button>
             </KeyboardAvoidingView>
           </View>

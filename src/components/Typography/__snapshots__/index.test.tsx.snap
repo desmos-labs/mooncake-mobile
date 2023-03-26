@@ -308,26 +308,6 @@ exports[`component: Typography renders Display1 1`] = `
 </Text>
 `;
 
-exports[`component: Typography renders Display1 2`] = `
-<Text
-  style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 64,
-        "fontWeight": "600",
-        "letterSpacing": -0.015,
-      },
-    ]
-  }
->
-  Hello world
-</Text>
-`;
-
 exports[`component: Typography renders Display2 1`] = `
 <Text
   style={

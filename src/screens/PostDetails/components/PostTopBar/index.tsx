@@ -8,7 +8,7 @@ import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import ImageButton from 'components/ImageButton';
-import { followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
+import { block, followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
 import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
 import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
@@ -73,6 +73,13 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         label: t('home:report'),
         onPress: () => handlePressReport(post),
         icon: reportIcon,
+      },
+      {
+        label: t('home:block'),
+        onPress: () => {
+          // TODO: implement
+        },
+        icon: block,
       },
     ];
 

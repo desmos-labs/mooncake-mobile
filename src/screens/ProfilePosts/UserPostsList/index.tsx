@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
-import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { Post } from 'types/posts';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
-import { Center, Spinner, useTheme } from 'native-base';
+import { Center } from 'native-base';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export interface UserPostsListProps {
@@ -48,7 +49,6 @@ export interface UserPostsListProps {
  */
 const UserPostsList = (props: UserPostsListProps) => {
   const styles = useStyles();
-  const theme = useTheme();
 
   const {
     posts,
@@ -92,7 +92,7 @@ const UserPostsList = (props: UserPostsListProps) => {
   if (isLoading) {
     return (
       <View style={styles.contentContainer}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
+        <StyledSpinner />
       </View>
     );
   }
@@ -114,8 +114,8 @@ const UserPostsList = (props: UserPostsListProps) => {
         ListEmptyComponent={emptyComponent}
         ListFooterComponent={
           fetchingMore ? (
-            <Center style={{ marginVertical: theme.spacing.m }}>
-              <Spinner />
+            <Center my="m">
+              <StyledSpinner />
             </Center>
           ) : null
         }

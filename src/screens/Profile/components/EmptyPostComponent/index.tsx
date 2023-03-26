@@ -1,5 +1,5 @@
 import { emptyListPlaceholder } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
@@ -31,9 +31,10 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
       <Spacer paddingVertical={theme.spacing.m} />
       <Button
         onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}
-        size={ButtonSize.M}
-        mode={ButtonMode.OUTLINED}
-        additionalStyle={styles.button}>
+        size={44}
+        variant="outlined"
+        mx="100px"
+        justifyContent="center">
         {buttonLabel}
       </Button>
     </View>
@@ -42,7 +43,6 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
 
 const useStyles = makeStyle(theme => ({
   container: {
-    flex: 1,
     alignSelf: 'center',
     marginTop: theme.spacing.xl,
     backgroundColor: theme.colors.white,

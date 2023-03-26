@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
@@ -9,8 +9,8 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, View } from 'react-native';
-import { Text, useTheme } from 'native-base';
+import { Image } from 'react-native';
+import { Box, Text, useTheme } from 'native-base';
 import { useAppStateValue } from '@recoil/appState';
 import { usePerformImportAccount } from 'screens/Landing/hooks';
 import useStyles from './useStyles';
@@ -78,27 +78,17 @@ const Landing = () => {
         {t('header')}
       </Text>
       <Spacer paddingTop={theme.spacing.m} />
-      <View style={{ alignSelf: 'stretch' }}>
-        <Button
-          mode={ButtonMode.CONTAINED}
-          size={ButtonSize.L}
-          useSubtitle={true}
-          backgroundColor="rgba(255, 255, 255, 0.7)"
-          onPress={onSignUp}>
+      <Box alignSelf="stretch">
+        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={onSignUp}>
           {t('signUp')}
         </Button>
 
         <Spacer paddingVertical={theme.spacing.l}>
-          <Button
-            mode={ButtonMode.CONTAINED}
-            size={ButtonSize.L}
-            useSubtitle={true}
-            backgroundColor="rgba(255, 255, 255, 0.7)"
-            onPress={onSignUpWithWallet}>
+          <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={onSignUpWithWallet}>
             {t('signUp with wallet')}
           </Button>
         </Spacer>
-      </View>
+      </Box>
     </DView>
   );
 };

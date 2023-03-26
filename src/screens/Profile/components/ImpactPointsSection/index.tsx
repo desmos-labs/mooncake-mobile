@@ -1,15 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import { infoIcon } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { HStack, useTheme } from 'native-base';
 import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 /**
@@ -51,7 +52,7 @@ const ImpactPointsSection = () => {
   if (areImpactPointsLoading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
+        <StyledSpinner />
       </View>
     );
   }
@@ -59,30 +60,24 @@ const ImpactPointsSection = () => {
   return (
     <View>
       <View style={styles.container}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <HStack justifyContent="space-between">
           {/* Title with an info icon */}
-          <TouchableOpacity
-            onPress={handleInfoPress}
-            style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Typography.Body6
-              style={{
-                color: theme.colors.surfaceBlack,
-                marginRight: 4,
-              }}>
+          <TouchableOpacity onPress={handleInfoPress} style={styles.infoButton}>
+            <Typography.Body6 style={styles.infoButtonText}>
               {t('convertible points')}
             </Typography.Body6>
-            <FastImage source={infoIcon} style={{ width: 22, height: 22 }} />
+            <FastImage source={infoIcon} style={styles.infoButtonIcon} />
           </TouchableOpacity>
 
           {/* Link to know how to earn impact points */}
           <Button
-            size={ButtonSize.S}
-            mode={ButtonMode.TEXT}
+            size={32}
+            variant="link"
             textColor={theme.colors.butterOrange01}
             onPress={handleHowToEarnPoints}>
             {t('how to earn points')}
           </Button>
-        </View>
+        </HStack>
 
         {/* Margin */}
         <Spacer paddingVertical={theme.spacing.s} />

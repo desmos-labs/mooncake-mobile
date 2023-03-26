@@ -11,8 +11,8 @@ import useUploadPictures, {
 } from 'screens/Modals/UploadProfilePicturesModal/hooks';
 import { useTranslation } from 'react-i18next';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import { useTheme } from 'native-base';
+import Button from 'components/Button';
 import useStyles from './useStyles';
 
 export interface UploadPicturesSuccess {
@@ -83,13 +83,12 @@ const UploadProfilePicturesModal: React.FC<NavProps> = ({ route }) => {
       <View style={styles.innerContainer}>
         <Typography.Body5 style={styles.message}>{uiMessage}</Typography.Body5>
         <Button
-          backgroundColor={theme.colors.surfaceBlack}
+          size={44}
           textColor={theme.colors.white}
-          mode={ButtonMode.CONTAINED}
-          size={ButtonSize.M}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={handleBtnPress}
           disabled={state.type === UploadPictureStateType.Uploading}
-          loading={state.type === UploadPictureStateType.Uploading}>
+          isLoading={state.type === UploadPictureStateType.Uploading}>
           {btnText}
         </Button>
       </View>

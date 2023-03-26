@@ -18,6 +18,19 @@ const useStyles = makeStyle(theme => ({
     paddingTop: theme.spacing.m,
     paddingBottom: theme.spacing.s,
   },
+  sectionListContentContainer: {
+    flexGrow: 1,
+    paddingHorizontal: theme.spacing.m,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  sendAllText: {
+    color: theme.colors.grey01,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
 }));
 
 export default useStyles;

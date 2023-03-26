@@ -4,8 +4,8 @@ import useRefreshSession from 'hooks/apis/useRefreshSession';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { StatusBar, View } from 'react-native';
-import { useTheme } from 'native-base';
+import { StatusBar } from 'react-native';
+import { Box, useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Home from 'screens/Home';
 import { CompositeScreenProps, useRoute } from '@react-navigation/native';
@@ -69,9 +69,9 @@ const HomeTabs = () => {
   );
 
   return (
-    <View
+    <Box
+      flex={1}
       style={{
-        flex: 1,
         backgroundColor: theme.colors.white,
         paddingTop: Math.max(24, top),
       }}>
@@ -83,7 +83,7 @@ const HomeTabs = () => {
         <Tab.Screen name={ROUTES.HOME_TAB_DISCOVER} component={Home} />
         <Tab.Screen name={ROUTES.HOME_TAB_FOLLOWING} component={Home} />
       </Tab.Navigator>
-    </View>
+    </Box>
   );
 };
 

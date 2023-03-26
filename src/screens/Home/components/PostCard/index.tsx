@@ -20,16 +20,16 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Center, useTheme } from 'native-base';
+import { VStack, HStack, Center, useTheme } from 'native-base';
 import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import ToastConfig from 'config/ToastConfig';
-import { useToast } from 'react-native-toast-notifications';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -74,7 +74,7 @@ const PostCard = (props: PostCardProps) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('home');
-  const toast = useToast();
+  const toast = useCustomToast();
   // Unwrap the props
   const {
     post,
@@ -163,9 +163,7 @@ const PostCard = (props: PostCardProps) => {
    */
   const checkUserAndHandleSendTips = useCallback(() => {
     if (isCurrentUserAuthor) {
-      toast.show(t('common:cannot tip yourself'), {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      toast.errorNoRetry(t('common:cannot tip yourself'));
     } else {
       onPressTip();
     }
@@ -178,9 +176,7 @@ const PostCard = (props: PostCardProps) => {
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
   const onPressLike = useCallback(async () => {
     if (isPostPending(post)) {
-      return toast.show(t('toast:postTxInProgress'), {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      return toast.success(t('toast:postTxInProgress'));
     }
     addOrRemoveLike(post);
   }, [addOrRemoveLike, post, t, toast]);
@@ -207,11 +203,11 @@ const PostCard = (props: PostCardProps) => {
   const ProfileInfo = React.useMemo(() => {
     return (
       <View style={styles.profileInfoView}>
-        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onPressAuthor}>
+        <TouchableOpacity style={CommonStyles.flexDirection.row} onPress={onPressAuthor}>
           <FastImage source={getProfilePicture(post.author)} style={styles.profilePic} />
-          <View style={{ flexDirection: 'column' }}>
+          <VStack>
             <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
-            <View style={{ flexDirection: 'row' }}>
+            <HStack>
               <Typography.Body6 style={{ color: theme.colors.midGrey }}>
                 @{post.author.dTag}
               </Typography.Body6>
@@ -222,8 +218,8 @@ const PostCard = (props: PostCardProps) => {
                 }}>
                 {!isPending && `· ${calculatedCreationDate}`}
               </Typography.Body6>
-            </View>
-          </View>
+            </HStack>
+          </VStack>
         </TouchableOpacity>
         <Center justifyContent="flex-start">{PendingIndicator}</Center>
       </View>
@@ -275,13 +271,7 @@ const PostCard = (props: PostCardProps) => {
         {/* the user tipped the post or not. This has been done for the following reasons: */}
         {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
         {/* 2. It's extremely hard to implement, and completely useless in the first place */}
-        <TouchableOpacity
-          onPress={checkUserAndHandleSendTips}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: theme.spacing.s,
-          }}>
+        <TouchableOpacity onPress={checkUserAndHandleSendTips} style={styles.tipButton}>
           <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
           <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
             {t('tip')}

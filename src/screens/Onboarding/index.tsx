@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { bgonboarding, onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -14,7 +14,8 @@ import { Animated as ClassicAnimated, Dimensions, View } from 'react-native';
 import { ScalingDot } from 'react-native-animated-pagination-dots';
 import FastImage, { Source } from 'react-native-fast-image';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);
@@ -113,7 +114,7 @@ const Onboarding = () => {
           </Spacer>
           <Typography.H3>{item.title}</Typography.H3>
           <Spacer paddingVertical={theme.spacing.s} />
-          <Typography.Body6 style={{ textAlign: 'center' }}>{item.subtitle}</Typography.Body6>
+          <Typography.Body6 style={CommonStyles.textAlign.center}>{item.subtitle}</Typography.Body6>
         </View>
       );
     },
@@ -126,23 +127,20 @@ const Onboarding = () => {
       style={styles.root}
       topBar={
         <TopBar
-          style={{ zIndex: 2 }}
+          style={styles.topBar}
           noBackButton={true}
           rightElement={
             selected !== 3 ? (
               <Button
                 onPress={() => navigateToCorrectScreen()}
-                mode={ButtonMode.TEXT}
+                variant="link"
                 size={26}
-                additionalStyle={{
-                  right: 0,
-                  marginLeft: 'auto',
-                  marginVertical: theme.spacing.s,
-                }}>
+                ml="auto"
+                my="s">
                 {t('skip')}
               </Button>
             ) : (
-              <View style={{ height: 45 }} />
+              <Box height="45px" />
             )
           }
         />
@@ -153,7 +151,7 @@ const Onboarding = () => {
       <AnimatedPagerView
         testID="onboardingPagerView"
         ref={ref}
-        style={{ flex: 1 }}
+        style={CommonStyles.flex[1]}
         initialPage={0}
         onPageScroll={onPageScroll}
         onPageSelected={(selectedEvent: any) => setSelected(selectedEvent.nativeEvent.position)}>
@@ -164,7 +162,6 @@ const Onboarding = () => {
       {selected === 3 ? (
         <View style={{ marginHorizontal: theme.spacing.m }}>
           <Button
-            mode={ButtonMode.CONTAINED}
             backgroundColor={theme.colors.surfaceBlack}
             textColor={theme.colors.white}
             size={44}

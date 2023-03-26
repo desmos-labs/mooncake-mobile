@@ -3,7 +3,8 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import { View } from 'react-native';
 import FastImage, { Source } from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { HStack, useTheme, VStack } from 'native-base';
+import useStyles from './useStyles';
 
 interface Props {
   image: Source;
@@ -14,29 +15,15 @@ interface Props {
 
 const StepComponent = ({ image, number, text, disableLine }: Props) => {
   const theme = useTheme();
+  const styles = useStyles();
 
   return (
-    <View style={{ flexDirection: 'row' }}>
-      <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-        <FastImage source={image} style={{ height: 32, width: 32 }} />
-        {!disableLine && (
-          <View
-            style={{
-              marginVertical: theme.spacing.s,
-              height: 16,
-              width: 1.5,
-              backgroundColor: theme.colors.butterOrange03,
-            }}
-          />
-        )}
-      </View>
-      <View
-        style={{
-          height: 32,
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          alignContent: 'center',
-        }}>
+    <HStack>
+      <VStack alignItems="center">
+        <FastImage source={image} style={styles.image} />
+        {!disableLine && <View style={styles.disabledContainer} />}
+      </VStack>
+      <View style={styles.container}>
         <Typography.Subtitle2 style={{ marginHorizontal: theme.spacing.m }}>
           {number}
         </Typography.Subtitle2>
@@ -44,7 +31,7 @@ const StepComponent = ({ image, number, text, disableLine }: Props) => {
           <Trans i18nKey={text} components={[<Typography.Subtitle2 />]} />
         </Typography.Body5>
       </View>
-    </View>
+    </HStack>
   );
 };
 

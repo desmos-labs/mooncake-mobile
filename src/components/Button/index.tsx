@@ -1,84 +1,118 @@
-import React from 'react';
-import { StyleProp, ViewProps, ViewStyle } from 'react-native';
-// @ts-ignore Ignoring errors since typescript does not recognize the alias
-import GenericButton from 'components/Button/components/GenericButton'; // eslint-disable-line import/no-unresolved
-import useStyles from './useStyles';
+import React, { memo } from 'react';
+import { Button as NBButton, useTheme, useToken } from 'native-base';
+import { ColorType } from 'native-base/lib/typescript/components/types';
+import _ from 'lodash';
+import { StyleProp, StyleSheet, TextStyle } from 'react-native';
+import { TypographyStyles } from 'components/Typography';
 
-/** Defined Figma modes
- *  CONTAINED = 'contained',
- *  OUTLINED = 'outlined',
- *  TEXT = 'text',
- */
-export enum ButtonMode {
-  CONTAINED = 'contained',
-  OUTLINED = 'outlined',
-  TEXT = 'text',
-}
+interface Props
+  extends Omit<
+    React.ComponentProps<typeof NBButton>,
+    'shadow' | '_pressed' | 'hover' | 'opacity' | 'color' | 'colorScheme' | '_text'
+  > {
+  /**
+   * The relative height of the button.
+   */
+  size?: 26 | 32 | 44 | 56;
 
-/** Defined Figma sized
- *   XS = 26,
- *   S = 32,
- *   M = 44,
- *   L = 56,
- */
-export enum ButtonSize {
-  XS = 26,
-  S = 32,
-  M = 44,
-  L = 56,
-}
+  /**
+   * The text that will be rendered on the button.
+   */
+  children?: string;
 
-/**
- * Button props
- * @typedef {Object} ButtonProps
- * @property {ButtonMode} mode - Defined Figma modes
- * @property {ButtonSize} size - Defined Figma sized
- * @property {() => void} onPress - On press function
- * @property {boolean} disabled - Disable button
- * @property {StyleProp<ViewStyle>} additionalStyle - Additional style
- * @property {string} backgroundColor - Background color, default white
- * @property {string} textColor - Text color, default surfaceBlack
- * @property {boolean} useSubtitle - Use subtitle2 instead of button2 as text component
- * @property {boolean} loading - Display a loading component (be sure to increment the width dinamically inside small buttons)
- */
-export interface ButtonProps extends ViewProps {
-  mode: ButtonMode;
-  size: ButtonSize;
-  onPress: () => void;
-  disabled?: boolean;
-  additionalStyle?: StyleProp<ViewStyle>;
-  backgroundColor?: string;
-  textColor?: string;
-  useSubtitle?: boolean;
-  loading?: boolean;
+  /**
+   * Optionally override the default button text color.
+   */
+  textColor?: ColorType;
+
+  /**
+   * Change the background color of the button.
+   */
+  backgroundColor?: ColorType;
+
+  /**
+   * Change the outline/border color of the button. Only relevant for outlined variant.
+   */
+  borderColor?: ColorType;
+
+  /**
+   * What to do when the button is pressed.
+   */
+  onPress?: () => void;
 }
 
 /**
- * This HOC should be used to have a correct animation of the button in iOS as well,
- * since the Pressable does not have a consistent animation with both operating systems
- * @param props ButtonProps
+ * A button component based on the native-base Button.
+ * @constructor
  */
-const Button = ({ children, ...rest }: ButtonProps) => {
-  const styles = useStyles();
+const Button = ({
+  size = 56,
+  variant = 'solid',
+  backgroundColor,
+  borderColor,
+  textColor,
+  children,
+  ...rest
+}: Props) => {
+  const theme = useTheme();
+  const defaultTextColor = useToken('colors', ['surfaceBlack'][0]);
 
-  const styleMap: { [index: string]: any } = {
-    [ButtonMode.TEXT]: styles.text,
-    [ButtonMode.CONTAINED]: styles.contained,
-    [ButtonMode.OUTLINED]: styles.outlined,
-  };
+  const buttonTypography = React.useMemo(() => {
+    const sizeToTypographyMap: { [index: number]: StyleProp<TextStyle> } = {
+      56: TypographyStyles.Subtitle2,
+      44: TypographyStyles.Button2,
+      32: TypographyStyles.Button3,
+      26: TypographyStyles.Button3,
+    };
 
-  const sizeMap: { [index: string]: any } = {
-    [ButtonSize.XS]: styles.h26,
-    [ButtonSize.S]: styles.h32,
-    [ButtonSize.M]: styles.h44,
-    [ButtonSize.L]: styles.h56,
-  };
+    const typographyStyle = sizeToTypographyMap[size as number];
+
+    return {
+      _text: StyleSheet.flatten([
+        typographyStyle,
+        {
+          color: textColor || defaultTextColor,
+          numberOfLines: 1,
+        },
+      ]),
+    };
+  }, [defaultTextColor, size, textColor]);
+
+  const buttonStyle = React.useMemo(() => {
+    const backgroundColorFromTheme = _.get(theme, `colors.${backgroundColor}`, backgroundColor);
+    const borderColorFromTheme = _.get(theme, `colors.${borderColor}`, borderColor);
+
+    const variantStyleMap: { [index: string]: any } = {
+      solid: {
+        backgroundColor: backgroundColorFromTheme || theme.colors.primary,
+      },
+      link: {
+        textDecorationLine: 'none',
+      },
+      outlined: {
+        borderColor: borderColorFromTheme || theme.colors.surfaceBlack,
+        borderWidth: 1,
+      },
+    };
+
+    return variantStyleMap[variant as string];
+  }, [backgroundColor, borderColor, theme, variant]);
 
   return (
-    <GenericButton styleMap={styleMap} sizeMap={sizeMap} {...rest}>
+    <NBButton
+      py={`${size / 4}px`}
+      isDisabled={rest.disabled || rest.isDisabled}
+      _disabled={{
+        backgroundColor: 'tabIconGrey',
+      }}
+      {...buttonTypography}
+      // can ignore this error as variant has a default value of solid
+      // @ts-ignore
+      {...buttonStyle}
+      {...rest}>
       {children}
-    </GenericButton>
+    </NBButton>
   );
 };
 
-export default Button;
+export default memo(Button);

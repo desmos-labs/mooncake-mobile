@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -9,9 +9,8 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import { Account } from 'types/account';
 import { Wallet } from 'types/wallet';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
@@ -111,10 +110,10 @@ const SaveAccount = ({ navigation }: NavProps) => {
 
   return (
     <DView style={styles.root} backgroundImage={accountCreatedBg} backgroundFillScreen={true}>
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+      <Box flex={1} justifyContent="center">
         <FastImage resizeMode="cover" source={accountCreatedIcon} style={styles.image} />
         <Spacer paddingTop={60} />
-        <View style={{ alignItems: 'center' }}>
+        <Box alignItems="center">
           {saving ? (
             <Typography.H4>{t('saving account')}</Typography.H4>
           ) : error !== undefined ? (
@@ -130,12 +129,11 @@ const SaveAccount = ({ navigation }: NavProps) => {
               <Typography.Body6>{t('profile created')}</Typography.Body6>
             </>
           )}
-        </View>
+        </Box>
         <Spacer paddingTop={60} />
         {!saving && (
           <Button
-            mode={ButtonMode.CONTAINED}
-            size={ButtonSize.M}
+            size={44}
             backgroundColor={theme.colors.surfaceBlack}
             textColor={theme.colors.white}
             onPress={resetToHome}>
@@ -143,7 +141,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
           </Button>
         )}
         <Spacer paddingTop={theme.spacing.m} />
-      </View>
+      </Box>
     </DView>
   );
 };

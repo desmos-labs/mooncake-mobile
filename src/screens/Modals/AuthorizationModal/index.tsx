@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -10,6 +10,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Spacer from 'components/Spacer';
 import { useTheme } from 'native-base';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type AuthorizationModalParams = {
@@ -76,7 +77,7 @@ const AuthorizationModal = () => {
       />
       <View style={styles.innerContainer}>
         <Spacer paddingBottom={16}>
-          <Typography.H4 style={{ textAlign: 'center' }}>{t('permissions')}</Typography.H4>
+          <Typography.H4 style={CommonStyles.textAlign.center}>{t('permissions')}</Typography.H4>
         </Spacer>
 
         <Typography.Body5>{t('permissions modal subtitle')}</Typography.Body5>
@@ -87,16 +88,15 @@ const AuthorizationModal = () => {
           <Button
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
-            mode={ButtonMode.CONTAINED}
-            size={ButtonSize.M}
+            size={44}
             onPress={onPressPrimaryButton}>
             {t('common:yes')}
           </Button>
           <Spacer paddingTop={theme.spacing.m}>
             <Button
               textColor={theme.colors.surfaceBlack}
-              mode={ButtonMode.OUTLINED}
-              size={ButtonSize.M}
+              variant="outlined"
+              size={44}
               onPress={onPressSecondaryButton}>
               {t('common:no')}
             </Button>

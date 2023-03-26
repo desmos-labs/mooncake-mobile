@@ -1,9 +1,6 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import Typography from 'components/Typography';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'native-base';
-import useStyles from './useStyles';
+import Button from 'components/Button';
 
 export interface FollowUnfollowButtonProps {
   /**
@@ -22,23 +19,28 @@ export interface FollowUnfollowButtonProps {
  */
 const FollowUnfollowButton = (props: FollowUnfollowButtonProps) => {
   const { t } = useTranslation('profile');
-  const theme = useTheme();
-  const styles = useStyles();
-
   const { isFollowing, onPress } = props;
 
   return isFollowing ? (
-    <TouchableOpacity style={styles.unfollowButton} onPress={onPress}>
-      <Typography.Subtitle4 style={{ color: theme.colors.surfaceBlack }}>
-        {t('following')}
-      </Typography.Subtitle4>
-    </TouchableOpacity>
+    <Button
+      mt="s"
+      backgroundColor="surfaceGrey"
+      minWidth="80px"
+      size={32}
+      onPress={onPress}
+      textColor="surfaceBlack">
+      {t('following')}
+    </Button>
   ) : (
-    <TouchableOpacity style={styles.followButton} onPress={onPress}>
-      <Typography.Subtitle4 style={{ color: theme.colors.white }}>
-        {t('follow')}
-      </Typography.Subtitle4>
-    </TouchableOpacity>
+    <Button
+      mt="s"
+      backgroundColor="surfaceBlack"
+      minWidth="80px"
+      size={32}
+      onPress={onPress}
+      textColor="white">
+      {t('follow')}
+    </Button>
   );
 };
 

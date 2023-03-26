@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import CustomRadioGroup, { RadioValue } from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -10,7 +10,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
@@ -18,6 +18,8 @@ import useReportPost from 'hooks/reports/useReportPost';
 import FastImage from 'react-native-fast-image';
 import { reportSuccessIcon } from 'assets/images';
 import { isPostAlreadyReportedError } from 'types/error';
+import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -109,7 +111,7 @@ const ReportPost = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={CommonStyles.flex[1]}
       keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <BottomUpModalWrapper goBack={goBack}>
@@ -143,14 +145,13 @@ const ReportPost = () => {
             <Spacer paddingVertical={30}>
               {loading ? (
                 <View style={styles.loadingView}>
-                  <ActivityIndicator color={theme.colors.surfaceBlack} />
+                  <StyledSpinner />
                 </View>
               ) : (
                 <Button
                   size={44}
                   backgroundColor={theme.colors.surfaceBlack}
                   textColor={theme.colors.white}
-                  mode={ButtonMode.CONTAINED}
                   onPress={onSubmit}>
                   {t('submit')}
                 </Button>

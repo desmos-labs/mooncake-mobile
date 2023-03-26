@@ -1,21 +1,11 @@
 import React from 'react';
-import { View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Box } from 'native-base';
 
+/**
+ * This component was refactored for compatibility, but consider replacing it entirely with native-base's Divider component
+ */
 const ItemSeparatorComponent = () => {
-  const theme = useTheme();
-
-  return (
-    <View
-      style={{
-        // padding won't work for some reason
-        marginHorizontal: theme.spacing.m,
-        height: 1,
-        backgroundColor: theme.colors.surfaceGrey,
-        marginVertical: theme.spacing.m,
-      }}
-    />
-  );
+  return <Box mx="m" height="1px" backgroundColor="surfaceGrey" my="m" />;
 };
 
 export default ItemSeparatorComponent;

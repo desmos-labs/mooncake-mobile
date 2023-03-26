@@ -9,11 +9,12 @@ import Typography from 'components/Typography';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
-import { Divider, Skeleton, Spinner, useTheme } from 'native-base';
+import { Divider, Skeleton, useTheme } from 'native-base';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { CompleteNotification } from 'types/notifications';
 import { useSetAppStateValue } from '@recoil/appState';
+import StyledSpinner from 'components/StyledSpinner';
 import { useKeyExtractor, useSplitNotificationsByWeek } from './hooks';
 import useStyles from './useStyles';
 
@@ -112,11 +113,7 @@ const Activities = () => {
   // Component shown at the bottom tof the page
   const FooterComponent = useMemo(() => {
     if (fetchingMore) {
-      return (
-        <View style={{ padding: theme.spacing.m }}>
-          <Spinner />
-        </View>
-      );
+      return <StyledSpinner p="m" />;
     } else {
       return null;
     }

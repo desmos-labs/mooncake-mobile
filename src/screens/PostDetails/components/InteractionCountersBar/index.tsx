@@ -3,9 +3,10 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Spinner, useTheme } from 'native-base';
+import { Box } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 type Props = {
@@ -22,7 +23,6 @@ type Props = {
  */
 const InteractionCountersBar = (props: Props) => {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation('postDetails');
 
   const { loading, interactionAuthors, tipsCounter, likesCounter, handlePressCounters } = props;
@@ -37,12 +37,12 @@ const InteractionCountersBar = (props: Props) => {
   }, [interactionAuthors.length]);
 
   return loading ? (
-    <Spinner color={theme.colors.surfaceBlack} />
+    <StyledSpinner />
   ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
         {interactionAuthors[0] && (
-          <View style={{ width: calculatedWidth, height: 30 }}>
+          <Box width={calculatedWidth} height="30px">
             {interactionAuthors.map((value, index) => {
               return (
                 <FastImage
@@ -52,7 +52,7 @@ const InteractionCountersBar = (props: Props) => {
                 />
               );
             })}
-          </View>
+          </Box>
         )}
         <Typography.Button2 style={styles.text}>
           {t('likes and tips', { likesCounter, tipsCounter })}

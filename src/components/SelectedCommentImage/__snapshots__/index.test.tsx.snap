@@ -83,7 +83,7 @@ exports[`component: SelectedCommentImage renders 1`] = `
         <Image
           source={
             {
-              "testUri": "../../../src/assets/images/whiteCross.png",
+              "testUri": "../../../src/assets/images/delete.png",
             }
           }
           style={

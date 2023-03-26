@@ -1,7 +1,5 @@
 import { DocumentNode, useSubscription } from '@apollo/client';
 import { useCallback, useRef } from 'react';
-import ToastConfig from 'config/ToastConfig';
-import { useToast } from 'react-native-toast-notifications';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +12,7 @@ import FollowingPostsCount from 'services/graphql/subscriptions/FollowingPostsCo
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { debounce } from 'lodash';
 import ROUTES from 'navigation/routes';
+import useCustomToast from 'hooks/extended/useCustomToast';
 
 /**
  * Hook that allows to observe a generic posts count subscription,
@@ -67,7 +66,7 @@ const usePostsCountSubscription = <TVariables = OperationVariables>(
  */
 const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
   const { t } = useTranslation('home');
-  const toast = useToast();
+  const toast = useCustomToast();
   const isFocused = useIsFocused();
   const { name: routeName } = useRoute<NavProps['route']>();
 
@@ -77,9 +76,8 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
   const onNewDiscoveryPosts = useCallback(() => {
     if (!isFocused || routeName !== ROUTES.HOME_TAB_DISCOVER) return;
     console.log('Received new discover posts');
-    toast.show(t('newDiscoverPost'), {
-      type: ToastConfig.SUCCESS,
-      onPress: onPressNotification,
+    toast.success(t('newDiscoverPost'), {
+      handlePressToast: onPressNotification,
     });
   }, [isFocused, onPressNotification, routeName, t, toast]);
 
@@ -100,7 +98,7 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
  */
 const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
   const { t } = useTranslation('home');
-  const toast = useToast();
+  const toast = useCustomToast();
   const isFocused = useIsFocused();
   const { name: routeName } = useRoute<NavProps['route']>();
 
@@ -110,9 +108,8 @@ const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
   const onNewFollowingPosts = useCallback(() => {
     if (!isFocused || routeName !== ROUTES.HOME_TAB_FOLLOWING) return;
     console.log('Received new followers posts');
-    toast.show(t('newFollowingPost'), {
-      type: ToastConfig.SUCCESS,
-      onPress: onPressNotification,
+    toast.success(t('newFollowingPost'), {
+      handlePressToast: onPressNotification,
     });
   }, [isFocused, onPressNotification, routeName, t, toast]);
 

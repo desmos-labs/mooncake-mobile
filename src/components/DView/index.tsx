@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Edge, SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type Props = SafeAreaViewProps & {
@@ -62,7 +63,6 @@ const DView: React.FC<Props> = props => {
     edges,
     showLoadingOverlay,
     onBackgroundPress,
-    backgroundFillScreen,
     onTouchStart,
     ...rest
   } = props;
@@ -91,10 +91,7 @@ const DView: React.FC<Props> = props => {
             {...statusBarProps}
           />
           {backgroundImage !== undefined && (
-            <ImageBackground
-              style={[styles.background, backgroundFillScreen && { bottom: 0, height: undefined }]}
-              source={backgroundImage}
-            />
+            <ImageBackground style={styles.background} source={backgroundImage} />
           )}
           {topBar}
           <Animated.View entering={FadeIn.duration(250)} style={[styles.content, style]}>
@@ -115,7 +112,7 @@ const DView: React.FC<Props> = props => {
                 {/*
               this View will save the world (ScrollView behavior back to work normally as intended on iOS)
               */}
-                <View onStartShouldSetResponder={() => true} style={{ flex: 1 }}>
+                <View onStartShouldSetResponder={() => true} style={CommonStyles.flex[1]}>
                   {children}
                 </View>
               </ScrollView>

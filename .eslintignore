@@ -7,3 +7,7 @@ jest
 *.tsx.snap
 
 e2e
+
+coverage
+
+*.stories.tsx

@@ -1,5 +1,4 @@
 import Button from 'components/Button';
-import Typography from 'components/Typography';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -36,12 +35,10 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
     <View style={styles.buttonView}>
       <Button
         onPress={handleButtonPress}
-        mode="outlined"
-        color={isFollowing ? theme.colors.surfaceBlack : theme.colors.butterOrange01}
+        variant="outlined"
+        backgroundColor={isFollowing ? theme.colors.surfaceBlack : theme.colors.butterOrange01}
         style={styles.button}>
-        <Typography.Button3 style={styles.buttonText}>
-          {t(isFollowing ? 'unfollow' : 'follow')}
-        </Typography.Button3>
+        {t(isFollowing ? 'unfollow' : 'follow')}
       </Button>
     </View>
   );

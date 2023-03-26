@@ -25,6 +25,10 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'cover',
     borderRadius: theme.roundness,
   },
+  nftImageContainer: {
+    width: '100%',
+    height: 332,
+  },
   backgroundImage: {
     width: '100%',
     resizeMode: 'cover',
@@ -34,6 +38,10 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     width: '100%',
     height: 400,
+  },
+  safeAreaView: {
+    backgroundColor: theme.colors.white,
+    flex: 1,
   },
 }));
 

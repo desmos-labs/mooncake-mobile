@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
 import BackButton from 'components/BackButton';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
@@ -26,8 +26,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useResetSignUpState } from '@recoil/screens/signUpState';
-import { useToast } from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import {
   SignUpStatus,
   useHandlePressPrivacyPolicy,
@@ -50,7 +49,7 @@ const Signup = () => {
   const { navigate, goBack } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
-  const toast = useToast();
+  const toast = useCustomToast();
 
   // Form validation
   const validationSchema = useValidationSchema();
@@ -82,9 +81,7 @@ const Signup = () => {
   const onError = useCallback(
     (error: Error) => {
       // TODO: Show the error here, maybe in a modal
-      toast.show(error.message, {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      toast.errorNoRetry(error.message);
     },
     [toast],
   );
@@ -245,7 +242,7 @@ const Signup = () => {
                 </View>
                 <Button
                   onPress={handleSubmit}
-                  loading={loading}
+                  isLoading={loading}
                   backgroundColor={theme.colors.surfaceBlack}
                   size={44}
                   textColor={theme.colors.white}
@@ -254,8 +251,7 @@ const Signup = () => {
                     !values.consent ||
                     !values.inviteCode ||
                     _.flatten(Object.values(errors)).length > 0
-                  }
-                  mode={ButtonMode.CONTAINED}>
+                  }>
                   {t('common:next')}
                 </Button>
               </>

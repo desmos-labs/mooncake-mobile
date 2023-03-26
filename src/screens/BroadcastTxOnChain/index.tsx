@@ -14,12 +14,11 @@ import { EncodeObject } from '@desmoslabs/desmjs';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/Button';
 import { isCanceledOperationError } from 'types/error';
 import { Wallet } from 'types/wallet';
 import { useTheme } from 'native-base';
-import { useToast } from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import { PendingTransaction } from 'types/transactions';
 import useEstimateTransactionFees from 'hooks/transactions/useEstimateTransactionFees';
 import useBroadcastTx from './useBroadcastTx';
@@ -65,7 +64,7 @@ const BroadcastTxOnChain: React.FC = () => {
   // --- Hooks
   // -----------------------------------------------------------------------
 
-  const toast = useToast();
+  const toast = useCustomToast();
   const estimateFees = useEstimateTransactionFees();
   const broadcastTx = useBroadcastTx();
 
@@ -124,9 +123,7 @@ const BroadcastTxOnChain: React.FC = () => {
       setBroadcastingTx(false);
 
       if (result.isErr() && !isCanceledOperationError(result.error)) {
-        toast.show(result.error.message, {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
+        toast.success(result.error.message);
       } else if (result.isOk() && onSuccess) {
         onSuccess(result.value);
       }
@@ -154,6 +151,8 @@ const BroadcastTxOnChain: React.FC = () => {
         {!broadcastingTx && (
           <>
             {/* TODO: Create a proper UI to display the tx messages */}
+            {/* ignored as component is temporary */}
+            {/* eslint-disable-next-line react-native/no-inline-styles */}
             <ScrollView style={{ minHeight: '80%', flex: 1 }}>
               <Typography.Body5>{JSON.stringify(messages)}</Typography.Body5>
             </ScrollView>
@@ -174,12 +173,11 @@ const BroadcastTxOnChain: React.FC = () => {
         )}
       </View>
       <Button
-        mode={ButtonMode.CONTAINED}
-        size={ButtonSize.M}
+        size={44}
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={handleBroadcastTx}
-        loading={broadcastingTx}
+        isLoading={broadcastingTx}
         disabled={estimatingFees || feesResult?.isErr() || broadcastingTx}>
         {t('broadcast tx')}
       </Button>

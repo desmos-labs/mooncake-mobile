@@ -1,25 +1,25 @@
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import ToastConfig from 'config/ToastConfig';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'native-base';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import { useSetting } from '@recoil/settings';
 import useClearUserData from 'hooks/useClearUserData';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
 import { BiometricAuthorizations } from 'types/settings';
 import useOnSubmitPassword from 'screens/Login/hooks';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
@@ -49,7 +49,7 @@ const Login = () => {
 
   const navigateToHome = useNavigateToHome();
 
-  const toast = useToast();
+  const toast = useCustomToast();
   const areBiometricsEnabled = useSetting('biometrics');
   const clearUserData = useClearUserData();
 
@@ -98,7 +98,7 @@ const Login = () => {
     const loginResult = await onSubmitPassword(biometricsPassword);
     if (loginResult.isErr()) {
       setBiometricsLoading(false);
-      toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
+      toast.errorNoRetry(t('toast:errorLogin'));
       return;
     }
 
@@ -115,7 +115,7 @@ const Login = () => {
     const loginResult = await onSubmitPassword(password);
     if (loginResult.isErr()) {
       setLoading(false);
-      toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
+      toast.errorNoRetry(t('toast:errorLogin'));
       return;
     }
 
@@ -149,8 +149,8 @@ const Login = () => {
       backgroundFillScreen
       style={styles.container}>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
+        style={CommonStyles.flex[1]}
+        contentContainerStyle={CommonStyles.flexGrow[1]}
         keyboardVerticalOffset={Platform.OS === 'ios' ? -100 : 0}
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}>
         <Image source={butterflyLandingIcon} style={styles.logo} />
@@ -175,12 +175,11 @@ const Login = () => {
             <Button
               size={56}
               textColor="white"
-              backgroundColor="transparent"
               disabled={loading || !password}
-              loading={loading}
+              isLoading={loading}
               onPress={handleSubmit}
-              additionalStyle={{ borderColor: theme.colors.white }}
-              mode={ButtonMode.OUTLINED}>
+              borderColor={theme.colors.white}
+              variant="outlined">
               {t('common:confirm')}
             </Button>
           </Spacer>
