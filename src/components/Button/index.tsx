@@ -76,7 +76,7 @@ const Button = ({
         },
       ]),
     };
-  }, [size, textColor]);
+  }, [defaultTextColor, size, textColor]);
 
   const buttonStyle = React.useMemo(() => {
     const backgroundColorFromTheme = _.get(theme, `colors.${backgroundColor}`, backgroundColor);

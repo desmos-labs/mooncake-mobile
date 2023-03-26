@@ -203,7 +203,7 @@ const ProfileOperations = () => {
         <StyledSpinner />
       </Center>
     );
-  }, [fetchingMore, theme.spacing.s]);
+  }, [fetchingMore]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
