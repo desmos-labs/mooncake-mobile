@@ -22,7 +22,7 @@ const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
       </View>
       {additionalButton && handleButton && (
-        <Button size={44} textColor="white" onPress={handleButton} mt="xl" mx={80}>
+        <Button size={44} textColor="white" onPress={handleButton} mt="xl" mx="80px">
           {buttonLabel}
         </Button>
       )}

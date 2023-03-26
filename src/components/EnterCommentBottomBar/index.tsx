@@ -156,7 +156,7 @@ const EnterCommentBottomBar = (props: Props) => {
         size={26}
         p={0}
         width={71}
-        ml={12}
+        ml="12px"
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
         disabled={attachment ? false : comment.length === 0}

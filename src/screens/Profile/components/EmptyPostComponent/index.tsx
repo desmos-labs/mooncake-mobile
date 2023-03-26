@@ -33,7 +33,7 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
         onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}
         size={44}
         variant="outlined"
-        mx={100}
+        mx="100px"
         justifyContent="center">
         {buttonLabel}
       </Button>

@@ -199,7 +199,7 @@ const ProfileOperations = () => {
     }
 
     return (
-      <Center my={theme.spacing.s}>
+      <Center my="s">
         <StyledSpinner />
       </Center>
     );
