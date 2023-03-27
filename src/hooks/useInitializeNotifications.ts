@@ -34,10 +34,8 @@ const useInitializeNotifications = () => {
   const handleNotificationPressEvent = useHandleNotificationPressEvent();
 
   const manageInitialNotifications = useCallback(async () => {
-    console.log('manageInitialNotifications');
     const initialNotification = await notifee.getInitialNotification();
     if (initialNotification) {
-      console.log('initialNotification', initialNotification);
       // iOS Badges
       const actualBadgeCount = await notifee.getBadgeCount();
       await notifee.setBadgeCount(actualBadgeCount - 1);
