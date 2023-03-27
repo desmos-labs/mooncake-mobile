@@ -16,7 +16,6 @@ import AppSilent from './AppSilent';
 
 // Notification creation for both iOS and Android
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
   const notification = parseRemoteNotification(remoteMessage.data);
   if (isSocialNotification(notification)) {
     await createBackgroundNotificationData(notification);
