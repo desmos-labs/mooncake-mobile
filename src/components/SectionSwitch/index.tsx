@@ -34,11 +34,11 @@ const SectionSwitch: React.FC<Props> = props => {
         {label}
       </Typography.Button1>
       <Switch
-        value={value}
+        isChecked={value}
         trackColor={{ true: theme.colors.butterOrange01 }}
         thumbColor="white"
-        disabled={disabled}
-        onValueChange={onValueChange}
+        isDisabled={disabled}
+        onToggle={onValueChange}
       />
     </View>
   );
