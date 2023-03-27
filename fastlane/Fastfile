@@ -4,6 +4,7 @@ PROJECT_NAME = "Butter"
 # Common variable
 VERSION_OVERRIDE = ENV['VERSION_OVERRIDE']
 ENV_FILE = '../.env'
+ENV_TESTING_BASE64 = ENV['ENV_TESTING_BASE64']
 
 # iOS variables
 XCODE_PROJECT = "./ios/#{PROJECT_NAME}.xcodeproj"
@@ -348,9 +349,8 @@ platform :common do
     sh("rm #{ENV_FILE} || echo #{ENV_FILE} not present")
 
     sh(
-        command: "printf '#{ENV_TESTING_BASE64}' | base64 --decode >> #{ENV_FILE}",
-        log: false
+          command: "printf '#{ENV_TESTING_BASE64}' | base64 --decode >> '#{ENV_FILE}'",
+          log: false
     )
-
   end
 end
