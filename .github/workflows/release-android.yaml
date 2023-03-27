@@ -54,7 +54,7 @@ jobs:
         id: version-info
         run: bundle exec fastlane common populate_github_env
         env:
-          VERSION_OVERRIDE: 0.0.1-RC01
+          VERSION_OVERRIDE: 0.0.1-RC1
 
       - name: Install yarn dependencies 🔨
         run: yarn install --immutable
@@ -71,7 +71,7 @@ jobs:
           ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
           ANDROID_SIGNING_ALIAS: ${{ secrets.ANDROID_SIGNING_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
-          VERSION_OVERRIDE: 0.0.1-RC01
+          VERSION_OVERRIDE: 0.0.1-RC1
 
       - name: Build apk 🔨
         run: bundle exec fastlane android build_apk
@@ -80,13 +80,13 @@ jobs:
           ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
           ANDROID_SIGNING_ALIAS: ${{ secrets.ANDROID_SIGNING_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
-          VERSION_OVERRIDE: 0.0.1-RC01
+          VERSION_OVERRIDE: 0.0.1-RC1
 
       - name: Deploy on Play Store 🚀
         run: bundle exec fastlane android deploy_bundle
         env:
           PLAYSTORE_JSON_KEY: ${{ secrets.PLAYSTORE_JSON_KEY_BASE64 }}
-          VERSION_OVERRIDE: 0.0.1-RC01
+          VERSION_OVERRIDE: 0.0.1-RC1
 
       - name: Upload apks to release 🚀
         uses: svenstaro/upload-release-action@v2
