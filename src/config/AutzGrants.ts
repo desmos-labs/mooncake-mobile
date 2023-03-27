@@ -3,6 +3,7 @@ import {
   MsgAddReactionTypeUrl,
   MsgCreatePostTypeUrl,
   MsgCreateRelationshipTypeUrl,
+  MsgCreateReportTypeUrl,
   MsgDeletePostTypeUrl,
   MsgDeleteRelationshipTypeUrl,
   MsgRemovePostAttachmentTypeUrl,
@@ -13,19 +14,26 @@ import {
 export const MsgExecuteContractTypeUrl = '/cosmwasm.wasm.v1.MsgExecuteContract';
 
 export const RequiredMessageTypesGrant = [
-  // Editing profile permission
+  // Profiles
   MsgSaveProfileTypeUrl,
+
+  // Relationships
+  MsgCreateRelationshipTypeUrl,
+  MsgDeleteRelationshipTypeUrl,
+
   // Post permissions
   MsgCreatePostTypeUrl,
   MsgAddPostAttachmentTypeUrl,
   MsgRemovePostAttachmentTypeUrl,
   MsgDeletePostTypeUrl,
-  // Follow unfollow permissions
-  MsgCreateRelationshipTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
+
   // Reactions
   MsgAddReactionTypeUrl,
   MsgRemoveReactionTypeUrl,
+
+  // Reports
+  MsgCreateReportTypeUrl,
+
   // Contract execution permission
   MsgExecuteContractTypeUrl,
 ];

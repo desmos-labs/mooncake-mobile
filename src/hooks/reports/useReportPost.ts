@@ -47,9 +47,7 @@ const useReportPost = (post: Post) => {
       };
 
       // Broadcast the transaction
-      return broadcastTx([msg], {
-        optimistic: true,
-      });
+      return broadcastTx([msg]);
     },
     [activeAddress, broadcastTx, hasReportedPost, post.id, post.subspaceId],
   );
