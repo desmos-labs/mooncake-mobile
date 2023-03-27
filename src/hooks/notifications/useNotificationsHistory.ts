@@ -11,7 +11,7 @@ import {
   CompleteReplyReactionNotification,
   NotificationType,
 } from 'types/notifications';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
 import { convertGraphQLNotification, GraphQLNotification } from 'lib/GraphQLUtils/notifications';
 import { PostReaction } from 'types/desmos';
@@ -19,15 +19,13 @@ import GetPostReactions from 'services/graphql/queries/GetPostReactions';
 import { convertGraphQLReaction } from 'lib/GraphQLUtils/reactions';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useGetPostByID from 'hooks/posts/useGetPostByID';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 /**
  * Hook that allows to get the data of a reaction given the subspace, post and its id.
  */
 const useGetReactionData = () => {
-  const [getReaction] = useLazyQuery(GetPostReactions, {
-    fetchPolicy: 'cache-first',
-  });
-
+  const getReaction = useCustomLazyQuery(GetPostReactions);
   return React.useCallback(
     async (
       subspaceId: number,
@@ -41,13 +39,8 @@ const useGetReactionData = () => {
           reactionId,
         },
       });
-      if (!data) {
-        return undefined;
-      }
 
-      const { reactions } = data;
-      const [firstReactions] = reactions;
-      return convertGraphQLReaction(firstReactions);
+      return data?.reactions?.length > 0 ? convertGraphQLReaction(data.reactions[0]) : undefined;
     },
     [getReaction],
   );

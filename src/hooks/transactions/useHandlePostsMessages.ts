@@ -43,12 +43,15 @@ const useGetPostUpdate = () => {
     async (data: Pick<Post, 'subspaceId' | 'externalId'>) => {
       // Get the on-chain post
       let onChainPost = await getPostByExternalId(data.subspaceId, data.externalId);
-      if (!onChainPost) {
+      while (!onChainPost) {
         // The post might not have been parsed yet, we can simply wait for some seconds and try again
+        // Its fine to disable the rule here because we need to wait
+        // eslint-disable-next-line no-await-in-loop
         await sleep(1000);
+        // Its fine to disable the rule here because we need to wait
+        // eslint-disable-next-line no-await-in-loop
         onChainPost = await getPostByExternalId(data.subspaceId, data.externalId);
       }
-
       // Get the post update
       return {
         type: PostUpdateType.REPLACE,

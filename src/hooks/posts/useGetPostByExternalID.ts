@@ -1,10 +1,10 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useLazyQuery } from '@apollo/client';
 import React from 'react';
 import { Post } from 'types/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import GetPostByExternalID from 'services/graphql/queries/GetPostByExternalID';
 import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 /**
  * Hook that allows to get the data of a post given its subspace id and external id.
@@ -13,9 +13,7 @@ const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
 
   const getQueryReactionValue = useGetQueryReactionValue();
-  const [getPost] = useLazyQuery(GetPostByExternalID, {
-    fetchPolicy: 'network-only',
-  });
+  const getPost = useCustomLazyQuery(GetPostByExternalID);
 
   return React.useCallback(
     async (subspaceId: number, externalId: string): Promise<Post | undefined> => {

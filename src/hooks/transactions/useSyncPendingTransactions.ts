@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDeletePendingTransactions, usePendingTransactions } from '@recoil/transactions';
-import { useLazyQuery } from '@apollo/client';
 import GetTransactionsByHashes from 'services/graphql/queries/GetTransactionsByHashes';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 /**
  * Hook that returns the hashes of the transactions that are on-chain.
  */
 const useGetOnChainTransactionsByHashes = () => {
-  const [getTransactionsByHashes] = useLazyQuery(GetTransactionsByHashes);
-
+  const getTransactionsByHashes = useCustomLazyQuery(GetTransactionsByHashes);
   return React.useCallback(
     async (hashes: string[]) => {
       const { data } = await getTransactionsByHashes({

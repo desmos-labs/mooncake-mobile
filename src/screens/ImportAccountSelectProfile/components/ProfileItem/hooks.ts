@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { DesmosProfile } from 'types/desmos';
-import { useLazyQuery } from '@apollo/client';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 const useGetOnChainProfile = () => {
-  const [fetchProfile] = useLazyQuery(GetProfileForAddress, {
-    fetchPolicy: 'cache-and-network',
-  });
-
+  const fetchProfile = useCustomLazyQuery(GetProfileForAddress);
   return React.useCallback(
     async (address: string, abortController: AbortController) => {
-      const { data, error } = await fetchProfile({
+      const { data } = await fetchProfile({
         variables: { address },
         context: {
           fetchOptions: {
@@ -20,12 +17,7 @@ const useGetOnChainProfile = () => {
         },
       });
 
-      if (!data || error) {
-        return undefined;
-      }
-
-      const { profiles } = data;
-      return profiles.length === 0 ? undefined : convertGraphQLProfile(profiles[0]);
+      return data?.profiles?.length > 0 ? convertGraphQLProfile(data.profiles[0]) : undefined;
     },
     [fetchProfile],
   );

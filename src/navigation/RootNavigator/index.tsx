@@ -265,19 +265,6 @@ const RootNavigator = () => {
   const { height, width } = Dimensions.get('window');
   const gestureResponseDistance = Math.max(height, width);
 
-  // const theme = useTheme();
-  // const styles: { [key: string]: ViewStyle | TextStyle } = {
-  //   followingAndFollowers: {
-  //     backgroundColor: theme.colors.white,
-  //   },
-  //   addProfileCard: {
-  //     backgroundColor: 'rgb(245,246,249)',
-  //   },
-  //   statusScreen: {
-  //     backgroundColor: 'rgb(175,175,175)',
-  //   },
-  // };
-
   const initialRouteName = React.useMemo(() => {
     if (__DEV__) return ROUTES.DEV_SCREEN;
     const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);

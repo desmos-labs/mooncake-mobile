@@ -19,7 +19,7 @@
     "detox:test-ios": "detox test -c ios.sim.release"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.3",
+    "@apollo/client": "^3.7.10",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@cosmjs/cosmwasm-stargate": "^0.30.0",
     "@cosmjs/crypto": "^0.30.0",
