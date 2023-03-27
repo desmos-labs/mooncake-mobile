@@ -26,6 +26,7 @@ import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import { emptyListPlaceholder } from 'assets/images';
+import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
@@ -51,6 +52,9 @@ const Home = () => {
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
+
+  // Ask the user the permission to access the device notification
+  useRequestNotificationsPermission();
 
   const setLastHomeTab = useSetAppStateValue('lastHomeTab');
 

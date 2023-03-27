@@ -1,6 +1,5 @@
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import React from 'react';
 import Typography from 'components/Typography';
 import { communitiesBackgroundImage } from 'assets/images';
@@ -8,8 +7,6 @@ import useStyles from './useStyles';
 
 const Communities = () => {
   const styles = useStyles();
-
-  useRequestNotificationsPermission();
 
   return (
     <DView

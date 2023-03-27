@@ -4,7 +4,6 @@ import { butterflyLandingIcon, landingBG } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
-import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -36,9 +35,6 @@ const Landing = () => {
 
   // Tells whether the user has previously given consent to the Butter ToS and Privacy policies
   const consentGiven = useAppStateValue('consentGiven');
-
-  // Ask the user the permission to access the device notification
-  useRequestNotificationsPermission();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
