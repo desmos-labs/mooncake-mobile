@@ -16,6 +16,7 @@ export const DefaultAppSettings: AppSettings = {
   theme: 'light',
   biometrics: false,
   notifications: false,
+  simplifyTxBroadcast: false,
   currentChain: EnvConfig.CHAIN === 'mainnet' ? DesmosMainnet : DesmosTestnet,
 };
 
@@ -75,18 +76,21 @@ export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
   const setSettings = useSetRecoilState(settingsAppState);
   return React.useCallback(
     (setting: AppSettings[K] | ((value: AppSettings[K]) => AppSettings[K])) => {
-      setSettings(currentValue => {
+      setSettings(currentSettings => {
         if (!activeAccountAddress) {
           throw new Error('Cannot set settings without active account');
         }
 
-        const userSettings = currentValue[activeAccountAddress];
-        const currentSettingValue = userSettings[settingKey];
+        // Get the settings only for the active address, or the default ones if not valid
+        const userSettings = currentSettings[activeAccountAddress] ?? DefaultAppSettings;
+
+        // Get the current and new setting values
+        const currentValue = userSettings[settingKey];
+        const newValue = typeof setting === 'function' ? setting(currentValue) : setting;
 
         // Avoid updating the values if the given value is the same as the current one
-        const newValue = typeof setting === 'function' ? setting(currentSettingValue) : setting;
-        if (newValue !== currentSettingValue) {
-          return currentValue;
+        if (newValue === currentValue) {
+          return currentSettings;
         }
 
         // Update the user settings
@@ -97,7 +101,7 @@ export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
 
         // Update the application settings
         return {
-          ...currentValue,
+          ...currentSettings,
           [activeAccountAddress]: newUserSettings,
         };
       });
