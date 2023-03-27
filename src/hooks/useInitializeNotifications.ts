@@ -65,6 +65,7 @@ const useInitializeNotifications = () => {
         // Here we need to manage the initial notification when the app is opened from the background, cause
         // line 62 is not called in this case, since the app has already been mounted
         setNotificationsCount(current => current ?? 0);
+        manageInitialNotifications().catch(err => console.error(err));
       }
     });
 
