@@ -13,10 +13,11 @@ const useCustomLazyQuery = <TData = any, TVariables = OperationVariables>(
 ) => {
   const [getData] = useApolloLazyQuery<TData, TVariables>(query, options);
   return React.useCallback(
-    async (variables: TVariables): Promise<any | undefined> => {
+    async (opts?: Partial<LazyQueryHookOptions<TData, TVariables>>): Promise<any | undefined> => {
       return new Promise((resolve, reject) => {
+        const extraOptions = opts || {};
         getData({
-          variables,
+          ...extraOptions,
           fetchPolicy: 'no-cache',
           onCompleted: resolve,
           onError: reject,
