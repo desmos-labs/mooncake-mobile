@@ -22,16 +22,15 @@ import { getProfilePicture } from 'lib/ProfileUtils';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
-import useHasReacted from 'hooks/reactions/useHasReacted';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import {
-  useHandlePressReaction,
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
 } from 'screens/PostDetails/hooks';
 import PopupMenu from 'components/PopupMenu';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -59,16 +58,15 @@ const CommentItem = (props: CommentItemProps) => {
   // -------------------------------------------------------------------------------------
 
   const { count: commentsCount } = usePostCommentsCount(comment);
-  const hasReacted = useHasReacted(comment);
   const { count: reactionsCount } = usePostReactionsCount(comment);
   const { count: tipsCount } = usePostTipsCount(comment);
   const handleNavigateToProfile = useNavigateToProfile();
-  const handlePressReaction = useHandlePressReaction();
   const handlePressSendTips = useHandlePressSendTips();
   const handleShowCommentDetails = useHandlePressShowCommentDetails();
   const isFollowing = useIsFollowing(comment.author.address);
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
+  const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -98,7 +96,7 @@ const CommentItem = (props: CommentItemProps) => {
 
   const handlePressLike = () => {
     if (isPostPending(comment)) return;
-    handlePressReaction(comment);
+    addOrRemoveLike(comment);
   };
   const handlePressTip = () => {
     if (isPostPending(comment)) return;
@@ -181,15 +179,14 @@ const CommentItem = (props: CommentItemProps) => {
             )}
             <TouchableOpacity onPress={handlePressLike} style={styles.interactionButton}>
               <Image
-                source={hasReacted ? commentLiked : commentLikeEmptyIcon}
+                source={liked ? commentLiked : commentLikeEmptyIcon}
                 style={[
                   styles.buttonImage,
-                  hasReacted ? styles.orangeIconAndText : {},
+                  liked ? styles.orangeIconAndText : {},
                   styles.interactionImage,
                 ]}
               />
-              <Typography.Subtitle3
-                style={hasReacted ? styles.orangeIconAndText : styles.textStyle}>
+              <Typography.Subtitle3 style={liked ? styles.orangeIconAndText : styles.textStyle}>
                 {formatNumShorthand(reactionsCount)}
               </Typography.Subtitle3>
             </TouchableOpacity>
