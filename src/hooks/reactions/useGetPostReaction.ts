@@ -10,7 +10,7 @@ const useGetPostReaction = () => {
   const getReaction = useCustomLazyQuery(GetPostReaction);
   return React.useCallback(
     async (subspaceId: number, postId: number, user: string) => {
-      const { data } = await getReaction({
+      const data = await getReaction({
         variables: {
           subspaceId,
           postId,

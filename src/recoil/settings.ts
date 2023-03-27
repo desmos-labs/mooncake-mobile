@@ -16,7 +16,6 @@ export const DefaultAppSettings: AppSettings = {
   theme: 'light',
   biometrics: false,
   notifications: false,
-  notificationsPermission: false,
   currentChain: EnvConfig.CHAIN === 'mainnet' ? DesmosMainnet : DesmosTestnet,
 };
 

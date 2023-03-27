@@ -20,7 +20,7 @@ const useGetPostByID = () => {
 
   return React.useCallback(
     async (subspaceId: number, postId: number): Promise<Post | undefined> => {
-      const { data } = await getPost({
+      const data = await getPost({
         variables: {
           subspaceId,
           postId,

@@ -15,7 +15,7 @@ const useHasReportedPost = () => {
   const getReportsByUser = useCustomLazyQuery(GetReportsByUser);
   return React.useCallback(
     async (subspaceId: number, postId: number) => {
-      const { data } = await getReportsByUser({
+      const data = await getReportsByUser({
         variables: {
           subspaceId,
           target: { post_id: postId.toString() },

@@ -8,7 +8,7 @@ const useGetOnChainProfile = () => {
   const fetchProfile = useCustomLazyQuery(GetProfileForAddress);
   return React.useCallback(
     async (address: string, abortController: AbortController) => {
-      const { data } = await fetchProfile({
+      const data = await fetchProfile({
         variables: { address },
         context: {
           fetchOptions: {

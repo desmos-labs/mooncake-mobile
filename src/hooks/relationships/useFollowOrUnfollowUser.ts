@@ -27,7 +27,7 @@ const useDoesRelationshipExistRemotely = () => {
   const getRelationship = useCustomLazyQuery(GetRelationshipForAddress);
   return React.useCallback(
     async (address: string, counterparty: string) => {
-      const { data } = await getRelationship({
+      const data = await getRelationship({
         variables: {
           userAddress: address,
           counterpartyAddress: counterparty,

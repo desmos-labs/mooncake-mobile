@@ -21,7 +21,7 @@ const useGetPostByExternalID = () => {
         throw new Error('Trying to get post data without active user');
       }
 
-      const { data } = await getPost({
+      const data = await getPost({
         variables: {
           subspaceId,
           externalId,

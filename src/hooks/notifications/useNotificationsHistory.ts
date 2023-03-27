@@ -32,7 +32,7 @@ const useGetReactionData = () => {
       postId: number,
       reactionId: number,
     ): Promise<PostReaction | undefined> => {
-      const { data } = await getReaction({
+      const data = await getReaction({
         variables: {
           subspaceId,
           postId,
