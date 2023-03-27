@@ -7,10 +7,9 @@ import { GetAccountFeeGrantAllowance } from 'services/graphql/queries/GetAccount
 
 /**
  * Hook to get the fee grants and authz grants of a user's account.
- * @param accountAddress - Address of the account of interest.
  * must be fetched using the refetch function.
  */
-const useGetAuthorizationInformation = (accountAddress: string) => {
+const useGetAuthorizationInformation = () => {
   const butterConfig = useAppStateValue('butterConfig');
   const apisAddress = butterConfig?.desmosAddress;
 
@@ -18,28 +17,31 @@ const useGetAuthorizationInformation = (accountAddress: string) => {
   const [fetchFeeGrants] = useLazyQuery(GetAccountFeeGrantAllowance, { fetchPolicy: 'no-cache' });
   const [fetchAuthzGrants] = useLazyQuery(GetAccountAuthzGrants, { fetchPolicy: 'no-cache' });
 
-  return React.useCallback(async () => {
-    // Build the query options
-    const options = {
-      variables: {
-        granteeAddress: apisAddress,
-        granterAddress: accountAddress,
-      },
-    };
+  return React.useCallback(
+    async (accountAddress: string) => {
+      // Build the query options
+      const options = {
+        variables: {
+          granteeAddress: apisAddress,
+          granterAddress: accountAddress,
+        },
+      };
 
-    // Get the fee grant data
-    const { data: feeGrantData } = await fetchFeeGrants(options);
-    const feeGrants = ((feeGrantData?.fee_grants as any[]) ?? []).map(convertGraphQLFeeGrant);
+      // Get the fee grant data
+      const { data: feeGrantData } = await fetchFeeGrants(options);
+      const feeGrants = ((feeGrantData?.fee_grants as any[]) ?? []).map(convertGraphQLFeeGrant);
 
-    // Get the authz data
-    const { data: authzGrantsData } = await fetchAuthzGrants(options);
-    const authzGrants = ((authzGrantsData?.grants as any[]) ?? []).map(convertGraphQLAuthzGrant);
+      // Get the authz data
+      const { data: authzGrantsData } = await fetchAuthzGrants(options);
+      const authzGrants = ((authzGrantsData?.grants as any[]) ?? []).map(convertGraphQLAuthzGrant);
 
-    return {
-      feeGrants,
-      authzGrants,
-    };
-  }, [accountAddress, apisAddress, fetchAuthzGrants, fetchFeeGrants]);
+      return {
+        feeGrants,
+        authzGrants,
+      };
+    },
+    [apisAddress, fetchAuthzGrants, fetchFeeGrants],
+  );
 };
 
 export default useGetAuthorizationInformation;

@@ -8,10 +8,6 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { getSupportedBiometryType } from 'react-native-keychain';
-import useAddAuthorizations from 'hooks/authorizations/useAddAuthorizations';
-import useRemoveAuthorizations from 'hooks/authorizations/useRemoveAuthorizations';
-import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
-import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
 import { useDeleteAuthToken } from 'services/axios';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import { Linking } from 'react-native';
@@ -19,6 +15,8 @@ import useUnlockWallet from 'hooks/useUnlockWallet';
 import isAccountWithPrivateKey from 'lib/AccountUtils/type';
 import { WalletWithPrivateKey } from 'types/wallet';
 import { toHex } from '@cosmjs/encoding';
+import useEnableOrDisableAuthorizations from 'hooks/authorizations/useEnableOrDisableAuthorizations';
+import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizations';
 
 /**
  * Hook that provides a function to reveal the current active user private key
@@ -55,14 +53,6 @@ export const useShowPrivateKey = () => {
   };
 };
 
-export const useManageAppLinks = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-
-  return React.useCallback(() => {
-    navigator.navigate(ROUTES.MANAGE_CONNECTED_APPS);
-  }, [navigator]);
-};
-
 /**
  * Hook that provides a function to give or remove to the current user the grants
  * necessary to execute operations on behalf of the user.
@@ -72,54 +62,28 @@ export const useManageAppLinks = () => {
 export const useToggleSimplifiedTxBroadcast = (requiredPermissions: string[]) => {
   const activeAccountAddress = useActiveAccountAddress();
   if (!activeAccountAddress) {
-    throw new Error('Cannot toggle simplified tx broadcast without an active account');
+    throw new Error('Cannot toggle simplified tx broadcasting without an active account');
   }
 
-  // Local state
-  const [loading, setLoading] = React.useState(true);
-  const [permissionsEnabled, setPermissionsEnabled] = React.useState(false);
-
-  // Hooks
-  const getAuthorizations = useGetAuthorizationInformation(activeAccountAddress);
-  const addAuthorizations = useAddAuthorizations(activeAccountAddress);
-  const removeAuthorizations = useRemoveAuthorizations(activeAccountAddress);
+  const simplifyTxBroadcastEnabled = useSetting('simplifyTxBroadcast');
+  const enableOrDisableAuthorizations = useEnableOrDisableAuthorizations();
+  const { refresh: refreshPermissions, loading } = useRefreshAuthorizations();
 
   // Callback used to toggle the simplified tx broadcasting
   const toggleSimplifiedTxBroadcast = React.useCallback(async () => {
-    const newState = !permissionsEnabled;
-
-    const result = newState
-      ? await addAuthorizations(requiredPermissions)
-      : await removeAuthorizations(requiredPermissions);
-
-    // TX ok, toggle the state.
-    if (result.isOk()) {
-      setPermissionsEnabled(newState);
-    }
-  }, [permissionsEnabled, addAuthorizations, removeAuthorizations, requiredPermissions]);
+    await enableOrDisableAuthorizations(activeAccountAddress, requiredPermissions);
+  }, [activeAccountAddress, enableOrDisableAuthorizations, requiredPermissions]);
 
   // Callback used to refetch the permissions
-  const refetchPermissions = React.useCallback(async () => {
-    setLoading(true);
-
-    // Get the fee grants
-    const { feeGrants, authzGrants } = await getAuthorizations();
-
-    // Update the permissions state
-    const missingFeeGrants = getMissingFeeGrantPermissions(requiredPermissions, feeGrants ?? []);
-    const missingAuthzGrants = getMissingAuthzPermissions(requiredPermissions, authzGrants ?? []);
-    setPermissionsEnabled(missingFeeGrants.length === 0 && missingAuthzGrants.length === 0);
-    setLoading(false);
-  }, [getAuthorizations, requiredPermissions]);
 
   // As soon as the component is mounted, refetch the permissions
   React.useEffect(() => {
-    refetchPermissions();
-  }, [refetchPermissions]);
+    refreshPermissions(activeAccountAddress, requiredPermissions);
+  }, [activeAccountAddress, refreshPermissions, requiredPermissions]);
 
   return {
     loading,
-    permissionsEnabled,
+    simplifyTxBroadcastEnabled,
     toggleSimplifiedTxBroadcast,
   };
 };

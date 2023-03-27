@@ -16,6 +16,7 @@ export type AppSettings = {
   biometrics: boolean;
   notifications: boolean;
   currentChain: ChainInfo;
+  simplifyTxBroadcast: boolean;
 };
 
 /**

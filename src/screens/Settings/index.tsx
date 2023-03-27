@@ -60,7 +60,7 @@ const Settings = (props: NavProps) => {
 
   const {
     loading: loadingSimplifiedTxBroadcast,
-    permissionsEnabled: simplifiedTxBroadcast,
+    simplifyTxBroadcastEnabled,
     toggleSimplifiedTxBroadcast,
   } = useToggleSimplifiedTxBroadcast(RequiredMessageTypesGrant);
 
@@ -109,7 +109,7 @@ const Settings = (props: NavProps) => {
         <SectionSwitch
           label={t('permissions')}
           onValueChange={toggleSimplifiedTxBroadcast}
-          value={simplifiedTxBroadcast}
+          value={simplifyTxBroadcastEnabled}
           disabled={loadingSimplifiedTxBroadcast}
         />
 
