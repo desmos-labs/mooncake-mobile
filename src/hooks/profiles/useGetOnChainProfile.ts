@@ -13,7 +13,7 @@ const useGetOnChainProfile = () => {
 
   return React.useCallback(
     async (address: string): Promise<DesmosProfile | undefined> => {
-      const { data } = await getProfile({
+      const data = await getProfile({
         variables: { address },
       });
 

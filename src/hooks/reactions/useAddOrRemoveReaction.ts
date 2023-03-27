@@ -79,7 +79,7 @@ const useRemoveReaction = (activeAddress: string) => {
       setPostReactionStatus(post, DataStatus.DELETED_LOCALLY);
 
       // Get the reaction id from the server, if any
-      const { data } = await getReaction({
+      const data = await getReaction({
         variables: {
           subspaceId: post.subspaceId,
           postId: post.id,

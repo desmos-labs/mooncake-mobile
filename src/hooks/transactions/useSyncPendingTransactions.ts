@@ -10,7 +10,7 @@ const useGetOnChainTransactionsByHashes = () => {
   const getTransactionsByHashes = useCustomLazyQuery(GetTransactionsByHashes);
   return React.useCallback(
     async (hashes: string[]) => {
-      const { data } = await getTransactionsByHashes({
+      const data = await getTransactionsByHashes({
         variables: { hashes },
       });
       return (data?.messages ?? []).map((tx: any) => tx.transaction_hash);

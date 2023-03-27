@@ -70,7 +70,7 @@ export const useCheckDTagAvailability = () => {
   const getDTagAvailability = useCustomLazyQuery(GetProfileForDTag);
   return React.useCallback(
     async (inputDTag: string) => {
-      const { data } = await getDTagAvailability({ variables: { dTag: inputDTag } });
+      const data = await getDTagAvailability({ variables: { dTag: inputDTag } });
       return (data?.profile?.length ?? 0) === 0;
     },
     [getDTagAvailability],
