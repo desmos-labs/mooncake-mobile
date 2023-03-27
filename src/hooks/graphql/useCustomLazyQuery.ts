@@ -21,7 +21,7 @@ const useCustomLazyQuery = <TData = any, TVariables = OperationVariables>(
           onCompleted: resolve,
           onError: reject,
           ...extraOptions,
-        });
+        }).then(({ data }) => resolve(data));
       });
     },
     [getData],
