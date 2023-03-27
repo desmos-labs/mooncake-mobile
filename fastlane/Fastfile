@@ -347,6 +347,10 @@ platform :common do
   lane :write_env_file do
     sh("rm #{ENV_FILE} || echo #{ENV_FILE} not present")
 
-    printf '#{ENV_TESTING_BASE64}' | base64 --decode >> /tmp/keystore.jks",
+    sh(
+        command: "printf '#{ENV_TESTING_BASE64}' | base64 --decode >> #{ENV_FILE}",
+        log: false
+    )
+
   end
 end
