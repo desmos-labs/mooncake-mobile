@@ -15,7 +15,6 @@ export type AppSettings = {
   theme: AppTheme;
   biometrics: boolean;
   notifications: boolean;
-  notificationsPermission: boolean;
   currentChain: ChainInfo;
 };
 

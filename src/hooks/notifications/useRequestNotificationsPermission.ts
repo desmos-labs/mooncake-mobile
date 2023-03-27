@@ -1,5 +1,4 @@
-import notifee, { AuthorizationStatus } from '@notifee/react-native';
-import { useSetSetting } from '@recoil/settings';
+import notifee from '@notifee/react-native';
 import { useCallback, useEffect } from 'react';
 
 /**
@@ -8,32 +7,21 @@ import { useCallback, useEffect } from 'react';
  * it can be later disabled by the user.
  */
 const useRequestNotificationsPermission = () => {
-  const setNotificationPermission = useSetSetting('notificationsPermission');
-
   const requestUserPermission = useCallback(async () => {
     try {
-      const notifeeAuth = await notifee.requestPermission({
+      await notifee.requestPermission({
         sound: true,
         alert: true,
         badge: true,
         carPlay: true,
       });
-
-      switch (notifeeAuth.authorizationStatus) {
-        case AuthorizationStatus.AUTHORIZED:
-          setNotificationPermission(true);
-          break;
-        default:
-          setNotificationPermission(false);
-      }
     } catch (e) {
       console.error(e);
     }
-  }, [setNotificationPermission]);
+  }, []);
 
   useEffect(() => {
-    requestUserPermission().then(() => console.log('Permissions requested'));
-
+    requestUserPermission();
     // Safe to ignore, we want to execute this function just one time.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
