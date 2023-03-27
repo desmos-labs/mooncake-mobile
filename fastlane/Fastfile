@@ -31,7 +31,7 @@ ANDROID_USE_LOCAL_KEYSTORE = ENV["ANDROID_USE_LOCAL_KEYSTORE"] != nil
 
 # Define utility function to check if a string is a valid integer
 def is_integer(value)
-  value.to_i.to_s == value
+  value.to_i.to_s == value.sub!(/^0+/,'')
 end
 
 def delete_temp_keychain(name)
