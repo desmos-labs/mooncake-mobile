@@ -34,8 +34,10 @@ const useInitializeNotifications = () => {
   const handleNotificationPressEvent = useHandleNotificationPressEvent();
 
   const manageInitialNotifications = useCallback(async () => {
+    console.log('manageInitialNotifications');
     const initialNotification = await notifee.getInitialNotification();
     if (initialNotification) {
+      console.log('initialNotification', initialNotification);
       // iOS Badges
       const actualBadgeCount = await notifee.getBadgeCount();
       await notifee.setBadgeCount(actualBadgeCount - 1);
@@ -56,12 +58,15 @@ const useInitializeNotifications = () => {
   }, [handleNotificationPressEvent, setNotificationsCount]);
 
   useEffect(() => {
+    // Here we need to manage the initial notification when the app is closed
+    manageInitialNotifications().catch(err => console.error(err));
     const subscription = AppState.addEventListener('change', nextAppState => {
       setAppStateVisible(nextAppState);
       setAppState(nextAppState);
       if (nextAppState === 'active') {
+        // Here we need to manage the initial notification when the app is opened from the background, cause
+        // line 62 is not called in this case, since the app has already been mounted
         setNotificationsCount(current => current ?? 0);
-        manageInitialNotifications().catch(err => console.error(err));
       }
     });
 
