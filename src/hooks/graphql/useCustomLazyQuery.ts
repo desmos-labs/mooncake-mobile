@@ -17,10 +17,10 @@ const useCustomLazyQuery = <TData = any, TVariables = OperationVariables>(
       return new Promise((resolve, reject) => {
         const extraOptions = opts || {};
         getData({
-          ...extraOptions,
           fetchPolicy: 'no-cache',
           onCompleted: resolve,
           onError: reject,
+          ...extraOptions,
         });
       });
     },
