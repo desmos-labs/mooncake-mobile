@@ -166,23 +166,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           </VStack>
           <Spacer paddingHorizontal={4} />
           <VStack flex={0.5}>
-            <Button
-              size={32}
-              onPress={() => {
-                Alert.alert('Are you sure?', 'This will revoke all grants on chain.', [
-                  {
-                    text: 'Yes',
-                    onPress: async () => {
-                      // await revokeGrants();
-                    },
-                  },
-                  {
-                    text: 'Cancel',
-                  },
-                ]);
-              }}>
-              Revoke all Grants
-            </Button>
             <Spacer paddingVertical={4} />
             <Button
               size={32}
