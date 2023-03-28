@@ -10,12 +10,16 @@ const useStyles = makeStyleWithProps((background: Props, theme) => ({
   },
   background: {
     width: '100%',
+    bottom: background.backgroundFillScreen ? 0 : undefined,
     height: background.backgroundFillScreen ? undefined : verticalScale(230),
     resizeMode: 'cover',
     position: 'absolute',
     top: 0,
     zIndex: 1,
-    bottom: background.backgroundFillScreen ? 0 : undefined,
+  },
+  backgroundFillOverride: {
+    bottom: 0,
+    height: undefined,
   },
   content: {
     zIndex: 1,
