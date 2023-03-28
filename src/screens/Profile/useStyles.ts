@@ -1,6 +1,4 @@
 import { makeStyleWithProps } from 'config/theme';
-import { HEADER_HEIGHT_COMPACT, HEADER_HEIGHT_EXPANDED } from 'screens/Profile/index';
-import { StyleSheet } from 'react-native';
 
 const useStyles = makeStyleWithProps((props: any, theme) => ({
   flexRow: {
@@ -73,28 +71,6 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     alignItems: 'center',
     marginLeft: theme.spacing.m,
   },
-  profileImage: {
-    zIndex: 2,
-    position: 'absolute',
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    left: theme.spacing.m,
-    borderColor: theme.colors.white,
-    backgroundColor: theme.colors.white,
-  },
-  banner: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    zIndex: 0,
-    height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
-  },
-  bannerBlur: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 2,
-  },
   nickname: {
     marginTop: 10,
   },
@@ -111,6 +87,17 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
   },
   r60: {
     right: 60,
+  },
+  profileImage: {
+    zIndex: 2,
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 3,
+    left: theme.spacing.m,
+    borderColor: theme.colors.white,
+    backgroundColor: theme.colors.white,
   },
 }));
 

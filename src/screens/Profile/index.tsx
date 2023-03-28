@@ -1,4 +1,3 @@
-import { BlurView } from '@react-native-community/blur';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { profileBack, profileSettings } from 'assets/images';
@@ -10,7 +9,6 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ImageBackground,
   InteractionManager,
   RefreshControl,
   SafeAreaView,
@@ -18,7 +16,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { useTheme } from 'native-base';
 import Animated, {
   Extrapolation,
@@ -34,7 +31,6 @@ import BalanceSection from 'screens/Profile/components/BalanceSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
 import UserBio from 'screens/Profile/components/UserBio';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
-import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfileConnections';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
@@ -47,6 +43,8 @@ import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
 import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import StyledSpinner from 'components/StyledSpinner';
+import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
+import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -181,11 +179,6 @@ const Profile = () => {
   // --- Animations
   // -------------------------------------------------------------------------------------
 
-  const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
-  // @ts-ignore
-  const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
-  const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-
   const scrollY = useSharedValue(0);
   const scrollOffset = useSharedValue(45 + HEADER_HEIGHT_EXPANDED);
 
@@ -200,49 +193,6 @@ const Profile = () => {
     return {
       opacity,
       transform: [{ translateY }],
-    };
-  });
-
-  const animatedImageBGStyle = useAnimatedStyle(() => {
-    const scale = interpolate(scrollY.value, [-200, 0], [5, 1], {
-      extrapolateRight: Extrapolation.CLAMP,
-      extrapolateLeft: Extrapolation.EXTEND,
-    });
-
-    return {
-      transform: [{ scale }],
-    };
-  });
-
-  const animatedBlurStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(scrollY.value, [-50, 0, 50, 100], [1, 0, 0, 1]);
-
-    return {
-      opacity,
-    };
-  });
-
-  const animatedProfilePicStyle = useAnimatedStyle(() => {
-    const scale = interpolate(scrollY.value, [0, HEADER_HEIGHT_EXPANDED], [1, 0.5], {
-      extrapolateRight: Extrapolation.CLAMP,
-      extrapolateLeft: Extrapolation.CLAMP,
-    });
-
-    const translateY = interpolate(scrollY.value, [0, HEADER_HEIGHT_EXPANDED], [0, 46], {
-      extrapolateRight: Extrapolation.CLAMP,
-      extrapolateLeft: Extrapolation.CLAMP,
-    });
-
-    const top = scrollOffset.value;
-    const opacity = interpolate(scrollY.value, [0, HEADER_HEIGHT_EXPANDED], [1, 0], {
-      extrapolateRight: Extrapolation.CLAMP,
-      extrapolateLeft: Extrapolation.CLAMP,
-    });
-
-    return {
-      opacity,
-      top,
-      transform: [{ translateY }, { scale }],
     };
   });
 
@@ -278,44 +228,6 @@ const Profile = () => {
   const handlePressFollow = useCallback(async () => {
     await followOrUnfollowUser(profile!);
   }, [followOrUnfollowUser, profile]);
-
-  // -------------------------------------------------------------------------------------
-  // --- Child components
-  // -------------------------------------------------------------------------------------
-
-  // Banner image needs to be memoized to avoid flickering
-  const Banner = useMemo(() => {
-    return (
-      <AnimatedImageBackground
-        resizeMode="cover"
-        source={getCoverPicture(profile)}
-        style={[styles.banner, animatedImageBGStyle]}>
-        <AnimatedBlurView
-          blurType="dark"
-          blurAmount={96}
-          style={[styles.bannerBlur, animatedBlurStyle]}
-        />
-      </AnimatedImageBackground>
-    );
-  }, [
-    AnimatedBlurView,
-    AnimatedImageBackground,
-    animatedBlurStyle,
-    animatedImageBGStyle,
-    profile,
-    styles.banner,
-    styles.bannerBlur,
-  ]);
-
-  // Profile image needs to be memoized to avoid flickering
-  const ProfileImage = useMemo(() => {
-    return (
-      <AnimatedFastImage
-        source={getProfilePicture(profile)}
-        style={[styles.profileImage, animatedProfilePicStyle]}
-      />
-    );
-  }, [AnimatedFastImage, animatedProfilePicStyle, profile, styles.profileImage]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -380,10 +292,10 @@ const Profile = () => {
       </Animated.View>
 
       {/* Banner */}
-      {Banner}
+      <AnimatedBannerPicture profile={profile} scrollY={scrollY} />
 
       {/* Profile image */}
-      {ProfileImage}
+      <AnimatedProfilePicture profile={profile} scrollY={scrollY} scrollOffset={scrollOffset} />
 
       <Animated.ScrollView
         overScrollMode="never"
