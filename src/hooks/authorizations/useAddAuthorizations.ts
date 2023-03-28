@@ -14,15 +14,14 @@ import React from 'react';
 /**
  * Hook that provides a function to add the necessary fee grants and authzs grant
  * so that the user can use the centralized API to perform such actions.
- * @param accountAddress - User's account address.
  */
-const useAddAuthorizations = (accountAddress: string) => {
-  const { refetch } = useGetAuthorizations(accountAddress, true);
+const useAddAuthorizations = () => {
+  const getAuthorizations = useGetAuthorizations();
   const { config: butterConfig } = useButterConfig();
   const broadcastTx = useBroadcastTx();
 
   return React.useCallback(
-    async (authorizations: string[]) => {
+    async (userAddress: string, authorizations: string[]) => {
       if (authorizations.length === 0) {
         return err(Error('No authorizations to add'));
       }
@@ -32,11 +31,8 @@ const useAddAuthorizations = (accountAddress: string) => {
       }
 
       // Fetch the current configurations.
-      const fetchAuthorizationsResult = await refetch();
-      if (fetchAuthorizationsResult.isErr()) {
-        return err(fetchAuthorizationsResult.error);
-      }
-      const { feeGrants, authzGrants } = fetchAuthorizationsResult.value;
+      const { feeGrants, authzGrants } = await getAuthorizations(userAddress);
+
       // Compute the missing permissions from the current one.
       const missingFeeGrants = getMissingFeeGrantPermissions(authorizations, feeGrants);
       const missingAuthzGrants = getMissingAuthzPermissions(authorizations, authzGrants);
@@ -49,14 +45,14 @@ const useAddAuthorizations = (accountAddress: string) => {
           feeGrants,
           missingFeeGrants,
           butterConfig.desmosAddress,
-          accountAddress,
+          userAddress,
         ),
       );
 
       if (missingAuthzGrants.length > 0) {
         // Push the new authz grants message.
         msgs.push(
-          ...buildGrantMsgEncodes(missingAuthzGrants, butterConfig.desmosAddress, accountAddress),
+          ...buildGrantMsgEncodes(missingAuthzGrants, butterConfig.desmosAddress, userAddress),
         );
       }
 
@@ -65,7 +61,7 @@ const useAddAuthorizations = (accountAddress: string) => {
         onChain: true,
       });
     },
-    [butterConfig, refetch, broadcastTx, accountAddress],
+    [butterConfig, getAuthorizations, broadcastTx],
   );
 };
 

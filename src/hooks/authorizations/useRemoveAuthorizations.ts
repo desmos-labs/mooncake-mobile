@@ -8,15 +8,14 @@ import React from 'react';
 
 /**
  * Hook that provide a function to revoke some fee grants and authzs grants.
- * @param accountAddress - User's account address.
  */
-const useRemoveAuthorizations = (accountAddress: string) => {
-  const { refetch } = useGetAuthorizations(accountAddress, true);
+const useRemoveAuthorizations = () => {
+  const getAuthorizations = useGetAuthorizations();
   const { config: butterConfig } = useButterConfig();
   const broadcastTx = useBroadcastTx();
 
   return React.useCallback(
-    async (authorizations: string[]) => {
+    async (userAddress: string, authorizations: string[]) => {
       if (authorizations.length === 0) {
         return err(Error('No authorizations to remove'));
       }
@@ -26,11 +25,7 @@ const useRemoveAuthorizations = (accountAddress: string) => {
       }
 
       // Fetch the current configurations.
-      const fetchAuthorizationsResult = await refetch();
-      if (fetchAuthorizationsResult.isErr()) {
-        return err(fetchAuthorizationsResult.error);
-      }
-      const { feeGrants } = fetchAuthorizationsResult.value;
+      const { feeGrants } = await getAuthorizations(userAddress);
       const msgs: EncodeObject[] = [];
 
       // Push the messages to update the fee-grant.
@@ -39,13 +34,13 @@ const useRemoveAuthorizations = (accountAddress: string) => {
           feeGrants,
           authorizations,
           butterConfig.desmosAddress,
-          accountAddress,
+          userAddress,
         ),
       );
 
       // Push authz grant remove messages.
       msgs.push(
-        ...buildRevokeGrantMsgEncodes(authorizations, butterConfig.desmosAddress, accountAddress),
+        ...buildRevokeGrantMsgEncodes(authorizations, butterConfig.desmosAddress, userAddress),
       );
 
       // Broadcast the transaction.
@@ -53,7 +48,7 @@ const useRemoveAuthorizations = (accountAddress: string) => {
         onChain: true,
       });
     },
-    [butterConfig, refetch, broadcastTx, accountAddress],
+    [butterConfig, getAuthorizations, broadcastTx],
   );
 };
 

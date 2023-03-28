@@ -8,10 +8,6 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { getSupportedBiometryType } from 'react-native-keychain';
-import useAddAuthorizations from 'hooks/authorizations/useAddAuthorizations';
-import useRemoveAuthorizations from 'hooks/authorizations/useRemoveAuthorizations';
-import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
-import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
 import { useDeleteAuthToken } from 'services/axios';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import { Linking } from 'react-native';
@@ -19,6 +15,8 @@ import useUnlockWallet from 'hooks/useUnlockWallet';
 import isAccountWithPrivateKey from 'lib/AccountUtils/type';
 import { WalletWithPrivateKey } from 'types/wallet';
 import { toHex } from '@cosmjs/encoding';
+import useEnableOrDisableAuthorizations from 'hooks/authorizations/useEnableOrDisableAuthorizations';
+import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizations';
 
 /**
  * Hook that provides a function to reveal the current active user private key
@@ -55,14 +53,6 @@ export const useShowPrivateKey = () => {
   };
 };
 
-export const useManageAppLinks = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-
-  return React.useCallback(() => {
-    navigator.navigate(ROUTES.MANAGE_CONNECTED_APPS);
-  }, [navigator]);
-};
-
 /**
  * Hook that provides a function to give or remove to the current user the grants
  * necessary to execute operations on behalf of the user.
@@ -70,39 +60,31 @@ export const useManageAppLinks = () => {
  * have access to use the simplified tx broadcasting logic.
  */
 export const useToggleSimplifiedTxBroadcast = (requiredPermissions: string[]) => {
-  const activeAccountAddress = useActiveAccountAddress()!;
-  const [state, setState] = React.useState(false);
-  const { feeGrants, authzGrants, loading } = useGetAuthorizationInformation(activeAccountAddress);
-  const addAuthorizations = useAddAuthorizations(activeAccountAddress);
-  const removeAuthorizations = useRemoveAuthorizations(activeAccountAddress);
+  const activeAccountAddress = useActiveAccountAddress();
+  if (!activeAccountAddress) {
+    throw new Error('Cannot toggle simplified tx broadcasting without an active account');
+  }
 
-  React.useEffect(() => {
-    if (!loading && feeGrants !== undefined && authzGrants !== undefined) {
-      const missingFeeGrants = getMissingFeeGrantPermissions(requiredPermissions, feeGrants);
-      const missingAuthzGrants = getMissingAuthzPermissions(requiredPermissions, authzGrants);
-      setState(missingFeeGrants.length === 0 && missingAuthzGrants.length === 0);
-    }
-  }, [authzGrants, feeGrants, loading, requiredPermissions]);
+  const simplifyTxBroadcastEnabled = useSetting('simplifyTxBroadcast');
+  const enableOrDisableAuthorizations = useEnableOrDisableAuthorizations();
+  const { refresh: refreshPermissions, loading } = useRefreshAuthorizations();
 
+  // Callback used to toggle the simplified tx broadcasting
   const toggleSimplifiedTxBroadcast = React.useCallback(async () => {
-    const newState = !state;
+    await enableOrDisableAuthorizations(activeAccountAddress, requiredPermissions);
+  }, [activeAccountAddress, enableOrDisableAuthorizations, requiredPermissions]);
 
-    const result = newState
-      ? await addAuthorizations(requiredPermissions)
-      : await removeAuthorizations(requiredPermissions);
+  // Callback used to refetch the permissions
 
-    // TX ok, toggle the state.
-    if (result.isOk()) {
-      setState(newState);
-    }
-
-    return result;
-  }, [state, addAuthorizations, removeAuthorizations, requiredPermissions]);
+  // As soon as the component is mounted, refetch the permissions
+  React.useEffect(() => {
+    refreshPermissions(activeAccountAddress, requiredPermissions);
+  }, [activeAccountAddress, refreshPermissions, requiredPermissions]);
 
   return {
     loading,
+    simplifyTxBroadcastEnabled,
     toggleSimplifiedTxBroadcast,
-    state,
   };
 };
 
