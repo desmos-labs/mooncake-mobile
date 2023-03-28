@@ -4,6 +4,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: theme.spacing.s,
   },
   addressText: {
     maxWidth: '35%',
