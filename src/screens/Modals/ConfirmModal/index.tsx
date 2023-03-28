@@ -71,10 +71,20 @@ export type ConfirmModalParams = {
   primaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
 
   /**
+   * If the primary button should be in loading state
+   */
+  primaryButtonLoading?: boolean;
+
+  /**
    * The mode of the secondary button.
    * @default text
    */
   secondaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
+
+  /**
+   * If the secondary button should be in loading state
+   */
+  secondaryButtonLoading?: boolean;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -94,6 +104,8 @@ const ConfirmModal = () => {
       image,
       primaryButtonMode = 'solid',
       secondaryButtonMode = 'link',
+      primaryButtonLoading,
+      secondaryButtonLoading,
     },
   } = useRoute<NavProps['route']>();
 
@@ -149,6 +161,7 @@ const ConfirmModal = () => {
         <Spacer paddingTop={theme.spacing.xl}>
           {primaryButtonLabel && (
             <Button
+              isLoading={primaryButtonLoading ?? false}
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}
@@ -161,6 +174,7 @@ const ConfirmModal = () => {
           {secondaryButtonLabel && (
             <Spacer paddingTop={theme.spacing.m}>
               <Button
+                isLoading={secondaryButtonLoading ?? false}
                 size={44}
                 mb="s"
                 alignSelf="stretch"

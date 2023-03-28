@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from 'native-base';
 import DTextInput from 'components/DTextInput';
 import useStyles from './useStyles';
@@ -19,25 +19,15 @@ declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS
 
 const ShowPrivateKey: React.FC<NavProps> = () => {
   const { params } = useRoute<NavProps['route']>();
-  const { t } = useTranslation();
+  const { t } = useTranslation('settings');
   const styles = useStyles();
   const theme = useTheme();
 
   return (
-    <DView style={styles.root} topBar={<TopBar />}>
-      <Typography.H3 style={{ marginBottom: theme.spacing.m }}>
-        {t('settings:secret recovery phrase')}
-      </Typography.H3>
-      <Typography.Body6>
-        <Trans
-          i18nKey="settings:show recovery passphrase message"
-          components={[
-            <Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />,
-            <Typography.Subtitle2 style={{ color: theme.colors.surfaceBlack }} />,
-          ]}
-        />
-      </Typography.Body6>
-      <DTextInput multiline={true} editable={false}>
+    <DView style={styles.root} topBar={<TopBar />} backgroundColor={theme.colors.white}>
+      <Typography.H3 style={{ marginBottom: theme.spacing.m }}>{t('private key')}</Typography.H3>
+      <Typography.Body6>{t('show private key message')}</Typography.Body6>
+      <DTextInput multiline={true} editable={false} style={styles.input}>
         {params.hexEncodedPrivateKey}
       </DTextInput>
     </DView>

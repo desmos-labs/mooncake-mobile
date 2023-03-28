@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useActiveAccount, useActiveAccountAddress } from '@recoil/accounts';
 import { deleteBiometricAuthorization } from 'lib/SecureStorage';
 import { BiometricAuthorizations } from 'types/settings';
@@ -17,6 +17,8 @@ import { WalletWithPrivateKey } from 'types/wallet';
 import { toHex } from '@cosmjs/encoding';
 import useEnableOrDisableAuthorizations from 'hooks/authorizations/useEnableOrDisableAuthorizations';
 import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizations';
+import useRemoveAccount from 'hooks/accounts/useRemoveAccount';
+import sleep from 'lib/sleep';
 
 /**
  * Hook that provides a function to reveal the current active user private key
@@ -178,19 +180,29 @@ export const useShowAboutInfo = () => {
  * Hook that provide a function to sign out the current active account.
  */
 export const useSignOut = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const [signOutLoading, setSignOutLoading] = useState(false);
+  const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const activeAccount = useActiveAccount();
   const deleteAuthToken = useDeleteAuthToken();
+  const removeAccount = useRemoveAccount();
 
-  return React.useCallback(() => {
+  const signOut = React.useCallback(async () => {
+    setSignOutLoading(true);
+    await sleep(1000);
     deleteAuthToken();
-    // Home screen will request user to login if no bearer token is detected
-    navigator.reset({
+    await removeAccount(activeAccount?.address!);
+    navigation.reset({
       index: 0,
       routes: [
         {
-          name: ROUTES.HOME_TABS,
+          name: ROUTES.LANDING,
         },
       ],
     });
-  }, [navigator, deleteAuthToken]);
+    setSignOutLoading(false);
+  }, [activeAccount?.address, deleteAuthToken, navigation, removeAccount]);
+  return {
+    signOutLoading,
+    signOut,
+  };
 };

@@ -14,7 +14,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
-import { useTheme } from 'native-base';
 import { useActiveAccount } from '@recoil/accounts';
 import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 import {
@@ -37,8 +36,6 @@ declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS
 const Settings = (props: NavProps) => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
-  const theme = useTheme();
-
   const { navigation } = props;
   const { navigate } = navigation;
 
@@ -68,40 +65,33 @@ const Settings = (props: NavProps) => {
   const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
 
   const openNotificationsSettings = useOpenNotificationsSettings();
-
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const sendFeedback = useSendFeedback();
   const showAboutInfo = useShowAboutInfo();
-  const signOut = useSignOut();
+  const { signOut, signOutLoading } = useSignOut();
 
   const openConfirmSignOutModal = useCallback(() => {
     navigate({
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('confirmModal:signout'),
-        subtitle: (
-          <Trans
-            i18nKey="confirmModal:backupSeedphrase"
-            components={[<Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />]}
-          />
-        ),
-        primaryButtonLabel: t('confirmModal:goToBackup'),
-        secondaryButtonLabel: t('confirmModal:signout'),
-        onPressPrimary: () => console.log('primary'),
-        onPressSecondary: signOut,
+        subtitle: <Typography.Body6>{t('confirmModal:private key warning')}</Typography.Body6>,
+        primaryButtonLabel: t('confirmModal:signout'),
+        onPressPrimary: signOut,
+        removeModalAfterButtonPress: true,
       },
     });
-  }, [signOut, navigate, t, theme.colors.butterOrange01]);
+  }, [navigate, t, signOut]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView scrollable style={styles.root} topBar={<TopBar />}>
+    <DView scrollable style={styles.root} topBar={<TopBar />} showLoadingOverlay={signOutLoading}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
 
       {/* Security section */}
@@ -122,7 +112,7 @@ const Settings = (props: NavProps) => {
         )}
         <SectionButton label={t('change password')} onPress={changePassword} />
         {canShowPrivateKey && (
-          <SectionButton label={t('show private key')} onPress={showPrivateKey} />
+          <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
         )}
       </Section>
 
