@@ -85,20 +85,6 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
   r20: {
     right: 20,
   },
-  r60: {
-    right: 60,
-  },
-  profileImage: {
-    zIndex: 2,
-    position: 'absolute',
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    left: theme.spacing.m,
-    borderColor: theme.colors.white,
-    backgroundColor: theme.colors.white,
-  },
 }));
 
 export default useStyles;
