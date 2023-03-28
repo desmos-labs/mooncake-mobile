@@ -38,7 +38,6 @@ const Settings = (props: NavProps) => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
   const theme = useTheme();
-
   const { navigation } = props;
   const { navigate } = navigation;
 
@@ -68,14 +67,13 @@ const Settings = (props: NavProps) => {
   const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
 
   const openNotificationsSettings = useOpenNotificationsSettings();
-
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const sendFeedback = useSendFeedback();
   const showAboutInfo = useShowAboutInfo();
-  const signOut = useSignOut();
+  const { signOut, signOutLoading } = useSignOut();
 
   const openConfirmSignOutModal = useCallback(() => {
     navigate({
@@ -92,16 +90,17 @@ const Settings = (props: NavProps) => {
         secondaryButtonLabel: t('confirmModal:signout'),
         onPressPrimary: () => console.log('primary'),
         onPressSecondary: signOut,
+        removeModalAfterButtonPress: true,
       },
     });
-  }, [signOut, navigate, t, theme.colors.butterOrange01]);
+  }, [navigate, t, theme.colors.butterOrange01, signOut]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView scrollable style={styles.root} topBar={<TopBar />}>
+    <DView scrollable style={styles.root} topBar={<TopBar />} showLoadingOverlay={signOutLoading}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
 
       {/* Security section */}
@@ -122,7 +121,7 @@ const Settings = (props: NavProps) => {
         )}
         <SectionButton label={t('change password')} onPress={changePassword} />
         {canShowPrivateKey && (
-          <SectionButton label={t('show private key')} onPress={showPrivateKey} />
+          <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
         )}
       </Section>
 

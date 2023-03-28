@@ -172,15 +172,12 @@ const Home = () => {
       );
     },
     [
-      styles,
       handleNavigateToProfile,
-      handlePressDetails,
-      toast,
-      t,
       handlePressComments,
-      handlePressTip,
+      handlePressDetails,
       handlePressFollow,
       handlePressReport,
+      handlePressTip,
     ],
   );
 

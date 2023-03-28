@@ -7,7 +7,10 @@ import { LazyQueryHookOptions } from '@apollo/client/react/types/types';
 /**
  * Hook that wraps {@link useApolloLazyQuery} into a new {@link Promise} so that the result can be returned properly.
  */
-const useCustomLazyQuery = <TData = any, TVariables = OperationVariables>(
+const useCustomLazyQuery = <
+  TData = any,
+  TVariables extends OperationVariables = OperationVariables,
+>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: LazyQueryHookOptions<TData, TVariables>,
 ) => {
