@@ -22,7 +22,7 @@ const WelcomeBack = () => {
   const [password, setPassword] = React.useState('');
 
   return (
-    <DView backgroundImage={landingBG} style={styles.container}>
+    <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>
       <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
       <Text style={styles.title} allowFontScaling>
         {t('header')}

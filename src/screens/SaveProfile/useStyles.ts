@@ -60,17 +60,31 @@ const useStyles = makeStyleWithProps(
       borderTopRightRadius: 32,
       backgroundColor: theme.colors.white,
     },
-    scrollContainer: { flex: 1, marginTop: 60 },
-    bioInput: { alignSelf: 'flex-start' },
+    scrollContainer: {
+      flex: 1,
+      marginTop: 60,
+    },
+    bioInput: {
+      height: 160,
+      alignSelf: 'flex-start',
+    },
     bioDTextInput: {
-      minHeight: 160,
       borderWidth: 1,
       borderColor: theme.colors.lightGrey01,
     },
-    errorText: { color: theme.colors.pink01, flex: 1 },
-    nickname: { opacity: nicknameInputRef.current?.isFocused() ? 1 : 0 },
-    dTag: { opacity: dTagInputRef.current?.isFocused() ? 1 : 0 },
-    bio: { opacity: bioInputRef.current?.isFocused() ? 1 : 0 },
+    errorText: {
+      color: theme.colors.pink01,
+      flex: 1,
+    },
+    nickname: {
+      opacity: nicknameInputRef.current?.isFocused() ? 1 : 0,
+    },
+    dTag: {
+      opacity: dTagInputRef.current?.isFocused() ? 1 : 0,
+    },
+    bio: {
+      opacity: bioInputRef.current?.isFocused() ? 1 : 0,
+    },
   }),
 );
 
