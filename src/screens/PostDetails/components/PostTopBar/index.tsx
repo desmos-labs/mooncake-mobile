@@ -7,7 +7,6 @@ import BackButton from 'components/BackButton';
 import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import ImageButton from 'components/ImageButton';
 import { block, followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
 import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
 import { useTheme } from 'native-base';
@@ -52,7 +51,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handleNavigateToProfile = useNavigateToProfile();
   const isFollowingAddress = useIsFollowing(post.author.address);
   const handlePressReport = useHandlePressReport();
-  const handlePressFollow = useHandlePressFollowOrUnfollow();
 
   /**
    * Hooks for getting comments count
@@ -64,11 +62,13 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
    */
   const PressMoreComponent = React.useMemo(() => {
     const menuItems = [
-      {
-        label: isFollowingAddress ? t('home:unfollow') : t('home:follow'),
-        onPress: () => handlePressFollow(post.author),
-        icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
-      },
+      post.author.address !== activeAddress
+        ? {
+            label: isFollowingAddress ? t('home:unfollow') : t('home:follow'),
+            onPress: () => handlePressFollowOrUnfollow(post.author),
+            icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
+          }
+        : undefined,
       {
         label: t('home:report'),
         onPress: () => handlePressReport(post),
@@ -84,7 +84,15 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     ];
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
-  }, [handlePressFollow, handlePressMore, handlePressReport, isFollowingAddress, post, t]);
+  }, [
+    activeAddress,
+    handlePressFollowOrUnfollow,
+    handlePressMore,
+    handlePressReport,
+    isFollowingAddress,
+    post,
+    t,
+  ]);
 
   if (isComment(post!)) {
     return (
@@ -123,15 +131,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
       </View>
 
       <View style={styles.rightContainer}>
-        {activeAddress !== post!.author.address && (
-          <ImageButton
-            style={[styles.followIcon]}
-            image={isFollowingAddress ? unfollowBlackIcon : followBlackIcon}
-            onPress={() => {
-              handlePressFollowOrUnfollow(post!.author);
-            }}
-          />
-        )}
         <Spacer paddingHorizontal="xs" />
         {PressMoreComponent}
       </View>

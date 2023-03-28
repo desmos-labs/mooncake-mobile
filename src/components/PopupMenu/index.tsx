@@ -23,7 +23,7 @@ interface PopupMenuItem {
 }
 
 export interface Props {
-  menuItems: PopupMenuItem[];
+  menuItems: (PopupMenuItem | undefined)[];
 
   /**
    * An optional callback that is called when the menu is opened.
@@ -45,6 +45,9 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
    */
   const menuOptions = React.useMemo(() => {
     return menuItems.map((item, idx) => {
+      if (!item) {
+        return null;
+      }
       return (
         <Box id={item.label} key={item.label}>
           <Menu.Item
