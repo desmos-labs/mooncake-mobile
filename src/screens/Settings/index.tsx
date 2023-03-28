@@ -14,7 +14,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
-import { useTheme } from 'native-base';
 import { useActiveAccount } from '@recoil/accounts';
 import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 import {
@@ -37,7 +36,6 @@ declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS
 const Settings = (props: NavProps) => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
-  const theme = useTheme();
   const { navigation } = props;
   const { navigate } = navigation;
 
@@ -80,20 +78,13 @@ const Settings = (props: NavProps) => {
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('confirmModal:signout'),
-        subtitle: (
-          <Trans
-            i18nKey="confirmModal:backupSeedphrase"
-            components={[<Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />]}
-          />
-        ),
-        primaryButtonLabel: t('confirmModal:goToBackup'),
-        secondaryButtonLabel: t('confirmModal:signout'),
-        onPressPrimary: () => console.log('primary'),
-        onPressSecondary: signOut,
+        subtitle: <Typography.Body6>{t('confirmModal:private key warning')}</Typography.Body6>,
+        primaryButtonLabel: t('confirmModal:signout'),
+        onPressPrimary: signOut,
         removeModalAfterButtonPress: true,
       },
     });
-  }, [navigate, t, theme.colors.butterOrange01, signOut]);
+  }, [navigate, t, signOut]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering

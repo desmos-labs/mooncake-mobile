@@ -1,7 +1,6 @@
 {
   "removeProfile": "Remove profile",
-  "backupSeedphrase": "Make sure you have a backup of secret recovery phrase and <0>DO NOT SHARE</0> it to anyone; it is the only way to restore your profile dTags!",
-  "goToBackup": "Back up your phrase",
+  "private key warning": "Make sure you have a backup of your account (write down the private key) before signing out. It is the only way to restore your profile",
   "remove": "Remove",
   "signout": "Sign Out"
 }
