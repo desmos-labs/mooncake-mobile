@@ -46,7 +46,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
  */
 const Signup = () => {
   const { t } = useTranslation('passwordManipulation');
-  const { navigate, goBack } = useNavigation<NavProps['navigation']>();
+  const { reset, goBack } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
   const toast = useCustomToast();
@@ -74,8 +74,20 @@ const Signup = () => {
 
   // Callback that is used when the signup completes properly
   const onSuccess = useCallback(() => {
-    navigate(ROUTES.WELCOME);
-  }, [navigate]);
+    // Redirect fresh user to Discover Tab as they won't be following anyone
+    reset({
+      index: 0,
+      routes: [
+        {
+          name: ROUTES.BOTTOM_TABS,
+          params: {
+            screen: ROUTES.HOME_TABS,
+            params: { initialRouteName: ROUTES.HOME_TAB_DISCOVER },
+          },
+        },
+      ],
+    });
+  }, [reset]);
 
   // Callback that is used when the signup procedure raises any error
   const onError = useCallback(
