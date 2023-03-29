@@ -3,11 +3,13 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 export type PostsListState = {
   scrollToTop: boolean;
   searchBarFocused: boolean;
+  valueToSearch: string;
 };
 
 const DefaultListOptions: PostsListState = {
   scrollToTop: false,
   searchBarFocused: false,
+  valueToSearch: '',
 };
 
 /**

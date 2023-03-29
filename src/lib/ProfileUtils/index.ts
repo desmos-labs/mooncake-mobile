@@ -26,6 +26,7 @@ export const isPictureAsset = (picture: Asset | string | undefined): picture is 
 
 const getPictureData = (picture: Asset | string | undefined, defaultImage: ImageRequireSource) => {
   if (isPictureUri(picture)) {
+    console.log('isPictureUri', picture);
     const trimmedUri = picture.trim();
     return trimmedUri.length > 0 ? { uri: trimmedUri } : defaultImage;
   } else if (isPictureAsset(picture)) {
@@ -41,6 +42,7 @@ const getPictureData = (picture: Asset | string | undefined, defaultImage: Image
 export const getProfilePicture = (
   profile: DesmosProfile | undefined,
 ): Source | ImageRequireSource => {
+  console.log('getProfilePicture', profile);
   return getPictureData(profile?.profilePicture, defaultProfilePic);
 };
 

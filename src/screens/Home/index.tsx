@@ -6,7 +6,7 @@ import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import Typography from 'components/Typography';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Platform, RefreshControl, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, Platform, RefreshControl, View } from 'react-native';
 import { useTheme } from 'native-base';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -27,6 +27,7 @@ import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import { emptyListPlaceholder } from 'assets/images';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
+import SearchViewComponent from 'screens/Home/components/SearchViewComponent';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
@@ -178,6 +179,9 @@ const Home = () => {
       handlePressFollow,
       handlePressReport,
       handlePressTip,
+      styles.loaderView,
+      t,
+      toast,
     ],
   );
 
@@ -193,23 +197,6 @@ const Home = () => {
       setPostsListState(value => ({ ...value, scrollToTop: false }));
     }
   }, [postsListState, postListRef, setPostsListState]);
-
-  // View that represents the search bar
-  const SearchView = useMemo(() => {
-    return (
-      postsListState.searchBarFocused && (
-        <TouchableWithoutFeedback
-          onPress={() => setPostsListState(value => ({ ...value, searchBarFocused: false }))}
-          style={styles.searchView}>
-          <View style={styles.absoluteView}>
-            <Typography.Body6>
-              We are Anonymous, we are legion, we do not forgive, we do not forget. Expect us.
-            </Typography.Body6>
-          </View>
-        </TouchableWithoutFeedback>
-      )
-    );
-  }, [postsListState, setPostsListState, styles]);
 
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
@@ -273,7 +260,9 @@ const Home = () => {
           getItemType={getPostType}
         />
       </View>
-      {SearchView}
+      {postsListState.searchBarFocused && (
+        <SearchViewComponent valueToSearch={postsListState.valueToSearch} />
+      )}
     </>
   );
 };

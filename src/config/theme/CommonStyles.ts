@@ -66,6 +66,15 @@ const overflow: { visible: StyleProp<ViewStyle> } = {
   },
 };
 
+/**
+ * A map of commonly used absolute values
+ */
+const position: { absolute: StyleProp<ViewStyle> } = {
+  absolute: {
+    position: 'absolute',
+  },
+};
+
 const CommonStyles = {
   flex,
   flexGrow,
@@ -73,6 +82,7 @@ const CommonStyles = {
   opacity,
   overflow,
   flexDirection,
+  position,
 };
 
 export default CommonStyles;

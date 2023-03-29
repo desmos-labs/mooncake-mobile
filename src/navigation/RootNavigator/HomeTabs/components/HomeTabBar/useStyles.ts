@@ -8,6 +8,14 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'cover',
     marginRight: theme.spacing.xs,
   },
+  butterFlyImageContainer: { position: 'absolute', left: 0, right: 'auto' },
+  inviteIconContainer: { position: 'absolute', left: 'auto', right: 0 },
+  cancelIconContainer: {
+    marginLeft: theme.spacing.m,
+    position: 'absolute',
+    left: 'auto',
+    right: 0,
+  },
   container: {
     marginTop: theme.spacing.xs,
     paddingBottom: theme.spacing.s,
@@ -35,14 +43,6 @@ const useStyles = makeStyle(theme => ({
     width: 36,
     height: 36,
     resizeMode: 'contain',
-  },
-  searchBarRightElement: {
-    position: 'absolute',
-    right: 0,
-  },
-  searchBarLeftElement: {
-    position: 'absolute',
-    left: 0,
   },
 }));
 
