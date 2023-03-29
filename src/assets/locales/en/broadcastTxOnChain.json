@@ -2,5 +2,17 @@
   "transaction broadcasting": "Transaction broadcasting...",
   "please wait": "Please wait",
   "memo": "Memo",
-  "broadcast tx": "Broadcast tx"
+  "broadcast tx": "Broadcast tx",
+  "createPost": "Create post",
+  "authorization": "Authorization",
+  "likePost": "Like post",
+  "tipPost": "Tip post",
+  "dislikePost": "Dislike post",
+  "followUser": "Follow user",
+  "unfollowUser": "Unfollow user",
+  "reportPost": "Report post",
+  "address": "Address",
+  "type": "Type",
+  "header": "Transaction Details",
+  "fee": "Fee"
 }
