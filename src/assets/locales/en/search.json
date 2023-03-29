@@ -1,3 +1,4 @@
 {
-  "total results": "{{number}} total results"
+  "total results": "{{number}} total results",
+  "no results": "No results",
 }

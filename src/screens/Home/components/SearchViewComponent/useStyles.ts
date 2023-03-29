@@ -1,6 +1,7 @@
 import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
+  wrapperView: { height: '100%', width: '100%' },
   absoluteView: {
     flex: 1,
     position: 'absolute',

@@ -35,6 +35,7 @@ const HomeSearchBar = ({ handleChange, searchPlaceHolder, onFocus, onBlur, focus
         autoCorrect={true}
         disableFullscreenUI={true}
         allowFontScaling={true}
+        clearButtonMode="while-editing"
         numberOfLines={1}
         ref={textInputRef}
         style={styles.input}
