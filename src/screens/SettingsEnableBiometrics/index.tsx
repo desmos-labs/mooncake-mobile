@@ -111,13 +111,8 @@ const SettingsEnableBiometrics = () => {
               style={styles.buttonGroup}>
               <Button
                 isLoading={loading}
-                textColor="white"
-                // TODO: figure out this button's color behavior
-                // color={
-                //   !values.password || Object.values(errors).length > 0
-                //     ? theme.colors.lightGrey02
-                //     : theme.colors.surfaceBlack
-                // }
+                backgroundColor={theme.colors.surfaceBlack}
+                textColor={theme.colors.white}
                 disabled={!values.password || Object.values(errors).length > 0}
                 onPress={handleSubmit as any}>
                 {t('common:next')}
