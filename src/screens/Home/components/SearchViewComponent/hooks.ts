@@ -25,7 +25,7 @@ const useHooks = (addressToSearch: string) => {
     } else {
       results = await getProfile({
         variables: {
-          dTag: '',
+          dTag: addressToSearch,
         },
       });
     }
@@ -33,7 +33,7 @@ const useHooks = (addressToSearch: string) => {
     setProfiles(convertedProfiles);
     await sleep(500);
     setIsSearching(false);
-  }, [getProfile, addressToSearch]);
+  }, [addressToSearch, getProfile]);
 
   return {
     getProfileForDTag,

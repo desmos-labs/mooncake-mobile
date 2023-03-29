@@ -1,11 +1,12 @@
 import Typography from 'components/Typography';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 interface Props {
@@ -20,11 +21,17 @@ interface Props {
 const SearchResultComponent = ({ profile }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-
+  const activeAddress = useActiveAccountAddress();
   const navigateToProfile = useNavigateToProfile();
+  const isActiveAddress = useMemo(
+    () => profile.address === activeAddress,
+    [activeAddress, profile.address],
+  );
 
   return (
-    <TouchableOpacity style={styles.container} onPress={() => navigateToProfile(profile.address)}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigateToProfile(isActiveAddress ? undefined : profile.address)}>
       <FastImage source={getProfilePicture(profile)} resizeMode="cover" style={styles.avatar} />
       <View style={styles.textContainer}>
         <Typography.Subtitle3>{profile.nickname}</Typography.Subtitle3>
