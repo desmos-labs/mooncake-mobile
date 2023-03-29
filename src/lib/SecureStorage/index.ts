@@ -310,8 +310,8 @@ export const storeBiometricAuthorization = async (
   authorizationType: BiometricAuthorizations,
   password: string,
 ) => {
-  const isPasswordValid = await checkUserPassword(password);
-  if (!isPasswordValid) {
+  const result = await checkUserPassword(password);
+  if (result.isErr() || !result.value) {
     return err(new WrongPasswordError());
   }
 
