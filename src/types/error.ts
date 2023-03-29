@@ -7,7 +7,7 @@ export class PostAlreadyReportedError extends Error {
   readonly type: 'PostAlreadyReportedError';
 
   constructor(message?: string) {
-    super(message);
+    super(message || 'Post already reported');
     this.type = 'PostAlreadyReportedError';
   }
 }
@@ -24,7 +24,7 @@ export class CentralizedApiNotGrantedError extends Error {
   readonly type: 'CentralizedApiNotGrantedError';
 
   constructor(message?: string) {
-    super(message);
+    super(message || 'Centralized APIs permissions not granted');
     this.type = 'CentralizedApiNotGrantedError';
   }
 }
@@ -41,7 +41,7 @@ export class CanceledOperationError extends Error {
   readonly type: 'CanceledOperationError';
 
   constructor(message?: string) {
-    super(message);
+    super(message || 'Operation canceled');
     this.type = 'CanceledOperationError';
   }
 }
