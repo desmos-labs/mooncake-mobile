@@ -101,6 +101,7 @@ const useStyles = makeStyle(theme => ({
     paddingVertical: theme.spacing.m,
     borderRadius: 12,
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 }));
 
