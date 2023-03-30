@@ -12,7 +12,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import { Center, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
 import {
@@ -191,16 +191,14 @@ const CreatePost = () => {
               textAlignVertical="top"
             />
             {/* TODO: Allow to select multiple attachments */}
-            <Center>
-              <SelectedPostImage
-                source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
-                dimensions={{
-                  width: postAttachments.length > 0 ? postAttachments[0].width : undefined,
-                  height: postAttachments.length > 0 ? postAttachments[0].height : undefined,
-                }}
-                handlePress={source => removePostAttachment(source)}
-              />
-            </Center>
+            <SelectedPostImage
+              source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
+              dimensions={{
+                width: postAttachments.length > 0 ? postAttachments[0].width : undefined,
+                height: postAttachments.length > 0 ? postAttachments[0].height : undefined,
+              }}
+              handlePress={source => removePostAttachment(source)}
+            />
           </ScrollView>
         </View>
       </DView>
