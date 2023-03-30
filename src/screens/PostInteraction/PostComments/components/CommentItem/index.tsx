@@ -27,6 +27,7 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import {
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
+  useHandlePressShowCommentDetailsWithFocus,
 } from 'screens/PostDetails/hooks';
 import PopupMenu from 'components/PopupMenu';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
@@ -64,6 +65,7 @@ const CommentItem = (props: CommentItemProps) => {
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressSendTips = useHandlePressSendTips();
   const handleShowCommentDetails = useHandlePressShowCommentDetails();
+  const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
   const isFollowing = useIsFollowing(comment.author.address);
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
@@ -106,6 +108,10 @@ const CommentItem = (props: CommentItemProps) => {
   const handlePress = () => {
     if (isPostPending(comment)) return;
     handleShowCommentDetails(comment);
+  };
+  const handlePressCommentWithFocus = () => {
+    if (isPostPending(comment)) return;
+    handleShowCommentDetailsWithFocus(comment);
   };
 
   // -------------------------------------------------------------------------------------
@@ -178,7 +184,9 @@ const CommentItem = (props: CommentItemProps) => {
 
           <View style={styles.interactionButtonGroup}>
             {!disableInnerComment && (
-              <TouchableOpacity style={styles.interactionButton}>
+              <TouchableOpacity
+                onPress={handlePressCommentWithFocus}
+                style={styles.interactionButton}>
                 <Image source={commentIcon} style={[styles.buttonImage, styles.interactionImage]} />
                 <Typography.Subtitle3 style={styles.textStyle}>
                   {formatNumShorthand(commentsCount)}
