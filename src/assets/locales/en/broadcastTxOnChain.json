@@ -14,5 +14,6 @@
   "address": "Address",
   "type": "Type",
   "header": "Transaction Details",
-  "fee": "Fee"
+  "fee": "Fee",
+  "errorOccurredPleaseTryAgain": "Error occurred. Please try again."
 }

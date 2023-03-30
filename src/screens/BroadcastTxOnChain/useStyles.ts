@@ -4,7 +4,8 @@ const useStyles = makeStyle(theme => ({
   root: {
     flex: 1,
   },
-  scrollviewContentContainer: {
+  scrollViewContentContainer: {
+    flexGrow: 1,
     paddingHorizontal: theme.spacing.m,
   },
 }));

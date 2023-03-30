@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import ROUTES from 'navigation/routes';
 import { useRoute } from '@react-navigation/native';
 import { broadcastAnim } from 'assets/animations';
@@ -89,7 +89,7 @@ const BroadcastTxOnChain: React.FC = () => {
 
   const [estimatingFees, setEstimatingFees] = React.useState(false);
   const [feesResult, setFeesResult] = React.useState<Result<StdFee, Error>>();
-  const [broadcastingTx, setBroadcastingTx] = React.useState(false);
+  const [broadcastingTx, setBroadcastingTx] = React.useState(true);
 
   // -----------------------------------------------------------------------
   // --- Back action
@@ -105,27 +105,31 @@ const BroadcastTxOnChain: React.FC = () => {
   // -----------------------------------------------------------------------
 
   React.useEffect(() => {
-    (async () => {
-      setFeesResult(undefined);
-      setEstimatingFees(true);
-
-      // Get the address of the user
-      let address: string;
-      if (typeof accountAddressOrWallet === 'object') {
-        address = accountAddressOrWallet.address;
-      } else {
-        address = accountAddressOrWallet;
-      }
-
-      // Estimate the fees
-      const estimatedFees = await estimateFees(address, messages, memo);
-      setEstimatingFees(false);
-      setFeesResult(estimatedFees);
-    })();
-
+    handleEstimateFees();
     // Safe to ignore, we want to estimate the fees just when we enter this screen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // -----------------------------------------------------------------------
+  // --- Callbacks
+  // -----------------------------------------------------------------------
+  const handleEstimateFees = React.useCallback(async () => {
+    setFeesResult(undefined);
+    setEstimatingFees(true);
+
+    // Get the address of the user
+    let address: string;
+    if (typeof accountAddressOrWallet === 'object') {
+      address = accountAddressOrWallet.address;
+    } else {
+      address = accountAddressOrWallet;
+    }
+
+    // Estimate the fees
+    const estimatedFees = await estimateFees(address, messages, memo);
+    setEstimatingFees(false);
+    setFeesResult(estimatedFees);
+  }, [accountAddressOrWallet, estimateFees, memo, messages]);
 
   // -----------------------------------------------------------------------
   // --- Memoized values
@@ -190,10 +194,16 @@ const BroadcastTxOnChain: React.FC = () => {
     }
     if (feesResult.isOk()) {
       return formatCoins(_.get(feesResult, 'value.amount'));
-    } else {
-      return feesResult.error.message;
     }
-  }, [feesResult]);
+    if (feesResult.isErr()) {
+      return t('errorOccurredPleaseTryAgain');
+    }
+  }, [feesResult, t]);
+
+  const TopBarOrEmptyView = React.useMemo(() => {
+    if (broadcastingTx) return <View />;
+    return <TopBar />;
+  }, [broadcastingTx]);
 
   // -----------------------------------------------------------------------
   // --- Actions
@@ -216,13 +226,13 @@ const BroadcastTxOnChain: React.FC = () => {
   const broadcastTxAnimation = React.useMemo(() => {
     if (broadcastingTx) {
       return (
-        <>
+        <Box flex={1} alignItems="center" justifyContent="center">
           <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
           <Spacer paddingVertical={12}>
             <Typography.H4>{title || t('transaction broadcasting')}</Typography.H4>
           </Spacer>
           <Typography.Body6>{t('please wait')}</Typography.Body6>
-        </>
+        </Box>
       );
     }
   }, [broadcastingTx, t, title]);
@@ -232,26 +242,39 @@ const BroadcastTxOnChain: React.FC = () => {
   // -----------------------------------------------------------------------
 
   return (
-    <DView topBar={<TopBar />} style={styles.root}>
-      <Box px="m" mb="50px">
-        <Typography.H3>{t('header')}</Typography.H3>
-      </Box>
-      <ScrollView contentContainerStyle={styles.scrollviewContentContainer}>
+    <DView topBar={TopBarOrEmptyView} style={styles.root}>
+      {!broadcastingTx && (
+        <Box px="m" mb="50px">
+          <Typography.H3>{t('header')}</Typography.H3>
+        </Box>
+      )}
+
+      <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
         {/* Broadcasting animation shown while the transaction it's broadcasting */}
         {broadcastTxAnimation}
-        {/* Messages list, tx fees and memo */}
-        <TransactionRow title={t('address')} subtitle={broadcasterAddress} />
-        <TransactionRow title={t('type')} subtitle={transactionType} />
-        <TransactionRow title={t('fee')} isLoading={!feesResult} subtitle={transactionFee} />
+        {/* Tx type, tx fees */}
+        {!broadcastingTx && (
+          <>
+            <TransactionRow title={t('address')} subtitle={broadcasterAddress} />
+            <TransactionRow title={t('type')} subtitle={transactionType} />
+            <TransactionRow title={t('fee')} isLoading={!feesResult} subtitle={transactionFee} />
+            <Box flex={1} justifyContent="center">
+              <Typography.Body5>
+                {feesResult && feesResult?.isErr() && feesResult.error.message}
+              </Typography.Body5>
+            </Box>
+          </>
+        )}
       </ScrollView>
       <Button
         size={44}
+        mx="m"
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
-        onPress={handleBroadcastTx}
+        onPress={feesResult?.isErr() ? handleEstimateFees : handleBroadcastTx}
         isLoading={broadcastingTx}
-        disabled={estimatingFees || feesResult?.isErr() || broadcastingTx}>
-        {t('broadcast tx')}
+        disabled={estimatingFees || broadcastingTx}>
+        {feesResult?.isErr() ? t('common:retry') : t('broadcast tx')}
       </Button>
     </DView>
   );
