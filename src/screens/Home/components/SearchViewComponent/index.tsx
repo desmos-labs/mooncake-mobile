@@ -61,7 +61,7 @@ const SearchViewComponent = ({ valueToSearch }: Props) => {
                 keyboardDismissMode="on-drag"
                 data={profiles}
                 renderItem={renderItem}
-                estimatedItemSize={150}
+                estimatedItemSize={55}
                 ListEmptyComponent={<EmptyListComponent label={t('no results')} />}
               />
             </>

@@ -34,7 +34,7 @@ const SearchResultComponent = ({ profile }: Props) => {
       onPress={() => navigateToProfile(isActiveAddress ? undefined : profile.address)}>
       <FastImage source={getProfilePicture(profile)} resizeMode="cover" style={styles.avatar} />
       <View style={styles.textContainer}>
-        <Typography.Subtitle3>{profile.nickname}</Typography.Subtitle3>
+        <Typography.Subtitle3>{profile.nickname || 'no-nickname'}</Typography.Subtitle3>
         <Typography.Body7 style={{ color: theme.colors.midGrey }}>@{profile.dTag}</Typography.Body7>
       </View>
     </TouchableOpacity>

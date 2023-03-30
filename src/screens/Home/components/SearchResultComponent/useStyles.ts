@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     flexDirection: 'row',
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacing.l,
   },
   textContainer: {
     flex: 1,
