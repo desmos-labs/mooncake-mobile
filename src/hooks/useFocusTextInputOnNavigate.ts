@@ -13,7 +13,7 @@ const useFocusTextInputOnNavigate = () => {
    * Main keyboard focus callback for use when user presses the comment button
    */
   const focusTextInputRef = useCallback(() => {
-    textInputRef.current.focus();
+    textInputRef && textInputRef.current && textInputRef.current.focus();
   }, [textInputRef]);
 
   /**
@@ -27,7 +27,10 @@ const useFocusTextInputOnNavigate = () => {
         }, 200);
       }
     }
-  }, [focusTextInputRef, params.focusCommentBox, textInputRef]);
+    // We need to ignore this warning as it flags the textInputRef.current dep as invalid, when it is
+    // necessary to detect if the reference has been properly set so that the app can focus on the text input
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusTextInputRef, params.focusCommentBox, textInputRef.current]);
 
   return {
     focusTextInputRef,
