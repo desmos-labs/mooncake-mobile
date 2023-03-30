@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, ImageProps, TouchableOpacity, View } from 'react-native';
 import { makeStyle } from 'config/theme';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
-import { whiteCross } from 'assets/images';
+import { deleteButton } from 'assets/images';
+import { scale } from 'react-native-size-matters';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {
   source: UploadAssetType | undefined;
@@ -70,7 +71,7 @@ const SelectedPostImage = ({ source, handlePress, dimensions }: Props) => {
             <TouchableOpacity
               style={styles.closeButtonContainer}
               onPress={() => handlePress(source)}>
-              <Image style={styles.closeButton} source={whiteCross} />
+              <Image style={styles.closeButton} source={deleteButton} />
             </TouchableOpacity>
           </View>
         </View>
@@ -82,14 +83,11 @@ const SelectedPostImage = ({ source, handlePress, dimensions }: Props) => {
 const useStyles = makeStyle(theme => ({
   fakeView: { opacity: 0 },
   closeButton: {
-    height: 12,
+    height: scale(24),
+    width: scale(24),
     resizeMode: 'contain',
-    width: 12,
   },
   closeButtonContainer: {
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 8,
-    padding: 7.5,
     position: 'absolute',
     right: 8,
     top: 8,
