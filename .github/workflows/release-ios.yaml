@@ -41,8 +41,6 @@ jobs:
       - name: Get version info ⚙
         id: version-info
         run: bundle exec fastlane common populate_github_env
-        env:
-          VERSION_OVERRIDE: 0.0.1-RC1
 
       - name: Install yarn dependencies 🔨
         run: yarn install --immutable
@@ -69,7 +67,6 @@ jobs:
           APPLE_KEY_ID: '${{ secrets.APPLE_KEY_ID }}'
           APPLE_ISSUER_ID: '${{ secrets.APPLE_ISSUER_ID }}'
           APPLE_KEY_CONTENT: '${{ secrets.APPLE_KEY_CONTENT }}'
-          VERSION_OVERRIDE: 0.0.1-RC1
 
       - name: Deploy 🚀
         run: bundle exec fastlane ios deploy
@@ -88,4 +85,3 @@ jobs:
           APPLE_KEY_ID: '${{ secrets.APPLE_KEY_ID }}'
           APPLE_ISSUER_ID: '${{ secrets.APPLE_ISSUER_ID }}'
           APPLE_KEY_CONTENT: '${{ secrets.APPLE_KEY_CONTENT }}'
-          VERSION_OVERRIDE: 0.0.1-RC1
