@@ -7,7 +7,7 @@ import { ResultAsync } from 'neverthrow';
 const GetNonce = (address: string): ResultAsync<string, Error> => {
   return ResultAsync.fromPromise(axiosInstance.get(`/nonce/${address}`), (e: any) =>
     Error(e?.message ?? 'Error getting the nonce'),
-  ).map(response => response.data);
+  ).map(response => response.data.nonce);
 };
 
 export default GetNonce;
