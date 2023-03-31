@@ -20,9 +20,8 @@ const useGetPostData = (userAddress: string) => {
         },
       });
 
-      const serverCount = data?.post?.reactions?.totalCount || 0;
+      const serverCount = data?.reactions?.aggregate?.count || 0;
       const reactionsCount = computeReactionsCount(serverCount, post);
-
       return {
         ...post,
         reactionsCount,

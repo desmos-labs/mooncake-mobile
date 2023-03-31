@@ -13,7 +13,6 @@ const useGetComputePostReactionsCount = (userAddress: string) => {
       const serverReactionsCount = serverCount ?? 0;
 
       // Get the reactions difference that is stored locally
-
       const reactionsDifference = getReactionsDifference(post.subspaceId, post.id);
 
       // Compute the overall reactions count by adding to the server count the local difference
