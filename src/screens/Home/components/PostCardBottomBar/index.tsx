@@ -37,10 +37,19 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   // -------------------------------------------------------------------------------------
 
   const activeAddress = useActiveAccountAddress();
-  const { count: reactionsCount } = usePostReactionsCount(post);
-  const { count: commentsCount } = usePostCommentsCount(post);
+  const { count: reactionsCount, refetch: refreshReactionsCount } = usePostReactionsCount(post);
+  const { count: commentsCount, refetch: refreshCommentsCount } = usePostCommentsCount(post);
 
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  React.useEffect(() => {
+    refreshReactionsCount();
+    refreshCommentsCount();
+  }, [refreshCommentsCount, refreshReactionsCount]);
 
   // -------------------------------------------------------------------------------------
   // --- Memoized variables
