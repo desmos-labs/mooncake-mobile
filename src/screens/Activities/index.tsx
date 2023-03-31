@@ -107,7 +107,7 @@ const Activities = () => {
       // Render a notification
       return <NotificationComponent notification={item} />;
     },
-    [styles.divider, styles.sectionHeader],
+    [styles.divider, styles.sectionHeader, t],
   );
 
   // Component shown at the bottom tof the page
@@ -117,7 +117,7 @@ const Activities = () => {
     } else {
       return null;
     }
-  }, [fetchingMore, theme.spacing.m]);
+  }, [fetchingMore]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects

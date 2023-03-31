@@ -12,6 +12,7 @@ import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
 import useSetNotificationAsRead from 'hooks/notifications/useSetNotificationAsRead';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 export interface NotificationComponentProps {
@@ -30,6 +31,16 @@ const NotificationItem = (props: NotificationComponentProps) => {
   const { notification } = props;
 
   // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const activeAccountAddress = useActiveAccountAddress();
+
+  const navigateToProfile = useNavigateToProfile();
+  const setNotificationAsRead = useSetNotificationAsRead();
+  const handleNotificationPressEvent = useHandleNotificationPressEvent();
+
+  // -------------------------------------------------------------------------------------
   // --- Formatted data
   // -------------------------------------------------------------------------------------
 
@@ -37,24 +48,29 @@ const NotificationItem = (props: NotificationComponentProps) => {
   const formatDate = useFormatTimeForPostDetails();
   const formattedDate = formatDate(timestamp);
 
-  const profile = useMemo(() => {
+  // Get the profile address and the profile details of the other user involved in the notification
+  const [profileAddress, profile] = useMemo(() => {
     switch (notification.type) {
       case NotificationType.ReactionReply:
       case NotificationType.ReactionComment:
       case NotificationType.ReactionPost:
-        return notification.reaction?.author;
+        return [notification.reactionAuthorAddress, notification.reaction?.author];
       case NotificationType.Comment:
-        return notification.comment?.author;
+        return [notification.commentAuthorAddress, notification.comment?.author];
       case NotificationType.Reply:
-        return notification.reply?.author;
+        return [notification.replyAuthorAddress, notification.reply?.author];
       case NotificationType.Follow:
-        return notification.user;
-      case NotificationType.InviteClaimed:
-        return notification.claimer;
+        return [notification.userAddress, notification.user];
+      case NotificationType.InviteClaimed: {
+        if (notification.claimerAddress === activeAccountAddress) {
+          return [notification.inviterAddress, notification.inviter];
+        }
+        return [notification.claimerAddress, notification.claimer];
+      }
       default:
-        return undefined;
+        return [undefined, undefined];
     }
-  }, [notification]);
+  }, [activeAccountAddress, notification]);
 
   const post = useMemo(() => {
     switch (notification.type) {
@@ -87,22 +103,18 @@ const NotificationItem = (props: NotificationComponentProps) => {
         return t('commented reply');
       case NotificationType.Follow:
         return t('followed you');
-      case NotificationType.InviteClaimed:
+      case NotificationType.InviteClaimed: {
+        if (notification.claimerAddress === activeAccountAddress) {
+          return t('invited you to join Butter');
+        }
         return t('claimed your invite');
+      }
       case NotificationType.InviteUnlocked:
         return t('unlocked a new invite');
       default:
         return 'Unsupported notification type';
     }
-  }, [notification, t]);
-
-  // -------------------------------------------------------------------------------------
-  // --- Hooks
-  // -------------------------------------------------------------------------------------
-
-  const navigateToProfile = useNavigateToProfile();
-  const setNotificationAsRead = useSetNotificationAsRead();
-  const handleNotificationPressEvent = useHandleNotificationPressEvent();
+  }, [activeAccountAddress, notification, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -161,7 +173,15 @@ const NotificationItem = (props: NotificationComponentProps) => {
         {/* Notification texts */}
         <TouchableOpacity style={styles.profileView} onPress={handleNavigateToNotification}>
           {profile && <Typography.Subtitle3>{getProfileDisplayName(profile)}</Typography.Subtitle3>}
-          <Typography.Body6> {bodyText}</Typography.Body6>
+          {!profile && profileAddress && (
+            <Typography.Subtitle3
+              style={styles.profileAddressText}
+              lineBreakMode="middle"
+              numberOfLines={1}>
+              {profileAddress}
+            </Typography.Subtitle3>
+          )}
+          <Typography.Body6>{bodyText}</Typography.Body6>
           <Typography.Body7 style={styles.date}>{formattedDate}</Typography.Body7>
         </TouchableOpacity>
 
