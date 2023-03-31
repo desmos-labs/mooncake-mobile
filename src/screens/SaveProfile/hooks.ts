@@ -164,8 +164,6 @@ export const useSubmitForm = (
       profilePic: Asset | undefined,
       coverPic: Asset | undefined,
     ): Promise<Result<void, Error>> => {
-      console.log(values, profilePic, coverPic);
-
       // Get the address of the profile based on the given params
       const profileAddress = account?.account?.address ?? profile?.address;
       if (!profileAddress) {
@@ -185,7 +183,6 @@ export const useSubmitForm = (
         address: profileAddress,
         creationTime: profile?.creationTime ?? new Date(Date.now()).toISOString(),
       };
-      console.log('profile to save on chain: ', profileToSaveOnChain);
 
       // Store the profile locally by replacing the values with the previous ones (if undefined)
       const profileToSaveLocally: DesmosProfile = {
@@ -196,7 +193,6 @@ export const useSubmitForm = (
         profilePicture: profileToSaveOnChain.profilePicture ?? profile?.profilePicture,
         coverPicture: profileToSaveOnChain.coverPicture ?? profile?.coverPicture,
       };
-      console.log('profile to save locally: ', profileToSaveLocally);
       storeProfile(profileAddress, profileToSaveLocally);
 
       // Save the profile on-chain, if required
