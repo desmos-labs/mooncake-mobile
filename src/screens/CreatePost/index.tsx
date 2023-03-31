@@ -180,15 +180,14 @@ const CreatePost = () => {
           <ScrollView style={styles.contentContainer}>
             {/* this may get refactored into its own custom component */}
             <TextInput
+              autoFocus={true}
               maxLength={postsParams.maxTextLength}
               placeholder={t(parent ? 'yourReply' : 'writeSomething')}
               placeholderTextColor={theme.colors.grey02}
               value={postText}
               onChangeText={setPostText}
               multiline
-              style={{
-                color: theme.colors.surfaceBlack,
-              }}
+              style={styles.input}
               textAlignVertical="top"
             />
             {/* TODO: Allow to select multiple attachments */}
