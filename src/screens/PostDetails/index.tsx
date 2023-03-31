@@ -75,7 +75,7 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
 
   const scrollViewRef = useRef<FlashList<Post>>(null);
-  const { textInputRef } = useFocusTextInputOnNavigate();
+  const { textInputRef, focusTextInputRef } = useFocusTextInputOnNavigate();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -197,7 +197,7 @@ const PostDetails = () => {
         scrollEnabled={true}
         refreshing={pageRefreshing}
         onRefresh={refreshPage}
-        ListHeaderComponent={<PostHeader post={post!} />}
+        ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post!} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.externalId}
         renderItem={renderItem}
