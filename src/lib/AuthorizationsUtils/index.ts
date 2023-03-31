@@ -18,7 +18,6 @@ import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/a
 import { genericSubspaceAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
 import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import Long from 'long';
-import EnvConfig from 'config/EnvConfig';
 import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { EncodeObject } from '@cosmjs/proto-signing';
 
@@ -219,12 +218,14 @@ export const buildRevokeAllowanceEncodes = (
 /**
  * Build the MsgGrantEncodeObjects from an array of grants.
  * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#How-to-grant-an-authorization
+ * @param subspaceId - The subspace id inside which to create the grant.
  * @param grants - An array of grants to build MsgGrantEncodeObjects for.
  * @param grantee - The address of the grantee.
  * @param granter - The address of the granter.
  * @returns {MsgGrantEncodeObject[]} An array of Encode Objects that authorizes a grantee to conduct {grants} type transactions onbehalf of the granter.
  */
 export const buildGrantMsgEncodes = (
+  subspaceId: number,
   grants: string[],
   grantee: string,
   granter: string,
@@ -239,7 +240,7 @@ export const buildGrantMsgEncodes = (
           )
         : genericSubspaceAuthorizationToAny(
             GenericSubspaceAuthorization.fromPartial({
-              subspacesIds: [Long.fromNumber(EnvConfig.APP_SUBSPACE_ID)],
+              subspacesIds: [Long.fromNumber(subspaceId)],
               msg: grant,
             }),
           );

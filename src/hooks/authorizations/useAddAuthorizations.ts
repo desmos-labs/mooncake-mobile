@@ -10,14 +10,17 @@ import useButterConfig from 'hooks/config/useButterConfig';
 import { err } from 'neverthrow';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import React from 'react';
+import { useAppStateValue } from '@recoil/appState';
 
 /**
  * Hook that provides a function to add the necessary fee grants and authzs grant
  * so that the user can use the centralized API to perform such actions.
  */
 const useAddAuthorizations = () => {
-  const getAuthorizations = useGetAuthorizations();
+  const subspaceId = useAppStateValue('subspaceId');
   const { config: butterConfig } = useButterConfig();
+
+  const getAuthorizations = useGetAuthorizations();
   const broadcastTx = useBroadcastTx();
 
   return React.useCallback(
@@ -52,7 +55,12 @@ const useAddAuthorizations = () => {
       if (missingAuthzGrants.length > 0) {
         // Push the new authz grants message.
         msgs.push(
-          ...buildGrantMsgEncodes(missingAuthzGrants, butterConfig.desmosAddress, userAddress),
+          ...buildGrantMsgEncodes(
+            subspaceId,
+            missingAuthzGrants,
+            butterConfig.desmosAddress,
+            userAddress,
+          ),
         );
       }
 
@@ -61,7 +69,7 @@ const useAddAuthorizations = () => {
         onChain: true,
       });
     },
-    [butterConfig, getAuthorizations, broadcastTx],
+    [butterConfig, getAuthorizations, broadcastTx, subspaceId],
   );
 };
 

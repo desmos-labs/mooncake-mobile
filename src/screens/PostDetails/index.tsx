@@ -6,14 +6,14 @@ import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { useTheme } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import { FlashList } from '@shopify/flash-list';
-import { Post } from 'types/posts';
+import { isCommentReply, Post } from 'types/posts';
 import usePost from 'hooks/posts/usePost';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
@@ -75,7 +75,7 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
 
   const scrollViewRef = useRef<FlashList<Post>>(null);
-  const { textInputRef } = useFocusTextInputOnNavigate();
+  const { textInputRef, focusTextInputRef } = useFocusTextInputOnNavigate();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -152,7 +152,8 @@ const PostDetails = () => {
   // Function uses to render the items inside the list of comments
   const renderItem = React.useCallback((info: ListRenderItemInfo<Post>) => {
     const { item } = info;
-    return <CommentItem comment={item} />;
+    const disabled = isCommentReply(item);
+    return <CommentItem comment={item} disableInnerComment={disabled} />;
   }, []);
 
   // -------------------------------------------------------------------------------------
@@ -197,7 +198,7 @@ const PostDetails = () => {
         scrollEnabled={true}
         refreshing={pageRefreshing}
         onRefresh={refreshPage}
-        ListHeaderComponent={<PostHeader post={post!} />}
+        ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post!} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.externalId}
         renderItem={renderItem}

@@ -8,7 +8,6 @@ import { isRootPost, Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
-import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import { useHandlePressCounters, useHandlePressSendTips } from 'screens/PostDetails/hooks';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useTranslation } from 'react-i18next';
@@ -19,17 +18,19 @@ import useStyles from './useStyles';
 
 interface Props {
   post: Post;
+
+  handlePressComment: () => void;
 }
 
 /**
  * Component that renders the header of the post details screen.
  * @param post - Post to render
+ * @param handlePressComment - What to do when the Comment button is pressed. (i.e focus on the text input)
  * @constructor
  */
-const PostHeader = ({ post }: Props) => {
+const PostHeader = ({ post, handlePressComment }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
-  const { focusTextInputRef } = useFocusTextInputOnNavigate();
   const activeAddress = useActiveAccountAddress();
   const toast = useCustomToast();
 
@@ -85,7 +86,7 @@ const PostHeader = ({ post }: Props) => {
           <PostActionButtonsBar
             postLiked={liked}
             handleLikePress={() => addOrRemoveLike(post!)}
-            handleCommentPress={focusTextInputRef}
+            handleCommentPress={handlePressComment}
             handleTipPress={checkUserAndHandleSendTips}
           />
         </>

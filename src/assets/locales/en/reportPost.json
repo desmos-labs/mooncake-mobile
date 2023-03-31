@@ -8,6 +8,8 @@
   "report": "Report",
   "submit": "Submit",
   "message": "Add more details",
+  "already reported": "Already reported",
+  "already reported message": "You have already reported this post",
   "thanks for reporting": "Thank you for reporting",
-  "report success message": "Thank you for taking your time to report this post. In case the post violates our community guidelines, Butter will take care of handling the post."
+  "report success message": "In case the post violates our community guidelines, our support will take care of it"
 }

@@ -11,6 +11,9 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'cover',
     borderRadius: 20,
   },
+  profileAddressText: {
+    width: '50%',
+  },
   profileView: {
     marginLeft: theme.spacing.s,
     flexDirection: 'column',

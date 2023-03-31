@@ -90,7 +90,9 @@ const UnlockWallet = () => {
 
         if (walletResult.isErr()) {
           setLoading(false);
-          setPasswordError(walletResult.error.message);
+          // setPasswordError(walletResult.error.message);
+          // show more user-centric error instead
+          setPasswordError(t('error:incorrectPassword'));
           return;
         }
 
@@ -102,7 +104,9 @@ const UnlockWallet = () => {
           if (result.isOk()) {
             onSuccess(walletResult.value);
           } else {
-            setPasswordError(result.error.message);
+            // setPasswordError(result.error.message);
+            // show more user-centric error instead
+            setPasswordError(t('error:incorrectPassword'));
           }
         }
       }
@@ -146,6 +150,7 @@ const UnlockWallet = () => {
         initialValues={initialFormValues}
         onSubmit={onFormSubmit}
         validationSchema={validationSchema}
+        enableReinitialize
         initialErrors={{ password: passwordError }}>
         {({ handleSubmit, errors, setValues, values }) => (
           <View style={styles.formContainer}>

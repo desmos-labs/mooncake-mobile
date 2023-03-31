@@ -14,6 +14,11 @@ const useAddOrRemoveLike = (post: Post) => {
   // and have a more responsive UI as soon as the user presses the like button
   const [liked, setLiked] = React.useState(hasReacted);
 
+  // Update the local state when the server response changes
+  React.useEffect(() => {
+    setLiked(hasReacted);
+  }, [hasReacted]);
+
   // Debounce the add or remove reaction function to avoid spamming the server
   const addOrRemoveReaction = useAddOrRemoveReaction();
   const addOrRemovePostReactionDebounced = useMemo(

@@ -253,8 +253,8 @@ export const changeWalletsPassword = async (
   oldPassword: string,
   newPassword: string,
 ): Promise<Result<boolean, SecureStorageError>> => {
-  const isPasswordValid = await checkUserPassword(oldPassword);
-  if (isPasswordValid.isErr()) {
+  const checkResult = await checkUserPassword(oldPassword);
+  if (checkResult.isErr() || !checkResult.value) {
     return ok(false);
   }
 
@@ -310,8 +310,8 @@ export const storeBiometricAuthorization = async (
   authorizationType: BiometricAuthorizations,
   password: string,
 ) => {
-  const isPasswordValid = await checkUserPassword(password);
-  if (!isPasswordValid) {
+  const result = await checkUserPassword(password);
+  if (result.isErr() || !result.value) {
     return err(new WrongPasswordError());
   }
 

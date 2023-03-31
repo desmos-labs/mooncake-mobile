@@ -118,21 +118,17 @@ const usePerformSignUp = () => {
         return err(new Error('Your invite code is invalid'));
       }
 
-      console.log('Creating account with invite code', inviteCode);
-
       // Create a random wallet
       setStatus(SignUpStatus.CREATING_WALLET);
       const account = await generateRandomAccount();
 
       // Perform the login
       setStatus(SignUpStatus.CREATING_ACCOUNT);
-      const token = await performLogin(account.wallet);
-      if (!token) {
+      const tokenResult = await performLogin(account.wallet);
+      if (tokenResult.isErr()) {
         setStatus(SignUpStatus.DONE);
         return err(new Error('Cannot get token from APIs'));
       }
-
-      console.log('Login successful. Token:', token);
 
       // Accept the invitation
       setStatus(SignUpStatus.ACCEPTING_INVITE);

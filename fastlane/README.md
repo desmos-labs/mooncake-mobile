@@ -15,26 +15,18 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios key_check
+### ios build
 
 ```sh
-[bundle exec] fastlane ios key_check
+[bundle exec] fastlane ios build
 ```
 
 
 
-### ios build_ipa
+### ios deploy
 
 ```sh
-[bundle exec] fastlane ios build_ipa
-```
-
-
-
-### ios closed_beta
-
-```sh
-[bundle exec] fastlane ios closed_beta
+[bundle exec] fastlane ios deploy
 ```
 
 
@@ -60,6 +52,22 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### android clean
+
+```sh
+[bundle exec] fastlane android clean
+```
+
+
+
+### android signing_report
+
+```sh
+[bundle exec] fastlane android signing_report
+```
+
+
+
 ### android build_apk
 
 ```sh
@@ -76,10 +84,31 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
-### android deploy_to_internal_testing
+### android deploy_bundle
 
 ```sh
-[bundle exec] fastlane android deploy_to_internal_testing
+[bundle exec] fastlane android deploy_bundle
+```
+
+
+
+----
+
+
+## common
+
+### common populate_github_env
+
+```sh
+[bundle exec] fastlane common populate_github_env
+```
+
+
+
+### common write_env_file
+
+```sh
+[bundle exec] fastlane common write_env_file
 ```
 
 
