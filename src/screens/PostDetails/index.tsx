@@ -13,7 +13,7 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import { FlashList } from '@shopify/flash-list';
-import { Post } from 'types/posts';
+import { Post, PostData } from 'types/posts';
 import usePost from 'hooks/posts/usePost';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
@@ -21,7 +21,6 @@ import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { useActiveProfile } from '@recoil/profiles';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
@@ -74,7 +73,7 @@ const PostDetails = () => {
   // --- Views references
   // -------------------------------------------------------------------------------------
 
-  const scrollViewRef = useRef<FlashList<Post>>(null);
+  const scrollViewRef = useRef<FlashList<PostData>>(null);
   const { textInputRef, focusTextInputRef } = useFocusTextInputOnNavigate();
 
   // -------------------------------------------------------------------------------------
@@ -94,9 +93,6 @@ const PostDetails = () => {
     fetchMore: fetchMoreComments,
   } = usePostComments(postData);
   const { refetch: refreshCommentsCount } = usePostCommentsCount(postData);
-
-  // Reactions data
-  const { refetch: refreshReactionsCount } = usePostReactionsCount(postData);
 
   // Tips data
   const { refetch: refreshTipsCount } = usePostTipsCount(postData);
@@ -118,7 +114,6 @@ const PostDetails = () => {
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
     await refreshPost();
-    await refreshReactionsCount();
     await refreshComments();
     await refreshCommentsCount();
     await refreshTipsCount();
@@ -129,7 +124,6 @@ const PostDetails = () => {
     refreshCommentsCount,
     refreshInteractionsAuthors,
     refreshPost,
-    refreshReactionsCount,
     refreshTipsCount,
   ]);
 
@@ -150,7 +144,7 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
 
   // Function uses to render the items inside the list of comments
-  const renderItem = React.useCallback((info: ListRenderItemInfo<Post>) => {
+  const renderItem = React.useCallback((info: ListRenderItemInfo<PostData>) => {
     const { item } = info;
     return <CommentItem comment={item} />;
   }, []);

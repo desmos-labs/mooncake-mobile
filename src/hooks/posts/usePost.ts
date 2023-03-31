@@ -7,6 +7,8 @@ import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
+import { PostData } from 'types/posts';
+import useUpdatePost from 'hooks/posts/useUpdatePost';
 
 /**
  * Hook that allows to get the details of a post, or refetch them if needed.
@@ -64,9 +66,12 @@ const usePost = (subspaceId: number, postId: number) => {
     }
   }, [data, deletePost, post, storePost, updatePostReactionCache]);
 
+  const [postData, setPostData] = React.useState<PostData | undefined>();
+  useUpdatePost(activeAddress, post, setPostData);
+
   return {
     loading,
-    post,
+    post: postData,
     refetch,
   };
 };

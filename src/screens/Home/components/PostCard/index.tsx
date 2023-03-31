@@ -3,7 +3,7 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import React, { memo, useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'native-base';
-import { isPostPending, Post } from 'types/posts';
+import { isPostPending, PostData } from 'types/posts';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import useStyles from './useStyles';
@@ -12,7 +12,7 @@ interface PostCardProps {
   /**
    * Post that is related to this card.
    */
-  post: Post;
+  post: PostData;
   /**
    * What to do when the author's avatar, name, or DTag is pressed.
    */

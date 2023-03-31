@@ -4,8 +4,7 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import Spacer from 'components/Spacer';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import { Divider } from 'native-base';
-import { isRootPost, Post } from 'types/posts';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import { isRootPost, PostData } from 'types/posts';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import { useHandlePressCounters, useHandlePressSendTips } from 'screens/PostDetails/hooks';
@@ -17,29 +16,33 @@ import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 
 interface Props {
-  post: Post;
+  /**
+   * Post to render.
+   */
+  post: PostData;
 
+  /**
+   * What to do when the Comment button is pressed. (i.e focus on the text input)
+   */
   handlePressComment: () => void;
 }
 
 /**
  * Component that renders the header of the post details screen.
- * @param post - Post to render
- * @param handlePressComment - What to do when the Comment button is pressed. (i.e focus on the text input)
  * @constructor
  */
-const PostHeader = ({ post, handlePressComment }: Props) => {
+const PostHeader = (props: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
-  const activeAddress = useActiveAccountAddress();
-  const toast = useCustomToast();
+
+  const { post, handlePressComment } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  // Reactions data
-  const { count: reactionsCount, loading: isReactionsCountLoading } = usePostReactionsCount(post);
+  const toast = useCustomToast();
+  const activeAddress = useActiveAccountAddress();
 
   // Tips data
   const { count: tipsCount, loading: isTipsCountLoading } = usePostTipsCount(post);
@@ -101,8 +104,8 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
       <Spacer paddingVertical={16}>
         {/* Like, Comment and Tips bar */}
         <InteractionCountersBar
-          loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
-          likesCounter={reactionsCount}
+          loading={isTipsCountLoading || areInteractionsAuthorsLoading}
+          likesCounter={post.reactionsCount}
           tipsCounter={tipsCount}
           handlePressCounters={() => handlePressCounters(post!)}
           interactionAuthors={interactionsAuthors}

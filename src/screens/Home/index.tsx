@@ -21,7 +21,7 @@ import {
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import { isPostPending, Post } from 'types/posts';
+import { isPostPending, Post, PostData } from 'types/posts';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
@@ -131,7 +131,7 @@ const Home = () => {
   // -------------------------------------------------------------------------------------
 
   const renderPost = React.useCallback(
-    ({ item }: ListRenderItemInfo<Post>) => {
+    ({ item }: ListRenderItemInfo<PostData>) => {
       if (!item) {
         return (
           <View style={styles.loaderView}>
@@ -178,6 +178,9 @@ const Home = () => {
       handlePressFollow,
       handlePressReport,
       handlePressTip,
+      styles.loaderView,
+      t,
+      toast,
     ],
   );
 

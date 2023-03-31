@@ -11,6 +11,8 @@ import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 import sleep from 'lib/sleep';
 import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
+import { PostData } from 'types/posts';
+import useGetPostsData from 'hooks/posts/useGetPostsData';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -119,6 +121,7 @@ const usePosts = (queryType: PostsQueryType) => {
   );
 
   // Local state, used as returned values
+  const [postsData, setPostsData] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -147,6 +150,7 @@ const usePosts = (queryType: PostsQueryType) => {
       graphQLPosts.forEach(post => {
         updatePostReactionCache(post);
       });
+
       // This sleep is added on purpose in order to make the user wait,
       // to trigger the release of serotonin inside their brain
       // (just like slot machines)
@@ -173,7 +177,7 @@ const usePosts = (queryType: PostsQueryType) => {
       setError(undefined);
       setFetchingMore(true);
       await fetchMore({
-        variables: { offset: posts.length },
+        variables: { offset: postsData.length },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
           // If there are no more posts, stop fetching more
@@ -189,7 +193,7 @@ const usePosts = (queryType: PostsQueryType) => {
       setFetchingMore(false);
       setError(e.toString());
     }
-  }, [setError, setFetchingMore, fetchMore, posts]);
+  }, [fetchMore, postsData.length]);
 
   // Callback that is used in order to re-fetch the entire list of posts
   const refreshPosts = React.useCallback(async () => {
@@ -205,8 +209,14 @@ const usePosts = (queryType: PostsQueryType) => {
     }
   }, [refetch, queryData.variables, onCompletedCallback]);
 
+  // When the posts change, we need to update the local state
+  const getPostData = useGetPostsData(activeAddress);
+  React.useEffect(() => {
+    getPostData(posts).then(setPostsData);
+  }, [getPostData, posts]);
+
   return {
-    posts,
+    posts: postsData,
     loading,
     fetchMore: fetchMorePosts,
     fetchingMore,

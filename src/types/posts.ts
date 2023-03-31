@@ -8,6 +8,10 @@ export enum PostStatus {
   DELETED_LOCALLY = 'deleted',
 }
 
+export interface PostData extends Post {
+  readonly reactionsCount: number;
+}
+
 export interface Post {
   /**
    * Status of the post.

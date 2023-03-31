@@ -6,16 +6,15 @@ import FastImage from 'react-native-fast-image';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'native-base';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
-import { isPostPending, Post } from 'types/posts';
+import { isPostPending, PostData } from 'types/posts';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 export interface PostBottomBarProps {
-  readonly post: Post;
+  readonly post: PostData;
   readonly onPressComment: () => void;
   readonly onPressTip: () => void;
 }
@@ -37,7 +36,6 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   // -------------------------------------------------------------------------------------
 
   const activeAddress = useActiveAccountAddress();
-  const { count: reactionsCount, refetch: refreshReactionsCount } = usePostReactionsCount(post);
   const { count: commentsCount, refetch: refreshCommentsCount } = usePostCommentsCount(post);
 
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
@@ -47,9 +45,8 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   // -------------------------------------------------------------------------------------
 
   React.useEffect(() => {
-    refreshReactionsCount();
     refreshCommentsCount();
-  }, [refreshCommentsCount, refreshReactionsCount]);
+  }, [refreshCommentsCount]);
 
   // -------------------------------------------------------------------------------------
   // --- Memoized variables
@@ -97,7 +94,7 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
         />
         <Typography.Subtitle3
           style={liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }}>
-          {reactionsCount}
+          {post.reactionsCount}
         </Typography.Subtitle3>
         {/* I have completely removed the logic that changed the color of the button based on whether */}
         {/* the user comment the post or not. This has been done for the following reasons: */}

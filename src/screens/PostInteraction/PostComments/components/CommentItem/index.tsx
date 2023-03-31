@@ -18,9 +18,8 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { isPostPending, Post } from 'types/posts';
+import { isPostPending, PostData } from 'types/posts';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
@@ -36,7 +35,7 @@ import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
-  readonly comment: Post;
+  readonly comment: PostData;
   readonly disableInnerComment?: boolean;
   // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
   // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
@@ -60,7 +59,6 @@ const CommentItem = (props: CommentItemProps) => {
   // -------------------------------------------------------------------------------------
 
   const { count: commentsCount } = usePostCommentsCount(comment);
-  const { count: reactionsCount } = usePostReactionsCount(comment);
   const { count: tipsCount } = usePostTipsCount(comment);
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressSendTips = useHandlePressSendTips();
@@ -203,7 +201,7 @@ const CommentItem = (props: CommentItemProps) => {
                 ]}
               />
               <Typography.Subtitle3 style={liked ? styles.orangeIconAndText : styles.textStyle}>
-                {formatNumShorthand(reactionsCount)}
+                {formatNumShorthand(comment.reactionsCount)}
               </Typography.Subtitle3>
             </TouchableOpacity>
 

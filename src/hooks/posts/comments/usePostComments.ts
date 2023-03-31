@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Post } from 'types/posts';
+import { Post, PostData } from 'types/posts';
 import { useQuery } from '@apollo/client';
 import GetPostComments from 'services/graphql/queries/GetPostComments';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -8,6 +8,7 @@ import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
 import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
+import useGetPostsData from 'hooks/posts/useGetPostsData';
 
 /**
  * Hook that allows to get the comments for a given post.
@@ -35,6 +36,8 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     });
   }, [commentsToSync]);
 
+  // Local state, used as returns values
+  const [commentsData, setCommentsData] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -117,9 +120,15 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     }
   }, [onCompletedCallback, refetch]);
 
+  // Compute the comments data each time the comments change
+  const getPostData = useGetPostsData(activeAccountAddress);
+  React.useEffect(() => {
+    getPostData(comments).then(setCommentsData);
+  }, [comments, getPostData]);
+
   return {
     loading,
-    comments,
+    comments: commentsData,
     refetch: refreshComments,
     refreshing,
     fetchMore: fetchMoreComments,
