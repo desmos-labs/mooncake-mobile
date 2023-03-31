@@ -25,7 +25,7 @@ interface Props {
 const SearchViewComponent = ({ valueToSearch }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('search');
-  const { isSearching, profiles, getProfileForDTag } = useHooks(valueToSearch);
+  const { isSearching, profiles, getProfileForDTag, fetchMoreProfiles } = useHooks(valueToSearch);
 
   useEffect(() => {
     getProfileForDTag();
@@ -63,6 +63,7 @@ const SearchViewComponent = ({ valueToSearch }: Props) => {
                 renderItem={renderItem}
                 estimatedItemSize={55}
                 ListEmptyComponent={<EmptyListComponent label={t('no results')} />}
+                onEndReached={fetchMoreProfiles}
               />
             </>
           )}

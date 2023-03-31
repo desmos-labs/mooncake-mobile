@@ -10,9 +10,13 @@ import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
  * @param addressToSearch The profile to search for inside the search bar
  */
 const useHooks = (addressToSearch: string) => {
-  const { getLazyData: getProfile } = useCustomLazyQuery(GetProfileForDTag);
+  const { getLazyData: getProfile, fetchMore } = useCustomLazyQuery(GetProfileForDTag);
   const [profiles, setProfiles] = useState<DesmosProfile[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+
+  /**
+   * Gets the profile for the given DTag
+   */
   const getProfileForDTag = useCallback(async () => {
     setIsSearching(true);
     let results;
@@ -20,12 +24,16 @@ const useHooks = (addressToSearch: string) => {
       results = await getProfile({
         variables: {
           dTag: `%${addressToSearch}%`,
+          limit: 20,
+          offset: 0,
         },
       });
     } else {
       results = await getProfile({
         variables: {
           dTag: addressToSearch,
+          limit: 20,
+          offset: 0,
         },
       });
     }
@@ -35,10 +43,23 @@ const useHooks = (addressToSearch: string) => {
     setIsSearching(false);
   }, [addressToSearch, getProfile]);
 
+  const fetchMoreProfiles = useCallback(async () => {
+    console.log('fetchMoreProfiles', profiles.length);
+    const results = await fetchMore({
+      variables: { offset: profiles.length },
+    });
+
+    const convertedProfiles = results.data.profile.map((profile: any) =>
+      convertGraphQLProfile(profile),
+    );
+    setProfiles(prev => [...prev, ...convertedProfiles]);
+  }, [fetchMore, profiles.length]);
+
   return {
     getProfileForDTag,
     profiles,
     isSearching,
+    fetchMoreProfiles,
   };
 };
 
