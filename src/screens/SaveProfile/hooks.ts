@@ -136,11 +136,6 @@ const getValueToSave = (
 };
 
 /**
- * Represents the success response of a profile saving.
- */
-export interface SaveProfileSuccess {}
-
-/**
  * Hook that allows to submit the form that allows to create or edit
  * a Desmos profile.
  *
@@ -168,7 +163,7 @@ export const useSubmitForm = (
       values: SaveProfileFormState,
       profilePic: Asset | undefined,
       coverPic: Asset | undefined,
-    ): Promise<Result<SaveProfileSuccess, Error>> => {
+    ): Promise<Result<void, Error>> => {
       // Get the address of the profile based on the given params
       const profileAddress = account?.account?.address ?? profile?.address;
       if (!profileAddress) {
@@ -188,6 +183,7 @@ export const useSubmitForm = (
         address: profileAddress,
         creationTime: profile?.creationTime ?? new Date(Date.now()).toISOString(),
       };
+      console.log('profile to save on chain: ', profileToSaveOnChain);
 
       // Store the profile locally by replacing the values with the previous ones (if undefined)
       const profileToSaveLocally: DesmosProfile = {
@@ -198,17 +194,18 @@ export const useSubmitForm = (
         profilePicture: profileToSaveOnChain.profilePicture ?? profile?.profilePicture,
         coverPicture: profileToSaveOnChain.coverPicture ?? profile?.coverPicture,
       };
+      console.log('profile to save locally: ', profileToSaveLocally);
       storeProfile(profileAddress, profileToSaveLocally);
 
       // Save the profile on-chain, if required
       if (saveOnChain) {
         const result = await saveProfile(profileToSaveOnChain, account);
         if (result.isErr()) {
-          return result;
+          return err(result.error);
         }
       }
 
-      return ok({});
+      return ok(undefined);
     },
     [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile],
   );
