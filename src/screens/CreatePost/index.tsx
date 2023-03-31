@@ -5,7 +5,6 @@ import { ScrollView, TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
 import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
-import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -26,6 +25,7 @@ import useCustomToast from 'hooks/extended/useCustomToast';
 import SelectedPostImage from 'components/SelectedPostImage';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
+import usePostsParams from 'hooks/posts/usePostsParams';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -59,6 +59,7 @@ const CreatePost = () => {
   // --- Useful hooks
   // -------------------------------------------------------------------------------------
 
+  const { params: postsParams } = usePostsParams();
   const resetCreatePostState = useResetCreatePostState();
 
   // TODO: Properly display the state of the creation of the post
@@ -179,7 +180,7 @@ const CreatePost = () => {
           <ScrollView style={styles.contentContainer}>
             {/* this may get refactored into its own custom component */}
             <TextInput
-              maxLength={EnvConfig.MAX_COMMENT_LENGTH}
+              maxLength={postsParams.maxTextLength}
               placeholder={t(parent ? 'yourReply' : 'writeSomething')}
               placeholderTextColor={theme.colors.grey02}
               value={postText}

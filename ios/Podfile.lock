@@ -485,10 +485,6 @@ PODS:
     - React-Core
   - react-native-cameraroll (5.0.2):
     - React-Core
-  - react-native-config (1.5.0):
-    - react-native-config/App (= 1.5.0)
-  - react-native-config/App (1.5.0):
-    - React-Core
   - react-native-flipper-performance-plugin (0.3.1):
     - React-Core
     - react-native-flipper-performance-plugin/FBDefines (= 0.3.1)
@@ -746,7 +742,6 @@ DEPENDENCIES:
   - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
-  - react-native-config (from `../node_modules/react-native-config`)
   - react-native-flipper-performance-plugin (from `../node_modules/react-native-flipper-performance-plugin`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
@@ -892,8 +887,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/blur"
   react-native-cameraroll:
     :path: "../node_modules/@react-native-camera-roll/camera-roll"
-  react-native-config:
-    :path: "../node_modules/react-native-config"
   react-native-flipper-performance-plugin:
     :path: "../node_modules/react-native-flipper-performance-plugin"
   react-native-image-picker:
@@ -1041,7 +1034,6 @@ SPEC CHECKSUMS:
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-blur: 3e9c8e8e9f7d17fa1b94e1a0ae9fd816675f5382
   react-native-cameraroll: 4d0cb1c3413d4b7b85beb68a8c14325d887b404c
-  react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
   react-native-flipper-performance-plugin: 2b873b68da3e368afeaf29c9c7a8c2b0ff908c4f
   react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
   react-native-image-resizer: 794abf75ec13ed1f0dbb1f134e27504ea65e9e66

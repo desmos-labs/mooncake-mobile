@@ -62,7 +62,7 @@ const DefaultAppState: AppState = {
   dataInitialized: false,
   bearerToken: '',
   appActiveState: 'unknown',
-  subspaceId: EnvConfig.APP_SUBSPACE_ID,
+  subspaceId: parseFloat(EnvConfig.APP_SUBSPACE_ID),
   consentGiven: false,
   inviteCode: undefined,
   currentTimezone: '',
