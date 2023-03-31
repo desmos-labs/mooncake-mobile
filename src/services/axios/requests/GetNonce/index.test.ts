@@ -1,11 +1,11 @@
 import axiosInstance from 'services/axios';
 import GetNonce from './index';
 
-const mockResponse = 'mock-response';
-
 jest.mock('services/axios', () => ({
-  get: jest.fn(() => ({
-    data: mockResponse,
+  get: jest.fn(async () => ({
+    data: {
+      nonce: 'mock-nonce',
+    },
   })),
 }));
 
@@ -21,6 +21,7 @@ describe('services-axios: GetNonce', () => {
 
     expect(axiosInstance.get).toHaveBeenCalledWith(`/nonce/${mockAddress}`);
 
-    expect(result).toBe(mockResponse);
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrapOr(undefined)).toBe('mock-nonce');
   });
 });

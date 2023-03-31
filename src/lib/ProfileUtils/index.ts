@@ -24,6 +24,25 @@ export const isPictureAsset = (picture: Asset | string | undefined): picture is 
   return uri !== undefined;
 };
 
+/**
+ * Returns the given picture as an {@link Asset} if it is a valid URI or a valid {@link Asset}.
+ * @param picture {Asset | string | undefined} - Picture to convert.
+ */
+export const asPictureAsset = (picture: Asset | string | undefined): Asset | undefined => {
+  if (isPictureAsset(picture)) {
+    return picture;
+  }
+  if (isPictureUri(picture)) {
+    return { uri: picture };
+  }
+  return undefined;
+};
+
+/**
+ * Returns the source that should be used to display the given picture.
+ * @param picture {Asset | string | undefined} - Picture to display.
+ * @param defaultImage {ImageRequireSource} - Default image to be used if the given picture is not valid.
+ */
 const getPictureData = (picture: Asset | string | undefined, defaultImage: ImageRequireSource) => {
   if (isPictureUri(picture)) {
     const trimmedUri = picture.trim();
