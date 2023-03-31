@@ -25,12 +25,15 @@ import {
   useAddCreatePostAttachment,
   useCreatePostValue,
   useRemoveCreatePostAttachment,
+  useResetCreatePostState,
   useSetCreatePostValue,
 } from '@recoil/screens/createPostState';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import StyledSpinner from 'components/StyledSpinner';
+import { useNavigation } from '@react-navigation/native';
+import { NavProps } from 'screens/Home';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -68,7 +71,7 @@ const EnterCommentBottomBar = (props: Props) => {
   const { t } = useTranslation('comment');
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
-
+  const navigation = useNavigation<NavProps['navigation']>();
   const { author, onIconPress, handlePostComment, textInputRef, loading } = props;
 
   // -------------------------------------------------------------------------------------
@@ -86,6 +89,7 @@ const EnterCommentBottomBar = (props: Props) => {
   );
   const addAttachment = useAddCreatePostAttachment();
   const removeAttachment = useRemoveCreatePostAttachment();
+  const resetCreatePostState = useResetCreatePostState();
 
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
 
@@ -130,6 +134,18 @@ const EnterCommentBottomBar = (props: Props) => {
       keyboardDidShowListener.remove();
     };
   }, []);
+
+  // When the user leaves the screen, we reset the state of the post and remove the attachment if any
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', () => {
+        resetCreatePostState();
+        if (attachment) {
+          removeAttachment(attachment);
+        }
+      }),
+    [attachment, navigation, removeAttachment, resetCreatePostState],
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Child components
