@@ -30,10 +30,13 @@ interface ReceivedNotificationData {
   readonly subspace_id: string | undefined;
   readonly post_id: string | undefined;
   readonly comment_id: string | undefined;
+  readonly comment_author: string | undefined;
   readonly reply_id: string | undefined;
+  readonly reply_author: string | undefined;
 
   // Reactions
   readonly reaction_id: string | undefined;
+  readonly reaction_author: string | undefined;
 
   // Relationships
   readonly relationship_creator: string | undefined;
@@ -59,9 +62,12 @@ const convertRemoteMessage = (data: any): ReceivedNotificationData => {
     subspace_id: data.subspace_id as string,
     post_id: data.post_id as string,
     comment_id: data.comment_id as string,
+    comment_author: data.comment_author as string,
     reply_id: data.reply_id as string,
+    reply_author: data.reply_author as string,
 
     reaction_id: data.reaction_id as string,
+    reaction_author: data.reaction_author as string,
 
     relationship_creator: data.relationship_creator as string,
 
@@ -96,7 +102,9 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         postId: parseInt(data?.post_id ?? '0', 10),
         commentId: parseInt(data?.comment_id ?? '0', 10),
+        commentAuthorAddress: data?.comment_author,
       } as CommentNotificationData;
+
     case NotificationType.Reply:
       return {
         type: NotificationType.Reply,
@@ -105,6 +113,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         commentId: parseInt(data?.post_id ?? '0', 10),
         replyId: parseInt(data?.reply_id ?? '0', 10),
+        replyAuthorAddress: data?.reply_author,
       } as ReplyNotificationData;
 
     case NotificationType.ReactionPost:
@@ -115,6 +124,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         postId: parseInt(data?.post_id ?? '0', 10),
         reactionId: parseInt(data?.reaction_id ?? '0', 10),
+        reactionAuthorAddress: data?.reaction_author,
       } as PostReactionNotificationData;
 
     case NotificationType.ReactionComment:
@@ -126,6 +136,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         commentId: parseInt(data?.comment_id ?? '0', 10),
         reactionId: parseInt(data?.reaction_id ?? '0', 10),
+        reactionAuthorAddress: data?.reaction_author,
       } as CommentReactionNotificationData;
 
     case NotificationType.ReactionReply:
@@ -138,6 +149,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         commentId: parseInt(data?.comment_id ?? '0', 10),
         replyId: parseInt(data?.reply_id ?? '0', 10),
         reactionId: parseInt(data?.reaction_id ?? '0', 10),
+        reactionAuthorAddress: data?.reaction_author,
       } as ReplyReactionNotificationData;
 
     case NotificationType.Follow:

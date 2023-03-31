@@ -48,24 +48,29 @@ const NotificationItem = (props: NotificationComponentProps) => {
   const formatDate = useFormatTimeForPostDetails();
   const formattedDate = formatDate(timestamp);
 
-  const profile = useMemo(() => {
+  // Get the profile address and the profile details of the other user involved in the notification
+  const [profileAddress, profile] = useMemo(() => {
     switch (notification.type) {
       case NotificationType.ReactionReply:
       case NotificationType.ReactionComment:
       case NotificationType.ReactionPost:
-        return notification.reaction?.author;
+        return [notification.reactionAuthorAddress, notification.reaction?.author];
       case NotificationType.Comment:
-        return notification.comment?.author;
+        return [notification.commentAuthorAddress, notification.comment?.author];
       case NotificationType.Reply:
-        return notification.reply?.author;
+        return [notification.replyAuthorAddress, notification.reply?.author];
       case NotificationType.Follow:
-        return notification.user;
-      case NotificationType.InviteClaimed:
-        return notification.claimer;
+        return [notification.userAddress, notification.user];
+      case NotificationType.InviteClaimed: {
+        if (notification.claimerAddress === activeAccountAddress) {
+          return [notification.inviterAddress, notification.inviter];
+        }
+        return [notification.claimerAddress, notification.claimer];
+      }
       default:
-        return undefined;
+        return [undefined, undefined];
     }
-  }, [notification]);
+  }, [activeAccountAddress, notification]);
 
   const post = useMemo(() => {
     switch (notification.type) {
@@ -100,7 +105,7 @@ const NotificationItem = (props: NotificationComponentProps) => {
         return t('followed you');
       case NotificationType.InviteClaimed: {
         if (notification.claimerAddress === activeAccountAddress) {
-          return t('joined Butter');
+          return t('invited you to join Butter');
         }
         return t('claimed your invite');
       }
@@ -168,7 +173,15 @@ const NotificationItem = (props: NotificationComponentProps) => {
         {/* Notification texts */}
         <TouchableOpacity style={styles.profileView} onPress={handleNavigateToNotification}>
           {profile && <Typography.Subtitle3>{getProfileDisplayName(profile)}</Typography.Subtitle3>}
-          <Typography.Body6> {bodyText}</Typography.Body6>
+          {!profile && profileAddress && (
+            <Typography.Subtitle3
+              style={styles.profileAddressText}
+              lineBreakMode="middle"
+              numberOfLines={1}>
+              {profileAddress}
+            </Typography.Subtitle3>
+          )}
+          <Typography.Body6>{bodyText}</Typography.Body6>
           <Typography.Body7 style={styles.date}>{formattedDate}</Typography.Body7>
         </TouchableOpacity>
 

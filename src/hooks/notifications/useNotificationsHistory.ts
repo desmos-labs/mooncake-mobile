@@ -70,6 +70,7 @@ const useGetCompleteData = () => {
             comment: await getPost(data.subspaceId, data.commentId),
             post: await getPost(data.subspaceId, data.postId),
           } as CompleteCommentNotification;
+
         case NotificationType.Reply:
           return {
             ...notification,
@@ -78,6 +79,7 @@ const useGetCompleteData = () => {
             comment: await getPost(data.subspaceId, data.commentId),
             reply: await getPost(data.subspaceId, data.replyId),
           } as CompleteReplyNotification;
+
         case NotificationType.ReactionPost:
           return {
             ...notification,
@@ -86,6 +88,7 @@ const useGetCompleteData = () => {
             post: await getPost(data.subspaceId, data.postId),
             reaction: await getReaction(data.subspaceId, data.postId, data.reactionId),
           } as CompletePostReactionNotification;
+
         case NotificationType.ReactionComment:
           return {
             ...notification,
@@ -95,6 +98,7 @@ const useGetCompleteData = () => {
             comment: await getPost(data.subspaceId, data.commentId),
             reaction: await getReaction(data.subspaceId, data.commentId, data.reactionId),
           } as CompleteCommentReactionNotification;
+
         case NotificationType.ReactionReply:
           return {
             ...notification,
@@ -105,6 +109,7 @@ const useGetCompleteData = () => {
             reply: await getPost(data.subspaceId, data.replyId),
             reaction: await getReaction(data.subspaceId, data.replyId, data.reactionId),
           } as CompleteReplyReactionNotification;
+
         case NotificationType.Follow:
           return {
             ...notification,
@@ -112,6 +117,7 @@ const useGetCompleteData = () => {
             type: NotificationType.Follow,
             user: await getProfile(data.userAddress),
           } as CompleteFollowNotification;
+
         case NotificationType.InviteClaimed:
           return {
             ...notification,
@@ -120,6 +126,7 @@ const useGetCompleteData = () => {
             inviter: await getProfile(data.inviterAddress),
             claimer: await getProfile(data.claimerAddress),
           } as CompleteInviteClaimedNotification;
+
         case NotificationType.InviteUnlocked:
           return {
             ...notification,

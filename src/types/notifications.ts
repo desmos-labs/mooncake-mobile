@@ -30,6 +30,10 @@ export interface TransactionNotificationData extends BaseNotificationData {
   readonly txHash: string;
 }
 
+// --------------------------------------------
+// --- Transactions
+// --------------------------------------------
+
 export interface TransactionSuccessNotificationData extends TransactionNotificationData {
   readonly type: NotificationType.TransactionSuccess;
 }
@@ -38,16 +42,25 @@ export interface TransactionFailNotificationData extends TransactionNotification
   readonly type: NotificationType.TransactionFail;
 }
 
+// --------------------------------------------
+// --- Social notifications
+// --------------------------------------------
+
 export interface SocialNotificationData extends BaseNotificationData {
   readonly title: string;
   readonly body: string;
 }
+
+// --------------------------------------------
+// --- Posts
+// --------------------------------------------
 
 export interface CommentNotificationData extends SocialNotificationData {
   readonly type: NotificationType.Comment;
   readonly subspaceId: number;
   readonly postId: number;
   readonly commentId: number;
+  readonly commentAuthorAddress: string;
 }
 
 export interface ReplyNotificationData extends SocialNotificationData {
@@ -55,37 +68,48 @@ export interface ReplyNotificationData extends SocialNotificationData {
   readonly subspaceId: number;
   readonly commentId: number;
   readonly replyId: number;
+  readonly replyAuthorAddress: string;
 }
 
-export interface PostReactionNotificationData extends SocialNotificationData {
+// --------------------------------------------
+// --- Reactions
+// --------------------------------------------
+
+export interface ReactionNotificationData extends SocialNotificationData {
+  readonly subspaceId: number;
+  readonly postId: number;
+  readonly reactionId: number;
+  readonly reactionAuthorAddress: string;
+}
+
+export interface PostReactionNotificationData extends ReactionNotificationData {
   readonly type: NotificationType.ReactionPost;
-  readonly subspaceId: number;
-  readonly postId: number;
-  readonly reactionId: number;
 }
 
-export interface CommentReactionNotificationData extends SocialNotificationData {
+export interface CommentReactionNotificationData extends ReactionNotificationData {
   readonly type: NotificationType.ReactionComment;
-  readonly subspaceId: number;
-  readonly postId: number;
   readonly commentId: number;
-  readonly reactionId: number;
 }
 
-export interface ReplyReactionNotificationData extends SocialNotificationData {
+export interface ReplyReactionNotificationData extends ReactionNotificationData {
   readonly type: NotificationType.ReactionReply;
-  readonly subspaceId: number;
-  readonly postId: number;
   readonly commentId: number;
   readonly replyId: number;
-  readonly reactionId: number;
 }
+
+// --------------------------------------------
+// --- Follows
+// --------------------------------------------
 
 export interface FollowNotificationData extends SocialNotificationData {
   readonly type: NotificationType.Follow;
   readonly subspaceId: number;
   readonly userAddress: string;
 }
+
+// --------------------------------------------
+// --- Invites
+// --------------------------------------------
 
 export interface InviteClaimedNotificationData extends SocialNotificationData {
   readonly type: NotificationType.InviteClaimed;
