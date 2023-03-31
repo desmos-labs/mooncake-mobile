@@ -12,6 +12,7 @@ import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
 import useSetNotificationAsRead from 'hooks/notifications/useSetNotificationAsRead';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 export interface NotificationComponentProps {
@@ -28,6 +29,16 @@ const NotificationItem = (props: NotificationComponentProps) => {
   const styles = useStyles();
 
   const { notification } = props;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const activeAccountAddress = useActiveAccountAddress();
+
+  const navigateToProfile = useNavigateToProfile();
+  const setNotificationAsRead = useSetNotificationAsRead();
+  const handleNotificationPressEvent = useHandleNotificationPressEvent();
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -87,22 +98,18 @@ const NotificationItem = (props: NotificationComponentProps) => {
         return t('commented reply');
       case NotificationType.Follow:
         return t('followed you');
-      case NotificationType.InviteClaimed:
+      case NotificationType.InviteClaimed: {
+        if (notification.claimerAddress === activeAccountAddress) {
+          return t('joined Butter');
+        }
         return t('claimed your invite');
+      }
       case NotificationType.InviteUnlocked:
         return t('unlocked a new invite');
       default:
         return 'Unsupported notification type';
     }
-  }, [notification, t]);
-
-  // -------------------------------------------------------------------------------------
-  // --- Hooks
-  // -------------------------------------------------------------------------------------
-
-  const navigateToProfile = useNavigateToProfile();
-  const setNotificationAsRead = useSetNotificationAsRead();
-  const handleNotificationPressEvent = useHandleNotificationPressEvent();
+  }, [activeAccountAddress, notification, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
