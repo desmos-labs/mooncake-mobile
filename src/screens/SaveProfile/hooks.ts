@@ -164,6 +164,8 @@ export const useSubmitForm = (
       profilePic: Asset | undefined,
       coverPic: Asset | undefined,
     ): Promise<Result<void, Error>> => {
+      console.log(values, profilePic, coverPic);
+
       // Get the address of the profile based on the given params
       const profileAddress = account?.account?.address ?? profile?.address;
       if (!profileAddress) {
