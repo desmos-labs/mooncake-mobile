@@ -89,6 +89,7 @@ export interface FollowNotificationData extends SocialNotificationData {
 
 export interface InviteClaimedNotificationData extends SocialNotificationData {
   readonly type: NotificationType.InviteClaimed;
+  readonly inviterAddress: string;
   readonly claimerAddress: string;
 }
 
@@ -246,7 +247,13 @@ export interface CompleteInviteClaimedNotification
     InviteClaimedNotificationData {
   type: NotificationType.InviteClaimed;
   /**
-   * Address of the user that has claimed the invite.
+   * User that has sent the invite.
+   * This is going to be `undefined` if the user has deleted their profile in the meanwhile.
+   */
+  inviter: DesmosProfile | undefined;
+
+  /**
+   * User that has claimed the invite.
    * This is going to be `undefined` if the user has deleted their profile in the meanwhile.
    */
   claimer: DesmosProfile | undefined;

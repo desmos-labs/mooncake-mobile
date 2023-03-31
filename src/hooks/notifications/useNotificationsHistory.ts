@@ -117,6 +117,7 @@ const useGetCompleteData = () => {
             ...notification,
             ...data,
             type: NotificationType.InviteClaimed,
+            inviter: await getProfile(data.inviterAddress),
             claimer: await getProfile(data.claimerAddress),
           } as CompleteInviteClaimedNotification;
         case NotificationType.InviteUnlocked:

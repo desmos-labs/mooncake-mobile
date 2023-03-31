@@ -39,6 +39,7 @@ interface ReceivedNotificationData {
   readonly relationship_creator: string | undefined;
 
   // Invites
+  readonly inviter_address: string | undefined;
   readonly claimer_address: string | undefined;
 }
 
@@ -64,6 +65,7 @@ const convertRemoteMessage = (data: any): ReceivedNotificationData => {
 
     relationship_creator: data.relationship_creator as string,
 
+    inviter_address: data.inviter_address as string,
     claimer_address: data.claimer_address as string,
   };
 };
@@ -152,6 +154,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         type: NotificationType.InviteClaimed,
         title: data.notification_title,
         body: data.notification_body,
+        inviterAddress: data.inviter_address,
         claimerAddress: data.claimer_address,
       } as InviteClaimedNotificationData;
 
