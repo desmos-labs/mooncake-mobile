@@ -3,8 +3,6 @@ import { DesmosTestnet } from '@desmoslabs/desmjs/build/types/chains';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AppSettings } from 'types/settings';
-import EnvConfig from 'config/EnvConfig';
-import { DesmosMainnet } from '@desmoslabs/desmjs';
 import { findChainInfoByName } from 'lib/ChainsUtils';
 import { GasPrice } from '@cosmjs/stargate';
 import { activeAccountAddressState, useActiveAccountAddress } from '@recoil/accounts';
@@ -17,7 +15,7 @@ export const DefaultAppSettings: AppSettings = {
   biometrics: false,
   notifications: false,
   simplifyTxBroadcast: false,
-  currentChain: EnvConfig.CHAIN === 'mainnet' ? DesmosMainnet : DesmosTestnet,
+  currentChain: DesmosTestnet,
 };
 
 /**

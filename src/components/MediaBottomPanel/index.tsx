@@ -1,13 +1,13 @@
 import { cameraIcon, galleryIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
-import EnvConfig from 'config/EnvConfig';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import usePostsParams from 'hooks/posts/usePostsParams';
 import useStyles from './useStyles';
 
-type Props = {
+type MediaBottomPanelProps = {
   /**
    * Action to execute when the gallery icon is pressed
    */
@@ -41,10 +41,11 @@ const MediaBottomPanel = ({
   imageSelected,
   rightComponent,
   style,
-}: Props) => {
+}: MediaBottomPanelProps) => {
   const styles = useStyles();
 
   const { bottom } = useSafeAreaInsets();
+  const { params } = usePostsParams();
 
   return (
     <KeyboardAvoidingView
@@ -71,7 +72,7 @@ const MediaBottomPanel = ({
         </View>
 
         <View style={styles.rightGroup}>
-          <RadialTextCounter max={EnvConfig.MAX_COMMENT_LENGTH} current={commentLength} />
+          <RadialTextCounter max={params.maxTextLength} current={commentLength} />
           {rightComponent}
         </View>
       </SafeAreaView>
