@@ -1,10 +1,6 @@
 import axiosInstance from 'services/axios';
 import { ResultAsync } from 'neverthrow';
 
-type Response = {
-  token: string;
-};
-
 export interface LoginParams {
   /**
    * Address of the user logging in
