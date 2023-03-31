@@ -19,6 +19,7 @@ import { formatCoins } from 'lib/FormatUtils';
 import { TipTarget } from 'types/tips';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 import {
   FormValues,
@@ -45,7 +46,7 @@ const SendTips = (props: NavProps) => {
   const { t } = useTranslation('sendTips');
   const styles = useStyles();
   const theme = useTheme();
-
+  const toast = useCustomToast();
   const { route } = props;
   const { params } = route;
   const { target } = params;
@@ -88,14 +89,14 @@ const SendTips = (props: NavProps) => {
       setSendingTip(true);
       const result = await sendTip(values);
       if (result.isErr()) {
-        // TODO: Do something with this error
-        console.log('Error while sending post tip', result.error.message);
+        console.error(result);
+        toast.errorNoRetry(result.error.message);
       }
 
       setSendingTip(false);
       pop();
     },
-    [pop, sendTip],
+    [pop, sendTip, toast],
   );
 
   // -------------------------------------------------------------------------------------

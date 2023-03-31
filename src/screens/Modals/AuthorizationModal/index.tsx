@@ -50,7 +50,7 @@ const AuthorizationModal = () => {
   // This is to make sure that onDismiss is not called unless we want to
   const closeWithoutDismiss = useCallback(() => {
     setCallOnDismissOnGoBack(false);
-    goBack();
+    setTimeout(() => goBack(), 200);
   }, [goBack]);
 
   // Little hack to make sure the modal is dismissed before the onPress callback is invoked
@@ -72,7 +72,9 @@ const AuthorizationModal = () => {
 
   // If the user goes back, consider it as a dismiss
   useOnBackAction(() => {
-    callOnDismissOnGoBack && onDismiss && setTimeout(() => onDismiss(), 200);
+    if (callOnDismissOnGoBack && onDismiss) {
+      setTimeout(() => onDismiss(), 200);
+    }
   }, [callOnDismissOnGoBack, onDismiss]);
 
   return (
