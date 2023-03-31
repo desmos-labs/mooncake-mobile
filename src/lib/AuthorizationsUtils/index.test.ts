@@ -64,8 +64,8 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
   });
 
   describe('buildGrantMsgEncodes', () => {
-    it('properly builds an array of MsgGRantEncodeObjects', () => {
-      const msgEO = buildGrantMsgEncodes(grants, grantee, granter);
+    it('properly builds an array of MsgGrantEncodeObjects', () => {
+      const msgEO = buildGrantMsgEncodes(5, grants, grantee, granter);
 
       expect(JSON.stringify(msgEO)).toEqual(
         JSON.stringify([
