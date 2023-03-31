@@ -13,7 +13,7 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import { FlashList } from '@shopify/flash-list';
-import { Post } from 'types/posts';
+import { isCommentReply, Post } from 'types/posts';
 import usePost from 'hooks/posts/usePost';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
@@ -152,7 +152,8 @@ const PostDetails = () => {
   // Function uses to render the items inside the list of comments
   const renderItem = React.useCallback((info: ListRenderItemInfo<Post>) => {
     const { item } = info;
-    return <CommentItem comment={item} />;
+    const disabled = isCommentReply(item);
+    return <CommentItem comment={item} disableInnerComment={disabled} />;
   }, []);
 
   // -------------------------------------------------------------------------------------
