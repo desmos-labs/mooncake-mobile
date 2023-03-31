@@ -1,3 +1,5 @@
+/* It's fine to disable the next line warning as the module is declared anyway */
+/* eslint-disable import/no-unresolved */
 import {
   APP_SUBSPACE_ID,
   BUTTER_GQL,
