@@ -12,7 +12,7 @@ const useHasReportedPost = () => {
     throw new Error('Trying to check if a post has been reported without an active account');
   }
 
-  const getReportsByUser = useCustomLazyQuery(GetReportsByUser);
+  const { getLazyData: getReportsByUser } = useCustomLazyQuery(GetReportsByUser);
   return React.useCallback(
     async (subspaceId: number, postId: number) => {
       const data = await getReportsByUser({

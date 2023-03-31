@@ -5,7 +5,7 @@ import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 const useGetOnChainProfile = () => {
-  const fetchProfile = useCustomLazyQuery(GetProfileForAddress);
+  const { getLazyData: fetchProfile } = useCustomLazyQuery(GetProfileForAddress);
   return React.useCallback(
     async (address: string, abortController: AbortController) => {
       const data = await fetchProfile({

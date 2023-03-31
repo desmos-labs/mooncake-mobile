@@ -9,7 +9,7 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
  * associated with an address.
  */
 const useGetOnChainProfile = () => {
-  const getProfile = useCustomLazyQuery(GetProfileForAddress);
+  const { getLazyData: getProfile } = useCustomLazyQuery(GetProfileForAddress);
 
   return React.useCallback(
     async (address: string): Promise<DesmosProfile | undefined> => {

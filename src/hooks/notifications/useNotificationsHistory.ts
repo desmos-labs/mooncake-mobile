@@ -25,7 +25,7 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
  * Hook that allows to get the data of a reaction given the subspace, post and its id.
  */
 const useGetReactionData = () => {
-  const getReaction = useCustomLazyQuery(GetPostReactions);
+  const { getLazyData: getReaction } = useCustomLazyQuery(GetPostReactions);
   return React.useCallback(
     async (
       subspaceId: number,

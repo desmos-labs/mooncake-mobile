@@ -67,7 +67,7 @@ export const useValidationSchema = (profileParams: ProfileParams) => {
  * TODO: This should be used somewhere to make sure the DTag input by the user is free
  */
 export const useCheckDTagAvailability = () => {
-  const getDTagAvailability = useCustomLazyQuery(GetProfileForDTag);
+  const { getLazyData: getDTagAvailability } = useCustomLazyQuery(GetProfileForDTag);
   return React.useCallback(
     async (inputDTag: string) => {
       const data = await getDTagAvailability({ variables: { dTag: inputDTag } });

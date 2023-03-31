@@ -71,7 +71,7 @@ const useRemoveReaction = (activeAddress: string) => {
 
   const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
 
-  const getReaction = useCustomLazyQuery(GetPostReactionsForUser);
+  const { getLazyData: getReaction } = useCustomLazyQuery(GetPostReactionsForUser);
 
   return React.useCallback(
     async (post: Post) => {

@@ -10,7 +10,7 @@ import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
  * @param addressToSearch The profile to search for inside the search bar
  */
 const useHooks = (addressToSearch: string) => {
-  const getProfile = useCustomLazyQuery(GetProfileForDTag);
+  const { getLazyData: getProfile } = useCustomLazyQuery(GetProfileForDTag);
   const [profiles, setProfiles] = useState<DesmosProfile[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const getProfileForDTag = useCallback(async () => {

@@ -14,8 +14,8 @@ const useCustomLazyQuery = <
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: LazyQueryHookOptions<TData, TVariables>,
 ) => {
-  const [getData] = useApolloLazyQuery<TData, TVariables>(query, options);
-  return React.useCallback(
+  const [getData, { refetch, fetchMore }] = useApolloLazyQuery<TData, TVariables>(query, options);
+  const getLazyData = React.useCallback(
     async (opts?: Partial<LazyQueryHookOptions<TData, TVariables>>): Promise<any | undefined> => {
       return new Promise((resolve, reject) => {
         const extraOptions = opts || {};
@@ -29,6 +29,12 @@ const useCustomLazyQuery = <
     },
     [getData],
   );
+
+  return {
+    getLazyData,
+    fetchMore,
+    refetch,
+  };
 };
 
 export default useCustomLazyQuery;

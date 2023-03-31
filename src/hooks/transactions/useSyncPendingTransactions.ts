@@ -7,7 +7,7 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
  * Hook that returns the hashes of the transactions that are on-chain.
  */
 const useGetOnChainTransactionsByHashes = () => {
-  const getTransactionsByHashes = useCustomLazyQuery(GetTransactionsByHashes);
+  const { getLazyData: getTransactionsByHashes } = useCustomLazyQuery(GetTransactionsByHashes);
   return React.useCallback(
     async (hashes: string[]) => {
       const data = await getTransactionsByHashes({

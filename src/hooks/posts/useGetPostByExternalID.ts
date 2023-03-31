@@ -13,7 +13,7 @@ const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
 
   const getQueryReactionValue = useGetQueryReactionValue();
-  const getPost = useCustomLazyQuery(GetPostByExternalID);
+  const { getLazyData: getPost } = useCustomLazyQuery(GetPostByExternalID);
 
   return React.useCallback(
     async (subspaceId: number, externalId: string): Promise<Post | undefined> => {
