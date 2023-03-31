@@ -6,7 +6,7 @@ import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { useTheme } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
