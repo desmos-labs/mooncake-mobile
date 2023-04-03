@@ -152,51 +152,55 @@ const BroadcastTxOnChain: React.FC = () => {
       };
     }, {});
 
+    // Create an array which will hold our mapped tx types. This is necessary as authorization type messages may also
+    // include a second type url.
+    const txStrings: string[] = [];
+
     // Authorization
     if (
       msgTypeObj[MsgRevokeAllowanceTypeUrl] ||
       msgTypeObj[MsgGrantAllowanceTypeUrl] ||
       msgTypeObj[MsgGrantTypeUrl]
     ) {
-      return t('broadcastTxOnChain:authorization');
+      txStrings.push(t('broadcastTxOnChain:authorization'));
     }
     // Save a profile
     if (msgTypeObj[MsgSaveProfileTypeUrl]) {
-      return t('broadcastTxOnChain:saveProfile');
+      txStrings.push(t('broadcastTxOnChain:saveProfile'));
     }
     // Create post
     if (msgTypeObj[MsgCreatePostTypeUrl]) {
-      return t('broadcastTxOnChain:createPost');
+      txStrings.push(t('broadcastTxOnChain:createPost'));
     }
     // Like a post
     if (msgTypeObj[MsgAddReactionTypeUrl]) {
-      return t('broadcastTxOnChain:likePost');
+      txStrings.push(t('broadcastTxOnChain:likePost'));
     }
     // Dislike post
     if (msgTypeObj[MsgRemoveReactionTypeUrl]) {
-      return t('broadcastTxOnChain:dislikePost');
+      txStrings.push(t('broadcastTxOnChain:dislikePost'));
     }
     // Follow a user
     if (msgTypeObj[MsgCreateRelationshipTypeUrl]) {
-      return t('broadcastTxOnChain:followUser');
+      txStrings.push(t('broadcastTxOnChain:followUser'));
     }
     // Unfollow a user
     if (msgTypeObj[MsgDeleteRelationshipTypeUrl]) {
-      return t('broadcastTxOnChain:unfollowUser');
+      txStrings.push(t('broadcastTxOnChain:unfollowUser'));
     }
     // Report a user
     if (msgTypeObj[MsgCreateReportTypeUrl]) {
-      return t('broadcastTxOnChain:reportPost');
+      txStrings.push(t('broadcastTxOnChain:reportPost'));
     }
     // smart contracts
     if (msgTypeObj[MsgExecuteContractTypeUrl]) {
       // tipping a post
       // TODO: figure out how to differentiate between smart contracts
-      return t('broadcastTxOnChain:tipPost');
+      txStrings.push(t('broadcastTxOnChain:tipPost'));
     }
 
     // unmapped, return all transaction types as a string
-    return msgTypes.join(', ');
+    return txStrings.length > 0 ? txStrings.join('\n') : msgTypes.join(', ');
   }, [messages, t]);
 
   const transactionFee = React.useMemo(() => {
