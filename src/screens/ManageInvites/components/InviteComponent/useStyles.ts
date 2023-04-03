@@ -50,6 +50,9 @@ const useStyles = makeStyle(theme => ({
     width: 16,
     height: 16,
   },
+  maxWidth70: {
+    maxWidth: '90%',
+  },
 }));
 
 export default useStyles;
