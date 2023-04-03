@@ -10,7 +10,7 @@ import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
  * @param addressToSearch The profile to search for inside the search bar
  */
 const useHooks = (addressToSearch: string) => {
-  const { getLazyData: getProfile, fetchMore } = useCustomLazyQuery(GetProfileForDTag);
+  const [getLazyData, { fetchMore }] = useCustomLazyQuery(GetProfileForDTag);
   const [profiles, setProfiles] = useState<DesmosProfile[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -21,7 +21,7 @@ const useHooks = (addressToSearch: string) => {
     setIsSearching(true);
     let results;
     if (addressToSearch !== '') {
-      results = await getProfile({
+      results = await getLazyData({
         variables: {
           dTag: `%${addressToSearch}%`,
           limit: 20,
@@ -29,7 +29,7 @@ const useHooks = (addressToSearch: string) => {
         },
       });
     } else {
-      results = await getProfile({
+      results = await getLazyData({
         variables: {
           dTag: addressToSearch,
           limit: 20,
@@ -41,7 +41,7 @@ const useHooks = (addressToSearch: string) => {
     setProfiles(convertedProfiles);
     await sleep(500);
     setIsSearching(false);
-  }, [addressToSearch, getProfile]);
+  }, [addressToSearch, getLazyData]);
 
   const fetchMoreProfiles = useCallback(async () => {
     console.log('fetchMoreProfiles', profiles.length);

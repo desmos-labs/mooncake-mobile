@@ -71,7 +71,7 @@ const useRemoveReaction = (activeAddress: string) => {
 
   const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
 
-  const { getLazyData: getReaction } = useCustomLazyQuery(GetPostReactionsForUser);
+  const [getLazyData] = useCustomLazyQuery(GetPostReactionsForUser);
 
   return React.useCallback(
     async (post: Post) => {
@@ -79,7 +79,7 @@ const useRemoveReaction = (activeAddress: string) => {
       setPostReactionStatus(post, DataStatus.DELETED_LOCALLY);
 
       // Get the reaction id from the server, if any
-      const data = await getReaction({
+      const data = await getLazyData({
         variables: {
           subspaceId: post.subspaceId,
           postId: post.id,
@@ -107,7 +107,7 @@ const useRemoveReaction = (activeAddress: string) => {
         setPostReactionStatus(post, DataStatus.CREATED_LOCALLY);
       }
     },
-    [setPostReactionStatus, getReaction, activeAddress, subspaceId, broadcastTx],
+    [setPostReactionStatus, getLazyData, activeAddress, subspaceId, broadcastTx],
   );
 };
 

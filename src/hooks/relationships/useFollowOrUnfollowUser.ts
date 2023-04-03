@@ -24,10 +24,10 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
  * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
  */
 const useDoesRelationshipExistRemotely = () => {
-  const { getLazyData: getRelationship } = useCustomLazyQuery(GetRelationshipForAddress);
+  const [getLazyData] = useCustomLazyQuery(GetRelationshipForAddress);
   return React.useCallback(
     async (address: string, counterparty: string) => {
-      const data = await getRelationship({
+      const data = await getLazyData({
         variables: {
           userAddress: address,
           counterpartyAddress: counterparty,
@@ -35,7 +35,7 @@ const useDoesRelationshipExistRemotely = () => {
       });
       return data?.relationships?.length > 0;
     },
-    [getRelationship],
+    [getLazyData],
   );
 };
 
