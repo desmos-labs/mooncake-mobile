@@ -14,6 +14,7 @@ import {
 import { FollowedUser } from 'types/relationships';
 import { CachedDataUpdate, CachedDataUpdateType } from 'lib/CacheUtils';
 import useUpdatePendingRelationships from 'hooks/relationships/useUpdatePendingRelationships';
+import { DataStatus } from 'types/cache';
 
 interface RelationshipData {
   readonly msgType: typeof MsgCreateRelationshipTypeUrl | typeof MsgDeleteRelationshipTypeUrl;
@@ -75,7 +76,10 @@ const useGetRelationshipsUpdate = () => {
         return {
           type: CachedDataUpdateType.UPDATED,
           original: data.relationship,
-          updated: data.relationship,
+          updated: {
+            ...data.relationship,
+            status: DataStatus.SYNCED,
+          },
         } as CachedDataUpdate<FollowedUser>;
       }
 
