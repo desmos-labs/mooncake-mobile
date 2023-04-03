@@ -2,6 +2,7 @@ import React from 'react';
 import { useDeletePendingTransactions, useGetPendingTransaction } from '@recoil/transactions';
 import useHandlePostsMessages from 'hooks/transactions/useHandlePostsMessages';
 import useHandleReactionsMessages from 'hooks/transactions/useHandleReactionsMessages';
+import useHandleRelationshipsMessages from 'hooks/transactions/useHandleRelationshipsMessages';
 
 /**
  * Hook that returns a function that allows to handle the successful broadcasting of a transaction.
@@ -10,6 +11,7 @@ const useHandleSuccessfulTransaction = () => {
   const getPendingTransaction = useGetPendingTransaction();
   const deletePendingTransactions = useDeletePendingTransactions();
 
+  const handleRelationshipsMessages = useHandleRelationshipsMessages();
   const handlePostsMessages = useHandlePostsMessages();
   const handleReactionsMessages = useHandleReactionsMessages();
 
@@ -24,6 +26,7 @@ const useHandleSuccessfulTransaction = () => {
       // Handle the messages
       await handlePostsMessages(transaction.messages);
       await handleReactionsMessages(transaction.messages);
+      await handleRelationshipsMessages(transaction.messages);
 
       // Delete the pending transaction as it was successful
       deletePendingTransactions([txHash]);
@@ -33,6 +36,7 @@ const useHandleSuccessfulTransaction = () => {
       getPendingTransaction,
       handlePostsMessages,
       handleReactionsMessages,
+      handleRelationshipsMessages,
     ],
   );
 };
