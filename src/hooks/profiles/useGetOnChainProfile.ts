@@ -13,7 +13,7 @@ const useGetOnChainProfile = () => {
 
   return React.useCallback(
     async (address: string): Promise<DesmosProfile | undefined> => {
-      const { data } = await getLazyData({
+      const data = await getLazyData({
         variables: { address },
       });
 
