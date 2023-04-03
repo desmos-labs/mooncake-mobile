@@ -13,6 +13,7 @@ import { broadcastAnim } from 'assets/animations';
 import {
   EncodeObject,
   MsgAddReactionTypeUrl,
+  MsgCreatePostTypeUrl,
   MsgCreateRelationshipTypeUrl,
   MsgCreateReportTypeUrl,
   MsgDeleteRelationshipTypeUrl,
@@ -20,6 +21,7 @@ import {
   MsgGrantTypeUrl,
   MsgRemoveReactionTypeUrl,
   MsgRevokeAllowanceTypeUrl,
+  MsgSaveProfileTypeUrl,
 } from '@desmoslabs/desmjs';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { Result } from 'neverthrow';
@@ -158,30 +160,39 @@ const BroadcastTxOnChain: React.FC = () => {
     ) {
       return t('broadcastTxOnChain:authorization');
     }
-    // like post
+    // Save a profile
+    if (msgTypeObj[MsgSaveProfileTypeUrl]) {
+      return t('broadcastTxOnChain:saveProfile');
+    }
+    // Create post
+    if (msgTypeObj[MsgCreatePostTypeUrl]) {
+      return t('broadcastTxOnChain:createPost');
+    }
+    // Like a post
     if (msgTypeObj[MsgAddReactionTypeUrl]) {
       return t('broadcastTxOnChain:likePost');
     }
-    // dislike post
+    // Dislike post
     if (msgTypeObj[MsgRemoveReactionTypeUrl]) {
       return t('broadcastTxOnChain:dislikePost');
+    }
+    // Follow a user
+    if (msgTypeObj[MsgCreateRelationshipTypeUrl]) {
+      return t('broadcastTxOnChain:followUser');
+    }
+    // Unfollow a user
+    if (msgTypeObj[MsgDeleteRelationshipTypeUrl]) {
+      return t('broadcastTxOnChain:unfollowUser');
+    }
+    // Report a user
+    if (msgTypeObj[MsgCreateReportTypeUrl]) {
+      return t('broadcastTxOnChain:reportPost');
     }
     // smart contracts
     if (msgTypeObj[MsgExecuteContractTypeUrl]) {
       // tipping a post
       // TODO: figure out how to differentiate between smart contracts
       return t('broadcastTxOnChain:tipPost');
-    }
-    // follow a user
-    if (msgTypeObj[MsgCreateRelationshipTypeUrl]) {
-      return t('broadcastTxOnChain:followUser');
-    }
-    // unfollow a user
-    if (msgTypeObj[MsgDeleteRelationshipTypeUrl]) {
-      return t('broadcastTxOnChain:unfollowUser');
-    }
-    if (msgTypeObj[MsgCreateReportTypeUrl]) {
-      return t('broadcastTxOnChain:reportPost');
     }
 
     // unmapped, return all transaction types as a string
