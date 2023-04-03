@@ -26,7 +26,6 @@ const useFollowUser = (activeAddress: string) => {
   const broadcastTx = useBroadcastTx();
 
   const addFollowedUser = useAddFollowedUser(activeAddress);
-  const setFollowedUserStatus = useSetFollowedUserStatus(activeAddress);
   const removeFollowedUser = useRemoveFollowedUser(activeAddress);
 
   return React.useCallback(
@@ -49,20 +48,9 @@ const useFollowUser = (activeAddress: string) => {
       if (result.isErr()) {
         // If the transaction is canceled or errors, remove the added relationship
         removeFollowedUser(counterparty.address);
-        return;
       }
-
-      // If the transaction succeeds, set it as synced.
-      setFollowedUserStatus(counterparty.address, DataStatus.SYNCED);
     },
-    [
-      addFollowedUser,
-      activeAddress,
-      subspaceId,
-      broadcastTx,
-      setFollowedUserStatus,
-      removeFollowedUser,
-    ],
+    [addFollowedUser, activeAddress, subspaceId, broadcastTx, removeFollowedUser],
   );
 };
 
@@ -74,7 +62,6 @@ const useUnfollowUser = (activeAddress: string) => {
   const broadcastTx = useBroadcastTx();
 
   const setFollowedUserStatus = useSetFollowedUserStatus(activeAddress);
-  const removeFollowedUser = useRemoveFollowedUser(activeAddress);
 
   return React.useCallback(
     async (counterparty: DesmosProfile) => {
@@ -96,13 +83,9 @@ const useUnfollowUser = (activeAddress: string) => {
       if (result.isErr()) {
         // If the transaction is canceled or errors, re-add the removed relationship
         setFollowedUserStatus(counterparty.address, DataStatus.SYNCED);
-        return;
       }
-
-      // If the transaction succeeds, delete the relationship locally as well
-      removeFollowedUser(counterparty.address);
     },
-    [setFollowedUserStatus, activeAddress, subspaceId, broadcastTx, removeFollowedUser],
+    [setFollowedUserStatus, activeAddress, subspaceId, broadcastTx],
   );
 };
 
