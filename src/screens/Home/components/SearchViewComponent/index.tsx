@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import CommonStyles from 'config/theme/CommonStyles';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import useStyles from './useStyles';
-import useHooks from './hooks';
+import useSearch from './hooks';
 
 interface Props {
   valueToSearch: string;
@@ -25,7 +25,7 @@ interface Props {
 const SearchViewComponent = ({ valueToSearch }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('search');
-  const { isSearching, profiles, getProfileForDTag, fetchMoreProfiles } = useHooks(valueToSearch);
+  const { isSearching, profiles, getProfileForDTag, fetchMoreProfiles } = useSearch(valueToSearch);
 
   useEffect(() => {
     getProfileForDTag();

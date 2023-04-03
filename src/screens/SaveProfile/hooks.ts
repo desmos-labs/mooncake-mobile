@@ -3,7 +3,7 @@ import { Asset } from 'react-native-image-picker';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { DesmosProfile, ProfileParams } from 'types/desmos';
-import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
+import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
@@ -67,7 +67,7 @@ export const useValidationSchema = (profileParams: ProfileParams) => {
  * TODO: This should be used somewhere to make sure the DTag input by the user is free
  */
 export const useCheckDTagAvailability = () => {
-  const [getLazyData] = useCustomLazyQuery(GetProfileForDTag);
+  const [getLazyData] = useCustomLazyQuery(SearchProfiles);
   return React.useCallback(
     async (inputDTag: string) => {
       const data = await getLazyData({ variables: { dTag: inputDTag } });

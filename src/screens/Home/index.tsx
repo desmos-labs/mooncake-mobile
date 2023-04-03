@@ -27,6 +27,7 @@ import ROUTES from 'navigation/routes';
 import { emptyListPlaceholder } from 'assets/images';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import SearchViewComponent from 'screens/Home/components/SearchViewComponent';
+import HomePostListContentLoader from 'components/Loaders/HomePostListContentLoader';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
@@ -210,11 +211,7 @@ const Home = () => {
   // TODO: If the view is NOT loading, and there are no posts, we should return an empty view
   // This might be the case if the user is offline and has no cached posts
   if (loading) {
-    return (
-      <View style={styles.loadingView}>
-        <HomePostContentLoader />
-      </View>
-    );
+    return <HomePostListContentLoader />;
   }
 
   if (!loading && posts.length === 0) {
@@ -245,8 +242,8 @@ const Home = () => {
           }
           renderItem={renderPost}
           showsVerticalScrollIndicator={false}
-          estimatedItemSize={250}
           ListFooterComponent={footerComponent}
+          estimatedItemSize={180}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
           onEndReached={fetchMorePosts}
           getItemType={getPostType}
