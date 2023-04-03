@@ -13,11 +13,11 @@ const useIsFollowing = (counterparty: string) => {
     );
   }
 
-  const hasFollowedUser = useHasFollowedUser(activeAddress);
+  const hasFollowedUser = useHasFollowedUser();
 
   return React.useMemo(
     // Do not perform the search if the active address and counterparty are the same
-    () => activeAddress !== counterparty && hasFollowedUser(counterparty),
+    () => activeAddress !== counterparty && hasFollowedUser(activeAddress, counterparty),
     [activeAddress, counterparty, hasFollowedUser],
   );
 };

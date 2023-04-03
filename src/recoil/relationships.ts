@@ -9,9 +9,10 @@ import {
   FollowedUser,
 } from 'types/relationships';
 import { DesmosProfile } from 'types/desmos';
+import { useGetStoredProfile } from '@recoil/profiles';
 
-const followageState = atom<MultipleUsersCache<FollowedUser, ComparableFollowedUser>>({
-  key: 'followageState',
+const relationshipsState = atom<MultipleUsersCache<FollowedUser, ComparableFollowedUser>>({
+  key: 'relationshipsState',
   default: mmkvValueToCache(MMKVKEYS.FOLLOWAGE, areFollowedUsersComparable),
   effects: [
     ({ onSet }) => {
@@ -25,19 +26,106 @@ const followageState = atom<MultipleUsersCache<FollowedUser, ComparableFollowedU
 /**
  * Hook that allows to easily know if a user is following another user having a given address.
  */
-export const useHasFollowedUser = (user: string) => {
-  const followage = useRecoilValue(followageState);
+export const useHasFollowedUser = () => {
+  const followage = useRecoilValue(relationshipsState);
   return React.useCallback(
-    (counterparty: string) => {
+    (user: string, counterparty: string) => {
       const userFollowage = followage.get(user);
       return userFollowage.has({ address: counterparty });
     },
-    [followage, user],
+    [followage],
   );
 };
 
+/**
+ * Hook that allows to get the cached reaction for a given post.
+ */
+export const useGetRelationship = () => {
+  const relationships = useRecoilValue(relationshipsState);
+  return React.useCallback(
+    (user: string, counterparty: string) => {
+      const userRelationships = relationships.get(user);
+      return userRelationships.get({ address: counterparty });
+    },
+    [relationships],
+  );
+};
+
+/**
+ * Hook that allows to add a new relationship on behalf of the user having a provided address.
+ */
+export const useAddRelationship = () => {
+  const getStoredProfile = useGetStoredProfile();
+  const setRelationships = useSetRecoilState(relationshipsState);
+
+  return React.useCallback(
+    (user: string, counterparty: DesmosProfile) => {
+      const profile = getStoredProfile(counterparty.address);
+      if (!profile) {
+        throw new Error('Cannot add reaction to post for user without profile');
+      }
+
+      setRelationships(currentRelationships => {
+        const existingRelationships = currentRelationships.get(user);
+        const existingRelationship = existingRelationships.get({
+          address: counterparty.address,
+        });
+        switch (existingRelationship?.status) {
+          case undefined:
+            // The relationship does not exist in the cache, so add it
+            return currentRelationships.update(
+              user,
+              existingRelationships.add({
+                user: counterparty,
+              }),
+            );
+
+          case DataStatus.DELETED_LOCALLY:
+            // The reaction was deleted locally. Bring it back to CREATED
+            return currentRelationships.update(
+              user,
+              existingRelationships.updateStatus(
+                { address: counterparty.address },
+                DataStatus.CREATED_LOCALLY,
+              ),
+            );
+
+          default:
+            // Do nothing in other cases
+            return currentRelationships;
+        }
+      });
+    },
+    [getStoredProfile, setRelationships],
+  );
+};
+
+/**
+ * Hook that allows to set the local status of a relationship.
+ */
+export const useUpdateRelationshipStatus = () => {
+  const setRelationships = useSetRecoilState(relationshipsState);
+  return React.useCallback(
+    (user: string, counterparty: string, status: DataStatus) => {
+      setRelationships(currentRelationships => {
+        // Update the status of existing relationship
+        const existingRelationships = currentRelationships.get(user);
+        const updatedRelationships = existingRelationships.updateStatus(
+          { address: counterparty },
+          status,
+        );
+        return currentRelationships.update(user, updatedRelationships);
+      });
+    },
+    [setRelationships],
+  );
+};
+
+/**
+ * Hook that allows to get the list of all the users that the given user is following and are stored locally.
+ */
 export const useGetFollowersToSync = () => {
-  const relationships = useRecoilValue(followageState);
+  const relationships = useRecoilValue(relationshipsState);
   return React.useCallback(
     (user: string) => {
       return relationships
@@ -61,7 +149,7 @@ export const useGetFollowersToSync = () => {
  * This difference can be used to show an updated followers count compared to the current values on the server.
  */
 export const useGetFollowersDifference = () => {
-  const followage = useRecoilValue(followageState);
+  const followage = useRecoilValue(relationshipsState);
   return React.useCallback(
     (user: string) => {
       const userFollowage = followage.readAll();
@@ -87,7 +175,7 @@ export const useGetFollowersDifference = () => {
  * Hook that allows to get the list of followage that should be synced with the server.
  */
 export const useGetFollowageToSync = () => {
-  const followage = useRecoilValue(followageState);
+  const followage = useRecoilValue(relationshipsState);
   return React.useCallback(
     (user: string) => {
       const userFollowage = followage.get(user);
@@ -112,7 +200,7 @@ export const useGetFollowageToSync = () => {
  * @param user {string} - Address of the user for which to get the difference.
  */
 export const useGetFollowageDifference = (user: string) => {
-  const followage = useRecoilValue(followageState);
+  const followage = useRecoilValue(relationshipsState);
   return React.useCallback(() => {
     const userFollowage = followage.get(user);
     return userFollowage
@@ -135,7 +223,7 @@ export const useGetFollowageDifference = (user: string) => {
  * Hook that allows to get the relationship that was created locally for a given user, if any.
  */
 export const useGetCreatedRelationshipToSync = () => {
-  const relationships = useRecoilValue(followageState);
+  const relationships = useRecoilValue(relationshipsState);
   return React.useCallback(
     (user: string, counterparty: string) => {
       const userRelationships = relationships.get(user);
@@ -151,7 +239,7 @@ export const useGetCreatedRelationshipToSync = () => {
  * Hook that allows to get the relationships that were deleted locally, if any.
  */
 export const useGetDeletedRelationshipToSync = () => {
-  const relationships = useRecoilValue(followageState);
+  const relationships = useRecoilValue(relationshipsState);
   return React.useCallback(
     (user: string, counterparty: string) => {
       const userRelationships = relationships.get(user);
@@ -166,10 +254,10 @@ export const useGetDeletedRelationshipToSync = () => {
 /**
  * Hook that allows to set the local status of a followed user.
  */
-export const useSetFollowedUserStatus = (user: string) => {
-  const setFollowage = useSetRecoilState(followageState);
+export const useSetFollowedUserStatus = () => {
+  const setFollowage = useSetRecoilState(relationshipsState);
   return React.useCallback(
-    (counterparty: string, status: DataStatus) => {
+    (user: string, counterparty: string, status: DataStatus) => {
       setFollowage(currentFollowage => {
         // Update the status of existing followed user
         const existingFollowage = currentFollowage.get(user);
@@ -177,17 +265,17 @@ export const useSetFollowedUserStatus = (user: string) => {
         return currentFollowage.update(user, updatedFollowage);
       });
     },
-    [user, setFollowage],
+    [setFollowage],
   );
 };
 
 /**
  * Hook that allows to add a new followed user on behalf of the user having the provided address.
  */
-export const useAddFollowedUser = (user: string) => {
-  const setFollowage = useSetRecoilState(followageState);
+export const useAddFollowedUser = () => {
+  const setFollowage = useSetRecoilState(relationshipsState);
   return React.useCallback(
-    (counterparty: DesmosProfile) => {
+    (user: string, counterparty: DesmosProfile) => {
       setFollowage(currentFollowage => {
         // Add the new followed user
         const existingFollowage = currentFollowage.get(user);
@@ -215,7 +303,7 @@ export const useAddFollowedUser = (user: string) => {
         }
       });
     },
-    [setFollowage, user],
+    [setFollowage],
   );
 };
 
@@ -223,7 +311,7 @@ export const useAddFollowedUser = (user: string) => {
  * Hook that allows to update a stored pending followed user for a given post.
  */
 export const useUpdatePendingFollowedUser = () => {
-  const setFollowage = useSetRecoilState(followageState);
+  const setFollowage = useSetRecoilState(relationshipsState);
   return React.useCallback(
     (user: string, counterparty: string, update: FollowedUser) => {
       setFollowage(currentFollowage => {
@@ -240,7 +328,7 @@ export const useUpdatePendingFollowedUser = () => {
  * Hook that allows to delete a stored pending followed user for a given user.
  */
 export const useRemovePendingFollowedUser = () => {
-  const setFollowage = useSetRecoilState(followageState);
+  const setFollowage = useSetRecoilState(relationshipsState);
   return React.useCallback(
     (user: string, counterparty: string) => {
       setFollowage(currentFollowage => {
@@ -256,16 +344,16 @@ export const useRemovePendingFollowedUser = () => {
 /**
  * Hook that allows to remove a followed user on behalf of the user with the provided address.
  */
-export const useRemoveFollowedUser = (user: string) => {
-  const setFollowage = useSetRecoilState(followageState);
+export const useRemoveFollowedUser = () => {
+  const setFollowage = useSetRecoilState(relationshipsState);
   return React.useCallback(
-    (counterparty: string) => {
+    (user: string, counterparty: string) => {
       setFollowage(currentFollowage => {
         const existingFollowage = currentFollowage.get(user);
         const updatedFollowage = existingFollowage.remove({ address: counterparty });
         return currentFollowage.update(user, updatedFollowage);
       });
     },
-    [setFollowage, user],
+    [setFollowage],
   );
 };
