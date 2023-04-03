@@ -9,7 +9,6 @@ import {
   FollowedUser,
 } from 'types/relationships';
 import { DesmosProfile } from 'types/desmos';
-import { useGetStoredProfile } from '@recoil/profiles';
 
 const relationshipsState = atom<MultipleUsersCache<FollowedUser, ComparableFollowedUser>>({
   key: 'relationshipsState',
@@ -55,16 +54,10 @@ export const useGetRelationship = () => {
  * Hook that allows to add a new relationship on behalf of the user having a provided address.
  */
 export const useAddRelationship = () => {
-  const getStoredProfile = useGetStoredProfile();
   const setRelationships = useSetRecoilState(relationshipsState);
 
   return React.useCallback(
     (user: string, counterparty: DesmosProfile) => {
-      const profile = getStoredProfile(counterparty.address);
-      if (!profile) {
-        throw new Error('Cannot add reaction to post for user without profile');
-      }
-
       setRelationships(currentRelationships => {
         const existingRelationships = currentRelationships.get(user);
         const existingRelationship = existingRelationships.get({
@@ -96,7 +89,7 @@ export const useAddRelationship = () => {
         }
       });
     },
-    [getStoredProfile, setRelationships],
+    [setRelationships],
   );
 };
 

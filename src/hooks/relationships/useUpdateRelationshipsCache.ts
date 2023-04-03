@@ -25,6 +25,11 @@ const useUpdateRelationshipsCache = () => {
         throw new Error('Cannot update the relationships cache without an active account');
       }
 
+      // Skip if the counterparty is the same as the active account
+      if (counterparty === activeAccountAddress) {
+        return;
+      }
+
       const counterpartyProfile = await getProfile(counterparty);
       if (!counterpartyProfile) {
         // Skip all relationships with people that do not have a profile

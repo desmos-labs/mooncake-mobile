@@ -45,6 +45,7 @@ import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import StyledSpinner from 'components/StyledSpinner';
 import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
+import useUpdateRelationshipsCache from 'hooks/relationships/useUpdateRelationshipsCache';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -89,6 +90,8 @@ const Profile = () => {
     () => address === activeAccountAddress,
     [activeAccountAddress, address],
   );
+
+  const updateRelationshipsCache = useUpdateRelationshipsCache();
 
   const {
     profile,
@@ -135,6 +138,7 @@ const Profile = () => {
   // Callback to refresh the data
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
+    await updateRelationshipsCache(address);
     await refreshProfile();
     await refreshFollowageCount();
     await refreshFollowersCount();
@@ -143,12 +147,14 @@ const Profile = () => {
     await refreshPostsCount();
     setPageRefreshing(false);
   }, [
+    address,
     refreshBalance,
     refreshFollowageCount,
     refreshFollowersCount,
     refreshPosts,
     refreshPostsCount,
     refreshProfile,
+    updateRelationshipsCache,
   ]);
 
   // Refresh the data on the focus of the screen
