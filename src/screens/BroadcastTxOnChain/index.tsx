@@ -10,17 +10,33 @@ import { ScrollView, View } from 'react-native';
 import ROUTES from 'navigation/routes';
 import { useRoute } from '@react-navigation/native';
 import { broadcastAnim } from 'assets/animations';
-import { EncodeObject } from '@desmoslabs/desmjs';
+import {
+  EncodeObject,
+  MsgAddReactionTypeUrl,
+  MsgCreatePostTypeUrl,
+  MsgCreateRelationshipTypeUrl,
+  MsgCreateReportTypeUrl,
+  MsgDeleteRelationshipTypeUrl,
+  MsgGrantAllowanceTypeUrl,
+  MsgGrantTypeUrl,
+  MsgRemoveReactionTypeUrl,
+  MsgRevokeAllowanceTypeUrl,
+  MsgSaveProfileTypeUrl,
+} from '@desmoslabs/desmjs';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
 import Button from 'components/Button';
 import { isCanceledOperationError } from 'types/error';
 import { Wallet } from 'types/wallet';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import { PendingTransaction } from 'types/transactions';
 import useEstimateTransactionFees from 'hooks/transactions/useEstimateTransactionFees';
+import TransactionRow from 'screens/BroadcastTxOnChain/components/TransactionRow';
+import { formatCoins } from 'lib/FormatUtils';
+import TopBar from 'components/TopBar';
+import { MsgExecuteContractTypeUrl } from 'config/AutzGrants';
 import useBroadcastTx from './useBroadcastTx';
 import useStyles from './useStyles';
 
@@ -90,27 +106,118 @@ const BroadcastTxOnChain: React.FC = () => {
   // -----------------------------------------------------------------------
 
   React.useEffect(() => {
-    (async () => {
-      setFeesResult(undefined);
-      setEstimatingFees(true);
-
-      // Get the address of the user
-      let address: string;
-      if (typeof accountAddressOrWallet === 'object') {
-        address = accountAddressOrWallet.address;
-      } else {
-        address = accountAddressOrWallet;
-      }
-
-      // Estimate the fees
-      const estimatedFees = await estimateFees(address, messages, memo);
-      setEstimatingFees(false);
-      setFeesResult(estimatedFees);
-    })();
-
+    handleEstimateFees();
     // Safe to ignore, we want to estimate the fees just when we enter this screen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // -----------------------------------------------------------------------
+  // --- Callbacks
+  // -----------------------------------------------------------------------
+  const handleEstimateFees = React.useCallback(async () => {
+    setFeesResult(undefined);
+    setEstimatingFees(true);
+
+    // Get the address of the user
+    let address: string;
+    if (typeof accountAddressOrWallet === 'object') {
+      address = accountAddressOrWallet.address;
+    } else {
+      address = accountAddressOrWallet;
+    }
+
+    // Estimate the fees
+    const estimatedFees = await estimateFees(address, messages, memo);
+    setEstimatingFees(false);
+    setFeesResult(estimatedFees);
+  }, [accountAddressOrWallet, estimateFees, memo, messages]);
+
+  // -----------------------------------------------------------------------
+  // --- Memoized values
+  // -----------------------------------------------------------------------
+
+  const broadcasterAddress: string = React.useMemo(() => {
+    return (accountAddressOrWallet as Wallet).address || (accountAddressOrWallet as string);
+  }, [accountAddressOrWallet]);
+
+  const transactionType: string = React.useMemo(() => {
+    const msgTypes = messages.map(x => x.typeUrl);
+
+    // turn the msgType array into an object for faster indexing.
+    const msgTypeObj: { [index: string]: number } = msgTypes.reduce((acc, cur) => {
+      return {
+        ...acc,
+        [cur]: 1,
+      };
+    }, {});
+
+    // Create an array which will hold our mapped tx types. This is necessary as authorization type messages may also
+    // include a second type url.
+    const txStrings: string[] = [];
+
+    // Authorization
+    if (
+      msgTypeObj[MsgRevokeAllowanceTypeUrl] ||
+      msgTypeObj[MsgGrantAllowanceTypeUrl] ||
+      msgTypeObj[MsgGrantTypeUrl]
+    ) {
+      txStrings.push(t('broadcastTxOnChain:authorization'));
+    }
+    // Save a profile
+    if (msgTypeObj[MsgSaveProfileTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:saveProfile'));
+    }
+    // Create post
+    if (msgTypeObj[MsgCreatePostTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:createPost'));
+    }
+    // Like a post
+    if (msgTypeObj[MsgAddReactionTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:likePost'));
+    }
+    // Dislike post
+    if (msgTypeObj[MsgRemoveReactionTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:dislikePost'));
+    }
+    // Follow a user
+    if (msgTypeObj[MsgCreateRelationshipTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:followUser'));
+    }
+    // Unfollow a user
+    if (msgTypeObj[MsgDeleteRelationshipTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:unfollowUser'));
+    }
+    // Report a user
+    if (msgTypeObj[MsgCreateReportTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:reportPost'));
+    }
+    // smart contracts
+    if (msgTypeObj[MsgExecuteContractTypeUrl]) {
+      // tipping a post
+      // TODO: figure out how to differentiate between smart contracts
+      txStrings.push(t('broadcastTxOnChain:tipPost'));
+    }
+
+    // unmapped, return all transaction types as a string
+    return txStrings.length > 0 ? txStrings.join('\n') : msgTypes.join(', ');
+  }, [messages, t]);
+
+  const transactionFee = React.useMemo(() => {
+    if (!feesResult) {
+      return '';
+    }
+    if (feesResult.isOk()) {
+      return formatCoins(feesResult.value.amount);
+    }
+    if (feesResult.isErr()) {
+      return t('errorOccurredPleaseTryAgain');
+    }
+  }, [feesResult, t]);
+
+  const TopBarOrEmptyView = React.useMemo(() => {
+    if (broadcastingTx) return <View />;
+    return <TopBar />;
+  }, [broadcastingTx]);
 
   // -----------------------------------------------------------------------
   // --- Actions
@@ -130,56 +237,59 @@ const BroadcastTxOnChain: React.FC = () => {
     }
   }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess, toast]);
 
+  const broadcastTxAnimation = React.useMemo(() => {
+    if (broadcastingTx) {
+      return (
+        <Box flex={1} alignItems="center" justifyContent="center">
+          <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+          <Spacer paddingVertical={12}>
+            <Typography.H4>{title || t('transaction broadcasting')}</Typography.H4>
+          </Spacer>
+          <Typography.Body6>{t('please wait')}</Typography.Body6>
+        </Box>
+      );
+    }
+  }, [broadcastingTx, t, title]);
+
   // -----------------------------------------------------------------------
   // --- Screen rendering
   // -----------------------------------------------------------------------
 
   return (
-    <DView style={styles.root}>
-      <View style={styles.container}>
+    <DView topBar={TopBarOrEmptyView} style={styles.root}>
+      {!broadcastingTx && (
+        <Box px="m" mb="50px">
+          <Typography.H3>{t('header')}</Typography.H3>
+        </Box>
+      )}
+
+      <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
         {/* Broadcasting animation shown while the transaction it's broadcasting */}
-        {broadcastingTx && (
-          <>
-            <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
-            <Spacer paddingVertical={12}>
-              <Typography.H4>{title || t('transaction broadcasting')}</Typography.H4>
-            </Spacer>
-            <Typography.Body6>{t('please wait')}</Typography.Body6>
-          </>
-        )}
-        {/* Messages list, tx fees and memo */}
+        {broadcastTxAnimation}
+        {/* Tx type, tx fees */}
         {!broadcastingTx && (
           <>
-            {/* TODO: Create a proper UI to display the tx messages */}
-            {/* ignored as component is temporary */}
-            {/* eslint-disable-next-line react-native/no-inline-styles */}
-            <ScrollView style={{ minHeight: '80%', flex: 1 }}>
-              <Typography.Body5>{JSON.stringify(messages)}</Typography.Body5>
-            </ScrollView>
-            {estimatingFees || feesResult === undefined ? (
-              /* TODO: Create a proper UI with a spinner or something else */
-              <Typography.Body5>Estimating fees...</Typography.Body5>
-            ) : (
-              /* TODO: Create a proper UI to render the fee result */
+            <TransactionRow title={t('address')} subtitle={broadcasterAddress} />
+            <TransactionRow title={t('type')} subtitle={transactionType} />
+            <TransactionRow title={t('fee')} isLoading={!feesResult} subtitle={transactionFee} />
+            <Box flex={1} justifyContent="center">
               <Typography.Body5>
-                Fees:{' '}
-                {feesResult.isOk() ? JSON.stringify(feesResult.value) : feesResult.error.message}
+                {feesResult && feesResult?.isErr() && feesResult.error.message}
               </Typography.Body5>
-            )}
-            <Typography.Body5>
-              {t('memo')}: {memo ?? 'N/A'}
-            </Typography.Body5>
+            </Box>
           </>
         )}
-      </View>
+      </ScrollView>
       <Button
         size={44}
+        mx="m"
+        my="m"
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
-        onPress={handleBroadcastTx}
+        onPress={feesResult?.isErr() ? handleEstimateFees : handleBroadcastTx}
         isLoading={broadcastingTx}
-        disabled={estimatingFees || feesResult?.isErr() || broadcastingTx}>
-        {t('broadcast tx')}
+        disabled={estimatingFees || broadcastingTx}>
+        {feesResult?.isErr() ? t('common:retry') : t('broadcast tx')}
       </Button>
     </DView>
   );

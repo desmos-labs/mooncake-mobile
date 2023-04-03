@@ -2,5 +2,19 @@
   "transaction broadcasting": "Transaction broadcasting...",
   "please wait": "Please wait",
   "memo": "Memo",
-  "broadcast tx": "Broadcast tx"
+  "broadcast tx": "Broadcast tx",
+  "saveProfile": "Save a profile",
+  "createPost": "Create post",
+  "authorization": "Authorization",
+  "likePost": "Like a post",
+  "tipPost": "Tip a post",
+  "dislikePost": "Dislike a post",
+  "followUser": "Follow a user",
+  "unfollowUser": "Unfollow a user",
+  "reportPost": "Report a post",
+  "address": "Address",
+  "type": "Type",
+  "header": "Transaction Details",
+  "fee": "Fee",
+  "errorOccurredPleaseTryAgain": "Error occurred. Please try again."
 }
