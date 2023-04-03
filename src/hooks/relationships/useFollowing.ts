@@ -25,7 +25,7 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   }
 
   const subspaceId = useAppStateValue('subspaceId');
-  const updatePendingRelationships = useUpdatePendingRelationships(userAddress);
+  const updatePendingRelationships = useUpdatePendingRelationships();
 
   // Get the relationships to sync
   const followageToSync = useFollowageToSync(userAddress);
@@ -56,7 +56,7 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
         );
 
         // Update the pending relationships by deleting the ones that are now synced
-        updatePendingRelationships(updates);
+        updatePendingRelationships(userAddress, updates);
 
         return merged;
       });
@@ -64,7 +64,7 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
       setFetchingMore(false);
       setRefreshing(false);
     },
-    [updatePendingRelationships],
+    [updatePendingRelationships, userAddress],
   );
 
   // Query used to get the following list
