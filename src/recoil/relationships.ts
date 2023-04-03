@@ -118,6 +118,38 @@ export const useGetFollowageDifference = (user: string) => {
 };
 
 /**
+ * Hook that allows to get the relationship that was created locally for a given user, if any.
+ */
+export const useGetCreatedRelationshipToSync = () => {
+  const relationships = useRecoilValue(followageState);
+  return React.useCallback(
+    (user: string, counterparty: string) => {
+      const userRelationships = relationships.get(user);
+      return userRelationships
+        .filter({ address: counterparty })
+        .find(reaction => reaction.status === DataStatus.CREATED_LOCALLY);
+    },
+    [relationships],
+  );
+};
+
+/**
+ * Hook that allows to get the relationships that were deleted locally, if any.
+ */
+export const useGetDeletedRelationshipToSync = () => {
+  const relationships = useRecoilValue(followageState);
+  return React.useCallback(
+    (user: string, counterparty: string) => {
+      const userRelationships = relationships.get(user);
+      return userRelationships
+        .filter({ address: counterparty })
+        .find(reaction => reaction.status === DataStatus.DELETED_LOCALLY);
+    },
+    [relationships],
+  );
+};
+
+/**
  * Hook that allows to set the local status of a followed user.
  */
 export const useSetFollowedUserStatus = (user: string) => {
