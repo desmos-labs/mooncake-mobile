@@ -13,7 +13,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
-import { useAppStateValue } from '@recoil/appState';
+import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 
 // -------------------------------------------------------------------------------------
 // --- TAB DATA
@@ -50,6 +50,7 @@ const HomeTabs = () => {
   const { params } = route;
 
   const lastInitialRouteName = useAppStateValue('lastHomeTab');
+  const setLastHomeTab = useSetAppStateValue('lastHomeTab');
   const initialRouteName = params?.initialRouteName ?? lastInitialRouteName;
 
   // Refresh the token if we have one, otherwise perform the login again
@@ -80,8 +81,24 @@ const HomeTabs = () => {
         tabBar={renderTabBar}
         screenOptions={{ swipeEnabled: false }}
         initialRouteName={initialRouteName}>
-        <Tab.Screen name={ROUTES.HOME_TAB_DISCOVER} component={Home} />
-        <Tab.Screen name={ROUTES.HOME_TAB_FOLLOWING} component={Home} />
+        <Tab.Screen
+          name={ROUTES.HOME_TAB_DISCOVER}
+          component={Home}
+          listeners={{
+            tabPress: () => {
+              setLastHomeTab(ROUTES.HOME_TAB_DISCOVER);
+            },
+          }}
+        />
+        <Tab.Screen
+          name={ROUTES.HOME_TAB_FOLLOWING}
+          component={Home}
+          listeners={{
+            tabPress: () => {
+              setLastHomeTab(ROUTES.HOME_TAB_FOLLOWING);
+            },
+          }}
+        />
       </Tab.Navigator>
     </Box>
   );
