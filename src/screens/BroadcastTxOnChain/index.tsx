@@ -35,7 +35,6 @@ import { PendingTransaction } from 'types/transactions';
 import useEstimateTransactionFees from 'hooks/transactions/useEstimateTransactionFees';
 import TransactionRow from 'screens/BroadcastTxOnChain/components/TransactionRow';
 import { formatCoins } from 'lib/FormatUtils';
-import _ from 'lodash';
 import TopBar from 'components/TopBar';
 import { MsgExecuteContractTypeUrl } from 'config/AutzGrants';
 import useBroadcastTx from './useBroadcastTx';
@@ -208,7 +207,7 @@ const BroadcastTxOnChain: React.FC = () => {
       return '';
     }
     if (feesResult.isOk()) {
-      return formatCoins(_.get(feesResult, 'value.amount'));
+      return formatCoins(feesResult.value.amount);
     }
     if (feesResult.isErr()) {
       return t('errorOccurredPleaseTryAgain');
