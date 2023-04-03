@@ -56,6 +56,30 @@ export const useHandlePressShowCommentDetails = () => {
 };
 
 /**
+ * Hook that allows to handle the action performed when the user clicks on a comment button of a reply.
+ *
+ */
+export const useHandlePressShowCommentDetailsWithFocus = () => {
+  const navigateToPost = useNavigateToPost();
+  return React.useCallback(
+    (comment: Post) => {
+      switch (isCommentReply(comment)) {
+        case true:
+          // If the post is a reply to a comment, do nothing
+          return;
+        default:
+          // If the post is a comment to a post, navigate to its details
+          navigateToPost(comment.subspaceId, comment.id, {
+            navigationMethod: 'push',
+            focusCommentBox: true,
+          });
+      }
+    },
+    [navigateToPost],
+  );
+};
+
+/**
  * Hook that allows to see the comment details when a user wants to create a comment.
  */
 export const useHandleExpandCommentView = () => {

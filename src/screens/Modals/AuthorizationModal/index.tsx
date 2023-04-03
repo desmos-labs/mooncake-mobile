@@ -4,7 +4,7 @@ import Button from 'components/Button';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Spacer from 'components/Spacer';
@@ -44,28 +44,38 @@ const AuthorizationModal = () => {
 
   const { goBack } = useNavigation<NavProps['navigation']>();
 
+  // Tells whether or not to call the onDismiss callback when the user goes back
+  const [callOnDismissOnGoBack, setCallOnDismissOnGoBack] = useState(true);
+
+  // This is to make sure that onDismiss is not called unless we want to
+  const closeWithoutDismiss = useCallback(() => {
+    setCallOnDismissOnGoBack(false);
+    setTimeout(() => goBack(), 200);
+  }, [goBack]);
+
   // Little hack to make sure the modal is dismissed before the onPress callback is invoked
   const onPressPrimaryButton = useCallback(() => {
-    goBack();
+    closeWithoutDismiss();
     onPressYes && setTimeout(() => onPressYes(), 200);
-  }, [goBack, onPressYes]);
+  }, [closeWithoutDismiss, onPressYes]);
 
   // Little hack to make sure the modal is dismissed before the onPress callback is invoked
   const onPressSecondaryButton = useCallback(() => {
-    goBack();
+    closeWithoutDismiss();
     onPressNo && setTimeout(() => onPressNo(), 200);
-  }, [goBack, onPressNo]);
+  }, [closeWithoutDismiss, onPressNo]);
 
   // Little hack to make sure the modal is dismissed before the onDismiss callback is invoked
   const onPressDismiss = useCallback(() => {
     goBack();
-    onDismiss && setTimeout(() => onDismiss(), 200);
-  }, [goBack, onDismiss]);
+  }, [goBack]);
 
   // If the user goes back, consider it as a dismiss
   useOnBackAction(() => {
-    onDismiss && setTimeout(() => onDismiss(), 200);
-  }, [onDismiss]);
+    if (callOnDismissOnGoBack && onDismiss) {
+      setTimeout(() => onDismiss(), 200);
+    }
+  }, [callOnDismissOnGoBack, onDismiss]);
 
   return (
     <View style={styles.container}>

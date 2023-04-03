@@ -1,5 +1,4 @@
 import { MMKV, useMMKVObject } from 'react-native-mmkv';
-import EnvConfig from 'config/EnvConfig';
 import { deserializeObject, serializeObject } from './encoding';
 
 export enum MMKVKEYS {
@@ -31,7 +30,7 @@ export enum MMKVKEYS {
 }
 
 const MMKVStorage = new MMKV({
-  id: EnvConfig.MMKV_ID || 'butter',
+  id: 'butter',
 });
 
 /**

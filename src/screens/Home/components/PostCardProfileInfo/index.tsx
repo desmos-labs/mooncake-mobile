@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Center, HStack, useTheme, VStack } from 'native-base';
 import Typography from 'components/Typography';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { isPostPending, Post } from 'types/posts';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { loadingOrange } from 'assets/animations';
@@ -44,6 +44,18 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const isFollowing = useIsFollowing(post.author.address);
+  const [actualDate, setActualDate] = useState(new Date());
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setActualDate(new Date());
+    }, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Memoized variables
@@ -56,12 +68,14 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
 
   const isPending = useMemo(() => isPostPending(post), [post]);
 
-  const formattedDate = useMemo(() => formatDate(post.creationDate), []);
+  const formattedDate = useMemo(
+    () => formatDate(post.creationDate),
+    [formatDate, post.creationDate],
+  );
   const calculatedCreationDate = useMemo(() => {
     const parsedTime = parseISO(`${post.creationDate}Z`);
-    const now = new Date();
 
-    const differenceInUnix = now.getTime() - parsedTime.getTime();
+    const differenceInUnix = actualDate.getTime() - parsedTime.getTime();
     if (differenceInUnix < 59999) {
       return t('seconds ago', {
         count: formatMsToHumanReadable(differenceInUnix, 'seconds'),
@@ -81,7 +95,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
     } else {
       return formattedDate;
     }
-  }, [formattedDate, post.creationDate, t]);
+  }, [actualDate, formattedDate, post.creationDate, t]);
 
   const popupMenuItems = useMemo(
     () => [

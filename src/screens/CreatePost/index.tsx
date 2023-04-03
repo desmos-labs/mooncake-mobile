@@ -5,14 +5,13 @@ import { ScrollView, TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
 import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
-import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import { Center, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
 import {
@@ -26,6 +25,7 @@ import useCustomToast from 'hooks/extended/useCustomToast';
 import SelectedPostImage from 'components/SelectedPostImage';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
+import usePostsParams from 'hooks/posts/usePostsParams';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -59,6 +59,7 @@ const CreatePost = () => {
   // --- Useful hooks
   // -------------------------------------------------------------------------------------
 
+  const { params: postsParams } = usePostsParams();
   const resetCreatePostState = useResetCreatePostState();
 
   // TODO: Properly display the state of the creation of the post
@@ -179,28 +180,25 @@ const CreatePost = () => {
           <ScrollView style={styles.contentContainer}>
             {/* this may get refactored into its own custom component */}
             <TextInput
-              maxLength={EnvConfig.MAX_COMMENT_LENGTH}
+              autoFocus={true}
+              maxLength={postsParams.maxTextLength}
               placeholder={t(parent ? 'yourReply' : 'writeSomething')}
               placeholderTextColor={theme.colors.grey02}
               value={postText}
               onChangeText={setPostText}
               multiline
-              style={{
-                color: theme.colors.surfaceBlack,
-              }}
+              style={styles.input}
               textAlignVertical="top"
             />
             {/* TODO: Allow to select multiple attachments */}
-            <Center>
-              <SelectedPostImage
-                source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
-                dimensions={{
-                  width: postAttachments.length > 0 ? postAttachments[0].width : undefined,
-                  height: postAttachments.length > 0 ? postAttachments[0].height : undefined,
-                }}
-                handlePress={source => removePostAttachment(source)}
-              />
-            </Center>
+            <SelectedPostImage
+              source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
+              dimensions={{
+                width: postAttachments.length > 0 ? postAttachments[0].width : undefined,
+                height: postAttachments.length > 0 ? postAttachments[0].height : undefined,
+              }}
+              handlePress={source => removePostAttachment(source)}
+            />
           </ScrollView>
         </View>
       </DView>

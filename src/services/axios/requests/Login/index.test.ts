@@ -1,21 +1,18 @@
 import axiosInstance from 'services/axios';
 import Login from './index';
 
-const mockResponse = { value: 'mock-response' };
-
 jest.mock('services/axios', () => ({
   post: jest.fn(async () => ({
-    data: 'mock-response',
+    data: {
+      token: 'mock-token',
+    },
   })),
 }));
 
 const mockArgs = {
   address: 'mock-address',
-
   pubkeyBytes: 'mock-pubKeyBytes',
-
   signedBytes: 'mock-signedBytes',
-
   signatureBytes: 'mock-signatureBytes',
 };
 
@@ -34,6 +31,7 @@ describe('services-axios: Login', () => {
       signature_bytes: mockArgs.signatureBytes,
     });
 
-    expect(result).toEqual(mockResponse);
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrapOr(undefined)).toEqual('mock-token');
   });
 });

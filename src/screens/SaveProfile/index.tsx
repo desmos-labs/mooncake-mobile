@@ -22,6 +22,7 @@ import useProfileParams from 'hooks/profiles/useProfileParams';
 import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useStyles from 'screens/SaveProfile/useStyles';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
+import { asPictureAsset } from 'lib/ProfileUtils';
 import CreateAvatar from './components/CreateAvatar';
 import {
   SaveProfileFormState,
@@ -75,7 +76,6 @@ const SaveProfile = (props: NavProps) => {
   const theme = useTheme();
   const { t } = useTranslation('createProfile');
 
-  // Screen props
   const { goBack } = useNavigation<NavProps['navigation']>();
   const { route } = props;
   const { params } = route;
@@ -85,35 +85,53 @@ const SaveProfile = (props: NavProps) => {
   const onError = params?.onError;
   const saveOnChain = params?.storeOnChain ?? true;
 
-  // Validation params
-  const { params: profileParams } = useProfileParams();
+  // -------------------------------------------------------------------------------------
+  // --- Styles
+  // -------------------------------------------------------------------------------------
 
-  // State of the edit form
-  const [profilePic, setProfilePic] = useState<Asset>();
-  const profilePicBackground = useGetImageBackground(
-    profilePic,
-    profile?.profilePicture,
-    defaultProfilePic,
-  );
-  const [coverPic, setCoverPic] = useState<Asset>();
-  const coverPictureBackground = useGetImageBackground(
-    coverPic,
-    profile?.coverPicture,
-    defaultBanner,
-  );
-
-  // Inputs styles
   const nicknameInputRef = useRef<TextInput>(null);
   const dTagInputRef = useRef<TextInput>(null);
   const bioInputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const styles = useStyles({ nicknameInputRef, dTagInputRef, bioInputRef });
 
-  // Form validation
+  // -------------------------------------------------------------------------------------
+  // --- Screen state
+  // -------------------------------------------------------------------------------------
+
+  // State of the edit form
+  const [profilePic, setProfilePic] = useState<Asset | undefined>(
+    asPictureAsset(profile?.profilePicture),
+  );
+  const profilePicBackground = useGetImageBackground(
+    profilePic,
+    profile?.profilePicture,
+    defaultProfilePic,
+  );
+  const [coverPic, setCoverPic] = useState<Asset | undefined>(
+    asPictureAsset(profile?.coverPicture),
+  );
+  const coverPictureBackground = useGetImageBackground(
+    coverPic,
+    profile?.coverPicture,
+    defaultBanner,
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Form validation
+  // -------------------------------------------------------------------------------------
+
+  // Validation params
+  const { params: profileParams } = useProfileParams();
+
   const initialFormState = useInitialFormState(profile);
   const validationSchema = useValidationSchema(profileParams);
 
-  // Actions
+  // -------------------------------------------------------------------------------------
+  // --- Callbacks
+  // -------------------------------------------------------------------------------------
+
+  // Image selection actions
   const { imageFromLibrary: selectCoverPicture } = useImageFromDevice({
     onImageSelected: image => setCoverPic(image),
   });
@@ -147,6 +165,10 @@ const SaveProfile = (props: NavProps) => {
     () => status !== SaveProfileStatus.UNDEFINED && status !== SaveProfileStatus.DONE,
     [status],
   );
+
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView

@@ -11,6 +11,7 @@ import { buildGrantAllowanceEncodes, buildGrantMsgEncodes } from 'lib/Authorizat
 import ROUTES from 'navigation/routes';
 import { CanceledOperationError, CentralizedApiNotGrantedError } from 'types/error';
 import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizations';
+import { useAppStateValue } from '@recoil/appState';
 
 /**
  * Hook that provides a function that requests the user if they want to give
@@ -19,9 +20,12 @@ import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizati
  */
 const usePromptRequestCentralizedAPIsPermissions = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
   const activeAccountAddress = useActiveAccountAddress();
-  const { refresh: refreshAuthorizations } = useRefreshAuthorizations();
+  const subspaceId = useAppStateValue('subspaceId');
   const { config } = useButterConfig();
+
+  const { refresh: refreshAuthorizations } = useRefreshAuthorizations();
 
   return React.useCallback(
     async (_: EncodeObject[]) => {
@@ -54,6 +58,7 @@ const usePromptRequestCentralizedAPIsPermissions = () => {
               if (missingAuthzGrants.length > 0) {
                 grantPermissionsMsgs.push(
                   ...buildGrantMsgEncodes(
+                    subspaceId,
                     missingAuthzGrants,
                     config?.desmosAddress ?? '',
                     activeAccountAddress,
@@ -74,7 +79,7 @@ const usePromptRequestCentralizedAPIsPermissions = () => {
         }
       });
     },
-    [activeAccountAddress, config?.desmosAddress, navigation, refreshAuthorizations],
+    [activeAccountAddress, config?.desmosAddress, navigation, refreshAuthorizations, subspaceId],
   );
 };
 
