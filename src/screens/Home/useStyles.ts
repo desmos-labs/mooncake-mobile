@@ -31,7 +31,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     backgroundColor: theme.colors.white,
   },
-  loaderView: { flex: 1, marginHorizontal: theme.spacing.m },
+  loaderView: { flex: 1 },
   searchView: { flex: 1, zIndex: 2 },
   emptyImage: {
     width: 72,

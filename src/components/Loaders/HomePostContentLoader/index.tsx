@@ -1,26 +1,24 @@
 import React, { memo } from 'react';
-import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
-import { Dimensions } from 'react-native';
-import { useTheme } from 'native-base';
+import { Center, HStack, Skeleton, useTheme, VStack } from 'native-base';
 
 const HomePostContentLoader = () => {
   const theme = useTheme();
 
   return (
-    <ContentLoader
-      animate={true}
-      speed={2}
-      width={Dimensions.get('window').width - 32}
-      height={166}
-      backgroundColor={theme.colors.surfaceGrey}
-      foregroundColor={theme.colors.background}>
-      <Rect x="64" y="18" rx="3" ry="3" width="88" height="8" />
-      <Rect x="64" y="38" rx="3" ry="3" width="110" height="8" />
-      <Rect x="6" y="66" rx="3" ry="3" width="320" height="8" />
-      <Rect x="6" y="86" rx="3" ry="3" width="280" height="8" />
-      <Rect x="6" y="106" rx="3" ry="3" width="330" height="8" />
-      <Circle cx="30" cy="30" r="25" />
-    </ContentLoader>
+    <Center marginTop={theme.spacing.s}>
+      <HStack space="12px" rounded={theme.roundness} paddingX={theme.spacing.xs}>
+        <Skeleton w="48px" h="48px" rounded="full" />
+        <VStack space="1.5" flex={1}>
+          <Skeleton width="200px" height="10px" mt="1" rounded={theme.roundness} />
+          <Skeleton width="100px" height="8px" mt="1" rounded={theme.roundness} />
+        </VStack>
+      </HStack>
+      <VStack space="1.5" alignSelf="flex-start" paddingX={theme.spacing.xs} marginTop="16px">
+        <Skeleton width="350px" height="10px" mt="1" rounded={theme.roundness} />
+        <Skeleton width="330px" height="10px" mt="1" rounded={theme.roundness} />
+        <Skeleton width="200px" height="10px" mt="1" rounded={theme.roundness} />
+      </VStack>
+    </Center>
   );
 };
 
