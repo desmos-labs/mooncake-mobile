@@ -24,7 +24,6 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { isPostPending, Post } from 'types/posts';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import ROUTES from 'navigation/routes';
-import { useSetAppStateValue } from '@recoil/appState';
 import { emptyListPlaceholder } from 'assets/images';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import SearchViewComponent from 'screens/Home/components/SearchViewComponent';
@@ -56,13 +55,6 @@ const Home = () => {
 
   // Ask the user the permission to access the device notification
   useRequestNotificationsPermission();
-
-  const setLastHomeTab = useSetAppStateValue('lastHomeTab');
-
-  // Set the last home tab when the route changes
-  useEffect(() => {
-    setLastHomeTab(routeName);
-  }, [routeName, setLastHomeTab]);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
