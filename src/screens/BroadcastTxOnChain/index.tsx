@@ -89,7 +89,7 @@ const BroadcastTxOnChain: React.FC = () => {
 
   const [estimatingFees, setEstimatingFees] = React.useState(false);
   const [feesResult, setFeesResult] = React.useState<Result<StdFee, Error>>();
-  const [broadcastingTx, setBroadcastingTx] = React.useState(true);
+  const [broadcastingTx, setBroadcastingTx] = React.useState(false);
 
   // -----------------------------------------------------------------------
   // --- Back action
@@ -269,6 +269,7 @@ const BroadcastTxOnChain: React.FC = () => {
       <Button
         size={44}
         mx="m"
+        my="m"
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={feesResult?.isErr() ? handleEstimateFees : handleBroadcastTx}
