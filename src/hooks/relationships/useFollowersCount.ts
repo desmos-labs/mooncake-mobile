@@ -2,6 +2,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import GetFollowersCount from 'services/graphql/queries/GetFollowersCount';
+import { useGetFollowersDifference } from '@recoil/relationships';
 
 /**
  * Hook that returns the number of users that the user having the given address is being followed by.
@@ -22,7 +23,20 @@ const useFollowersCount = (address: string | undefined) => {
   const { data, loading, refetch } = useQuery(GetFollowersCount, {
     variables: { userAddress },
   });
-  const followersCount = useMemo(() => data?.followers?.aggregate?.count ?? 0, [data]);
+  const serverFollowersCount = useMemo(() => data?.followers?.aggregate?.count ?? 0, [data]);
+
+  // Get the followers difference that is stored locally
+  const getFollowersDifference = useGetFollowersDifference();
+  const followersDifference = useMemo(
+    () => getFollowersDifference(userAddress),
+    [getFollowersDifference, userAddress],
+  );
+
+  // Compute the overall followers count by adding the difference to the server count
+  const followersCount = useMemo(
+    () => Math.max(0, serverFollowersCount + followersDifference),
+    [followersDifference, serverFollowersCount],
+  );
 
   return {
     count: followersCount,

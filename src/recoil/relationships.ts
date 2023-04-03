@@ -37,6 +37,41 @@ export const useHasFollowedUser = (user: string) => {
 };
 
 /**
+ * Hook that allows to get a number representing the current difference of the user followers.
+ * The difference is computed by considering:
+ * • each locally deleted relationship as <code>-1</code>
+ * • each locally added relationship as <code>+1</code>
+ *
+ * Here are some difference values examples:
+ * • a difference of -2 means that overall there are 2 locally deleted relationships
+ * • a difference of +1 means that overall there is 1 locally created relationship
+ *
+ * This difference can be used to show an updated followers count compared to the current values on the server.
+ */
+export const useGetFollowersDifference = () => {
+  const followage = useRecoilValue(followageState);
+  return React.useCallback(
+    (user: string) => {
+      const userFollowage = followage.readAll();
+      return userFollowage
+        .filter(followedUser => followedUser.user.address === user)
+        .map(followedUser => {
+          switch (followedUser.status) {
+            case DataStatus.CREATED_LOCALLY:
+              return 1;
+            case DataStatus.DELETED_LOCALLY:
+              return -1;
+            default:
+              return 0;
+          }
+        })
+        .reduce((sum: number, value: number) => sum + value, 0);
+    },
+    [followage],
+  );
+};
+
+/**
  * Hook that allows to get the list of followage that should be synced with the server.
  * @param user {string} - Address of the user for which to get the followage to sync.
  */
