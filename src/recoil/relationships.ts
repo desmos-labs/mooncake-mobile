@@ -36,6 +36,18 @@ export const useHasFollowedUser = (user: string) => {
   );
 };
 
+export const useGetFollowersToSync = () => {
+  const relationships = useRecoilValue(followageState);
+  return React.useCallback(
+    (user: string) => {
+      return relationships
+        .readAll()
+        .filter(r => r.user.address === user && r.status === DataStatus.CREATED_LOCALLY);
+    },
+    [relationships],
+  );
+};
+
 /**
  * Hook that allows to get a number representing the current difference of the user followers.
  * The difference is computed by considering:
@@ -73,14 +85,16 @@ export const useGetFollowersDifference = () => {
 
 /**
  * Hook that allows to get the list of followage that should be synced with the server.
- * @param user {string} - Address of the user for which to get the followage to sync.
  */
-export const useFollowageToSync = (user: string) => {
+export const useGetFollowageToSync = () => {
   const followage = useRecoilValue(followageState);
-  return React.useMemo(() => {
-    const userFollowage = followage.get(user);
-    return userFollowage.readAll().filter(r => r.status === DataStatus.CREATED_LOCALLY);
-  }, [followage, user]);
+  return React.useCallback(
+    (user: string) => {
+      const userFollowage = followage.get(user);
+      return userFollowage.readAll().filter(r => r.status === DataStatus.CREATED_LOCALLY);
+    },
+    [followage],
+  );
 };
 
 /**
