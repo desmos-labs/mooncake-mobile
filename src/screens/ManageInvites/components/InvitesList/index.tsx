@@ -1,6 +1,5 @@
 import { emptyInvitesImage } from 'assets/images';
 import Button from 'components/Button';
-import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React, { useMemo } from 'react';
@@ -53,13 +52,10 @@ const InvitesList = ({
   const EmptyInvites = useMemo(() => {
     return (
       <View style={styles.container}>
-        <Box alignItems="center">
+        <Box alignItems="center" marginBottom="xl">
           <Image source={emptyInvitesImage} style={styles.emptyImage} />
           <Typography.Body5>{t('no invites yet')}</Typography.Body5>
         </Box>
-
-        <Spacer paddingVertical="l" />
-
         <Button
           size={44}
           textColor={theme.colors.white}
@@ -96,7 +92,9 @@ const InvitesList = ({
 
   const bottomComponent = useMemo(() => {
     return totalInvites >= maxInvitations ? (
-      <Typography.Body6 style={styles.sendAllText}>{t('sent all')}</Typography.Body6>
+      <Box marginTop="s">
+        <Typography.Body6 style={styles.sendAllText}>{t('sent all')}</Typography.Body6>
+      </Box>
     ) : (
       <Button
         onPress={() => navigate(ROUTES.SETTINGS_INVITES)}

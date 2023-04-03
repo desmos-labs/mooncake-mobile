@@ -27,7 +27,7 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
   const content = useMemo(() => {
     return (
       <View style={styles.flexRowView}>
-        {invite.claimer ? (
+        {invite.claimerAddress ? (
           <VStack flex={1}>
             <HStack justifyContent="space-between">
               <Typography.Body5>
@@ -41,12 +41,20 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
             <HStack alignItems="center">
               <FastImage style={styles.avatar} source={getProfilePicture(invite.claimer)} />
               <View style={styles.profileView}>
-                <Typography.Subtitle2 numberOfLines={1}>
-                  {invite.claimer?.nickname?.trimStart() || 'no-nickname'}
-                </Typography.Subtitle2>
-                <Typography.Body7>
-                  @{invite.claimer?.dTag?.trimStart() || 'no-dtag'}
-                </Typography.Body7>
+                {invite.claimer ? (
+                  <>
+                    <Typography.Subtitle2 numberOfLines={1}>
+                      {invite.claimer?.nickname?.trimStart() || 'no-nickname'}
+                    </Typography.Subtitle2>
+                    <Typography.Body7>
+                      @{invite.claimer?.dTag?.trimStart() || 'no-dtag'}
+                    </Typography.Body7>
+                  </>
+                ) : (
+                  <Typography.Subtitle3 numberOfLines={1} style={styles.maxWidth70}>
+                    {invite.claimerAddress}
+                  </Typography.Subtitle3>
+                )}
               </View>
             </HStack>
           </VStack>
@@ -90,7 +98,7 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
         )}
       </View>
     );
-  }, [formatTime, index, invite.claimer, invite.creationTime, invite.link]);
+  }, [formattedDate, index, invite.claimer, invite.claimerAddress, invite.code, invite.link]);
 
   return <View style={styles.container}>{content}</View>;
 };
