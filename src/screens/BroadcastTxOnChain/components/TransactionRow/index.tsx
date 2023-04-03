@@ -10,12 +10,12 @@ interface Props {
   title: string;
 
   /**
-   * A low=context description of the row of data.
+   * A low-context description of the row of data.
    */
   subtitle?: string;
 
   /**
-   * If true, will display a loading spinner instead of subtitle.
+   * If true, will display a loading spinner instead of subtitle. This is useful if the result of the row is asynchronous.
    */
   isLoading?: boolean;
 }
