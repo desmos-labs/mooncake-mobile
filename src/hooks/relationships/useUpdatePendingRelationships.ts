@@ -6,16 +6,15 @@ import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransac
 
 /**
  * Hook that allows to update the pending relationships based on the data retrieved from the server.
- * @param user {string} - Address of the user for which the pending relationships should be updated.
  */
-const useUpdatePendingRelationships = (user: string) => {
-  const updateStoredPendingFollowedUser = useUpdatePendingFollowedUser(user);
-  const removeStoredPendingFollowedUser = useRemovePendingFollowedUser(user);
+const useUpdatePendingRelationships = () => {
+  const updateStoredPendingFollowedUser = useUpdatePendingFollowedUser();
+  const removeStoredPendingFollowedUser = useRemovePendingFollowedUser();
 
   const syncPendingTransactions = useSyncPendingTransactions();
 
   return React.useCallback(
-    (updates: CachedDataUpdate<FollowedUser>[]) => {
+    (user: string, updates: CachedDataUpdate<FollowedUser>[]) => {
       updates.forEach(update => {
         switch (update.type) {
           case CachedDataUpdateType.CREATED:
@@ -24,13 +23,13 @@ const useUpdatePendingRelationships = (user: string) => {
 
           case CachedDataUpdateType.UPDATED: {
             const { original, updated } = update;
-            updateStoredPendingFollowedUser(original.user.address, updated);
+            updateStoredPendingFollowedUser(user, original.user.address, updated);
             break;
           }
 
           case CachedDataUpdateType.DELETED: {
             const { data } = update;
-            removeStoredPendingFollowedUser(data.user.address);
+            removeStoredPendingFollowedUser(user, data.user.address);
             break;
           }
         }

@@ -175,37 +175,35 @@ export const useAddFollowedUser = (user: string) => {
 
 /**
  * Hook that allows to update a stored pending followed user for a given post.
- * @param user {string} - Address of the user for which to update the reaction.
  */
-export const useUpdatePendingFollowedUser = (user: string) => {
+export const useUpdatePendingFollowedUser = () => {
   const setFollowage = useSetRecoilState(followageState);
   return React.useCallback(
-    (counterparty: string, update: FollowedUser) => {
+    (user: string, counterparty: string, update: FollowedUser) => {
       setFollowage(currentFollowage => {
         const existingFollowage = currentFollowage.get(user);
         const updatedFollowage = existingFollowage.updatePending({ address: counterparty }, update);
         return currentFollowage.update(user, updatedFollowage);
       });
     },
-    [user, setFollowage],
+    [setFollowage],
   );
 };
 
 /**
  * Hook that allows to delete a stored pending followed user for a given user.
- * @param user {string} - Address of the user for which to delete the followed user.
  */
-export const useRemovePendingFollowedUser = (user: string) => {
+export const useRemovePendingFollowedUser = () => {
   const setFollowage = useSetRecoilState(followageState);
   return React.useCallback(
-    (counterparty: string) => {
+    (user: string, counterparty: string) => {
       setFollowage(currentFollowage => {
         const existingFollowage = currentFollowage.get(user);
         const updatedFollowage = existingFollowage.removePending({ address: counterparty });
         return currentFollowage.update(user, updatedFollowage);
       });
     },
-    [user, setFollowage],
+    [setFollowage],
   );
 };
 
