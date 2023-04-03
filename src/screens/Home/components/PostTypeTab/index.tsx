@@ -9,9 +9,10 @@ type Props = {
   state: TabNavigationState<ParamListBase>;
   position: Animated.AnimatedInterpolation<any>;
   navigation: any;
+  disableButtons: boolean;
 };
 
-const PostTypeTab = ({ state, position, navigation }: Props) => {
+const PostTypeTab = ({ state, position, navigation, disableButtons }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
 
@@ -27,15 +28,17 @@ const PostTypeTab = ({ state, position, navigation }: Props) => {
         const isFocused = state.index === idx;
 
         const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
+          if (!disableButtons) {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-          if (!isFocused && !event.defaultPrevented) {
-            // The `merge: true` option makes sure that the params inside the tab screen are preserved
-            navigation.navigate({ name: route.name, merge: true });
+            if (!isFocused && !event.defaultPrevented) {
+              // The `merge: true` option makes sure that the params inside the tab screen are preserved
+              navigation.navigate({ name: route.name, merge: true });
+            }
           }
         };
 

@@ -13,7 +13,7 @@ const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
 
   const getQueryReactionValue = useGetQueryReactionValue();
-  const getPost = useCustomLazyQuery(GetPostByExternalID);
+  const [getLazyData] = useCustomLazyQuery(GetPostByExternalID);
 
   return React.useCallback(
     async (subspaceId: number, externalId: string): Promise<Post | undefined> => {
@@ -21,7 +21,7 @@ const useGetPostByExternalID = () => {
         throw new Error('Trying to get post data without active user');
       }
 
-      const data = await getPost({
+      const data = await getLazyData({
         variables: {
           subspaceId,
           externalId,
@@ -35,7 +35,7 @@ const useGetPostByExternalID = () => {
 
       return data.posts.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
-    [activeAddress, getPost, getQueryReactionValue],
+    [activeAddress, getLazyData, getQueryReactionValue],
   );
 };
 

@@ -16,11 +16,11 @@ const useGetPostByID = () => {
   }
 
   const getQueryReactionValue = useGetQueryReactionValue();
-  const getPost = useCustomLazyQuery(GetPostByID);
+  const [getLazyData] = useCustomLazyQuery(GetPostByID);
 
   return React.useCallback(
     async (subspaceId: number, postId: number): Promise<Post | undefined> => {
-      const data = await getPost({
+      const data = await getLazyData({
         variables: {
           subspaceId,
           postId,
@@ -31,7 +31,7 @@ const useGetPostByID = () => {
 
       return data?.posts?.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
-    [activeAddress, getPost, getQueryReactionValue],
+    [activeAddress, getLazyData, getQueryReactionValue],
   );
 };
 

@@ -7,10 +7,10 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
  * Hook that allows to get the on-chain data for a post reaction from a user, if any.
  */
 const useGetPostReaction = () => {
-  const getReaction = useCustomLazyQuery(GetPostReaction);
+  const [getLazyData] = useCustomLazyQuery(GetPostReaction);
   return React.useCallback(
     async (subspaceId: number, postId: number, user: string) => {
-      const data = await getReaction({
+      const data = await getLazyData({
         variables: {
           subspaceId,
           postId,
@@ -20,7 +20,7 @@ const useGetPostReaction = () => {
 
       return data?.reactions?.length > 0 ? convertGraphQLReaction(data.reactions[0]) : undefined;
     },
-    [getReaction],
+    [getLazyData],
   );
 };
 

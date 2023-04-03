@@ -55,6 +55,7 @@ import broadcastTxOnChain from './broadcastTxOnChain.json';
 import importAccountSelectMode from './importAccountSelectMode.json';
 import a11y from './a11y.json';
 import uploadProfilePictures from './uploadProfilePictures.json';
+import search from './search.json';
 
 const en = {
   common,
@@ -114,6 +115,7 @@ const en = {
   importAccountSelectMode,
   a11y,
   uploadProfilePictures,
+  search,
 };
 
 export default en;

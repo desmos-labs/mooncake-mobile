@@ -3,8 +3,8 @@ import ProfileFields from 'services/graphql/queries/fragments/ProfilesFields';
 
 const GetProfileForDTag = gql`
   ${ProfileFields}
-  query GetProfileForDTag($dTag: String) @api(name: desmos) {
-    profile(where: { dtag: { _ilike: $dTag } }) {
+  query GetProfileForDTag($dTag: String, $offset: Int!, $limit: Int!) @api(name: desmos) {
+    profile(where: { dtag: { _ilike: $dTag } }, offset: $offset, limit: $limit) {
       ...ProfileFields
     }
   }
