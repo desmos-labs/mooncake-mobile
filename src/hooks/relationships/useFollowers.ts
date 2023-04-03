@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
+import { DesmosProfile } from 'types/desmos';
 import GetAccountFollowers from 'services/graphql/queries/GetAccountFollowers';
 import { useQuery } from '@apollo/client';
 import { useAppStateValue } from '@recoil/appState';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import { removeDuplicates } from 'lib/ProfileUtils';
 import { useGetFollowersToSync } from '@recoil/relationships';
-import { convertGraphQLFollower } from 'lib/GraphQLUtils/relationships';
-import { areFollowedUsersEqual, FollowedUser } from 'types/relationships';
-import { mergeCacheableData } from 'lib/CacheUtils';
-import useUpdatePendingRelationships from 'hooks/relationships/useUpdatePendingRelationships';
 
 /**
  * Hook that returns the list of the accounts that are following the user having the given address.
@@ -24,49 +22,31 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   }
 
   const subspaceId = useAppStateValue('subspaceId');
-  const updatePendingRelationships = useUpdatePendingRelationships();
 
   // Get the relationships to sync
   const getFollowersToSync = useGetFollowersToSync();
   const relationshipsToSync = React.useMemo(
-    () => getFollowersToSync(userAddress),
+    () => getFollowersToSync(userAddress).map(r => r.user),
     [getFollowersToSync, userAddress],
   );
 
   // Set the initial users to be the list of the relationships to sync
-  const [followers, setFollowers] = useState<FollowedUser[]>(relationshipsToSync);
+  const [followers, setFollowers] = useState<DesmosProfile[]>(relationshipsToSync);
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
   // Callback to be called when the followers list is fetched
-  const onCompletedCallback = React.useCallback(
-    (data: any) => {
-      if (!data) return;
+  const onCompletedCallback = React.useCallback((data: any) => {
+    if (!data) return;
 
-      const onChainFollowers = (data.relationships as any[]).map(convertGraphQLFollower);
-
-      // Update the followers list
-      setFollowers(currentFollowers => {
-        const [merged, updates] = mergeCacheableData(
-          currentFollowers,
-          onChainFollowers,
-          areFollowedUsersEqual,
-        );
-
-        // Update the pending relationships
-        updatePendingRelationships(userAddress, updates);
-
-        return merged;
-      });
-
-      setLoading(false);
-      setFetchingMore(false);
-      setRefreshing(false);
-    },
-    [updatePendingRelationships, userAddress],
-  );
+    const profiles = (data.relationships as any[]).map(r => r.creator).map(convertGraphQLProfile);
+    setFollowers(profiles);
+    setLoading(false);
+    setFetchingMore(false);
+    setRefreshing(false);
+  }, []);
 
   // Query the followers list
   const { fetchMore, refetch } = useQuery(GetAccountFollowers, {
@@ -121,7 +101,7 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
 
   return {
     // Make sure to remove duplicate followers users if, for any reason, we have them
-    followers: removeDuplicates(followers.map(value => value.user)),
+    followers: removeDuplicates(followers),
     loading,
     fetchMore: fetchMoreFollowers,
     fetchingMore,
