@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useFollowageToSync } from '@recoil/relationships';
+import { useGetFollowageToSync } from '@recoil/relationships';
 import { DataStatus } from 'types/cache';
 import { useQuery } from '@apollo/client';
 import GetAccountFollowing from 'services/graphql/queries/GetAccountFollowing';
@@ -28,10 +28,10 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   const updatePendingRelationships = useUpdatePendingRelationships();
 
   // Get the relationships to sync
-  const followageToSync = useFollowageToSync(userAddress);
+  const getFollowageToSync = useGetFollowageToSync();
   const relationshipsToSync = React.useMemo(() => {
-    return followageToSync.filter(r => r.status === DataStatus.CREATED_LOCALLY);
-  }, [followageToSync]);
+    return getFollowageToSync(userAddress).filter(r => r.status === DataStatus.CREATED_LOCALLY);
+  }, [getFollowageToSync, userAddress]);
 
   // Set the initial users to be the list of the relationships to sync
   const [users, setUsers] = useState<FollowedUser[]>(relationshipsToSync);
