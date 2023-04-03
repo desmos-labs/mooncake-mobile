@@ -6,7 +6,6 @@ import {
   useRemoveFollowedUser,
   useSetFollowedUserStatus,
 } from '@recoil/relationships';
-import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import {
   MsgCreateRelationshipEncodeObject,
   MsgCreateRelationshipTypeUrl,
@@ -18,26 +17,6 @@ import { useAppStateValue } from '@recoil/appState';
 import Long from 'long';
 import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
-import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
-
-/**
- * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
- */
-const useDoesRelationshipExistRemotely = () => {
-  const [getLazyData] = useCustomLazyQuery(GetRelationshipForAddress);
-  return React.useCallback(
-    async (address: string, counterparty: string) => {
-      const data = await getLazyData({
-        variables: {
-          userAddress: address,
-          counterpartyAddress: counterparty,
-        },
-      });
-      return data?.relationships?.length > 0;
-    },
-    [getLazyData],
-  );
-};
 
 /**
  * Hook that allows to follow a user both remotely and locally.
