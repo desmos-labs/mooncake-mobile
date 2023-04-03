@@ -1,7 +1,8 @@
 import { gql } from '@apollo/client';
 
 const GetRelationshipForAddress = gql`
-  query GetRelationshipForAddress($userAddress: String!, $counterpartyAddress: String!) {
+  query GetRelationshipForAddress($userAddress: String!, $counterpartyAddress: String!)
+  @api(name: butter) {
     relationships: user_relationship(
       where: {
         creator_address: { _eq: $userAddress }
