@@ -139,26 +139,26 @@ const Home = () => {
           onPressAuthor={() => handleNavigateToProfile(item.author.address)}
           onPressDetails={() => {
             if (isPostPending(item)) {
-              return toast.success(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
             }
             handlePressDetails(item);
           }}
           onPressComment={() => {
             if (isPostPending(item)) {
-              return toast.success(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
             }
             handlePressComments(item);
           }}
           onPressTip={() => {
             if (isPostPending(item)) {
-              return toast.success(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
             }
             handlePressTip(item);
           }}
           onPressFollow={() => handlePressFollow(item.author)}
           onPressReport={() => {
             if (isPostPending(item) || !item.author) {
-              return toast.success(t('toast:postTxInProgress'));
+              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
             }
             handlePressReport(item);
           }}
