@@ -44,7 +44,6 @@ const useHooks = (addressToSearch: string) => {
   }, [addressToSearch, getLazyData]);
 
   const fetchMoreProfiles = useCallback(async () => {
-    console.log('fetchMoreProfiles', profiles.length);
     const results = await fetchMore({
       variables: { offset: profiles.length },
     });
