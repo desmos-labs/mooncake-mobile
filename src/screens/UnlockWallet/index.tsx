@@ -53,31 +53,53 @@ const initialFormValues = {
   password: '',
 };
 
+/**
+ * Screen used to unlock the wallet during a transaction.
+ * @constructor
+ */
 const UnlockWallet = () => {
-  const {
-    params: { onSuccess, address, signingMode, onCancel, titleLabelOverride },
-  } = useRoute<NavProps['route']>();
-  const [loading, setLoading] = useState(false);
-  const biometrics = useSetting('biometrics');
   const { t } = useTranslation('enterPassword');
-  const [passwordError, setPasswordError] = useState<string>();
-  const clearUserData = useClearUserData();
-  const styles = useStyles();
   const theme = useTheme();
+  const styles = useStyles();
+
+  const { params } = useRoute<NavProps['route']>();
+  const { onSuccess, address, signingMode, onCancel, titleLabelOverride } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const biometrics = useSetting('biometrics');
+  const unlockWalletWithPassword = useUnlockWalletWithPassword();
   const getPasswordFromBiometrics = useGetPasswordFromBiometrics(
     BiometricAuthorizations.UnlockWallet,
   );
-  const unlockWalletWithPassword = useUnlockWalletWithPassword();
 
-  // Cancel if the user close this screen.
-  useOnBackAction(() => onCancel !== undefined && onCancel(), [onCancel]);
+  const clearUserData = useClearUserData();
 
+  // -------------------------------------------------------------------------------------
+  // --- Local state
+  // -------------------------------------------------------------------------------------
+
+  const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState<string>();
+
+  // -------------------------------------------------------------------------------------
+  // --- Form values
+  // -------------------------------------------------------------------------------------
+
+  // Validation schema for the form
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
       password: Yup.string().required(t('error:required')),
     });
   }, [t]);
 
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  // Callback used to unlock the wallet
   const unlockWallet = React.useCallback(
     async (unlockWalletPassword: string | undefined) => {
       setLoading(true);
@@ -90,8 +112,6 @@ const UnlockWallet = () => {
 
         if (walletResult.isErr()) {
           setLoading(false);
-          // setPasswordError(walletResult.error.message);
-          // show more user-centric error instead
           setPasswordError(t('error:incorrectPassword'));
           return;
         }
@@ -104,32 +124,39 @@ const UnlockWallet = () => {
           if (result.isOk()) {
             onSuccess(walletResult.value);
           } else {
-            // setPasswordError(result.error.message);
-            // show more user-centric error instead
             setPasswordError(t('error:incorrectPassword'));
           }
         }
       }
       setLoading(false);
     },
-    [unlockWalletWithPassword, address, signingMode, onSuccess],
+    [unlockWalletWithPassword, address, signingMode, t, onSuccess],
   );
 
+  // Callback used when the user wants to unlock the wallet using the biometrics
   const unlockWalletWithBiometrics = React.useCallback(async () => {
-    const biometricPassword = await getPasswordFromBiometrics();
-    if (biometricPassword.isOk()) {
-      await unlockWallet(biometricPassword.value);
+    const biometricsPasswordResult = await getPasswordFromBiometrics();
+    if (biometricsPasswordResult.isOk()) {
+      await unlockWallet(biometricsPasswordResult.value);
     } else {
       setLoading(false);
     }
   }, [getPasswordFromBiometrics, unlockWallet]);
 
+  // Callback used when the user submits the form to unlock the wallet using the password
   const onFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
       unlockWallet(formValues.password);
     },
     [unlockWallet],
   );
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  // Cancel if the user close this screen.
+  useOnBackAction(() => onCancel !== undefined && onCancel(), [onCancel]);
 
   React.useEffect(() => {
     if (biometrics) {
@@ -139,8 +166,13 @@ const UnlockWallet = () => {
       setTimeout(unlockWalletWithBiometrics, 500);
     }
 
+    // It's fine to disable the exhaustive deps here because we only want to run this effect once
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>
