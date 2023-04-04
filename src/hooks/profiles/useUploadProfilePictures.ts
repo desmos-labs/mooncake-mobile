@@ -5,7 +5,7 @@ import React from 'react';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import Routes from 'navigation/routes';
 import { DesmosProfile } from 'types/desmos';
-import { isPictureAsset } from 'lib/ProfileUtils';
+import { isPictureLocalAsset } from 'lib/ProfileUtils';
 import { CanceledOperationError } from 'types/error';
 import { UploadPicturesSuccess } from 'screens/Modals/UploadProfilePicturesModal';
 import { err, ok, Result } from 'neverthrow';
@@ -20,10 +20,10 @@ const useUploadProfilePictures = () => {
 
   return React.useCallback(
     (profile: DesmosProfile): Promise<Result<UploadPicturesSuccess, CanceledOperationError>> => {
-      const toUploadProfilePicture = isPictureAsset(profile.profilePicture)
+      const toUploadProfilePicture = isPictureLocalAsset(profile.profilePicture)
         ? profile.profilePicture
         : undefined;
-      const toUploadCoverPictureAsset = isPictureAsset(profile.coverPicture)
+      const toUploadCoverPictureAsset = isPictureLocalAsset(profile.coverPicture)
         ? profile.coverPicture
         : undefined;
 
