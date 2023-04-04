@@ -23,6 +23,7 @@ import * as Yup from 'yup';
 import { AccountWithWallet } from 'types/account';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -60,6 +61,8 @@ const PasswordManipulation = () => {
   const {
     params: { mode },
   } = useRoute<NavProps['route']>();
+
+  const { bottom: bottomSafeInset } = useSafeAreaInsets();
 
   const validationSchema = React.useMemo(() => {
     switch (mode) {
@@ -99,8 +102,11 @@ const PasswordManipulation = () => {
           <Typography.Body6>{t(descriptionText)}</Typography.Body6>
         </Spacer>
       )}
+      {/* nested ternary to fix next button behavior on small screen devices
+      values greater than 75 will cause the button to shift upwards after a TextInput is focused
+      */}
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? (bottomSafeInset ? 125 : 75) : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={CommonStyles.flex[1]}>
         <Formik
@@ -111,9 +117,9 @@ const PasswordManipulation = () => {
             return (
               <>
                 <ScrollView
+                  contentContainerStyle={{ flexGrow: 1 }}
                   ref={scrollViewRef}
-                  keyboardDismissMode="on-drag"
-                  style={CommonStyles.flex[1]}>
+                  keyboardDismissMode="on-drag">
                   <View style={styles.labelGroup}>
                     <Typography.Subtitle2>{t(pwInputLabel)}</Typography.Subtitle2>
 
