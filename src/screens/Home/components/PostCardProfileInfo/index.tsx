@@ -76,7 +76,9 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
     const parsedTime = parseISO(`${post.creationDate}Z`);
 
     const differenceInUnix = actualDate.getTime() - parsedTime.getTime();
-    if (differenceInUnix < 59999) {
+    if (differenceInUnix < 0) {
+      return t('now');
+    } else if (differenceInUnix < 59999) {
       return t('seconds ago', {
         count: formatMsToHumanReadable(differenceInUnix, 'seconds'),
       });
