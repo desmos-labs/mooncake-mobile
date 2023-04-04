@@ -23,16 +23,16 @@ import { getProfilePicture } from 'lib/ProfileUtils';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
+import PopupMenu from 'components/PopupMenu';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import {
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
 } from 'screens/PostDetails/hooks';
-import PopupMenu from 'components/PopupMenu';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
-import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -62,13 +62,7 @@ const CommentItem = (props: CommentItemProps) => {
   const { count: commentsCount } = usePostCommentsCount(comment);
   const { count: reactionsCount } = usePostReactionsCount(comment);
   const { count: tipsCount } = usePostTipsCount(comment);
-  const handleNavigateToProfile = useNavigateToProfile();
-  const handlePressSendTips = useHandlePressSendTips();
-  const handleShowCommentDetails = useHandlePressShowCommentDetails();
-  const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
-  const isFollowing = useIsFollowing(comment.author.address);
-  const handlePressFollow = useHandlePressFollow();
-  const handlePressReport = useHandlePressReport();
+  const { isFollowing } = useIsFollowing(comment.author.address);
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
 
   // -------------------------------------------------------------------------------------
@@ -94,8 +88,15 @@ const CommentItem = (props: CommentItemProps) => {
   });
 
   // -------------------------------------------------------------------------------------
-  // --- Screen rendering
+  // --- Actions
   // -------------------------------------------------------------------------------------
+
+  const handleNavigateToProfile = useNavigateToProfile();
+  const handlePressSendTips = useHandlePressSendTips();
+  const handleShowCommentDetails = useHandlePressShowCommentDetails();
+  const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
+  const handlePressFollow = useHandlePressFollow();
+  const handlePressReport = useHandlePressReport();
 
   const handlePressLike = () => {
     if (isPostPending(comment)) return;

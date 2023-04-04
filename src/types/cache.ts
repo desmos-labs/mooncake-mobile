@@ -231,6 +231,15 @@ export class MultipleUsersCache<T extends CacheableObject, C> {
   }
 
   /**
+   * Returns all the cached values for all the users.
+   */
+  public readAll(): T[] {
+    return Object.values(this.caches).reduce((previous, current) => {
+      return [...previous, ...current.readAll()];
+    }, [] as T[]);
+  }
+
+  /**
    * Serializes the values contained inside this instance.
    */
   public serialize(): Record<string, T[]> {

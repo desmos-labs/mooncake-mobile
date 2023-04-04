@@ -6,7 +6,6 @@ import {
   useRemoveFollowedUser,
   useSetFollowedUserStatus,
 } from '@recoil/relationships';
-import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import {
   MsgCreateRelationshipEncodeObject,
   MsgCreateRelationshipTypeUrl,
@@ -18,130 +17,75 @@ import { useAppStateValue } from '@recoil/appState';
 import Long from 'long';
 import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
-import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
-
-/**
- * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
- */
-const useDoesRelationshipExistRemotely = () => {
-  const [getLazyData] = useCustomLazyQuery(GetRelationshipForAddress);
-  return React.useCallback(
-    async (address: string, counterparty: string) => {
-      const data = await getLazyData({
-        variables: {
-          userAddress: address,
-          counterpartyAddress: counterparty,
-        },
-      });
-      return data?.relationships?.length > 0;
-    },
-    [getLazyData],
-  );
-};
 
 /**
  * Hook that allows to follow a user both remotely and locally.
  */
-const useFollowUser = (activeAddress: string) => {
+const useFollowUser = () => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
-  const addFollowedUser = useAddFollowedUser(activeAddress);
-  const setFollowedUserStatus = useSetFollowedUserStatus(activeAddress);
-  const removeFollowedUser = useRemoveFollowedUser(activeAddress);
-
-  const doesRelationshipExist = useDoesRelationshipExistRemotely();
+  const addFollowedUser = useAddFollowedUser();
+  const removeFollowedUser = useRemoveFollowedUser();
 
   return React.useCallback(
-    async (counterparty: DesmosProfile) => {
+    async (user: string, counterparty: DesmosProfile) => {
       // Add the relationships locally
-      addFollowedUser(counterparty);
+      addFollowedUser(user, counterparty);
 
-      const existsRemotely = await doesRelationshipExist(activeAddress, counterparty.address);
-      if (!existsRemotely) {
-        // If the relationship does not exist on the server, create it
-        const messageCreateRelationship: MsgCreateRelationshipEncodeObject = {
-          typeUrl: MsgCreateRelationshipTypeUrl,
-          value: {
-            subspaceId: Long.fromNumber(subspaceId),
-            counterparty: counterparty.address,
-            signer: activeAddress,
-          },
-        };
+      // If the relationship does not exist on the server, create it
+      const messageCreateRelationship: MsgCreateRelationshipEncodeObject = {
+        typeUrl: MsgCreateRelationshipTypeUrl,
+        value: {
+          subspaceId: Long.fromNumber(subspaceId),
+          counterparty: counterparty.address,
+          signer: user,
+        },
+      };
 
-        // Broadcast the transaction
-        const result = await broadcastTx([messageCreateRelationship], { optimistic: true });
-        if (result.isErr()) {
-          // If the transaction is canceled or errors, remove the added relationship
-          removeFollowedUser(counterparty.address);
-          return;
-        }
-
-        // If the transaction succeeds, set it as synced.
-        setFollowedUserStatus(counterparty.address, DataStatus.SYNCED);
+      // Broadcast the transaction
+      const result = await broadcastTx([messageCreateRelationship], { optimistic: true });
+      if (result.isErr()) {
+        // If the transaction is canceled or errors, remove the added relationship
+        removeFollowedUser(user, counterparty.address);
       }
     },
-    [
-      addFollowedUser,
-      doesRelationshipExist,
-      activeAddress,
-      subspaceId,
-      broadcastTx,
-      setFollowedUserStatus,
-      removeFollowedUser,
-    ],
+    [addFollowedUser, subspaceId, broadcastTx, removeFollowedUser],
   );
 };
 
 /**
  * Hook that allows to unfollow a user, both locally and remotely.
  */
-const useUnfollowUser = (activeAddress: string) => {
+const useUnfollowUser = () => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
-  const setFollowedUserStatus = useSetFollowedUserStatus(activeAddress);
-  const removeFollowedUser = useRemoveFollowedUser(activeAddress);
-
-  const doesRelationshipExist = useDoesRelationshipExistRemotely();
+  const setFollowedUserStatus = useSetFollowedUserStatus();
 
   return React.useCallback(
-    async (counterparty: DesmosProfile) => {
+    async (user: string, counterparty: DesmosProfile) => {
       // Delete the relationship locally
-      setFollowedUserStatus(counterparty.address, DataStatus.DELETED_LOCALLY);
+      setFollowedUserStatus(user, counterparty.address, DataStatus.DELETED_LOCALLY);
 
-      const existsRemotely = await doesRelationshipExist(activeAddress, counterparty.address);
-      if (existsRemotely) {
-        // If the relationship exists remotely, remote it from the server
-        const messageDeleteRelationship: MsgDeleteRelationshipEncodeObject = {
-          typeUrl: MsgDeleteRelationshipTypeUrl,
-          value: {
-            subspaceId: Long.fromNumber(subspaceId),
-            counterparty: counterparty.address,
-            signer: activeAddress,
-          },
-        };
+      // If the relationship exists remotely, remote it from the server
+      const messageDeleteRelationship: MsgDeleteRelationshipEncodeObject = {
+        typeUrl: MsgDeleteRelationshipTypeUrl,
+        value: {
+          subspaceId: Long.fromNumber(subspaceId),
+          counterparty: counterparty.address,
+          signer: user,
+        },
+      };
 
-        // Broadcasts the transaction
-        const result = await broadcastTx([messageDeleteRelationship], { optimistic: true });
-        if (result.isErr()) {
-          // If the transaction is canceled or errors, re-add the removed relationship
-          setFollowedUserStatus(counterparty.address, DataStatus.SYNCED);
-          return;
-        }
-
-        // If the transaction succeeds, delete the relationship locally as well
-        removeFollowedUser(counterparty.address);
+      // Broadcasts the transaction
+      const result = await broadcastTx([messageDeleteRelationship], { optimistic: true });
+      if (result.isErr()) {
+        // If the transaction is canceled or errors, re-add the removed relationship
+        setFollowedUserStatus(user, counterparty.address, DataStatus.SYNCED);
       }
     },
-    [
-      setFollowedUserStatus,
-      doesRelationshipExist,
-      activeAddress,
-      subspaceId,
-      broadcastTx,
-      removeFollowedUser,
-    ],
+    [setFollowedUserStatus, subspaceId, broadcastTx],
   );
 };
 
@@ -151,24 +95,25 @@ const useUnfollowUser = (activeAddress: string) => {
  */
 const useFollowOrUnfollowUser = () => {
   const activeAddress = useActiveAccountAddress();
-  if (!activeAddress) {
-    throw new Error('Trying to follow or unfollow a user, without active user');
-  }
 
-  const hasFollowedUser = useHasFollowedUser(activeAddress);
-  const followUser = useFollowUser(activeAddress);
-  const unfollowUser = useUnfollowUser(activeAddress);
+  const hasFollowedUser = useHasFollowedUser();
+  const followUser = useFollowUser();
+  const unfollowUser = useUnfollowUser();
 
   return React.useCallback(
     async (counterparty: DesmosProfile) => {
-      const isFollowing = hasFollowedUser(counterparty.address);
+      if (!activeAddress) {
+        throw new Error('Trying to follow or unfollow a user, without active user');
+      }
+
+      const isFollowing = hasFollowedUser(activeAddress, counterparty.address);
       if (isFollowing) {
-        await unfollowUser(counterparty);
+        await unfollowUser(activeAddress, counterparty);
       } else {
-        await followUser(counterparty);
+        await followUser(activeAddress, counterparty);
       }
     },
-    [hasFollowedUser, unfollowUser, followUser],
+    [activeAddress, hasFollowedUser, unfollowUser, followUser],
   );
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { isComment, Post } from 'types/posts';
 import TopBar from 'components/TopBar';
@@ -42,31 +42,46 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
-  /**
-   * Hooks for handling various actions
-   */
-  const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
-  const formatDate = useFormatTimeForPostDetails();
-  const activeAddress = useActiveAccountAddress();
-  const handleNavigateToProfile = useNavigateToProfile();
-  const isFollowingAddress = useIsFollowing(post.author.address);
-  const handlePressReport = useHandlePressReport();
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
 
-  /**
-   * Hooks for getting comments count
-   */
+  const activeAddress = useActiveAccountAddress();
+  const formatDate = useFormatTimeForPostDetails();
+
+  const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
   const { count: commentsCount } = usePostCommentsCount(post);
 
-  /**
-   * Popup Menu
-   */
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  const handleNavigateToProfile = useNavigateToProfile();
+  const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
+  const handlePressReport = useHandlePressReport();
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    refreshFollowing();
+
+    // It's safe to disable the linter here as we only want to run this effect once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // -------------------------------------------------------------------------------------
+  // --- Popup menu
+  // -------------------------------------------------------------------------------------
+
   const PressMoreComponent = React.useMemo(() => {
     const menuItems = [
       post.author.address !== activeAddress
         ? {
-            label: isFollowingAddress ? t('home:unfollow') : t('home:follow'),
+            label: isFollowing ? t('home:unfollow') : t('home:follow'),
             onPress: () => handlePressFollowOrUnfollow(post.author),
-            icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
+            icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
           }
         : undefined,
       {
@@ -89,10 +104,14 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     handlePressFollowOrUnfollow,
     handlePressMore,
     handlePressReport,
-    isFollowingAddress,
+    isFollowing,
     post,
     t,
   ]);
+
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
 
   if (isComment(post!)) {
     return (

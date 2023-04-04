@@ -21,13 +21,10 @@ const profilesState = atom<Record<string, DesmosProfile>>({
 
 /**
  * Hook that allows to get the profile for the given user.
- * @param user {string} - Address of the user for which to get the profile.
  */
-export const useStoredProfile = (user: string) => {
+export const useGetStoredProfile = () => {
   const profiles = useRecoilValue(profilesState);
-  // Safe to non memoize this value since we are returning a frozen value from
-  // recoil.
-  return profiles[user];
+  return React.useCallback((user: string) => profiles[user], [profiles]);
 };
 
 /**

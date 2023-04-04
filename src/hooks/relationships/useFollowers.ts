@@ -6,6 +6,7 @@ import { useAppStateValue } from '@recoil/appState';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import { removeDuplicates } from 'lib/ProfileUtils';
+import { useGetFollowersToSync } from '@recoil/relationships';
 
 /**
  * Hook that returns the list of the accounts that are following the user having the given address.
@@ -22,7 +23,15 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
 
   const subspaceId = useAppStateValue('subspaceId');
 
-  const [followers, setFollowers] = useState<DesmosProfile[]>([]);
+  // Get the relationships to sync
+  const getFollowersToSync = useGetFollowersToSync();
+  const relationshipsToSync = React.useMemo(
+    () => getFollowersToSync(userAddress).map(r => r.user),
+    [getFollowersToSync, userAddress],
+  );
+
+  // Set the initial users to be the list of the relationships to sync
+  const [followers, setFollowers] = useState<DesmosProfile[]>(relationshipsToSync);
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);

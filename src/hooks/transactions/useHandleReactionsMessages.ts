@@ -65,7 +65,9 @@ const useGetReactionsData = () => {
               return undefined;
           }
         })
-        .filter((data): data is PostReactionData => data !== undefined);
+        .filter(
+          (data): data is PostReactionData => data !== undefined && data.reaction !== undefined,
+        );
     },
     [getCreatedPostReactionToSync, getDeletedPostReactionToSync],
   );
@@ -133,11 +135,11 @@ const useHandleReactionsMessages = () => {
   return React.useCallback(
     async (messages: EncodeObject[]) => {
       if (!activeAddress) {
-        throw new Error('Trying to handle posts messages without active user');
+        throw new Error('Trying to handle reactions messages without active user');
       }
 
-      const postsData = getReactionsData(messages);
-      const updates = await Promise.all(postsData.map(getReactionUpdates));
+      const reactionsData = getReactionsData(messages);
+      const updates = await Promise.all(reactionsData.map(getReactionUpdates));
       updatePendingReactions(activeAddress, updates);
     },
     [activeAddress, getReactionUpdates, getReactionsData, updatePendingReactions],

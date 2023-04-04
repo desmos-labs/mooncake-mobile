@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Typography from 'components/Typography';
 import FastImage from 'react-native-fast-image';
@@ -34,11 +34,35 @@ const UserListItem = (props: UserListItemProps) => {
 
   const { profileAddress, user, onPress } = props;
 
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
   const activeAccountAddress = useActiveAccountAddress();
   const isActiveAccount = activeAccountAddress === profileAddress;
 
-  const isFollowing = useIsFollowing(user.address);
+  const { isFollowing, refetch: refreshFollowing } = useIsFollowing(user.address);
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
   const followOrUnfollowUser = useFollowOrUnfollowUser();
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    refreshFollowing();
+
+    // It's fine to disable the exhaustive deps check here because we only want to run this once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>

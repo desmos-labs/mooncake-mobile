@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const GetUserTweets = gql`
-  query GetUserTweets($username: String!, $count: Int!) {
+  query GetUserTweets($username: String!, $count: Int!) @api(name: butter) {
     user_tweet(username: $username, count: $count) {
       user {
         username

@@ -5,7 +5,7 @@ import React from 'react';
 import { Post } from 'types/posts';
 import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { mmkvValueToCache } from '@recoil/utils';
-import { useStoredProfile } from '@recoil/profiles';
+import { useGetStoredProfile } from '@recoil/profiles';
 
 /**
  * Recoil atom that holds all the post reactions that are cached within the application.
@@ -28,14 +28,16 @@ const reactionsState = atom<MultipleUsersCache<PostReaction, ComparableReaction>
  * to a post with a given id.
  */
 export const useAddPostReaction = (user: string) => {
-  const profile = useStoredProfile(user);
-  if (!profile) {
-    throw new Error('Cannot add reaction to post for user without profile');
-  }
+  const getStoredProfile = useGetStoredProfile();
 
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
     (post: Post) => {
+      const profile = getStoredProfile(user);
+      if (!profile) {
+        throw new Error('Cannot add reaction to post for user without profile');
+      }
+
       setReactions(currentReactions => {
         const existingReactions = currentReactions.get(user);
         const existingReaction = existingReactions.get({
@@ -70,7 +72,7 @@ export const useAddPostReaction = (user: string) => {
         }
       });
     },
-    [profile, setReactions, user],
+    [getStoredProfile, setReactions, user],
   );
 };
 

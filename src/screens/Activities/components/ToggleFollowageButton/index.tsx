@@ -24,7 +24,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
 
   const { user } = props;
 
-  const isFollowing = useIsFollowing(user.address);
+  const { isFollowing } = useIsFollowing(user.address);
   const navigateToProfile = useNavigateToProfile();
 
   const handleButtonPress = useCallback(() => {

@@ -118,7 +118,7 @@ const Profile = () => {
   const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
   // Relationships data
-  const isFollowing = useIsFollowing(address);
+  const { isFollowing, refetch: refreshFollowing } = useIsFollowing(address);
   const followOrUnfollowUser = useFollowOrUnfollowUser();
 
   // -------------------------------------------------------------------------------------
@@ -135,6 +135,8 @@ const Profile = () => {
   // Callback to refresh the data
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
+
+    await refreshFollowing();
     await refreshProfile();
     await refreshFollowageCount();
     await refreshFollowersCount();
@@ -146,6 +148,7 @@ const Profile = () => {
     refreshBalance,
     refreshFollowageCount,
     refreshFollowersCount,
+    refreshFollowing,
     refreshPosts,
     refreshPostsCount,
     refreshProfile,
@@ -155,6 +158,7 @@ const Profile = () => {
   useEffect(() => {
     setInitialLoading(true);
     refreshPage().finally(() => setInitialLoading(false));
+
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -43,7 +43,12 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const activeAddress = useActiveAccountAddress();
   const formatDate = useFormatTimeForPostDetails();
 
-  const isFollowing = useIsFollowing(post.author.address);
+  const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
+
+  // -------------------------------------------------------------------------------------
+  // --- Local state
+  // -------------------------------------------------------------------------------------
+
   const [actualDate, setActualDate] = useState(new Date());
 
   // -------------------------------------------------------------------------------------
@@ -51,10 +56,15 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   // -------------------------------------------------------------------------------------
 
   useEffect(() => {
+    refreshFollowing();
+
     const intervalId = setInterval(() => {
       setActualDate(new Date());
     }, 60000);
     return () => clearInterval(intervalId);
+
+    // It's fine to disable the following line because we want to run this effect only once
+    // eslint-disable-next-line
   }, []);
 
   // -------------------------------------------------------------------------------------
