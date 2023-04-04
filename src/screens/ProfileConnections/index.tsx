@@ -11,7 +11,7 @@ import Typography from 'components/Typography';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   GestureResponderEvent,
@@ -61,15 +61,32 @@ const ProfileConnections = () => {
   const route = useRoute<NavProps['route']>();
   const { params } = route;
   const { profile, initialTabRouteName } = params;
+
   // -------------------------------------------------------------------------------------
   // --- Tab bar labels
   // -------------------------------------------------------------------------------------
 
-  const { count: followingCount } = useFollowingCount(profile?.address);
+  const { count: followingCount, refetch: refreshFollowingCount } = useFollowingCount(
+    profile?.address,
+  );
   const followingTabName = `${formatNumShorthand(followingCount)} ${t('profile:following')}`;
 
-  const { count: followersCount } = useFollowersCount(profile?.address);
+  const { count: followersCount, refetch: refreshFollowersCount } = useFollowersCount(
+    profile?.address,
+  );
   const followersTabName = `${formatNumShorthand(followersCount)} ${t('profile:followers')}`;
+
+  // -------------------------------------------------------------------------------------
+  // --- Tab bar labels
+  // -------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    refreshFollowingCount();
+    refreshFollowersCount();
+
+    // It's fine to disable the exhaustive deps check here, since we want to refresh the count
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Gestures handlers
