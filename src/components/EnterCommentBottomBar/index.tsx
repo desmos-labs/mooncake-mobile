@@ -196,7 +196,7 @@ const EnterCommentBottomBar = (props: Props) => {
 
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 40 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? (bottom ? bottom + 40 : 75) : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
         stretch={true}
