@@ -9,6 +9,7 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   tabBar: {
     borderBottomWidth: 0,
     shadowOpacity: 0,
+    elevation: 0,
     marginBottom: 10,
     width: 250,
     backgroundColor: theme.colors.white,

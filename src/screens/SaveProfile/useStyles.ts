@@ -67,6 +67,7 @@ const useStyles = makeStyleWithProps(
     bioInput: {
       height: 160,
       alignSelf: 'flex-start',
+      textAlignVertical: 'top',
     },
     bioDTextInput: {
       borderWidth: 1,
