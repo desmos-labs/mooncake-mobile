@@ -280,17 +280,19 @@ const BroadcastTxOnChain: React.FC = () => {
           </>
         )}
       </ScrollView>
-      <Button
-        size={44}
-        mx="m"
-        my="m"
-        backgroundColor={theme.colors.surfaceBlack}
-        textColor={theme.colors.white}
-        onPress={feesResult?.isErr() ? handleEstimateFees : handleBroadcastTx}
-        isLoading={broadcastingTx}
-        disabled={estimatingFees || broadcastingTx}>
-        {feesResult?.isErr() ? t('common:retry') : t('broadcast tx')}
-      </Button>
+      {!broadcastingTx && (
+        <Button
+          size={44}
+          mx="m"
+          my="m"
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
+          onPress={feesResult?.isErr() ? handleEstimateFees : handleBroadcastTx}
+          isLoading={broadcastingTx}
+          disabled={estimatingFees || broadcastingTx}>
+          {feesResult?.isErr() ? t('common:retry') : t('broadcast tx')}
+        </Button>
+      )}
     </DView>
   );
 };
