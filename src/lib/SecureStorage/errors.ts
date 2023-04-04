@@ -2,6 +2,7 @@
 export enum SecureStorageErrorType {
   CorruptedData,
   WrongPassword,
+  WalletNotFound,
   Unknown,
 }
 
@@ -31,6 +32,18 @@ export class CorruptedDataError extends Error {
   }
 }
 
+export class WalletNotFoundError extends Error {
+  readonly type: SecureStorageErrorType.WalletNotFound;
+
+  readonly address: string;
+
+  constructor(address: string) {
+    super(`Wallet with address ${address} not found`);
+    this.address = address;
+    this.type = SecureStorageErrorType.WalletNotFound;
+  }
+}
+
 /**
  * Secure storage error raised if we can't provide
  * details about the error cause.
@@ -48,4 +61,8 @@ export class UnknownError extends Error {
  * Type union that represents the possible errors that can be
  * raised from the SecureStorage.
  */
-export type SecureStorageError = WrongPasswordError | CorruptedDataError | UnknownError;
+export type SecureStorageError =
+  | WrongPasswordError
+  | CorruptedDataError
+  | WalletNotFoundError
+  | UnknownError;
