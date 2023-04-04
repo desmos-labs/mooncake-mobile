@@ -2,13 +2,15 @@ import React, { useMemo, useState } from 'react';
 import { err, ok, Result } from 'neverthrow';
 import { useQuery } from '@apollo/client';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import { filterCoins } from 'lib/ChainsUtils';
 
 /**
  * Tells whether the given data contains a balance.
  * @param data {any} - Data retrieved from the GraphQL APIs.
  */
 const hasBalance = (data: any | undefined): boolean => {
-  return data && data?.balance?.coins?.length > 0 && data?.balance?.coins[0]?.amount !== 0;
+  const balance = data?.balance || [];
+  return filterCoins(balance).length > 0;
 };
 
 /**
