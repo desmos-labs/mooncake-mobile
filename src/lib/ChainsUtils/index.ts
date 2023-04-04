@@ -5,6 +5,7 @@ import { AccountWithWallet } from 'types/account';
 import { bech32AddressToAny } from '@desmoslabs/desmjs/build/aminomessages/profiles';
 import { Bech32Address } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import { Coin } from '@cosmjs/stargate';
+import { DesmosMainnet, DesmosTestnet } from '@desmoslabs/desmjs';
 
 /**
  * Finds the chain info with the given {@param chainName} inside the supported chains.
@@ -29,6 +30,17 @@ export const findCurrencyByDenom = (denom: string) => {
  */
 export const findCoinByDenom = (coins: Coin[], denom: string) => {
   return coins.find(coin => coin.denom === denom);
+};
+
+const supportedBalanceDenoms = [DesmosMainnet, DesmosTestnet]
+  .flatMap(chain => chain.currencies ?? [])
+  .map(currency => currency.coinMinimalDenom);
+
+/**
+ * Filters the given {@param coins} array, returning only the coins that are supported by the app.
+ */
+export const filterCoins = (coins: Coin[]): Coin[] => {
+  return coins.filter(coin => supportedBalanceDenoms.includes(coin.denom));
 };
 
 /**

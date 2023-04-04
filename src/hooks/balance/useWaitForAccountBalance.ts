@@ -2,14 +2,15 @@ import React, { useMemo, useState } from 'react';
 import { err, ok, Result } from 'neverthrow';
 import { useQuery } from '@apollo/client';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
-import { AcceptInviteSuccess } from 'hooks/invites/useAcceptInvite';
+import { filterCoins } from 'lib/ChainsUtils';
 
 /**
  * Tells whether the given data contains a balance.
  * @param data {any} - Data retrieved from the GraphQL APIs.
  */
 const hasBalance = (data: any | undefined): boolean => {
-  return data && data?.balance?.coins?.length > 0 && data?.balance?.coins[0]?.amount !== 0;
+  const balance = data?.balance || [];
+  return filterCoins(balance).length > 0;
 };
 
 /**
@@ -23,7 +24,7 @@ const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number =
   const [addressToCheck, setAddressToCheck] = useState<string>('');
 
   // Get a reference to the function that will be used to accept the returned promise
-  const accept = React.useRef<(result: Result<AcceptInviteSuccess, Error>) => void>(() => {});
+  const accept = React.useRef<(result: Result<void, Error>) => void>(() => {});
 
   // Build a promise that will be returned by this hook.
   // This is built here, before the query, in order to avoid mistakenly
@@ -31,7 +32,7 @@ const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number =
   // GetAccountBalance query later on
   const promise = useMemo(
     () =>
-      new Promise<Result<AcceptInviteSuccess, Error>>(a => {
+      new Promise<Result<void, Error>>(a => {
         accept.current = a;
       }),
     [],
@@ -62,7 +63,7 @@ const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number =
     if (hasBalance(data)) {
       clearTimeout(t);
       stopPolling();
-      accept.current(ok({} as AcceptInviteSuccess));
+      accept.current(ok(undefined));
     }
   }, [data, stopPolling, t]);
 
