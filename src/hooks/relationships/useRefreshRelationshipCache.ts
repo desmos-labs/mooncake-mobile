@@ -9,7 +9,7 @@ import useUpdateRelationshipCache from 'hooks/relationships/useUpdateRelationshi
 /**
  * Hook that allows to update the cache of the relationships for the currently active user.
  */
-const useUpdateRelationshipsCache = () => {
+const useRefreshRelationshipCache = () => {
   const activeAccountAddress = useActiveAccountAddress();
 
   const subspaceId = useAppStateValue('subspaceId');
@@ -17,7 +17,7 @@ const useUpdateRelationshipsCache = () => {
   const getProfile = useGetOnChainProfile();
   const [getLazyData] = useCustomLazyQuery(GetRelationshipForAddress);
 
-  const updateRelationshipsCache = useUpdateRelationshipCache();
+  const updateRelationshipCache = useUpdateRelationshipCache();
 
   return React.useCallback(
     async (counterparty: string) => {
@@ -47,10 +47,10 @@ const useUpdateRelationshipsCache = () => {
       const isFollowing = data?.relationships?.length > 0;
 
       // Update the cache
-      updateRelationshipsCache(activeAccountAddress, counterpartyProfile, isFollowing);
+      updateRelationshipCache(activeAccountAddress, counterpartyProfile, isFollowing);
     },
-    [activeAccountAddress, getLazyData, getProfile, subspaceId, updateRelationshipsCache],
+    [activeAccountAddress, getLazyData, getProfile, subspaceId, updateRelationshipCache],
   );
 };
 
-export default useUpdateRelationshipsCache;
+export default useRefreshRelationshipCache;
