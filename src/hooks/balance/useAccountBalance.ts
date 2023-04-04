@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import { Coin } from '@cosmjs/stargate';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { filterCoins } from 'lib/ChainsUtils';
 
 /**
  * Hook that allows to get the current balance for an account.
@@ -30,7 +31,7 @@ const useAccountBalance = (address?: string) => {
   }, [data]);
 
   return {
-    balance,
+    balance: filterCoins(balance),
     loading,
     refetch,
   };
