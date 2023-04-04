@@ -14,6 +14,7 @@ import {
   CorruptedDataError,
   SecureStorageError,
   UnknownError,
+  WalletNotFoundError,
   WrongPasswordError,
 } from 'lib/SecureStorage/errors';
 
@@ -59,7 +60,7 @@ export interface StoreOptions {
 export async function getItem<T>(
   key: string,
   options: StoreOptions | undefined = undefined,
-): Promise<Result<T | null, SecureStorageError>> {
+): Promise<Result<T | undefined, SecureStorageError>> {
   const moreOptions = options?.biometrics === true ? { ...defaultOptions } : null;
 
   const getDataResult = await ResultAsync.fromPromise(
@@ -78,23 +79,34 @@ export async function getItem<T>(
   }
 
   const data = getDataResult.value;
-  if (!data || options?.password === undefined) {
-    return ok(null);
+  if (!data) {
+    return ok(undefined);
   }
+
+  // By default, if the password is not provided, the data is stored as a plain text
+  let serializedData = data.password;
 
   // Password provided, decrypt the data
-  const jsonValueNew = JSON.parse(data.password);
-  if (typeof jsonValueNew.iv !== 'string' && typeof jsonValueNew.cipher !== 'string') {
-    return err(new CorruptedDataError());
+  if (options?.password !== undefined) {
+    // Get the password to be used to decrypt the data
+    const jsonValueNew = JSON.parse(data.password);
+    if (typeof jsonValueNew.iv !== 'string' && typeof jsonValueNew.cipher !== 'string') {
+      return err(new CorruptedDataError());
+    }
+
+    // Decrypt the data
+    const result = await decryptData(jsonValueNew as EncryptedData, options.password);
+    if (result.isErr()) {
+      if (result.error.message.indexOf('BAD_DECRYPT') !== 0) {
+        return err(new WrongPasswordError());
+      }
+      return err(new UnknownError(result.error.message));
+    }
+    serializedData = result.value;
   }
 
-  const jsonSerialized = await ResultAsync.fromPromise(
-    decryptData(jsonValueNew as EncryptedData, options.password),
-    // @ts-ignore
-    e => new WrongPasswordError(e?.message ?? 'Invalid password'),
-  );
-
-  return jsonSerialized.map(JSON.parse);
+  // Deserialize the data
+  return ok(JSON.parse(serializedData));
 }
 
 /**
@@ -137,7 +149,8 @@ async function storeWallet(
   wallet: SerializableWallet,
   password: string,
 ): Promise<Result<void, SecureStorageError>> {
-  const result = await setItem(`${wallet.address}${SecureStorageKeys.WALLET_SUFFIX}`, wallet, {
+  const key = getWalletKey(wallet.address);
+  const result = await setItem(key, wallet, {
     password,
   });
 
@@ -161,12 +174,16 @@ export const saveWallet = async (
   return storeWallet(serializableWallet, password);
 };
 
+const getWalletKey = (address: string) => `${address}${SecureStorageKeys.WALLET_SUFFIX}`;
+
 /**
  * Saves a wallet into the device storage.
  * @param address - Address of the wallet to delete.
  */
-export const deleteWallet = async (address: string) =>
-  deleteItem(`${address}${SecureStorageKeys.WALLET_SUFFIX}`);
+export const deleteWallet = async (address: string) => {
+  const key = getWalletKey(address);
+  return deleteItem(key);
+};
 
 /**
  * Gets a wallet from the device storage.
@@ -177,23 +194,20 @@ export const getWallet = async (
   address: string,
   password: string,
 ): Promise<Result<SerializableWallet, SecureStorageError>> => {
-  const loadedValue = await getItem<Partial<SerializableWallet>>(
-    `${address}${SecureStorageKeys.WALLET_SUFFIX}`,
-    {
-      password,
-    },
-  );
-
-  if (loadedValue.isErr()) {
-    return err(loadedValue.error);
+  const key = getWalletKey(address);
+  const result = await getItem<Partial<SerializableWallet>>(key, { password });
+  if (result.isErr()) {
+    return err(result.error);
   }
 
-  const serializedWallet = loadedValue.value;
-  if (serializedWallet === null) {
-    return err(new UnknownError(`Can't find wallet for address: ${address}`));
+  // Read the value from the result
+  const { value } = result;
+  if (!value) {
+    return err(new WalletNotFoundError(address));
   }
 
-  return ok(deserializeWallet(serializedWallet));
+  // Return the deserialized wallet
+  return ok(deserializeWallet(value));
 };
 
 /**

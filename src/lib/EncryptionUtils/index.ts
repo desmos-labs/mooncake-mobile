@@ -1,6 +1,7 @@
 // @ts-ignore
 
 import Aes from 'react-native-aes-crypto';
+import { Result, ResultAsync } from 'neverthrow';
 
 export interface EncryptedData {
   iv: string;
@@ -37,7 +38,13 @@ export const encryptData = async (text: string, password: string): Promise<Encry
  * @param data The data to be decrypted.
  * @param password The password used to generate the cipher key.
  */
-export const decryptData = async (data: EncryptedData, password: string): Promise<string> => {
+export const decryptData = async (
+  data: EncryptedData,
+  password: string,
+): Promise<Result<string, Error>> => {
   const securePassword: string = await deriveSecurePassword(password);
-  return Aes.decrypt(data.cipher, securePassword, data.iv, 'aes-256-cbc');
+  return ResultAsync.fromPromise(
+    Aes.decrypt(data.cipher, securePassword, data.iv, 'aes-256-cbc'),
+    (e: any) => new Error(e.toString()),
+  );
 };
