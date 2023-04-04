@@ -52,7 +52,6 @@ const useCustomToast = () => {
     (type: ToastConfig, message: string, options: ShowToastOptions | ShowErrorToastOptions) => {
       const toastId = generateToastId(options.id);
 
-      console.log('active?', Toast.isActive(toastId));
       if (Toast.isActive(toastId)) return;
 
       Toast.show({
@@ -63,7 +62,7 @@ const useCustomToast = () => {
         ),
       });
     },
-    [Toast],
+    [],
   );
 
   const success = React.useCallback(
