@@ -68,7 +68,7 @@
     "react": "18.2.0",
     "react-content-loader": "^6.2.0",
     "react-i18next": "^11.17.2",
-    "react-native": "0.71.5",
+    "react-native": "0.71.6",
     "react-native-aes-crypto": "^2.1.1",
     "react-native-animated-pagination-dots": "^0.1.73",
     "react-native-ble-plx": "^2.0.3",
