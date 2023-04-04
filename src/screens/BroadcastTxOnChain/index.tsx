@@ -1,6 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
-import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -242,9 +241,9 @@ const BroadcastTxOnChain: React.FC = () => {
       return (
         <Box flex={1} alignItems="center" justifyContent="center">
           <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
-          <Spacer paddingVertical={12}>
+          <Box marginY="s">
             <Typography.H4>{title || t('transaction broadcasting')}</Typography.H4>
-          </Spacer>
+          </Box>
           <Typography.Body6>{t('please wait')}</Typography.Body6>
         </Box>
       );
@@ -280,17 +279,19 @@ const BroadcastTxOnChain: React.FC = () => {
           </>
         )}
       </ScrollView>
-      <Button
-        size={44}
-        mx="m"
-        my="m"
-        backgroundColor={theme.colors.surfaceBlack}
-        textColor={theme.colors.white}
-        onPress={feesResult?.isErr() ? handleEstimateFees : handleBroadcastTx}
-        isLoading={broadcastingTx}
-        disabled={estimatingFees || broadcastingTx}>
-        {feesResult?.isErr() ? t('common:retry') : t('broadcast tx')}
-      </Button>
+      {!broadcastingTx && (
+        <Button
+          size={44}
+          mx="m"
+          my="m"
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
+          onPress={feesResult?.isErr() ? handleEstimateFees : handleBroadcastTx}
+          isLoading={broadcastingTx}
+          disabled={estimatingFees || broadcastingTx}>
+          {feesResult?.isErr() ? t('common:retry') : t('broadcast tx')}
+        </Button>
+      )}
     </DView>
   );
 };

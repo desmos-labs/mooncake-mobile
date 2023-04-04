@@ -14,6 +14,15 @@ export const isPictureUri = (picture: Asset | string | undefined): picture is st
 };
 
 /**
+ * Tells whether the given picture is a local asset or not.
+ * @param picture {Asset | string | undefined} - Picture to check.
+ */
+export const isPictureLocalAsset = (picture: Asset | string | undefined): picture is Asset => {
+  const asset = asPictureAsset(picture);
+  return asset !== undefined && asset.uri?.startsWith('file://') === true;
+};
+
+/**
  * Tells whether the given picture is a valid {@link Asset} or not.
  */
 export const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
