@@ -1,5 +1,5 @@
 import React from 'react';
-import { useToast } from 'native-base';
+import { Toast } from 'native-base';
 import { InterfaceToastProps } from 'native-base/lib/typescript/components/composites/Toast';
 import CustomToast from 'components/CustomToast';
 import { v4 as uuidV4 } from 'uuid';
@@ -48,23 +48,24 @@ const BaseToastConfig: Pick<InterfaceToastProps, 'placement' | 'duration'> = {
  * to make toasts more consistent across the application.
  */
 const useCustomToast = () => {
-  const toast = useToast();
-
   const showToast = React.useCallback(
     (type: ToastConfig, message: string, options: ShowToastOptions | ShowErrorToastOptions) => {
       const toastId = generateToastId(options.id);
 
-      if (toast.isActive(toastId)) return;
+      console.log('active?', Toast.isActive(toastId));
+      if (Toast.isActive(toastId)) return;
 
-      toast.show({
+      Toast.show({
         ...BaseToastConfig,
         id: toastId,
-        render: () => (
-          <CustomToast message={message} type={type} options={{ ...options, id: toastId }} />
-        ),
+        render: () => {
+          return (
+            <CustomToast message={message} type={type} options={{ ...options, id: toastId }} />
+          );
+        },
       });
     },
-    [toast],
+    [Toast],
   );
 
   const success = React.useCallback(
@@ -88,7 +89,7 @@ const useCustomToast = () => {
     [showToast],
   );
 
-  const closeAll = () => toast.closeAll();
+  const closeAll = () => Toast.closeAll();
 
   return {
     success,
