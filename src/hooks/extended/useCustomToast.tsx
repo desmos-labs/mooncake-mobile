@@ -58,11 +58,9 @@ const useCustomToast = () => {
       Toast.show({
         ...BaseToastConfig,
         id: toastId,
-        render: () => {
-          return (
-            <CustomToast message={message} type={type} options={{ ...options, id: toastId }} />
-          );
-        },
+        render: () => (
+          <CustomToast message={message} type={type} options={{ ...options, id: toastId }} />
+        ),
       });
     },
     [Toast],
