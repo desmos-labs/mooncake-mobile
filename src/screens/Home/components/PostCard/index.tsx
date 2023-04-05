@@ -1,6 +1,6 @@
 import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
-import React, { memo, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'native-base';
 import { isPostPending, Post } from 'types/posts';
@@ -103,4 +103,4 @@ const PostCard = (props: PostCardProps) => {
   );
 };
 
-export default memo(PostCard);
+export default PostCard;
