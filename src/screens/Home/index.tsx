@@ -203,6 +203,17 @@ const Home = () => {
     }
   }, [fetchingMore, styles]);
 
+  const emptyComponent = useMemo(() => {
+    if (!loading && posts.length === 0) {
+      return (
+        <View style={styles.emptyView}>
+          <Image source={emptyListPlaceholder} style={styles.emptyImage} />
+          <Typography.Body6>{t('no posts to display')}</Typography.Body6>
+        </View>
+      );
+    }
+  }, [loading, posts.length]);
+
   // -------------------------------------------------------------------------------------
   // --- Component rendering
   // -------------------------------------------------------------------------------------
@@ -212,15 +223,6 @@ const Home = () => {
   // This might be the case if the user is offline and has no cached posts
   if (loading) {
     return <HomePostListContentLoader />;
-  }
-
-  if (!loading && posts.length === 0) {
-    return (
-      <View style={styles.emptyView}>
-        <Image source={emptyListPlaceholder} style={styles.emptyImage} />
-        <Typography.Body6>{t('no posts to display')}</Typography.Body6>
-      </View>
-    );
   }
 
   return (
@@ -243,6 +245,7 @@ const Home = () => {
           renderItem={renderPost}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={footerComponent}
+          ListEmptyComponent={emptyComponent}
           estimatedItemSize={180}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
           onEndReached={fetchMorePosts}
