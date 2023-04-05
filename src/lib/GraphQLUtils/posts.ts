@@ -104,6 +104,8 @@ export const convertGraphQLPost = (post: any): GraphQLPost => {
     replySettings: ReplySetting[post.reply_settings as keyof typeof ReplySetting],
 
     creationDate: post.creation_date,
+    lastUpdatedDate: new Date(Date.now()).toISOString(),
+
     author: convertGraphQLProfile(post.author),
     transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
 

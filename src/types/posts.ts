@@ -80,6 +80,11 @@ export interface Post {
   readonly replySettings: ReplySetting;
 
   /**
+   * Date at which this post was last updated.
+   */
+  readonly lastUpdatedDate: string;
+
+  /**
    * Date at which this post was created.
    */
   readonly creationDate: string;
