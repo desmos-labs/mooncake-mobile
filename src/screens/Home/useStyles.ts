@@ -42,7 +42,8 @@ const useStyles = makeStyle(theme => ({
   emptyView: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.m,
+    padding: theme.spacing.m,
+    marginTop: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
