@@ -3,12 +3,16 @@ import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 /**
  * Hook that allows to navigate to the profile of a user.
  */
 const useNavigateToProfile = () => {
   const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  const activeAccountAddress = useActiveAccountAddress();
+
   return React.useCallback(
     (address?: string, onBeforeNavigation?: () => void) => {
       // Run any before navigation hook
@@ -17,6 +21,7 @@ const useNavigateToProfile = () => {
       }
 
       switch (address) {
+        case activeAccountAddress:
         case undefined:
           navigate(ROUTES.BOTTOM_TABS, { screen: ROUTES.PROFILE });
           break;
