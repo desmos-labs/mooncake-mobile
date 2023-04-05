@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Center, HStack, useTheme, VStack } from 'native-base';
 import Typography from 'components/Typography';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { isPostPending, Post } from 'types/posts';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { loadingOrange } from 'assets/animations';
@@ -49,7 +49,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   // --- Local state
   // -------------------------------------------------------------------------------------
 
-  const [actualDate, setActualDate] = useState(new Date());
+  // const [actualDate, setActualDate] = useState(new Date());
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -58,13 +58,8 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   useEffect(() => {
     refreshFollowing();
 
-    const intervalId = setInterval(() => {
-      setActualDate(new Date());
-    }, 60000);
-    return () => clearInterval(intervalId);
-
     // It's fine to disable the following line because we want to run this effect only once
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // -------------------------------------------------------------------------------------
@@ -82,10 +77,12 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
     () => formatDate(post.creationDate),
     [formatDate, post.creationDate],
   );
+
+  // TODO: Replace this with https://day.js.org/docs/en/display/from-now
+  const date = Date.now();
   const calculatedCreationDate = useMemo(() => {
     const parsedTime = parseISO(`${post.creationDate}Z`);
-
-    const differenceInUnix = actualDate.getTime() - parsedTime.getTime();
+    const differenceInUnix = date - parsedTime.getTime();
     if (differenceInUnix < 0) {
       return t('now');
     } else if (differenceInUnix < 59999) {
@@ -107,7 +104,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
     } else {
       return formattedDate;
     }
-  }, [actualDate, formattedDate, post.creationDate, t]);
+  }, [date, formattedDate, post.creationDate, t]);
 
   const popupMenuItems = useMemo(
     () => [
