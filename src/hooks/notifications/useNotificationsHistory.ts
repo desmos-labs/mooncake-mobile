@@ -38,9 +38,6 @@ const useGetReactionData = () => {
           postId,
           reactionId,
         },
-        onError: (error: any) => {
-          console.error('GetPostReactions', error);
-        },
       });
 
       return data?.reactions?.length > 0 ? convertGraphQLReaction(data.reactions[0]) : undefined;
