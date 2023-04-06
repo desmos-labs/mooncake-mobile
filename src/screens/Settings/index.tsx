@@ -16,6 +16,7 @@ import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { useActiveAccount } from '@recoil/accounts';
 import { RequiredMessageTypesGrant } from 'config/AutzGrants';
+import useUnlockWallet from 'hooks/useUnlockWallet';
 import {
   useChangePassword,
   useOpenNotificationsSettings,
@@ -62,6 +63,8 @@ const Settings = (props: NavProps) => {
   } = useToggleSimplifiedTxBroadcast(RequiredMessageTypesGrant);
 
   const changePassword = useChangePassword();
+  const unlockWallet = useUnlockWallet();
+
   const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
 
   const openNotificationsSettings = useOpenNotificationsSettings();
@@ -85,6 +88,16 @@ const Settings = (props: NavProps) => {
       },
     });
   }, [navigate, t, signOut]);
+
+  const handlePressChangePassword = useCallback(async () => {
+    const walletUnlockResult = await unlockWallet(undefined, undefined, {
+      titleLabelOverride: t('passwordManipulation:changePw'),
+    });
+
+    if (walletUnlockResult.isOk()) {
+      changePassword();
+    }
+  }, [changePassword, t, unlockWallet]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
@@ -110,7 +123,7 @@ const Settings = (props: NavProps) => {
             onValueChange={toggleBiometrics}
           />
         )}
-        <SectionButton label={t('change password')} onPress={changePassword} />
+        <SectionButton label={t('change password')} onPress={handlePressChangePassword} />
         {canShowPrivateKey && (
           <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
         )}

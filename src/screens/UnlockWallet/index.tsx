@@ -22,6 +22,7 @@ import { BiometricAuthorizations } from 'types/settings';
 import { ResultAsync } from 'neverthrow';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
+import { FormikHelpers } from 'formik/dist/types';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;
@@ -82,7 +83,6 @@ const UnlockWallet = () => {
   // -------------------------------------------------------------------------------------
 
   const [loading, setLoading] = useState(false);
-  const [passwordError, setPasswordError] = useState<string>();
 
   // -------------------------------------------------------------------------------------
   // --- Form values
@@ -101,7 +101,10 @@ const UnlockWallet = () => {
 
   // Callback used to unlock the wallet
   const unlockWallet = React.useCallback(
-    async (unlockWalletPassword: string | undefined) => {
+    async (
+      unlockWalletPassword: string | undefined,
+      formikHelpers?: FormikHelpers<typeof initialFormValues>,
+    ) => {
       setLoading(true);
       if (unlockWalletPassword !== undefined) {
         const walletResult = await unlockWalletWithPassword(
@@ -112,7 +115,7 @@ const UnlockWallet = () => {
 
         if (walletResult.isErr()) {
           setLoading(false);
-          setPasswordError(t('error:incorrectPassword'));
+          formikHelpers && formikHelpers.setErrors({ password: t('error:incorrectPassword') });
           return;
         }
 
@@ -124,7 +127,7 @@ const UnlockWallet = () => {
           if (result.isOk()) {
             onSuccess(walletResult.value);
           } else {
-            setPasswordError(t('error:incorrectPassword'));
+            formikHelpers && formikHelpers.setErrors({ password: t('error:incorrectPassword') });
           }
         }
       }
@@ -145,8 +148,11 @@ const UnlockWallet = () => {
 
   // Callback used when the user submits the form to unlock the wallet using the password
   const onFormSubmit = React.useCallback(
-    async (formValues: typeof initialFormValues) => {
-      unlockWallet(formValues.password);
+    async (
+      formValues: typeof initialFormValues,
+      formikHelpers?: FormikHelpers<typeof initialFormValues>,
+    ) => {
+      unlockWallet(formValues.password, formikHelpers);
     },
     [unlockWallet],
   );
@@ -181,9 +187,7 @@ const UnlockWallet = () => {
       <Formik
         initialValues={initialFormValues}
         onSubmit={onFormSubmit}
-        validationSchema={validationSchema}
-        enableReinitialize
-        initialErrors={{ password: passwordError }}>
+        validationSchema={validationSchema}>
         {({ handleSubmit, errors, setValues, values }) => (
           <View style={styles.formContainer}>
             <Typography.Subtitle2 style={styles.inputLabel}>{t('inputLabel')}</Typography.Subtitle2>

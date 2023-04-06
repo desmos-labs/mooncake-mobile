@@ -9,6 +9,7 @@ import { useActiveAccount } from '@recoil/accounts';
 import { SigningMode } from '@desmoslabs/desmjs';
 import { err, ok, Result } from 'neverthrow';
 import { CanceledOperationError } from 'types/error';
+import { UnlockWalletParams } from 'screens/UnlockWallet';
 
 /**
  * Hooks that provides a function to unlock and access a user wallet.
@@ -19,7 +20,11 @@ const useUnlockWallet = () => {
   const activeAccount = useActiveAccount();
 
   return useCallback(
-    (toUnlockAddress?: string, signingMode?: SigningMode) => {
+    (
+      toUnlockAddress?: string,
+      signingMode?: SigningMode,
+      params?: Pick<UnlockWalletParams, 'titleLabelOverride'>,
+    ) => {
       const address = toUnlockAddress ?? activeAccount!.address;
 
       if (address === undefined) {
@@ -38,6 +43,7 @@ const useUnlockWallet = () => {
             returnToCurrentScreen();
           },
           signingMode,
+          ...params,
         });
       });
     },
