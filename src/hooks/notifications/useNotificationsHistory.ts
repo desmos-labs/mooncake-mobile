@@ -156,7 +156,6 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
   // Callback that is used when some data is returned by the chain
   const onCompletedCallback = React.useCallback(
     async (data: any) => {
-      console.log('onCompletedCallback');
       if (!data) return;
       const onChainNotifications = (data.notifications as any[]).map(convertGraphQLNotification);
       const completeNotifications: CompleteNotification[] = [];
