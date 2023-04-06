@@ -17,7 +17,6 @@ import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { useActiveAccount } from '@recoil/accounts';
 import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import { err } from 'neverthrow';
 import {
   useChangePassword,
   useOpenNotificationsSettings,
