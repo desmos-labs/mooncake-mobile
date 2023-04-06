@@ -94,12 +94,10 @@ const Settings = (props: NavProps) => {
     const walletUnlockResult = await unlockWallet(undefined, undefined, {
       titleLabelOverride: t('passwordManipulation:changePw'),
     });
-    // An error occurred while unlocking the wallet, propagate it.
-    if (walletUnlockResult.isErr()) {
-      return err(walletUnlockResult.error);
-    }
 
-    changePassword();
+    if (walletUnlockResult.isOk()) {
+      changePassword();
+    }
   }, []);
 
   // -------------------------------------------------------------------------------------
