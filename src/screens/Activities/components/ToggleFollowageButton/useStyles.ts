@@ -8,13 +8,7 @@ const useStyles = makeStyleWithProps((props: NotificationButtonProps, theme) => 
     justifyContent: 'center',
   },
   button: {
-    minWidth: 86,
-    height: 34,
     justifyContent: 'center',
-  },
-  buttonText: {
-    color: props.isFollowingAddress ? undefined : theme.colors.white,
-    alignSelf: 'center',
   },
 }));
 

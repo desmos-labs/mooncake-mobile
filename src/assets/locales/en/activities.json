@@ -15,5 +15,6 @@
   "invited you to join Butter": "Invited you to join Butter",
   "claimed your invite": "Claimed your invite",
   "started following you": "started following you",
-  "tipped you": "tipped {{amount}} DSM to your post"
+  "tipped you": "tipped {{amount}} DSM to your post",
+  "profileNotFound": "Profile not found"
 }

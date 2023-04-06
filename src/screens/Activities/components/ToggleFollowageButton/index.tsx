@@ -34,9 +34,11 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   return (
     <View style={styles.buttonView}>
       <Button
+        textColor={isFollowing ? theme.colors.surfaceBlack : theme.colors.white}
         onPress={handleButtonPress}
-        variant="outlined"
-        backgroundColor={isFollowing ? theme.colors.surfaceBlack : theme.colors.butterOrange01}
+        size={32}
+        variant={isFollowing ? 'outline' : 'solid'}
+        backgroundColor={isFollowing ? theme.colors.white : theme.colors.surfaceBlack}
         style={styles.button}>
         {t(isFollowing ? 'unfollow' : 'follow')}
       </Button>
