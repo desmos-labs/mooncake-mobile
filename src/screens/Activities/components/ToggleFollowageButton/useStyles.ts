@@ -1,7 +1,6 @@
-import { makeStyleWithProps } from 'config/theme';
-import { NotificationButtonProps } from 'screens/Activities/components/ToggleFollowageButton/index';
+import { makeStyle } from 'config/theme';
 
-const useStyles = makeStyleWithProps((props: NotificationButtonProps, theme) => ({
+const useStyles = makeStyle(() => ({
   buttonView: {
     marginLeft: 'auto',
     right: 1,
