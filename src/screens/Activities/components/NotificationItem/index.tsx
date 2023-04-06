@@ -3,7 +3,6 @@ import Typography from 'components/Typography';
 import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'native-base';
 import ToggleFollowageButton from 'screens/Activities/components/ToggleFollowageButton';
 import PostAttachmentsPreview from 'screens/Activities/components/PostAttachmentsPreview';
 import { CompleteNotification, NotificationType } from 'types/notifications';
@@ -11,8 +10,8 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
-import useSetNotificationAsRead from 'hooks/notifications/useSetNotificationAsRead';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 
 export interface NotificationComponentProps {
@@ -25,11 +24,9 @@ export interface NotificationComponentProps {
  */
 const NotificationItem = (props: NotificationComponentProps) => {
   const { t } = useTranslation('activities');
-  const theme = useTheme();
   const styles = useStyles();
-
+  const toast = useCustomToast();
   const { notification } = props;
-
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
@@ -37,7 +34,6 @@ const NotificationItem = (props: NotificationComponentProps) => {
   const activeAccountAddress = useActiveAccountAddress();
 
   const navigateToProfile = useNavigateToProfile();
-  const setNotificationAsRead = useSetNotificationAsRead();
   const handleNotificationPressEvent = useHandleNotificationPressEvent();
 
   // -------------------------------------------------------------------------------------
@@ -121,15 +117,16 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------------------------------------------------------------------------------------
 
   const handleNavigateToProfile = useCallback(() => {
-    if (!profile) return;
+    if (!profile) {
+      return toast.errorNoRetry(t('profileNotFound'));
+    }
     navigateToProfile(profile.address);
-  }, [navigateToProfile, profile]);
+  }, [navigateToProfile, profile, t, toast]);
 
   const handleNavigateToNotification = useCallback(() => {
     // TODO: Probably we should handle the error somehow
-    setNotificationAsRead(notification);
     handleNotificationPressEvent(notification);
-  }, [handleNotificationPressEvent, notification, setNotificationAsRead]);
+  }, [handleNotificationPressEvent, notification]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -153,22 +150,14 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <View
-      style={[
-        styles.container,
-        notification.isRead && {
-          backgroundColor: theme.colors.butterOrange05,
-        },
-      ]}>
+    <View style={[styles.container]}>
       <View style={styles.flexRowView}>
         {/* User profile image */}
-        {profile && (
-          <ImageButton
-            onPress={handleNavigateToProfile}
-            style={styles.avatar}
-            image={getProfilePicture(profile)}
-          />
-        )}
+        <ImageButton
+          onPress={handleNavigateToProfile}
+          style={styles.avatar}
+          image={getProfilePicture(profile)}
+        />
 
         {/* Notification texts */}
         <TouchableOpacity style={styles.profileView} onPress={handleNavigateToNotification}>

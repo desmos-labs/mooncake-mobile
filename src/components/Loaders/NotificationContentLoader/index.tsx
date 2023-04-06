@@ -1,36 +1,20 @@
 import React, { memo } from 'react';
-import { HStack, Skeleton, useTheme, VStack } from 'native-base';
-import Spacer from 'components/Spacer';
+import { Center, HStack, Skeleton, useTheme, VStack } from 'native-base';
 
 const NotificationContentLoader = () => {
   const theme = useTheme();
 
   return (
-    <>
-      <HStack>
-        <Skeleton h={10} w={10} rounded={80} />
-        <VStack>
-          <Skeleton marginLeft={2} marginTop={2} h={2} w={250} rounded={theme.roundness} />
-          <Skeleton marginLeft={2} marginTop={2} h={2} w={100} rounded={theme.roundness} />
+    <Center marginBottom="32px" paddingBottom="32px">
+      <HStack space="12px" rounded={theme.roundness}>
+        <Skeleton w="40px" h="40px" rounded="full" />
+        <VStack space="1.5" flex={1}>
+          <Skeleton width="200px" height="9px" mt="1" rounded={theme.roundness} />
+          <Skeleton width="100px" height="7px" mt="1" rounded={theme.roundness} />
         </VStack>
+        <Skeleton w="48px" h="48px" rounded={4} />
       </HStack>
-      <Spacer paddingTop={theme.spacing.m} />
-      <HStack>
-        <Skeleton h={10} w={10} rounded={80} />
-        <VStack>
-          <Skeleton marginLeft={2} marginTop={2} h={2} w={230} rounded={theme.roundness} />
-          <Skeleton marginLeft={2} marginTop={2} h={2} w={90} rounded={theme.roundness} />
-        </VStack>
-      </HStack>
-      <Spacer paddingTop={theme.spacing.m} />
-      <HStack>
-        <Skeleton h={10} w={10} rounded={80} />
-        <VStack>
-          <Skeleton marginLeft={2} marginTop={2} h={2} w={140} rounded={theme.roundness} />
-          <Skeleton marginLeft={2} marginTop={2} h={2} w={50} rounded={theme.roundness} />
-        </VStack>
-      </HStack>
-    </>
+    </Center>
   );
 };
 
