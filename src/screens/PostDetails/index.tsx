@@ -26,6 +26,7 @@ import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import StyledSpinner from 'components/StyledSpinner';
+import Typography from 'components/Typography';
 import useStyles from './useStyles';
 import { useHandleCreateComment, useHandleExpandCommentView } from './hooks';
 
@@ -163,13 +164,17 @@ const PostDetails = () => {
   if (!post) {
     // If the post is loading, show the loading screen
     if (isPostLoading) {
-      // TODO: Improve this in order to show the proper loading screen
-      return <StyledSpinner />;
+      return (
+        <SafeAreaView style={styles.emptyView}>
+          <StyledSpinner />
+        </SafeAreaView>
+      );
     }
-
-    // TODO: It's best to show an error here or something, as it means the post does not exist anymore
-    goBack();
-    return null;
+    return (
+      <SafeAreaView style={styles.emptyView}>
+        <Typography.H1>Something went wrong when loading the post</Typography.H1>
+      </SafeAreaView>
+    );
   }
 
   if (initialLoading) {

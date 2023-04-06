@@ -16,7 +16,9 @@ const useGetPostByID = () => {
   }
 
   const getQueryReactionValue = useGetQueryReactionValue();
-  const [getLazyData] = useCustomLazyQuery(GetPostByID);
+  const [getLazyData] = useCustomLazyQuery(GetPostByID, {
+    fetchPolicy: 'cache-first',
+  });
 
   return React.useCallback(
     async (subspaceId: number, postId: number): Promise<Post | undefined> => {

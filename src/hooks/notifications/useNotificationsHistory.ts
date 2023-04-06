@@ -38,6 +38,9 @@ const useGetReactionData = () => {
           postId,
           reactionId,
         },
+        onError: (error: any) => {
+          console.error('GetPostReactions', error);
+        },
       });
 
       return data?.reactions?.length > 0 ? convertGraphQLReaction(data.reactions[0]) : undefined;
@@ -156,6 +159,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
   // Callback that is used when some data is returned by the chain
   const onCompletedCallback = React.useCallback(
     async (data: any) => {
+      console.log('onCompletedCallback');
       if (!data) return;
       const onChainNotifications = (data.notifications as any[]).map(convertGraphQLNotification);
       const completeNotifications: CompleteNotification[] = [];
@@ -190,6 +194,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
 
   // Callback that is used to fetch the next page of notifications
   const fetchMoreNotifications = React.useCallback(async () => {
+    if (loading) return;
     try {
       setError(undefined);
       setFetchingMore(true);
@@ -212,7 +217,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
       setFetchingMore(false);
       setError(e.toString);
     }
-  }, [fetchMore, notifications.length]);
+  }, [fetchMore, loading, notifications.length]);
 
   // Callback that is used in order to re-fetch the entire list of notifications
   const refetchNotifications = React.useCallback(async () => {
