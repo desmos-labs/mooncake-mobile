@@ -11,6 +11,7 @@ import EnvConfig from 'config/EnvConfig';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import NotificationMergePolicy from 'services/graphql/queries/typePolicies/notification';
 import { useAppStateValue } from '@recoil/appState';
+import { RetryLink } from '@apollo/client/link/retry';
 
 const multiApiLink = ApolloLink.from([
   new MultiAPILink({
@@ -27,6 +28,8 @@ const multiApiLink = ApolloLink.from([
       }),
   }),
 ]);
+
+const retry = new RetryLink({ attempts: { max: 3 } });
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -47,8 +50,11 @@ const cache = new InMemoryCache({
         // @ts-ignore
         if (object.post?.subspace_id && object.author?.address && object.post?.id && object.value) {
           // @ts-ignore
-          // eslint-disable-next-line prettier/prettier
-          return `reaction:${object.post.subspace_id}-${object.author.address}-${object.value.toString()}`;
+
+          return `reaction:${object.post.subspace_id}-${
+            // @ts-ignore
+            object.author?.address
+          }-${object.value.toString()}`;
         }
         return defaultDataIdFromObject(object);
       case 'notification':
@@ -81,7 +87,7 @@ const useClient = () => {
   const authLink = useAuthLink();
   return new ApolloClient({
     cache,
-    link: authLink.concat(multiApiLink),
+    link: authLink.concat(retry).concat(multiApiLink),
   });
 };
 

@@ -24,12 +24,9 @@ const useCustomLazyQuery = <
     async (opts?: Partial<LazyQueryHookOptions<TData, TVariables>>): Promise<any | undefined> => {
       return new Promise((resolve, reject) => {
         const extraOptions = opts || {};
-        getData({
-          fetchPolicy: 'no-cache',
-          onCompleted: resolve,
-          onError: reject,
-          ...extraOptions,
-        });
+        extraOptions.onCompleted = resolve;
+        extraOptions.onError = reject;
+        getData(extraOptions);
       });
     },
     [getData],

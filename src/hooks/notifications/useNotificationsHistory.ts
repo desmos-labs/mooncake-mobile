@@ -190,6 +190,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
 
   // Callback that is used to fetch the next page of notifications
   const fetchMoreNotifications = React.useCallback(async () => {
+    if (loading) return;
     try {
       setError(undefined);
       setFetchingMore(true);
@@ -201,7 +202,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
           if (!fetchMoreResult) return prev;
           // If there are no more notifications, stop fetching more
           if (fetchMoreResult.notifications.length === 0) {
-            setFetchingMore(false);
+            setTimeout(() => setFetchingMore(false), 200);
           }
           return {
             notifications: [...prev.notifications, ...fetchMoreResult.notifications],
@@ -212,7 +213,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
       setFetchingMore(false);
       setError(e.toString);
     }
-  }, [fetchMore, notifications.length]);
+  }, [fetchMore, loading, notifications.length]);
 
   // Callback that is used in order to re-fetch the entire list of notifications
   const refetchNotifications = React.useCallback(async () => {
