@@ -98,7 +98,7 @@ const Settings = (props: NavProps) => {
     if (walletUnlockResult.isOk()) {
       changePassword();
     }
-  }, []);
+  }, [changePassword, t, unlockWallet]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
