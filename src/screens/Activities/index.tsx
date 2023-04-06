@@ -3,18 +3,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
-import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
-import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
-import { Divider, Skeleton, useTheme } from 'native-base';
+import { Divider, useTheme } from 'native-base';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { CompleteNotification } from 'types/notifications';
 import { useSetAppStateValue } from '@recoil/appState';
 import StyledSpinner from 'components/StyledSpinner';
+import ActivitiesListContentLoader from 'components/Loaders/ActivitiesListContentLoader';
 import { useKeyExtractor, useSplitNotificationsByWeek } from './hooks';
 import useStyles from './useStyles';
 
@@ -149,6 +148,7 @@ const Activities = () => {
       <View
         style={{
           paddingHorizontal: theme.spacing.m,
+          paddingBottom: theme.spacing.m,
         }}>
         <Typography.H3>{t('activities')}</Typography.H3>
       </View>
@@ -181,9 +181,7 @@ const Activities = () => {
         />
       ) : (
         <View style={{ margin: theme.spacing.m }}>
-          <Skeleton h={1.5} w={90} rounded={theme.roundness} />
-          <Spacer paddingVertical={theme.spacing.s} />
-          <NotificationContentLoader />
+          <ActivitiesListContentLoader />
         </View>
       )}
     </DView>
