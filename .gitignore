@@ -79,3 +79,5 @@ contents.xcworkspacedata
 
 .reassure
 
+# SonarQube files
+.scannerwork/
