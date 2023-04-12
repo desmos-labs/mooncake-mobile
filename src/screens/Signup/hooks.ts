@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
 import useGenerateRandomAccount from 'hooks/accounts/useGenerateRandomAccount';
 import { useAppStateValue } from '@recoil/appState';
 import usePerformLogin from 'hooks/apis/usePerformLogin';
@@ -25,57 +23,7 @@ export const useInitialFormValues = (): FormValues => {
   return {
     newPassword: '',
     inviteCode,
-    consent: false,
   } as FormValues;
-};
-
-/**
- * Hook that returns the validation schema to be used when validating the sign up form.
- */
-export const useValidationSchema = () => {
-  const { t } = useTranslation('passwordManipulation');
-  return React.useMemo(() => {
-    return Yup.object().shape({
-      inviteCode: Yup.string().required(t('error:required')),
-    });
-  }, [t]);
-};
-
-/**
- * Hook that should be used in order to validate the form.
- */
-export const useValidateForm = () => {
-  const { t } = useTranslation('passwordManipulation');
-  return React.useCallback(
-    (values: FormValues) => {
-      const errors: any = {};
-
-      if (!values.consent) {
-        errors.consent = t('consent not checked');
-      }
-
-      return errors;
-    },
-    [t],
-  );
-};
-
-/**
- * Hook that allows to handle the press on the privacy policy button.
- */
-export const useHandlePressPrivacyPolicy = () => {
-  return React.useCallback(() => {
-    // go to Privacy policy page
-  }, []);
-};
-
-/**
- * Hook that allows to handle the press on the Terms of Service button.
- */
-export const useHandlePressTOS = () => {
-  return React.useCallback(() => {
-    // go to Terms of Service page
-  }, []);
 };
 
 /**

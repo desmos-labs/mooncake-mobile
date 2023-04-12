@@ -10,7 +10,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'react-native';
 import { Box, Text, useTheme } from 'native-base';
-import { useAppStateValue } from '@recoil/appState';
 import { usePerformImportAccount } from 'screens/Landing/hooks';
 import useStyles from './useStyles';
 
@@ -24,7 +23,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 const Landing = () => {
   const theme = useTheme();
   const { t } = useTranslation('landing');
-  const { navigate, replace } = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
 
   // -------------------------------------------------------------------------------------
@@ -33,32 +32,17 @@ const Landing = () => {
 
   const performImportAccount = usePerformImportAccount();
 
-  // Tells whether the user has previously given consent to the Butter ToS and Privacy policies
-  const consentGiven = useAppStateValue('consentGiven');
-
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const onSignUp = React.useCallback(() => {
-    if (!consentGiven) {
-      navigate(ROUTES.CONSENT_AGREEMENT, {
-        onConsentAgree: () => replace<any>(ROUTES.SIGNUP),
-      });
-    } else {
-      navigate(ROUTES.SIGNUP);
-    }
-  }, [consentGiven, navigate, replace]);
+    navigate(ROUTES.SIGNUP);
+  }, [navigate]);
 
   const onSignUpWithWallet = React.useCallback(() => {
-    if (!consentGiven) {
-      navigate(ROUTES.CONSENT_AGREEMENT, {
-        onConsentAgree: performImportAccount,
-      });
-    } else {
-      performImportAccount();
-    }
-  }, [consentGiven, navigate, performImportAccount]);
+    performImportAccount();
+  }, [performImportAccount]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
