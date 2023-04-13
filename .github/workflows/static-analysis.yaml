@@ -1,0 +1,35 @@
+name: SonarQube Static Analysis
+# SonarQube Static Analysis runs the static code analyses over the src folder.
+# This workflow is run on every pull request and push to main.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  Lint:
+    name: SonarQube Static Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+
+      - name: SonarQube Scan 🔍
+        uses: SonarSource/sonarqube-scan-action@v1.2.0
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+
+      - name: Post SonarQube Report ✍
+        uses: phwt/sonarqube-quality-gate-action@v1.3.2
+        if: "!cancelled()"
+        with:
+          sonar-project-key: butter
+          sonar-host-url: ${{ secrets.SONARQUBE_HOST }}
+          sonar-token: ${{ secrets.SONARQUBE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
