@@ -3,7 +3,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
-import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
@@ -16,7 +15,7 @@ import _ from 'lodash';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useTheme } from 'native-base';
 import Animated, {
@@ -27,15 +26,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useResetSignUpState } from '@recoil/screens/signUpState';
 import useCustomToast from 'hooks/extended/useCustomToast';
-import {
-  SignUpStatus,
-  useHandlePressPrivacyPolicy,
-  useHandlePressTOS,
-  useInitialFormValues,
-  useSubmitForm,
-  useValidateForm,
-  useValidationSchema,
-} from './hooks';
+import { SignUpStatus, useInitialFormValues, useSubmitForm } from './hooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
@@ -51,10 +42,6 @@ const Signup = () => {
   const styles = useStyles();
   const toast = useCustomToast();
 
-  // Form validation
-  const validationSchema = useValidationSchema();
-  const validateForm = useValidateForm();
-
   // Form state
   const initialFormValues = useInitialFormValues();
   const resetSignUpInfo = useResetSignUpState();
@@ -67,10 +54,6 @@ const Signup = () => {
       opacity: interpolate(animatedOpacity.value, [0, 1], [0, 1]),
     };
   });
-
-  // Actions
-  const handlePressPrivacyPolicy = useHandlePressPrivacyPolicy();
-  const handlePressTOS = useHandlePressTOS();
 
   // Callback that is used when the signup completes properly
   const onSuccess = useCallback(() => {
@@ -158,11 +141,7 @@ const Signup = () => {
         </View>
       }>
       <Typography.H3 style={styles.headerText}>{t('signup:signup')}</Typography.H3>
-      <Formik
-        initialValues={initialFormValues}
-        onSubmit={handleFormSubmit}
-        validationSchema={validationSchema}
-        validate={validateForm}>
+      <Formik initialValues={initialFormValues} onSubmit={handleFormSubmit}>
         {({ handleSubmit, values, errors, setFieldValue }) => {
           return (
             <>
@@ -224,49 +203,19 @@ const Signup = () => {
                   </View>
                 </ScrollView>
               </KeyboardAvoidingView>
-              <>
-                <View style={styles.consentGroup}>
-                  <CustomCheckbox
-                    checked={values.consent}
-                    handlePress={() => setFieldValue('consent', !values.consent, true)}
-                    error={!!errors.consent}
-                  />
-
-                  <Typography.Body6 style={styles.consentText}>
-                    <Trans
-                      i18nKey="mnemonicInput:userConsent"
-                      components={[
-                        <Typography.Body6
-                          onPress={handlePressTOS}
-                          style={
-                            values.consent ? styles.touchableTextChecked : styles.touchableText
-                          }
-                        />,
-                        <Typography.Body6
-                          onPress={handlePressPrivacyPolicy}
-                          style={
-                            values.consent ? styles.touchableTextChecked : styles.touchableText
-                          }
-                        />,
-                      ]}
-                    />
-                  </Typography.Body6>
-                </View>
-                <Button
-                  onPress={handleSubmit}
-                  isLoading={loading}
-                  backgroundColor={theme.colors.surfaceBlack}
-                  size={44}
-                  textColor={theme.colors.white}
-                  disabled={
-                    !values.newPassword ||
-                    !values.consent ||
-                    !values.inviteCode ||
-                    _.flatten(Object.values(errors)).length > 0
-                  }>
-                  {t('common:next')}
-                </Button>
-              </>
+              <Button
+                onPress={handleSubmit}
+                isLoading={loading}
+                backgroundColor={theme.colors.surfaceBlack}
+                size={44}
+                textColor={theme.colors.white}
+                disabled={
+                  !values.newPassword ||
+                  !values.inviteCode ||
+                  _.flatten(Object.values(errors)).length > 0
+                }>
+                {t('common:next')}
+              </Button>
             </>
           );
         }}

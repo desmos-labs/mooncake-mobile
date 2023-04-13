@@ -118,6 +118,7 @@ export const onboarding2 = require('./images/onboarding/onboarding2.png');
 export const onboarding3 = require('./images/onboarding/onboarding3.png');
 export const onboarding4 = require('./images/onboarding/onboarding4.png');
 export const bgonboarding = require('./images/onboarding/backgroundOnboarding.png');
+export const onboardingLogo = require('./images/onboarding/onboardingLogo.png');
 
 export const profileBack = require('./images/profileBack.png');
 

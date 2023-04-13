@@ -18,7 +18,6 @@ import Onboarding, { OnboardingParams } from 'screens/Onboarding';
 import ImportAccountSelectProfile, {
   SelectAccountParamList,
 } from 'screens/ImportAccountSelectProfile';
-import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
 import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
@@ -88,7 +87,6 @@ export type RootNavigatorParamList = {
 
   [ROUTES.LANDING]: undefined;
   [ROUTES.ONBOARDING]: OnboardingParams;
-  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
   [ROUTES.SIGNUP]: undefined;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
@@ -440,7 +438,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
         <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
         <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
-        <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
         <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />

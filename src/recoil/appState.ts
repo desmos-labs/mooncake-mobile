@@ -29,10 +29,6 @@ export interface AppState {
    */
   readonly subspaceId: number;
   /**
-   * Whether the user has given the consent to the Butter ToS and Privacy or not.
-   */
-  readonly consentGiven: boolean;
-  /**
    * Invitation code that the user has used in order to join the application.
    */
   readonly inviteCode: string | undefined;
@@ -63,7 +59,6 @@ const DefaultAppState: AppState = {
   bearerToken: '',
   appActiveState: 'unknown',
   subspaceId: parseFloat(EnvConfig.APP_SUBSPACE_ID),
-  consentGiven: false,
   inviteCode: undefined,
   currentTimezone: '',
   subspaceParams: {

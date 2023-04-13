@@ -3,7 +3,7 @@
   "profile dtag": "Profile DTag",
   "enter dtag": "Enter DTag",
   "dtag taken": "This DTag has already been taken",
-  "dtag info": "A DTag represents the unique human-readable name associated with a profile. When creating your profile, make sure you select a DTag that other people can easily remember and search.",
+  "dtag info": "DTag is a unique identifier for your profile that is easy for others to search and remember.",
   "completeProfile": "Complete profile",
   "password": "Password",
   "enter password": "Enter password",
