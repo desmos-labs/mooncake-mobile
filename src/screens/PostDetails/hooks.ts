@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import { Keyboard } from 'react-native';
 import { NavProps } from 'screens/PostDetails/index';
@@ -11,6 +11,7 @@ import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import { useTranslation } from 'react-i18next';
 import useCustomToast from 'hooks/extended/useCustomToast';
+import usePost from 'hooks/posts/usePost';
 
 /**
  * Hook that allows to report a user.
@@ -48,7 +49,10 @@ export const useHandlePressShowCommentDetails = () => {
           return;
         default:
           // If the post is a comment to a post, navigate to its details
-          navigateToPost(comment.subspaceId, comment.id, { navigationMethod: 'push' });
+          navigateToPost(comment.subspaceId, comment.id, {
+            navigationMethod: 'push',
+            initialPostData: comment,
+          });
       }
     },
     [navigateToPost],
@@ -72,6 +76,7 @@ export const useHandlePressShowCommentDetailsWithFocus = () => {
           navigateToPost(comment.subspaceId, comment.id, {
             navigationMethod: 'push',
             focusCommentBox: true,
+            initialPostData: comment,
           });
       }
     },
@@ -167,4 +172,23 @@ export const useHandlePressCounters = () => {
     },
     [navigate],
   );
+};
+
+/**
+ * A hook that tries to return queried post data from the server or the initial post data.
+ * This is to speed up the initial load time when transitioning from the home page to the
+ * post details page, as that data is already available.
+ */
+export const usePostData = () => {
+  const { params } = useRoute<NavProps['route']>();
+
+  const { initialPostData, subspaceId, postId } = params;
+
+  const { post, loading: isPostLoading, refetch: refreshPost } = usePost(subspaceId, postId);
+
+  return {
+    loading: isPostLoading,
+    refetch: refreshPost,
+    post: post || initialPostData,
+  };
 };
