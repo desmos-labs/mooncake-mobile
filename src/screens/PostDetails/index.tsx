@@ -135,6 +135,13 @@ const PostDetails = () => {
     refreshTipsCount,
   ]);
 
+  const onPullToRefresh = React.useCallback(() => {
+    // set firstLoad to false so the loading indicator will be shown in the event
+    // the user pulls to refresh during the first load.
+    setFirstLoad(false);
+    refreshPage();
+  }, [refreshPage]);
+
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
@@ -197,7 +204,7 @@ const PostDetails = () => {
         scrollEnabled={true}
         // Only show the loading indicator on the flatList if the user manually drags down on it
         refreshing={!firstLoad && pageRefreshing}
-        onRefresh={refreshPage}
+        onRefresh={onPullToRefresh}
         ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post!} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.externalId}
