@@ -119,9 +119,6 @@ const PostDetails = () => {
   // Method used to refresh the post data
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
-    // Set first load to false in the event the user manually refreshes so the
-    // flatList loading spinner will be shown
-    setFirstLoad(false);
     await refreshPost();
     await refreshReactionsCount();
     await refreshComments();
