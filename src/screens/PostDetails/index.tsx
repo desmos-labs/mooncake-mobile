@@ -69,7 +69,7 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
   // --- Loading states
   // -------------------------------------------------------------------------------------
-  const [initialLoading, setInitialLoading] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(false);
   const [pageRefreshing, setPageRefreshing] = useState(false);
 
   // -------------------------------------------------------------------------------------
@@ -119,6 +119,9 @@ const PostDetails = () => {
   // Method used to refresh the post data
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
+    // Set first load to false in the event the user manually refreshes so the
+    // flatList loading spinner will be shown
+    setFirstLoad(false);
     await refreshPost();
     await refreshReactionsCount();
     await refreshComments();
@@ -141,8 +144,8 @@ const PostDetails = () => {
 
   // Refresh the data on the focus of the screen
   useEffect(() => {
-    // setInitialLoading(true);
-    refreshPage().finally(() => setInitialLoading(false));
+    setFirstLoad(true);
+    refreshPage().finally(() => setFirstLoad(false));
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -179,14 +182,6 @@ const PostDetails = () => {
     );
   }
 
-  if (initialLoading) {
-    return (
-      <SafeAreaView style={styles.emptyView}>
-        <StyledSpinner />
-      </SafeAreaView>
-    );
-  }
-
   // -------------------------------------------------------------------------------------
   // --- Rendering
   // -------------------------------------------------------------------------------------
@@ -203,7 +198,8 @@ const PostDetails = () => {
         estimatedItemSize={120}
         ref={scrollViewRef}
         scrollEnabled={true}
-        refreshing={pageRefreshing}
+        // Only show the loading indicator on the flatList if the user manually drags down on it
+        refreshing={!firstLoad && pageRefreshing}
         onRefresh={refreshPage}
         ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post!} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
