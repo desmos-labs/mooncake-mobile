@@ -3,6 +3,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
+import { Post } from 'types/posts';
 
 /**
  * Options that can be passed to the navigateToPost callback.
@@ -20,6 +21,12 @@ export interface NavigateToPostOptions {
    * The navigation method to use when navigating to the post details screen.
    */
   readonly navigationMethod?: 'push' | 'navigate';
+
+  /**
+   * Existing post data so the post can be immediately rendered when navigating to the
+   * details screen.
+   */
+  readonly initialPostData?: Post;
 }
 
 /**
@@ -40,12 +47,14 @@ const useNavigateToPost = () => {
             postId,
             focusCommentBox: options?.focusCommentBox,
             focusPostId: options?.focusPostId,
+            initialPostData: options?.initialPostData,
           })
         : navigate(ROUTES.POST_DETAILS, {
             subspaceId,
             postId,
             focusCommentBox: options?.focusCommentBox,
             focusPostId: options?.focusPostId,
+            initialPostData: options?.initialPostData,
           });
     },
     [navigate, push],

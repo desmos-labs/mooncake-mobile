@@ -14,7 +14,6 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import { FlashList } from '@shopify/flash-list';
 import { isCommentReply, Post } from 'types/posts';
-import usePost from 'hooks/posts/usePost';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
@@ -28,7 +27,7 @@ import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
-import { useHandleCreateComment, useHandleExpandCommentView } from './hooks';
+import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 
 export type NavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList, ROUTES.POST_DETAILS>,
@@ -54,6 +53,8 @@ export interface PostDetailsParams {
    * TODO: Implement the scrolling of the list to this post
    */
   readonly focusPostId?: number;
+
+  readonly initialPostData?: Post;
 }
 
 const PostDetails = () => {
@@ -68,7 +69,7 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
   // --- Loading states
   // -------------------------------------------------------------------------------------
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(false);
   const [pageRefreshing, setPageRefreshing] = useState(false);
 
   // -------------------------------------------------------------------------------------
@@ -85,7 +86,7 @@ const PostDetails = () => {
   const activeProfile = useActiveProfile();
 
   // Post data
-  const { post, loading: isPostLoading, refetch: refreshPost } = usePost(subspaceId, postId);
+  const { post, loading: isPostLoading, refetch: refreshPost } = usePostData();
 
   // Comments data
   const {
@@ -134,14 +135,21 @@ const PostDetails = () => {
     refreshTipsCount,
   ]);
 
+  const onPullToRefresh = React.useCallback(() => {
+    // set firstLoad to false so the loading indicator will be shown in the event
+    // the user pulls to refresh during the first load.
+    setFirstLoad(false);
+    refreshPage();
+  }, [refreshPage]);
+
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
 
   // Refresh the data on the focus of the screen
   useEffect(() => {
-    setInitialLoading(true);
-    refreshPage().finally(() => setInitialLoading(false));
+    setFirstLoad(true);
+    refreshPage().finally(() => setFirstLoad(false));
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -166,6 +174,7 @@ const PostDetails = () => {
     if (isPostLoading) {
       return (
         <SafeAreaView style={styles.emptyView}>
+          <Typography.H1>hello world</Typography.H1>
           <StyledSpinner />
         </SafeAreaView>
       );
@@ -173,14 +182,6 @@ const PostDetails = () => {
     return (
       <SafeAreaView style={styles.emptyView}>
         <Typography.H1>Something went wrong when loading the post</Typography.H1>
-      </SafeAreaView>
-    );
-  }
-
-  if (initialLoading) {
-    return (
-      <SafeAreaView style={styles.emptyView}>
-        <StyledSpinner />
       </SafeAreaView>
     );
   }
@@ -201,8 +202,9 @@ const PostDetails = () => {
         estimatedItemSize={120}
         ref={scrollViewRef}
         scrollEnabled={true}
-        refreshing={pageRefreshing}
-        onRefresh={refreshPage}
+        // Only show the loading indicator on the flatList if the user manually drags down on it
+        refreshing={!firstLoad && pageRefreshing}
+        onRefresh={onPullToRefresh}
         ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post!} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.externalId}
