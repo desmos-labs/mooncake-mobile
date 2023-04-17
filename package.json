@@ -13,7 +13,7 @@
     "use:storybook": "cp index.storybook.js index.js && yarn prestorybook",
     "postinstall": "patch-package && rn-nodeify --install stream,crypto,fs,path --hack",
     "deploy:androidInternal": "fastlane android deploy_to_internal_testing",
-    "deploy:iosInternal": "fastlane common write_env_file && fastlane ios build && fastlane ios deploy",
+    "deploy:iosInternal": "fastlane fastlane ios build && fastlane ios deploy",
     "deploy:copyDevEnv": "cp .env.dev.sample .env",
     "detox:build-ios": "detox build -c ios.sim.release",
     "detox:test-ios": "detox test -c ios.sim.release"
