@@ -1,6 +1,8 @@
 import { gql } from '@apollo/client';
+import RelationshipFields from 'services/graphql/queries/fragments/RelationshipFields';
 
 const GetRelationshipForAddress = gql`
+  ${RelationshipFields}
   query GetRelationshipForAddress(
     $subspaceId: bigint!
     $userAddress: String!
@@ -13,7 +15,7 @@ const GetRelationshipForAddress = gql`
         counterparty_address: { _eq: $counterpartyAddress }
       }
     ) {
-      creator_address
+      ...RelationshipFields
     }
   }
 `;
