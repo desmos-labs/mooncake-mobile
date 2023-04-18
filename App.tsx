@@ -12,6 +12,14 @@ import lightTheme from 'config/theme/LightTheme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CommonStyles from 'config/theme/CommonStyles';
 
+import * as Sentry from '@sentry/react-native';
+import EnvConfig from 'config/EnvConfig';
+
+Sentry.init({
+  dsn: EnvConfig.SENTRY_DSN,
+  tracesSampleRate: 1.0,
+});
+
 /**
  * Context provider that allows to properly instantiate an Apollo client that
  * reacts to app state changes such as chain change, auth token change and so on.
@@ -41,4 +49,4 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+export default Sentry.wrap(App);

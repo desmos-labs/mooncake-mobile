@@ -113,6 +113,7 @@ def getVersionName() {
     return project.findProperty('versionName') ?: '1-Debug'
 }
 
+apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 android {
     ndkVersion rootProject.ext.ndkVersion
 

@@ -665,6 +665,9 @@ PODS:
   - RNScreens (3.19.0):
     - React-Core
     - React-RCTImage
+  - RNSentry (5.3.1):
+    - React-Core
+    - Sentry/HybridSDK (= 8.4.0)
   - RNSVG (12.1.1):
     - React
   - RNVectorIcons (9.2.0):
@@ -675,6 +678,9 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
+  - Sentry/HybridSDK (8.4.0):
+    - SentryPrivate (= 8.4.0)
+  - SentryPrivate (8.4.0)
   - SocketRocket (0.6.0)
   - TrezorCrypto (0.0.9)
   - Yoga (1.14.0)
@@ -781,6 +787,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - TrezorCrypto
@@ -820,6 +827,8 @@ SPEC REPOS:
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
+    - Sentry
+    - SentryPrivate
     - SocketRocket
     - TrezorCrypto
     - YogaKit
@@ -965,6 +974,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -1073,10 +1084,13 @@ SPEC CHECKSUMS:
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
+  RNSentry: 68d5b2339fc7cd864e8076279345cc90174fa583
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
+  Sentry: 16d46dd5ca10e7f4469a2611805a3de123188add
+  SentryPrivate: 2bb4f8d9ff558b25ac70b66c1dedc58a7c43630b
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   TrezorCrypto: bfeea47a052dca2c77d4a39e1e183865e52de14d
   Yoga: ba09b6b11e6139e3df8229238aa794205ca6a02a
@@ -1084,4 +1098,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f4b6873aa0de6d9a3bf15b3223e93e563400cf9f
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0

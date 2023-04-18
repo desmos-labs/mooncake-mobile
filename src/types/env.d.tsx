@@ -4,6 +4,8 @@ declare module '@env' {
   export const DESMOS_GQL: string;
   export const BUTTER_GQL: string;
   export const BUTTER_REST: string;
+  export const SENTRY_DSN: string;
+  export const SENTRY_AUTH_TOKEN: string;
   export const APP_SUBSPACE_ID: string;
   export const DEV_MNEMONIC: string;
 }
