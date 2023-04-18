@@ -13,9 +13,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CommonStyles from 'config/theme/CommonStyles';
 
 import * as Sentry from '@sentry/react-native';
+import EnvConfig from 'config/EnvConfig';
 
 Sentry.init({
-  dsn: 'https://167f8bef1f284f119053fae6385cd6ea@o348271.ingest.sentry.io/4505029507809280',
+  dsn: EnvConfig.SENTRY_DSN,
   tracesSampleRate: 1.0,
 });
 

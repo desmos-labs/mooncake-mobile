@@ -7,6 +7,8 @@ import {
   DESMOS_GQL,
   DEV_MNEMONIC,
   FORBOLE_GQL,
+  SENTRY_AUTH_TOKEN,
+  SENTRY_DSN,
 } from '@env';
 
 const EnvConfig = {
@@ -16,6 +18,8 @@ const EnvConfig = {
     butter: BUTTER_GQL,
   },
   BUTTER_REST,
+  SENTRY_DSN,
+  SENTRY_AUTH_TOKEN,
   APP_SUBSPACE_ID,
   DEV_MNEMONIC,
 };
