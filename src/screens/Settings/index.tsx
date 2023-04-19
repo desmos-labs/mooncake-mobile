@@ -81,7 +81,7 @@ const Settings = (props: NavProps) => {
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('confirmModal:signout'),
-        subtitle: <Typography.Body6>{t('confirmModal:private key warning')}</Typography.Body6>,
+        subtitle: <Typography.Body5>{t('confirmModal:private key warning')}</Typography.Body5>,
         primaryButtonLabel: t('confirmModal:signout'),
         onPressPrimary: signOut,
         removeModalAfterButtonPress: true,
