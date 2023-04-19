@@ -8,7 +8,7 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Spacer from 'components/Spacer';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
@@ -87,14 +87,13 @@ const AuthorizationModal = () => {
       />
       <View style={styles.innerContainer}>
         <Spacer paddingBottom={16}>
-          <Typography.H4 style={CommonStyles.textAlign.center}>{t('permissions')}</Typography.H4>
+          <Typography.H6 style={CommonStyles.textAlign.center}>{t('permissions')}</Typography.H6>
         </Spacer>
 
-        <Typography.Body5>{t('permissions modal subtitle')}</Typography.Body5>
         <Spacer paddingTop={theme.spacing.m} />
-        <Typography.Body5>{t('permissions modal body')}</Typography.Body5>
+        <Typography.Body5 style={styles.body}>{t('permissions modal body')}</Typography.Body5>
 
-        <Spacer paddingTop={theme.spacing.xl}>
+        <Box mt="20px" mx="10px">
           <Button
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
@@ -105,13 +104,13 @@ const AuthorizationModal = () => {
           <Spacer paddingTop={theme.spacing.m}>
             <Button
               textColor={theme.colors.surfaceBlack}
-              variant="outlined"
+              variant="unstyled"
               size={44}
               onPress={onPressSecondaryButton}>
               {t('common:no')}
             </Button>
           </Spacer>
-        </Spacer>
+        </Box>
       </View>
     </View>
   );
