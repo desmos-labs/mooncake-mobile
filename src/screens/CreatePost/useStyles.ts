@@ -36,6 +36,12 @@ const useStyles = makeStyle(theme => ({
   input: {
     color: theme.colors.surfaceBlack,
     minHeight: 100,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    letterSpacing: 0.025,
+    textAlign: 'left',
   },
 }));
 

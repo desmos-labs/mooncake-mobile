@@ -169,6 +169,7 @@ const CreatePost = () => {
     <>
       <DView
         style={styles.container}
+        backgroundColor={theme.colors.white}
         topBar={
           <TopBar
             style={styles.topBar}
