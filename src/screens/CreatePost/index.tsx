@@ -26,6 +26,7 @@ import SelectedPostImage from 'components/SelectedPostImage';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
 import usePostsParams from 'hooks/posts/usePostsParams';
+import { useSetPostsListState } from '@recoil/screens/postsListState';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -65,6 +66,7 @@ const CreatePost = () => {
   // TODO: Properly display the state of the creation of the post
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { state, createPost } = useCreatePost();
+  const setPostsListState = useSetPostsListState();
 
   // -------------------------------------------------------------------------------------
   // --- Post state
@@ -99,9 +101,10 @@ const CreatePost = () => {
       console.log('Error while creating post', result.error.message);
       return toast.errorNoRetry(t('errorWhileCreatingPost'));
     }
+    setPostsListState(value => ({ ...value, scrollToTop: true }));
 
     navigation.goBack();
-  }, [createPost, navigation, parent, t, toast]);
+  }, [createPost, navigation, parent, setPostsListState, t, toast]);
 
   const onCreatePostPressWrapper = useCallback(() => {
     requestAnimationFrame(async () => {
