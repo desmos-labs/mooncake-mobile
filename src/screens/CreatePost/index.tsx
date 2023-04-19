@@ -101,7 +101,11 @@ const CreatePost = () => {
       console.log('Error while creating post', result.error.message);
       return toast.errorNoRetry(t('errorWhileCreatingPost'));
     }
-    setPostsListState(value => ({ ...value, scrollToTop: true }));
+
+    // If the post is a root post AKA has no parent, we need to scroll to top the home posts list
+    if (!parent) {
+      setPostsListState(value => ({ ...value, scrollToTop: true }));
+    }
 
     navigation.goBack();
   }, [createPost, navigation, parent, setPostsListState, t, toast]);
