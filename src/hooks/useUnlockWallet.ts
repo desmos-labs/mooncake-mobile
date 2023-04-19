@@ -23,7 +23,10 @@ const useUnlockWallet = () => {
     (
       toUnlockAddress?: string,
       signingMode?: SigningMode,
-      params?: Pick<UnlockWalletParams, 'titleLabelOverride'>,
+      params?: Pick<
+        UnlockWalletParams,
+        'titleLabelOverride' | 'subtitleLabelOverride' | 'optionalBodyText'
+      >,
     ) => {
       const address = toUnlockAddress ?? activeAccount!.address;
 

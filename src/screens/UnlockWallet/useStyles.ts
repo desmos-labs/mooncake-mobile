@@ -19,6 +19,10 @@ const useStyles = makeStyle(theme => ({
     textTransform: 'capitalize',
     marginBottom: theme.spacing.s,
   },
+  optionalBody: {
+    marginTop: theme.spacing.m,
+    marginBottom: theme.spacing.l,
+  },
   buttonGroup: {
     flex: 1,
     justifyContent: 'flex-end',

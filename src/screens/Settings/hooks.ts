@@ -19,6 +19,7 @@ import useEnableOrDisableAuthorizations from 'hooks/authorizations/useEnableOrDi
 import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizations';
 import useRemoveAccount from 'hooks/accounts/useRemoveAccount';
 import sleep from 'lib/sleep';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Hook that provides a function to reveal the current active user private key
@@ -28,6 +29,7 @@ export const useShowPrivateKey = () => {
   const activeAccount = useActiveAccount();
   const unlockWallet = useUnlockWallet();
   const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const { t } = useTranslation('settings');
 
   const canShowPrivateKey = React.useMemo(() => {
     return activeAccount !== undefined && isAccountWithPrivateKey(activeAccount);
@@ -39,7 +41,11 @@ export const useShowPrivateKey = () => {
     }
 
     if (isAccountWithPrivateKey(activeAccount)) {
-      const wallet = await unlockWallet();
+      const wallet = await unlockWallet(undefined, undefined, {
+        titleLabelOverride: t('reveal private key title unlock'),
+        subtitleLabelOverride: t('reveal private key subtitle unlock'),
+        optionalBodyText: t('reveal private key body unlock'),
+      });
       if (wallet.isOk()) {
         const hexEncodedPrivateKey = toHex((<WalletWithPrivateKey>wallet.value).privateKey);
         navigator.navigate(ROUTES.SETTINGS_SHOW_PRIVATE_KEY, {
@@ -47,7 +53,7 @@ export const useShowPrivateKey = () => {
         });
       }
     }
-  }, [activeAccount, navigator, unlockWallet]);
+  }, [activeAccount, navigator, t, unlockWallet]);
 
   return {
     canShowPrivateKey,

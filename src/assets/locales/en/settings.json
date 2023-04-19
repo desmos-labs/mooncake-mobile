@@ -35,5 +35,8 @@
   "discord": "Discord",
   "medium": "Medium",
   "notifyOnNewDiscPosts": "Notify on new Discover Posts",
-  "notifyOnNewFollowPosts": "Notify on new Following Posts"
+  "notifyOnNewFollowPosts": "Notify on new Following Posts",
+  "reveal private key title unlock": "Reveal Private Key",
+  "reveal private key subtitle unlock": "Never disclose this key!",
+  "reveal private key body unlock": "Anyone who obtains your private key can take full control of your account."
 }
