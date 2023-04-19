@@ -30,9 +30,9 @@ const SectionSwitch: React.FC<Props> = props => {
 
   return (
     <View style={styles.root}>
-      <Typography.Button1 style={[styles.label, disabled ? styles.disabled : null]}>
+      <Typography.Subtitle2 style={[styles.label, disabled ? styles.disabled : null]}>
         {label}
-      </Typography.Button1>
+      </Typography.Subtitle2>
       <Switch
         isChecked={value}
         trackColor={{ true: theme.colors.butterOrange01 }}

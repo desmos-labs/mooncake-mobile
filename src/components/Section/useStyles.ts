@@ -10,7 +10,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.background,
   },
   innerContainer: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.roundness,
     padding: theme.spacing.m,
   },

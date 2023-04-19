@@ -29,7 +29,7 @@ const SectionButton: React.FC<Props> = props => {
   return (
     <TouchableOpacity style={styles.root} onPress={onPress ?? onPress}>
       {leftIcon && <Image style={styles.icon} source={leftIcon} resizeMode="contain" />}
-      <Typography.Button1 style={styles.label}>{label}</Typography.Button1>
+      <Typography.Subtitle2 style={styles.label}>{label}</Typography.Subtitle2>
       <Icon
         name={rightIconName || 'angle-right'}
         color={theme.colors.surfaceBlack}

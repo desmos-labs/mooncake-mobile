@@ -139,17 +139,16 @@ const Settings = (props: NavProps) => {
       <Button size={44} variant="outlined" onPress={openConfirmSignOutModal}>
         {t('confirmModal:signout')}
       </Button>
-
       <Typography.Body7 style={styles.bottomText}>
         <Trans
           i18nKey="settings:joined product"
-          components={[<Typography.Button2 />]}
+          components={[<Typography.Subtitle4 />]}
           values={{
             formattedDate: formattedAccountCreationDate,
           }}
         />
       </Typography.Body7>
-
+      <Spacer paddingVertical={12} />
       <VersionString />
     </DView>
   );
