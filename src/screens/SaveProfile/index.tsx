@@ -291,6 +291,7 @@ const SaveProfile = (props: NavProps) => {
                   textColor={theme.colors.white}
                   backgroundColor={theme.colors.surfaceBlack}
                   size={44}
+                  height="44px"
                   onPress={handleSubmit as any}>
                   {t('common:confirm')}
                 </Button>
