@@ -26,6 +26,7 @@ import SelectedPostImage from 'components/SelectedPostImage';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
 import usePostsParams from 'hooks/posts/usePostsParams';
+import { useSetPostsListState } from '@recoil/screens/postsListState';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -65,6 +66,7 @@ const CreatePost = () => {
   // TODO: Properly display the state of the creation of the post
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { state, createPost } = useCreatePost();
+  const setPostsListState = useSetPostsListState();
 
   // -------------------------------------------------------------------------------------
   // --- Post state
@@ -100,8 +102,13 @@ const CreatePost = () => {
       return toast.errorNoRetry(t('errorWhileCreatingPost'));
     }
 
+    // If the post is a root post AKA has no parent, we need to scroll to top the home posts list
+    if (!parent) {
+      setPostsListState(value => ({ ...value, scrollToTop: true }));
+    }
+
     navigation.goBack();
-  }, [createPost, navigation, parent, t, toast]);
+  }, [createPost, navigation, parent, setPostsListState, t, toast]);
 
   const onCreatePostPressWrapper = useCallback(() => {
     requestAnimationFrame(async () => {
