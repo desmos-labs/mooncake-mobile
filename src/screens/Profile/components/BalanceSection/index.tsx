@@ -70,7 +70,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
   return (
     <View>
       {balance && !isLoading ? (
-        <View style={[styles.container, !isGuestProfile && { height: verticalScale(140) }]}>
+        <View style={styles.container}>
           <Typography.Body6>{t('balance')}</Typography.Body6>
           <Typography.H3
             style={{
