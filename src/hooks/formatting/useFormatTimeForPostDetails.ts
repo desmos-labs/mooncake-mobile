@@ -8,12 +8,12 @@ import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 const useFormatTimeForPostDetails = () => {
   const formatDateToTZ = useFormatDateToTZ();
   return React.useCallback(
-    (timeToFormat: string) => {
+    (timeToFormat: string, forceRenderCollapsedtime?: boolean) => {
       const parsedTime = parseISO(`${timeToFormat}Z`);
       const shouldRenderDetailedTime = differenceInYears(new Date(parsedTime), Date.now()) === 0;
       return formatDateToTZ(
         timeToFormat,
-        shouldRenderDetailedTime ? 'dd MMM, HH:mm' : 'ccc MMM dd yyyy',
+        shouldRenderDetailedTime && !forceRenderCollapsedtime ? 'dd MMM, HH:mm' : 'dd MMM, yyyy',
       );
     },
     [formatDateToTZ],

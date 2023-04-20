@@ -1,6 +1,7 @@
 import { PastTransactionMessage } from 'types/transactions';
 import { SectionBase } from 'react-native';
 import usePastTransactions from 'hooks/transactions/usePastTransactions';
+import { getDate } from 'date-fns';
 
 /**
  * Type that contains the details of a single section of the list of past actions.
@@ -20,7 +21,9 @@ export interface MessagesSection extends SectionBase<PastTransactionMessage> {
 const groupMessagesByDate = (messages: PastTransactionMessage[]) => {
   const sections: MessagesSection[] = [];
   messages.forEach(message => {
-    const sectionIndex = sections.findIndex(section => section.timestamp === message.timestamp);
+    const sectionIndex = sections.findIndex(
+      section => getDate(new Date(section.timestamp)) === getDate(new Date(message.timestamp)),
+    );
     if (sectionIndex === -1) {
       sections.push({
         title: message.timestamp,

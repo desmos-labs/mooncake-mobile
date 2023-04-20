@@ -28,7 +28,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Center, useTheme } from 'native-base';
+import { Center, Divider, useTheme } from 'native-base';
 import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
@@ -153,29 +153,36 @@ const ProfileOperations = () => {
 
   const renderSectionHeader = useCallback(
     (info: { section: SectionListData<PastTransactionMessage> }) => {
-      const header = formatDate(info.section.title);
+      const header = formatDate(info.section.title, true);
       return (
-        <View style={styles.sectionHeader}>
-          <Typography.Button2>{header}</Typography.Button2>
-        </View>
+        <>
+          {sections.findIndex(item => item === info.section) !== 0 && (
+            <Divider style={styles.divider} />
+          )}
+          <View style={styles.sectionHeader}>
+            <Typography.Button2>{header}</Typography.Button2>
+          </View>
+        </>
       );
     },
-    [formatDate, styles.sectionHeader],
+    [formatDate, sections, styles.divider, styles.sectionHeader],
   );
 
   // Callback used to render the items of the list
   const renderItem = React.useCallback(
     ({ item }: ListRenderItemInfo<PastTransactionMessage>) => {
       return (
-        <MessageListItem
-          timestamp={item.timestamp}
-          fees={item.fees}
-          title={getTitle(item.type)}
-          image={getImage(item.type)}
-        />
+        <View style={styles.paddingHorizontalM}>
+          <MessageListItem
+            timestamp={item.timestamp}
+            fees={item.fees}
+            title={getTitle(item.type)}
+            image={getImage(item.type)}
+          />
+        </View>
       );
     },
-    [getImage, getTitle],
+    [getImage, getTitle, styles.paddingHorizontalM],
   );
 
   // Component used to render an empty list
@@ -216,26 +223,29 @@ const ProfileOperations = () => {
       backgroundColor={theme.colors.white}
       style={styles.container}>
       {/* Balance section title */}
-      <Typography.Body5>{t('balance')}</Typography.Body5>
-      {/* Balance amount (in coins) */}
-      {/* TODO: Show something if the balance is still loading */}
-      <Typography.H2>{formatCoins(balance, ', ')}</Typography.H2>
-      {/* Balance amount (in fiat) */}
-      {/* TODO: Show something if the balance is still loading */}
-      <Typography.H3>
-        {symbol} {formatNumShorthand(fiatAmount)}
-      </Typography.H3>
-      <Spacer paddingVertical={theme.spacing.s} />
-      {/* Past operations section title */}
-      <Typography.H5>{t('operations')}</Typography.H5>
-      {/* Loading indicator */}
-      {isDataLoading && (
-        <View style={{ marginVertical: theme.spacing.m }}>
-          <TextRowContentLoader width="120" />
-          <Spacer paddingVertical={theme.spacing.s} />
-          <OperationContentLoader />
-        </View>
-      )}
+      <View style={styles.paddingHorizontalM}>
+        <Typography.Body5>{t('balance')}</Typography.Body5>
+        {/* Balance amount (in coins) */}
+        {/* TODO: Show something if the balance is still loading */}
+        <Typography.H2>{formatCoins(balance, ', ')}</Typography.H2>
+        {/* Balance amount (in fiat) */}
+        {/* TODO: Show something if the balance is still loading */}
+        <Typography.H3>
+          {symbol} {formatNumShorthand(fiatAmount)}
+        </Typography.H3>
+        <Spacer paddingVertical={theme.spacing.m} />
+        {/* Past operations section title */}
+        <Typography.H5 style={styles.subtitle}>{t('operations')}</Typography.H5>
+        {/* Loading indicator */}
+        {isDataLoading && (
+          <View style={{ marginVertical: theme.spacing.m }}>
+            <TextRowContentLoader width="120" />
+            <Spacer paddingVertical={theme.spacing.s} />
+            <OperationContentLoader />
+          </View>
+        )}
+      </View>
+
       {/* Messages list TODO: move to Flashlist */}
       {!isDataLoading && (
         <SectionList
