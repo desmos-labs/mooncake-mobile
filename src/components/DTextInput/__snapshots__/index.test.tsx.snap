@@ -7,7 +7,7 @@ exports[`component: DTextInput renders 1`] = `
       {
         "alignItems": "center",
         "backgroundColor": "#FFFFFF",
-        "borderRadius": 14,
+        "borderRadius": 8,
         "display": "flex",
         "flexDirection": "row",
         "minHeight": 48,
@@ -57,7 +57,7 @@ exports[`component: DTextInput renders error style 1`] = `
       {
         "alignItems": "center",
         "backgroundColor": "#FFFFFF",
-        "borderRadius": 14,
+        "borderRadius": 8,
         "display": "flex",
         "flexDirection": "row",
         "minHeight": 48,
@@ -108,7 +108,7 @@ exports[`component: DTextInput renders numberOfLines style 1`] = `
       {
         "alignItems": "center",
         "backgroundColor": "#FFFFFF",
-        "borderRadius": 14,
+        "borderRadius": 8,
         "display": "flex",
         "flexDirection": "row",
         "minHeight": 48,

@@ -190,7 +190,7 @@ exports[`component: Typography renders Button2 1`] = `
         "fontStyle": "normal",
         "fontWeight": "600",
         "letterSpacing": 0.015,
-        "lineHeight": 19,
+        "lineHeight": 21,
         "textAlign": "left",
       },
     ]
@@ -212,7 +212,8 @@ exports[`component: Typography renders Button3 1`] = `
         "fontSize": 12,
         "fontStyle": "normal",
         "fontWeight": "600",
-        "letterSpacing": 0.04,
+        "letterSpacing": 0.015,
+        "lineHeight": 18,
         "textAlign": "left",
       },
     ]
@@ -533,6 +534,7 @@ exports[`component: Typography renders Subtitle2 1`] = `
         "fontStyle": "normal",
         "fontWeight": "600",
         "letterSpacing": 0.001,
+        "lineHeight": 24,
         "textAlign": "left",
       },
     ]
