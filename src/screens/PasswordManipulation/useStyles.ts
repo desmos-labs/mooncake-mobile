@@ -10,13 +10,18 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: 'transparent',
   },
   headerText: {
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacing.l,
   },
   formContainer: {
     flex: 1,
   },
-  inputLabel: {
+  bottomLabel: {
     marginBottom: theme.spacing.s,
+  },
+  inputLabel: {
+    borderWidth: 0.5,
+    borderColor: theme.colors.lightGrey01,
+    borderRadius: 8,
   },
   confirmButtonText: {
     color: theme.colors.white,
@@ -30,7 +35,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.s,
+    marginVertical: theme.spacing.s,
   },
   weakPw: {
     color: theme.colors.accentRed01,
