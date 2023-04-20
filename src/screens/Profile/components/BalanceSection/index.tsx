@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import { Divider, useTheme } from 'native-base';
-import { verticalScale } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Coin } from '@cosmjs/stargate';
 import { useActiveAccountAddress } from '@recoil/accounts';
