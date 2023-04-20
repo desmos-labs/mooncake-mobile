@@ -9,10 +9,10 @@ const useStyles = makeStyle(theme => ({
     padding: theme.spacing.m,
   },
   descriptionText: {
-    marginVertical: theme.spacing.m,
+    marginVertical: theme.spacing.l,
   },
   inputLabel: {
-    marginBottom: theme.spacing.s,
+    marginVertical: theme.spacing.s,
   },
   mnemonicInput: {
     borderWidth: 1,
