@@ -7,7 +7,7 @@ exports[`component: DSecureTextInput renders 1`] = `
       {
         "alignItems": "center",
         "backgroundColor": "#FFFFFF",
-        "borderRadius": 14,
+        "borderRadius": 8,
         "display": "flex",
         "flexDirection": "row",
         "minHeight": 48,
