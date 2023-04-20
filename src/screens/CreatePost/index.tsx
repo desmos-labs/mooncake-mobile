@@ -129,10 +129,11 @@ const CreatePost = () => {
       <Button
         isLoading={loading}
         size={26}
-        width={58}
+        width={61}
         backgroundColor={theme.colors.primary}
         textColor={theme.colors.white}
         disabled={!canCreatePost}
+        height="32px"
         onPress={onCreatePostPressWrapper}>
         {t('post')}
       </Button>
@@ -176,6 +177,7 @@ const CreatePost = () => {
     <>
       <DView
         style={styles.container}
+        backgroundColor={theme.colors.white}
         topBar={
           <TopBar
             style={styles.topBar}

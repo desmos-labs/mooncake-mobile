@@ -18,7 +18,7 @@ const lightTheme = extendTheme({
   spacing: baseSpacing,
   // duplicated spacings for native-base compatibility
   space: baseSpacing,
-  roundness: 14,
+  roundness: 12,
   colors: {
     primary: '#FEB027',
     background: '#F7F8FA',

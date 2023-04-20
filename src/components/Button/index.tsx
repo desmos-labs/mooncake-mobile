@@ -57,6 +57,21 @@ const Button = ({
   const theme = useTheme();
   const defaultTextColor = useToken('colors', ['surfaceBlack'][0]);
 
+  const paddingY = () => {
+    switch (size) {
+      case 56:
+        return 16;
+      case 44:
+        return 12;
+      case 32:
+        return 8;
+      case 26:
+        return 2;
+      default:
+        return 0;
+    }
+  };
+
   const buttonTypography = React.useMemo(() => {
     const sizeToTypographyMap: { [index: number]: StyleProp<TextStyle> } = {
       56: TypographyStyles.Subtitle2,
@@ -100,7 +115,7 @@ const Button = ({
 
   return (
     <NBButton
-      py={`${size / 4}px`}
+      py={`${paddingY()}px`}
       isDisabled={rest.disabled || rest.isDisabled}
       _disabled={{
         backgroundColor: 'tabIconGrey',

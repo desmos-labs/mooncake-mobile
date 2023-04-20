@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import React, { useEffect, useMemo } from 'react';
 import { isPostPending, Post } from 'types/posts';
 import ThemedLottieView from 'components/ThemedLottieView';
-import { loadingOrange } from 'assets/animations';
+import { loadingYellow } from 'assets/animations';
 import PopupMenu from 'components/PopupMenu';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { parseISO } from 'date-fns';
@@ -128,7 +128,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
 
   const PendingIndicator = useMemo(() => {
     if (isPending) {
-      return <ThemedLottieView source={loadingOrange} autoPlay style={styles.pendingIcon} />;
+      return <ThemedLottieView source={loadingYellow} autoPlay style={styles.pendingIcon} />;
     } else if (!isCurrentUserAuthor) {
       return <PopupMenu menuItems={popupMenuItems} />;
     }

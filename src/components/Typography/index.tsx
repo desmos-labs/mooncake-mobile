@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
-import { useTheme, ICustomTheme } from 'native-base';
+import { ICustomTheme, useTheme } from 'native-base';
 
 export type TypographyComponentProps = React.ComponentProps<typeof Text>;
 
@@ -101,6 +101,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     fontWeight: '600',
     letterSpacing: 0.001,
     textAlign: 'left',
+    lineHeight: 24,
   },
   Subtitle3: {
     fontFamily: 'Poppins-SemiBold',
@@ -195,7 +196,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 19,
+    lineHeight: 21,
     letterSpacing: 0.015,
     textAlign: 'left',
   },
@@ -204,8 +205,9 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
-    letterSpacing: 0.04,
+    letterSpacing: 0.015,
     textAlign: 'left',
+    lineHeight: 18,
   },
   Caption1: {
     fontFamily: 'Poppins-Regular',

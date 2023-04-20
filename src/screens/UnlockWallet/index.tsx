@@ -48,6 +48,14 @@ export type UnlockWalletParams = {
    * Custom screen title.
    */
   readonly titleLabelOverride?: string;
+  /**
+   * Custom screen subtitle.
+   */
+  readonly subtitleLabelOverride?: string;
+  /**
+   * Additional optional text.
+   */
+  readonly optionalBodyText?: string;
 };
 
 const initialFormValues = {
@@ -64,7 +72,15 @@ const UnlockWallet = () => {
   const styles = useStyles();
 
   const { params } = useRoute<NavProps['route']>();
-  const { onSuccess, address, signingMode, onCancel, titleLabelOverride } = params;
+  const {
+    onSuccess,
+    address,
+    signingMode,
+    onCancel,
+    titleLabelOverride,
+    subtitleLabelOverride,
+    optionalBodyText,
+  } = params;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -190,7 +206,19 @@ const UnlockWallet = () => {
         validationSchema={validationSchema}>
         {({ handleSubmit, errors, setValues, values }) => (
           <View style={styles.formContainer}>
-            <Typography.Subtitle2 style={styles.inputLabel}>{t('inputLabel')}</Typography.Subtitle2>
+            <Typography.Subtitle2 style={styles.inputLabel}>
+              {subtitleLabelOverride || t('inputLabel')}
+            </Typography.Subtitle2>
+            {optionalBodyText && (
+              <>
+                <Typography.Body6 style={styles.optionalBody}>{optionalBodyText}</Typography.Body6>
+                {subtitleLabelOverride && (
+                  <Typography.Subtitle2 style={styles.inputLabel}>
+                    {t('inputLabel')}
+                  </Typography.Subtitle2>
+                )}
+              </>
+            )}
             <DSecureTextInput
               style={styles.textInput}
               autoFocus={!biometrics}

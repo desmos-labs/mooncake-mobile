@@ -1,4 +1,4 @@
-import { loadingOrange } from 'assets/animations';
+import { loadingYellow } from 'assets/animations';
 import {
   block,
   commentIcon,
@@ -169,7 +169,7 @@ const CommentItem = (props: CommentItemProps) => {
           </TouchableOpacity>
 
           {isPostPending(comment) ? (
-            <ThemedLottieView loop autoPlay source={loadingOrange} style={styles.loadingAnim} />
+            <ThemedLottieView loop autoPlay source={loadingYellow} style={styles.loadingAnim} />
           ) : (
             PressMoreComponent
           )}

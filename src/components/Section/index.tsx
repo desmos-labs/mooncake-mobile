@@ -1,4 +1,3 @@
-import DropShadowWrapper from 'components/DropShadowWrapper';
 import React, { useMemo } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
@@ -27,10 +26,12 @@ const Section: React.FC<Props> = props => {
   }, [children]);
 
   return (
-    <DropShadowWrapper style={[style, styles.container]} innerStyle={styles.innerContainer}>
-      {title ? <Typography.Subtitle3 style={styles.title}>{title}</Typography.Subtitle3> : null}
-      <View>{wrapped}</View>
-    </DropShadowWrapper>
+    <View style={[style, styles.container]}>
+      <View style={styles.innerContainer}>
+        {title ? <Typography.Subtitle3 style={styles.title}>{title}</Typography.Subtitle3> : null}
+        <View>{wrapped}</View>
+      </View>
+    </View>
   );
 };
 

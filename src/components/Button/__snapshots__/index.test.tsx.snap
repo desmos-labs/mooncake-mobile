@@ -42,10 +42,10 @@ exports[`component:Button renders size 26 1`] = `
       "flexDirection": "row",
       "justifyContent": "center",
       "opacity": 1,
-      "paddingBottom": 6.5,
+      "paddingBottom": 2,
       "paddingLeft": 12,
       "paddingRight": 12,
-      "paddingTop": 6.5,
+      "paddingTop": 2,
     }
   }
 >
@@ -74,7 +74,7 @@ exports[`component:Button renders size 26 1`] = `
             "fontSize": 12,
             "fontStyle": "normal",
             "fontWeight": "600",
-            "letterSpacing": 0.04,
+            "letterSpacing": 0.015,
             "lineHeight": 18,
             "textAlign": "left",
             "textDecorationLine": undefined,
@@ -162,7 +162,7 @@ exports[`component:Button renders size 32 1`] = `
             "fontSize": 12,
             "fontStyle": "normal",
             "fontWeight": "600",
-            "letterSpacing": 0.04,
+            "letterSpacing": 0.015,
             "lineHeight": 18,
             "textAlign": "left",
             "textDecorationLine": undefined,
@@ -218,10 +218,10 @@ exports[`component:Button renders size 44 1`] = `
       "flexDirection": "row",
       "justifyContent": "center",
       "opacity": 1,
-      "paddingBottom": 11,
+      "paddingBottom": 12,
       "paddingLeft": 12,
       "paddingRight": 12,
-      "paddingTop": 11,
+      "paddingTop": 12,
     }
   }
 >
@@ -251,7 +251,7 @@ exports[`component:Button renders size 44 1`] = `
             "fontStyle": "normal",
             "fontWeight": "600",
             "letterSpacing": 0.015,
-            "lineHeight": 19,
+            "lineHeight": 21,
             "textAlign": "left",
             "textDecorationLine": undefined,
           }
@@ -306,10 +306,10 @@ exports[`component:Button renders size 56 1`] = `
       "flexDirection": "row",
       "justifyContent": "center",
       "opacity": 1,
-      "paddingBottom": 14,
+      "paddingBottom": 16,
       "paddingLeft": 12,
       "paddingRight": 12,
-      "paddingTop": 14,
+      "paddingTop": 16,
     }
   }
 >
@@ -394,10 +394,10 @@ exports[`component:Button renders variant link 1`] = `
       "flexDirection": "row",
       "justifyContent": "center",
       "opacity": 1,
-      "paddingBottom": 14,
+      "paddingBottom": 16,
       "paddingLeft": 12,
       "paddingRight": 12,
-      "paddingTop": 14,
+      "paddingTop": 16,
       "textDecorationLine": "none",
     }
   }
@@ -483,10 +483,10 @@ exports[`component:Button renders variant outlined 1`] = `
       "flexDirection": "row",
       "justifyContent": "center",
       "opacity": 1,
-      "paddingBottom": 14,
+      "paddingBottom": 16,
       "paddingLeft": 12,
       "paddingRight": 12,
-      "paddingTop": 14,
+      "paddingTop": 16,
     }
   }
 >
