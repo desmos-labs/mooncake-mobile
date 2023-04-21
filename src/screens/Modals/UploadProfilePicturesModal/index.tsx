@@ -48,7 +48,7 @@ const UploadProfilePicturesModal: React.FC<NavProps> = ({ route }) => {
       case UploadPictureStateType.Failed:
         return state.pictureType === PictureType.Profile
           ? t('profile picture upload failed')
-          : t('profile picture upload failed');
+          : t('cover picture upload failed');
       default:
         return t('unknown upload state');
     }
