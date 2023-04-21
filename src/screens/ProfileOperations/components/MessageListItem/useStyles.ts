@@ -19,7 +19,7 @@ const useStyles = makeStyle(theme => ({
   },
   formattedDate: {
     color: theme.colors.grey02,
-    marginTop: 2,
+    marginTop: theme.spacing.s,
   },
   feesText: {
     right: 0,

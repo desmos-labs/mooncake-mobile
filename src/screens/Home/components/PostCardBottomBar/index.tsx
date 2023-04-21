@@ -120,12 +120,14 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
       {/* the user tipped the post or not. This has been done for the following reasons: */}
       {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
       {/* 2. It's extremely hard to implement, and completely useless in the first place */}
-      <TouchableOpacity onPress={checkUserAndHandleSendTips} style={styles.tipButton}>
-        <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
-        <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
-          {t('tip')}
-        </Typography.Subtitle3>
-      </TouchableOpacity>
+      {!isCurrentUserAuthor && (
+        <TouchableOpacity onPress={checkUserAndHandleSendTips} style={styles.tipButton}>
+          <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
+          <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
+            {t('tip')}
+          </Typography.Subtitle3>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

@@ -94,7 +94,7 @@ const PasswordManipulation = () => {
   } = useHooks();
 
   return (
-    <DView style={styles.container} topBar={<TopBar />}>
+    <DView style={styles.container} topBar={<TopBar />} backgroundColor={theme.colors.white}>
       <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
 
       {descriptionText && (
@@ -147,7 +147,7 @@ const PasswordManipulation = () => {
 
                   <PasswordReqGroup passwordToCheck={values.newPassword} />
 
-                  <Typography.Subtitle2 style={styles.inputLabel}>
+                  <Typography.Subtitle2 style={styles.bottomLabel}>
                     {t('confirmPw')}
                   </Typography.Subtitle2>
                   <DSecureTextInput
