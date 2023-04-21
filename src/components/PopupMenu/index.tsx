@@ -87,6 +87,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
 
   return (
     <Menu
+      backgroundColor="white"
       disableScroll
       placement="left top"
       trigger={menuTriggerFn}
