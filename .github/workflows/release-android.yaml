@@ -15,17 +15,17 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@v3
 
-      - name: Compute diff 📜
-        uses: technote-space/get-diff-action@v6.1.2
-        id: git_diff
-        with:
-          PATTERNS: +(src|__tests__)/**/*.+(js|jsx|ts|tsx)
-          FILES: |
-            package.json
-            yarn.lock
+#      - name: Compute diff 📜
+#        uses: technote-space/get-diff-action@v6.1.2
+#        id: git_diff
+#        with:
+#          PATTERNS: +(src|__tests__)/**/*.+(js|jsx|ts|tsx)
+#          FILES: |
+#            package.json
+#            yarn.lock
 
       - name: Setup Node 👷
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
@@ -34,7 +34,7 @@ jobs:
             yarn.lock
 
       - name: Setup JDK 11 🔧
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         uses: actions/setup-java@v3
         with:
           distribution: "zulu"
@@ -52,7 +52,7 @@ jobs:
           bundler-cache: true
 
       - name: Setup Gradle cache 🗄
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         uses: actions/cache@v3
         with:
           path: |
@@ -63,22 +63,22 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Get version info ⚙
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         id: version-info
         run: bundle exec fastlane common populate_github_env
 
       - name: Install yarn dependencies 🔨
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         run: yarn install --immutable
 
       - name: Prepare production .env file 🔨
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         run: bundler exec fastlane common write_env_file
         env:
           ENV_TESTING_BASE64: ${{ secrets.ENV_TESTING_BASE64 }}
 
       - name: Build bundle 🔨
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         run: bundle exec fastlane android build_bundle
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_SIGNING_KEY_BASE64 }}
@@ -87,7 +87,7 @@ jobs:
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
 
       - name: Build apk 🔨
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         run: bundle exec fastlane android build_apk
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_SIGNING_KEY_BASE64 }}
@@ -96,13 +96,13 @@ jobs:
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
 
       - name: Deploy on Play Store 🚀
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         run: bundle exec fastlane android deploy_bundle
         env:
           PLAYSTORE_JSON_KEY: ${{ secrets.PLAYSTORE_JSON_KEY_BASE64 }}
 
       - name: Upload APKs to release 🚀
-        if: env.GIT_DIFF
+#        if: env.GIT_DIFF
         uses: svenstaro/upload-release-action@v2
         with:
           tag: ${{ github.ref }}
