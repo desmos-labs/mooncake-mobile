@@ -146,9 +146,6 @@ platform :ios do
       in_house: false
     )
 
-        puts "test"
-
-
     version_name = version_name_from_git(true)
     build_number = build_number_from_git
 
