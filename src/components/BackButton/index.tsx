@@ -4,6 +4,7 @@ import { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CommonStyles from 'config/theme/CommonStyles';
 
 export interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   /**
@@ -27,6 +28,7 @@ export const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColo
       style={[styles.button, style]}>
       <Icon
         name="angle-left"
+        style={disabled && CommonStyles.opacity['50']}
         color={iconColor || theme.colors.surfaceBlack}
         size={32}
         allowFontScaling
