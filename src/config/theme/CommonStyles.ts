@@ -56,7 +56,7 @@ const opacity = {
     opacity: 0,
   },
   50: {
-    opacity: 0.5
+    opacity: 0.5,
   },
 };
 
