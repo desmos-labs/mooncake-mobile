@@ -22,25 +22,37 @@ export type Props = {
    * Remove back button
    */
   noBackButton?: boolean;
+
+  /**
+   * Prevent the back button from functioning. Useful if the UI needs to be blocked for async operations.
+   */
+  disableBackButton?: boolean;
 };
 
 /**
  * TODO: use react-navigation's header prop on navigator instead
  */
 export const TopBar: React.FC<Props> = props => {
-  const { centerElement, rightElement, style, backButtonCustomBehavior, noBackButton } = props;
+  const {
+    centerElement,
+    rightElement,
+    style,
+    backButtonCustomBehavior,
+    noBackButton,
+    disableBackButton,
+  } = props;
   const styles = useStyles();
 
   const navigation = useNavigation<any>();
 
   const navigationGoBack = useMemo(() => {
     if (backButtonCustomBehavior) {
-      return <BackButton onPress={backButtonCustomBehavior} />;
+      return <BackButton disabled={disableBackButton} onPress={backButtonCustomBehavior} />;
     }
     return navigation.canGoBack() && !noBackButton ? (
-      <BackButton onPress={navigation.goBack} />
+      <BackButton disabled={disableBackButton} onPress={navigation.goBack} />
     ) : null;
-  }, [backButtonCustomBehavior, navigation, noBackButton]);
+  }, [disableBackButton, backButtonCustomBehavior, navigation, noBackButton]);
 
   return (
     <View style={[styles.root, style]}>

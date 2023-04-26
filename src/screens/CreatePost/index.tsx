@@ -34,6 +34,11 @@ export type CreatePostParams = {
    * Parent of this post (i.e. if this post is a comment, or a reply to a comment).
    */
   parent?: Post;
+
+  /**
+   * Disable swipe to go back. Useful if the UI needs to be blocked for async operations.
+   */
+  disableBackSwipe: boolean;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_CREATE>;
@@ -173,6 +178,23 @@ const CreatePost = () => {
     [navigation, postAttachments, removePostAttachment, resetCreatePostState],
   );
 
+  // Disable iOS swipe to go back if the create post state is loading
+  React.useEffect(() => {
+    if (loading) {
+      navigation.setParams({
+        ...params,
+        disableBackSwipe: true,
+      });
+    } else {
+      navigation.setParams({
+        ...params,
+        disableBackSwipe: false,
+      });
+    }
+    // Safe to ignore as we only want to call this effect when the loading state changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
   return (
     <>
       <DView
@@ -183,6 +205,7 @@ const CreatePost = () => {
             style={styles.topBar}
             centerElement={TopBarCenterElement}
             rightElement={TopBarRightElement}
+            disableBackButton={loading}
           />
         }>
         <View>

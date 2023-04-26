@@ -49,7 +49,7 @@ const convertAttachment = (result: UploadAssetResult, index: number): PostAttach
       uri: result.uri,
       mimeType: result.mimeType,
     },
-    size: undefined,
+    size: result.size,
   };
 };
 
