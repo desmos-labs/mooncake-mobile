@@ -104,7 +104,6 @@ const useImportAccount = (options: ImportAccountOptions) => {
             navigation.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP);
             break;
           case WalletType.Web3Auth:
-            // TODO: Implement navigation to web3auth login provider selection.
             console.warn('Import with Web3Auth not supported');
             onCancelFunction();
             break;

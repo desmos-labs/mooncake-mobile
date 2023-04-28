@@ -103,11 +103,7 @@ const Onboarding = () => {
   );
 
   const navigateToCorrectScreen = useCallback(() => {
-    if (isInvited) {
-      navigate(ROUTES.SIGNUP);
-    } else {
-      navigate(ROUTES.LANDING);
-    }
+    navigate(ROUTES.LANDING, { invited: isInvited });
   }, [isInvited, navigate]);
 
   const renderItem = useCallback(

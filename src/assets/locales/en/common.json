@@ -14,7 +14,7 @@
   "termsOfUse": "Terms of Use",
   "privacyPolicy": "Privacy Policy",
   "retry": "Retry",
-  "atLeastChar": "At least {{length}} characters in length",
+  "atLeastChar": "At least {{length}} characters",
   "atLeastLower": "At least 1 lowercase",
   "atLeastUpper": "At least 1 uppercase",
   "atLeastSpecial": "At least 1 special character (~|!’,;\\/@#$%^&+=)",
