@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useGetFollowageToSync } from '@recoil/relationships';
 import { DataStatus } from 'types/cache';
 import { useQuery } from '@apollo/client';
-import GetAccountFollowing from 'services/graphql/queries/GetAccountFollowing';
 import { useAppStateValue } from '@recoil/appState';
 import { mergeCacheableData } from 'lib/CacheUtils';
 import { convertGraphQLFollowedUser } from 'lib/GraphQLUtils/relationships';
-import { areFollowedUsersEqual, FollowedUser } from 'types/relationships';
-import useUpdatePendingRelationships from 'hooks/relationships/useUpdatePendingRelationships';
+import { areFollowedUsersEqual } from 'types/relationships';
 import { removeDuplicates } from 'lib/ProfileUtils';
+import useUpdatePendingBlockedRelationships from 'hooks/relationships/blocked/useUpdatePendingBlockedRelationships';
+import { useGetBlockedToSync } from '@recoil/blockedRelationships';
+import { BlockedUser } from 'types/blockedRelationships';
+import GetAccountBlocked from 'services/graphql/queries/GetAccountBlocked';
 
 /**
  * Hook that returns the list of the accounts that the user having the given address is following.
@@ -17,24 +18,24 @@ import { removeDuplicates } from 'lib/ProfileUtils';
  * If this is `undefined`, the current application's user address will be used instead.
  * @param usersPerPage {number} - Number of users to be fetched per page.
  */
-const useFollowing = (address?: string, usersPerPage: number = 50) => {
+const useBlocked = (address?: string, usersPerPage: number = 50) => {
   const activeAccountAddress = useActiveAccountAddress();
   const userAddress = address ?? activeAccountAddress;
   if (!userAddress) {
-    throw new Error('Cannot get the following list without valid address');
+    throw new Error('Cannot get the blocked list without valid address');
   }
 
   const subspaceId = useAppStateValue('subspaceId');
-  const updatePendingRelationships = useUpdatePendingRelationships();
+  const updatePendingBlockedRelationships = useUpdatePendingBlockedRelationships();
 
   // Get the relationships to sync
-  const getFollowageToSync = useGetFollowageToSync();
-  const relationshipsToSync = React.useMemo(() => {
-    return getFollowageToSync(userAddress).filter(r => r.status === DataStatus.CREATED_LOCALLY);
-  }, [getFollowageToSync, userAddress]);
+  const getBlockedToSync = useGetBlockedToSync();
+  const blockedRelationshipsToSync = React.useMemo(() => {
+    return getBlockedToSync(userAddress).filter(r => r.status === DataStatus.CREATED_LOCALLY);
+  }, [getBlockedToSync, userAddress]);
 
   // Set the initial users to be the list of the relationships to sync
-  const [users, setUsers] = useState<FollowedUser[]>(relationshipsToSync);
+  const [users, setUsers] = useState<BlockedUser[]>(blockedRelationshipsToSync);
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -43,7 +44,6 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   // Callback that is used when some data is returned by the chain
   const onCompletedCallback = React.useCallback(
     (data: any) => {
-      console.log('done fetching following');
       if (!data) return;
 
       const onChainUsers = data.following.map(convertGraphQLFollowedUser);
@@ -57,7 +57,7 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
         );
 
         // Update the pending relationships by deleting the ones that are now synced
-        updatePendingRelationships(userAddress, updates);
+        updatePendingBlockedRelationships(userAddress, updates);
 
         return merged;
       });
@@ -65,11 +65,11 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
       setFetchingMore(false);
       setRefreshing(false);
     },
-    [updatePendingRelationships, userAddress],
+    [updatePendingBlockedRelationships, userAddress],
   );
 
   // Query used to get the following list
-  const { fetchMore, refetch } = useQuery(GetAccountFollowing, {
+  const { fetchMore, refetch } = useQuery(GetAccountBlocked, {
     variables: {
       subspaceId,
       userAddress,
@@ -90,9 +90,9 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
         variables: { offset: users.length },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
-          if (fetchMoreResult.following.length === 0) setFetchingMore(false);
+          if (fetchMoreResult.blocked.length === 0) setFetchingMore(false);
           return {
-            following: [...prev.following, ...fetchMoreResult.following],
+            blocked: [...prev.blocked, ...fetchMoreResult.blocked],
           };
         },
       });
@@ -119,7 +119,7 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
 
   return {
     // Make sure to remove duplicate following users if, for any reason, we have them
-    following: removeDuplicates(users.map(value => value.user)),
+    blocked: removeDuplicates(users.map(value => value.user)),
     loading,
     fetchMore: fetchMoreUsers,
     fetchingMore,
@@ -129,4 +129,4 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   };
 };
 
-export default useFollowing;
+export default useBlocked;
