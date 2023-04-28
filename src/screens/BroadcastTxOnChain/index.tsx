@@ -21,6 +21,7 @@ import {
   MsgRemoveReactionTypeUrl,
   MsgRevokeAllowanceTypeUrl,
   MsgSaveProfileTypeUrl,
+  MsgUnblockUserTypeUrl,
 } from '@desmoslabs/desmjs';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { Result } from 'neverthrow';
@@ -36,6 +37,8 @@ import TransactionRow from 'screens/BroadcastTxOnChain/components/TransactionRow
 import { formatCoins } from 'lib/FormatUtils';
 import TopBar from 'components/TopBar';
 import { MsgExecuteContractTypeUrl } from 'config/AutzGrants';
+import { MsgBlockUser } from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
+import { MsgBlockUserTypeUrl } from '@desmoslabs/desmjs/build/const/relationships';
 import useBroadcastTx from './useBroadcastTx';
 import useStyles from './useStyles';
 
@@ -190,6 +193,14 @@ const BroadcastTxOnChain: React.FC = () => {
     if (msgTypeObj[MsgCreateReportTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:reportPost'));
     }
+    // Block a user
+    if (msgTypeObj[MsgBlockUserTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:blockUser'));
+    }
+    // Unblock a user
+    if (msgTypeObj[MsgUnblockUserTypeUrl]) {
+      txStrings.push(t('broadcastTxOnChain:unblockUser'));
+    }
     // smart contracts
     if (msgTypeObj[MsgExecuteContractTypeUrl]) {
       // tipping a post
@@ -255,7 +266,7 @@ const BroadcastTxOnChain: React.FC = () => {
   // -----------------------------------------------------------------------
 
   return (
-    <DView topBar={TopBarOrEmptyView} style={styles.root}>
+    <DView topBar={TopBarOrEmptyView} style={styles.root} disableHideKeyboardTouchable>
       {!broadcastingTx && (
         <Box px="m" mb="50px">
           <Typography.H3>{t('header')}</Typography.H3>
