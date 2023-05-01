@@ -22,6 +22,7 @@ import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
 import { useHandlePressReport } from 'screens/Home/hooks';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
 
 interface Props {
@@ -56,6 +57,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
   const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(post.author.address);
   const { count: commentsCount } = usePostCommentsCount(post);
+  const isAuthorActiveUser = useIsAuthorActiveUser(post);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -83,6 +85,9 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   // -------------------------------------------------------------------------------------
 
   const PressMoreComponent = React.useMemo(() => {
+    // Temporary: The use shouldn't be able to follow, report, or block themselves
+    if (isAuthorActiveUser) return undefined;
+
     const menuItems = [
       post.author.address !== activeAddress
         ? {
@@ -105,6 +110,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
+    isAuthorActiveUser,
     activeAddress,
     handlePressBlockOrUnblock,
     handlePressFollowOrUnfollow,

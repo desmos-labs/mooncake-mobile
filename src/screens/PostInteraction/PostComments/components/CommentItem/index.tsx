@@ -38,6 +38,7 @@ import {
   useHandlePressShowCommentDetailsWithFocus,
 } from 'screens/PostDetails/hooks';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -70,6 +71,7 @@ const CommentItem = (props: CommentItemProps) => {
   const { isFollowing } = useIsFollowing(comment.author.address);
   const { isBlocked } = useIsBlocked(comment.author.address);
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
+  const isAuthorActiveUser = useIsAuthorActiveUser(comment);
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -131,6 +133,9 @@ const CommentItem = (props: CommentItemProps) => {
    * the user can follow or report the comment author.
    */
   const PressMoreComponent = React.useMemo(() => {
+    // Temporary: The use shouldn't be able to follow, report, or block themselves
+    if (isAuthorActiveUser) return undefined;
+
     const menuItems = [
       {
         label: isFollowing ? t('home:unfollow') : t('home:follow'),
@@ -151,6 +156,7 @@ const CommentItem = (props: CommentItemProps) => {
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
+    isAuthorActiveUser,
     comment,
     handlePressBlock,
     handlePressFollow,
