@@ -150,7 +150,16 @@ const CommentItem = (props: CommentItemProps) => {
     ];
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
-  }, [comment, handlePressFollow, handlePressMore, handlePressReport, isFollowing, t]);
+  }, [
+    comment,
+    handlePressBlock,
+    handlePressFollow,
+    handlePressMore,
+    handlePressReport,
+    isBlocked,
+    isFollowing,
+    t,
+  ]);
 
   return (
     <View style={[styles.container, styles.flexRow]}>

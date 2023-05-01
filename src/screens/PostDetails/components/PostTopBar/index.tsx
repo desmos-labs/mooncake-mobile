@@ -106,9 +106,11 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
     activeAddress,
+    handlePressBlockOrUnblock,
     handlePressFollowOrUnfollow,
     handlePressMore,
     handlePressReport,
+    isBlocked,
     isFollowing,
     post,
     t,
