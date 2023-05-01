@@ -1,6 +1,12 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { profileBack, profileSettings } from 'assets/images';
+import {
+  block,
+  profileBack,
+  profileContextButton,
+  profileSettings,
+  reportIcon,
+} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -45,6 +51,9 @@ import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import StyledSpinner from 'components/StyledSpinner';
 import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
+import PopupMenu from 'components/PopupMenu';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -121,6 +130,9 @@ const Profile = () => {
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(address);
   const followOrUnfollowUser = useFollowOrUnfollowUser();
 
+  const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(address);
+  const blockOrUnblockUser = useBlockOrUnblockUser();
+
   // -------------------------------------------------------------------------------------
   // --- Local state
   // -------------------------------------------------------------------------------------
@@ -137,6 +149,7 @@ const Profile = () => {
     setPageRefreshing(true);
 
     await refreshFollowing();
+    await refreshIsBlocked();
     await refreshProfile();
     await refreshFollowageCount();
     await refreshFollowersCount();
@@ -149,6 +162,7 @@ const Profile = () => {
     refreshFollowageCount,
     refreshFollowersCount,
     refreshFollowing,
+    refreshIsBlocked,
     refreshPosts,
     refreshPostsCount,
     refreshProfile,
@@ -233,6 +247,41 @@ const Profile = () => {
     await followOrUnfollowUser(profile!);
   }, [followOrUnfollowUser, profile]);
 
+  const handlePressBlock = useCallback(async () => {
+    await blockOrUnblockUser(profile!);
+  }, [blockOrUnblockUser, profile]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Conditional rendering
+  // -------------------------------------------------------------------------------------
+  const PopupContextMenu = React.useMemo(() => {
+    // Don't show PopupMenu if active user
+    if (isActiveAccount) return undefined;
+
+    const menuItems = [
+      {
+        label: t('home:report'),
+        onPress: () => {
+          // implement
+        },
+        icon: reportIcon,
+      },
+      {
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: () => handlePressBlock(),
+        icon: block,
+      },
+    ];
+
+    return (
+      <PopupMenu
+        menuItems={menuItems}
+        menuIcon={profileContextButton}
+        menuIconStyle={styles.contextButtonStyle}
+      />
+    );
+  }, [handlePressBlock, isActiveAccount, isBlocked, styles.contextButtonStyle, t]);
+
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
@@ -272,6 +321,8 @@ const Profile = () => {
           onPress={goBack}
         />
       )}
+
+      <View style={styles.contextButtonPosition}>{PopupContextMenu}</View>
 
       {/* Edit and scan buttons */}
       {isActiveAccount && (

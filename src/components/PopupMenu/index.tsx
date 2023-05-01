@@ -1,10 +1,12 @@
 import React from 'react';
 import Typography from 'components/Typography';
-import { Image, ImageSourcePropType } from 'react-native';
+import { Image, ImageSourcePropType, ViewStyle } from 'react-native';
 import { Box, Divider, HStack, Menu, Pressable } from 'native-base';
 import { moreBlackIcon } from 'assets/images';
 import { InterfaceMenuProps } from 'native-base/src/components/composites/Menu/types';
 import { useTranslation } from 'react-i18next';
+import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+import { ImageStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 import useStyles from './useStyles';
 
 interface PopupMenuItem {
@@ -29,13 +31,23 @@ export interface Props {
    * An optional callback that is called when the menu is opened.
    */
   onMenuOpen?: () => void;
+
+  /**
+   * Optionally override the menu icon.
+   */
+  menuIcon?: ImageSourcePropType;
+
+  /**
+   * Override menu icon style.
+   */
+  menuIconStyle?: StyleProp<ImageStyle>;
 }
 
 /**
  * A floating context menu that provides additional options to the user once opened.
  * @constructor
  */
-const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
+const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen, menuIcon, menuIconStyle }) => {
   const styles = useStyles();
 
   const { t } = useTranslation('a11y');
@@ -78,7 +90,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
         accessibilityRole="button"
         accessibilityLabel={t('showPostActions')}
         {...triggerProps}>
-        <Image source={moreBlackIcon} style={styles.menuButton} />
+        <Image source={menuIcon || moreBlackIcon} style={menuIconStyle || styles.menuButton} />
       </Pressable>
     );
     // Can ignore this dependency has the styles will never change after initial render
@@ -88,6 +100,8 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
   return (
     <Menu
       backgroundColor="white"
+      // This is a custom prop added via patch-package to disable an unintended scrolling
+      // behavior that occurs on iOS
       disableScroll
       placement="left top"
       trigger={menuTriggerFn}
