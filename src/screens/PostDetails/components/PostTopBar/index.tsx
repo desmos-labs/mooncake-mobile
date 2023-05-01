@@ -8,7 +8,10 @@ import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { block, followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
-import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
+import {
+  useHandlePressBlockOrUnblock,
+  useHandlePressFollowOrUnfollow,
+} from 'screens/PostDetails/hooks';
 import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -18,6 +21,7 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
 import { useHandlePressReport } from 'screens/Home/hooks';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useStyles from './useStyles';
 
 interface Props {
@@ -50,6 +54,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
+  const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(post.author.address);
   const { count: commentsCount } = usePostCommentsCount(post);
 
   // -------------------------------------------------------------------------------------
@@ -59,6 +64,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
   const handlePressReport = useHandlePressReport();
+  const handlePressBlockOrUnblock = useHandlePressBlockOrUnblock();
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -66,6 +72,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
 
   useEffect(() => {
     refreshFollowing();
+    refreshIsBlocked();
 
     // It's safe to disable the linter here as we only want to run this effect once
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,10 +97,8 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         icon: reportIcon,
       },
       {
-        label: t('home:block'),
-        onPress: () => {
-          // TODO: implement
-        },
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: () => handlePressBlockOrUnblock(post.author),
         icon: block,
       },
     ];

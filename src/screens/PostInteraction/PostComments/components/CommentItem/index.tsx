@@ -25,7 +25,11 @@ import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import PopupMenu from 'components/PopupMenu';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
+import {
+  useHandlePressBlock,
+  useHandlePressFollow,
+  useHandlePressReport,
+} from 'screens/Home/hooks';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import {
@@ -33,6 +37,7 @@ import {
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
 } from 'screens/PostDetails/hooks';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -63,6 +68,7 @@ const CommentItem = (props: CommentItemProps) => {
   const { count: reactionsCount } = usePostReactionsCount(comment);
   const { count: tipsCount } = usePostTipsCount(comment);
   const { isFollowing } = useIsFollowing(comment.author.address);
+  const { isBlocked } = useIsBlocked(comment.author.address);
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
 
   // -------------------------------------------------------------------------------------
@@ -97,6 +103,7 @@ const CommentItem = (props: CommentItemProps) => {
   const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
+  const handlePressBlock = useHandlePressBlock();
 
   const handlePressLike = () => {
     if (isPostPending(comment)) return;
@@ -136,10 +143,8 @@ const CommentItem = (props: CommentItemProps) => {
         icon: reportIcon,
       },
       {
-        label: t('home:block'),
-        onPress: () => {
-          // TODO: implement
-        },
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: () => handlePressBlock(comment.author),
         icon: block,
       },
     ];

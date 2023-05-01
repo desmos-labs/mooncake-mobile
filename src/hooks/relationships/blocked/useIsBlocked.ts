@@ -22,8 +22,6 @@ const useIsBlocked = (counterparty: string) => {
     [activeAddress, counterparty, hasBlockedUser],
   );
 
-  console.log(isBlocked);
-
   // Allow to refresh the value when needed
   const updateBlockedRelationshipCache = useRefreshBlockedRelationshipCache();
   const refetch = React.useCallback(async () => {
