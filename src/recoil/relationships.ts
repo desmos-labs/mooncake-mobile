@@ -30,6 +30,7 @@ export const useHasFollowedUser = () => {
   return React.useCallback(
     (user: string, counterparty: string) => {
       const userFollowage = followage.get(user);
+
       return userFollowage.has({ address: counterparty });
     },
     [followage],

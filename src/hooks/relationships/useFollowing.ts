@@ -43,7 +43,6 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   // Callback that is used when some data is returned by the chain
   const onCompletedCallback = React.useCallback(
     (data: any) => {
-      console.log('done fetching following');
       if (!data) return;
 
       const onChainUsers = data.following.map(convertGraphQLFollowedUser);

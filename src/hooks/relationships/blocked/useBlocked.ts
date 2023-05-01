@@ -4,17 +4,16 @@ import { DataStatus } from 'types/cache';
 import { useQuery } from '@apollo/client';
 import { useAppStateValue } from '@recoil/appState';
 import { mergeCacheableData } from 'lib/CacheUtils';
-import { convertGraphQLFollowedUser } from 'lib/GraphQLUtils/relationships';
-import { areFollowedUsersEqual } from 'types/relationships';
 import { removeDuplicates } from 'lib/ProfileUtils';
 import useUpdatePendingBlockedRelationships from 'hooks/relationships/blocked/useUpdatePendingBlockedRelationships';
 import { useGetBlockedToSync } from '@recoil/blockedRelationships';
-import { BlockedUser } from 'types/blockedRelationships';
+import { areBlockedUsersEqual, BlockedUser } from 'types/blockedRelationships';
 import GetAccountBlocked from 'services/graphql/queries/GetAccountBlocked';
+import { convertGraphQLBlockedUser } from 'lib/GraphQLUtils/relationships';
 
 /**
- * Hook that returns the list of the accounts that the user having the given address is following.
- * @param address {String  | undefined} - Address of the user for which to get the following list.
+ * Hook that returns the list of the blocked accounts of a given address.
+ * @param address {String  | undefined} - Address of the user for which to get the blocked list.
  * If this is `undefined`, the current application's user address will be used instead.
  * @param usersPerPage {number} - Number of users to be fetched per page.
  */
@@ -46,14 +45,14 @@ const useBlocked = (address?: string, usersPerPage: number = 50) => {
     (data: any) => {
       if (!data) return;
 
-      const onChainUsers = data.following.map(convertGraphQLFollowedUser);
+      const onChainUsers = data.following.map(convertGraphQLBlockedUser);
 
       // Update the users list
       setUsers(currentUsers => {
         const [merged, updates] = mergeCacheableData(
           currentUsers,
           onChainUsers,
-          areFollowedUsersEqual,
+          areBlockedUsersEqual,
         );
 
         // Update the pending relationships by deleting the ones that are now synced

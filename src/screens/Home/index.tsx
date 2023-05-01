@@ -12,6 +12,7 @@ import useCustomToast from 'hooks/extended/useCustomToast';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'screens/Home/components/PostCard';
 import {
+  useHandlePressBlock,
   useHandlePressComments,
   useHandlePressDetails,
   useHandlePressFollow,
@@ -63,6 +64,7 @@ const Home = () => {
 
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollow = useHandlePressFollow();
+  const handlePressBlock = useHandlePressBlock();
   const handlePressDetails = useHandlePressDetails();
   const handlePressReport = useHandlePressReport();
   const handlePressComments = useHandlePressComments();
@@ -156,6 +158,7 @@ const Home = () => {
             handlePressTip(item);
           }}
           onPressFollow={() => handlePressFollow(item.author)}
+          onPressBlock={() => handlePressBlock(item.author)}
           onPressReport={() => {
             if (isPostPending(item) || !item.author) {
               return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });

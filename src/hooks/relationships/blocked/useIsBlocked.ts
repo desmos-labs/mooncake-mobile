@@ -1,10 +1,10 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useHasFollowedUser } from '@recoil/relationships';
 import React from 'react';
-import useRefreshRelationshipCache from 'hooks/relationships/useRefreshRelationshipCache';
+import { useHasBlockedUser } from '@recoil/blockedRelationships';
+import useRefreshBlockedRelationshipCache from 'hooks/relationships/blocked/useRefreshBlockedRelationshipCache';
 
 /**
- * Hook that allows to know if the current user is following a given user or not.
+ * Hook that allows to know if the current user has blocked a given user or not.
  */
 const useIsBlocked = (counterparty: string) => {
   const activeAddress = useActiveAccountAddress();
@@ -15,21 +15,23 @@ const useIsBlocked = (counterparty: string) => {
   }
 
   // Use the cached value in order to avoid unnecessary queries
-  const hasFollowedUser = useHasFollowedUser();
-  const isFollowing = React.useMemo(
+  const hasBlockedUser = useHasBlockedUser();
+  const isBlocked = React.useMemo(
     // Do not perform the search if the active address and counterparty are the same
-    () => activeAddress !== counterparty && hasFollowedUser(activeAddress, counterparty),
-    [activeAddress, counterparty, hasFollowedUser],
+    () => activeAddress !== counterparty && hasBlockedUser(activeAddress, counterparty),
+    [activeAddress, counterparty, hasBlockedUser],
   );
 
+  console.log(isBlocked);
+
   // Allow to refresh the value when needed
-  const updateRelationshipsCache = useRefreshRelationshipCache();
+  const updateBlockedRelationshipCache = useRefreshBlockedRelationshipCache();
   const refetch = React.useCallback(async () => {
-    await updateRelationshipsCache(counterparty);
-  }, [counterparty, updateRelationshipsCache]);
+    await updateBlockedRelationshipCache(counterparty);
+  }, [counterparty, updateBlockedRelationshipCache]);
 
   return {
-    isFollowing,
+    isBlocked,
     refetch,
   };
 };

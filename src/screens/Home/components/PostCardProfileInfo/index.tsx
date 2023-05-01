@@ -14,8 +14,9 @@ import { parseISO } from 'date-fns';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
+import { block, followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useStyles from './useStyles';
 
 export interface PostCardProfileInfoProps {
@@ -23,6 +24,7 @@ export interface PostCardProfileInfoProps {
   readonly onPressAuthor: () => void;
   readonly onPressFollow: () => void;
   readonly onPressReport: () => void;
+  readonly onPressBlock: () => void;
 }
 
 /**
@@ -34,7 +36,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
 
-  const { post, onPressAuthor, onPressFollow, onPressReport } = props;
+  const { post, onPressAuthor, onPressFollow, onPressBlock, onPressReport } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -44,6 +46,8 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
+
+  const { isBlocked, refetch: refreshBlocked } = useIsBlocked(post.author.address);
 
   // -------------------------------------------------------------------------------------
   // --- Local state
@@ -57,6 +61,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
 
   useEffect(() => {
     refreshFollowing();
+    refreshBlocked();
 
     // It's fine to disable the following line because we want to run this effect only once
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -117,6 +122,11 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         label: t('report'),
         onPress: onPressReport,
         icon: reportIcon,
+      },
+      {
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: onPressBlock,
+        icon: block,
       },
     ],
     [isFollowing, t, onPressFollow, onPressReport],

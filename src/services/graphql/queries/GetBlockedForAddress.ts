@@ -1,18 +1,18 @@
 import { gql } from '@apollo/client';
 import UserBlockFields from 'services/graphql/queries/fragments/UserBlockFields';
 
-const GetRelationshipForAddress = gql`
+const GetBlockedForAddress = gql`
   ${UserBlockFields}
-  query GetRelationshipForAddress(
+  query GetBlockedForAddress(
     $subspaceId: bigint!
-    $blocker_address: String!
-    $counterpartyAddress: String!
+    $blockerAddress: String!
+    $blockedAddress: String!
   ) @api(name: butter) {
-    relationships: user_relationship(
+    user_block(
       where: {
         subspace_id: { _eq: $subspaceId }
-        blocker_address: { _eq: blocker_address }
-        counterparty_address: { _eq: $counterpartyAddress }
+        blocker_address: { _eq: $blockerAddress }
+        blocked_address: { _eq: $blockedAddress }
       }
     ) {
       ...UserBlockFields
@@ -20,4 +20,4 @@ const GetRelationshipForAddress = gql`
   }
 `;
 
-export default GetRelationshipForAddress;
+export default GetBlockedForAddress;
