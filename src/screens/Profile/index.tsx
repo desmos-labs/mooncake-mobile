@@ -255,8 +255,10 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Memoized values
   // -------------------------------------------------------------------------------------
+  // This button will only be rendered if visiting another user's profile
   const ProfileInteractionButton = React.useMemo(() => {
     if (!isActiveAccount) {
+      // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
       if (isBlocked) {
         return (
           <Button
