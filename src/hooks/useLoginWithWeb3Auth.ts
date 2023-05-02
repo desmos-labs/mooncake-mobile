@@ -66,20 +66,17 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
           // and check if it has a profile
           const profile = await fetchProfile(account.wallet.address);
           setLoginLoading(false);
-          switch (profile) {
-            case undefined:
-              // The user does not have a profile, so we need to tell them to create one
-              createOrSaveProfile({
-                storeOnChain: false,
-                account,
-                onSuccess: () => saveAccount(account),
-              });
-              break;
-
-            default:
-              // The user has a profile, so we need to save both the account and the profile
-              saveAccount(account);
-              storeProfile(account.account.address, profile);
+          if (profile) {
+            // The user has a profile, we can now save it
+            saveAccount(account);
+            storeProfile(account.account.address, profile);
+          } else {
+            // The user hasn't got a profile, so we need to create it
+            createOrSaveProfile({
+              storeOnChain: false,
+              account,
+              onSuccess: () => saveAccount(account),
+            });
           }
         } else {
           // The wallet is not on chain or there is no wallet linked to this web3auth auth method, so we need to create one
