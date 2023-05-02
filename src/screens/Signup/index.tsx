@@ -109,7 +109,7 @@ const Signup = () => {
       title: t('signup:invite info title'),
       subtitle: t('signup:invite info body'),
       subtitleStyle: styles.inviteInfoBody,
-      primaryButtonLabel: t('join butter discord'),
+      primaryButtonLabel: t('signup:join butter discord'),
       onPressPrimary: () => {
         Linking.openURL('https://discord.gg/KsdUmerM5U');
       },
@@ -288,7 +288,7 @@ const Signup = () => {
                     values.newPassword.length === 0 ||
                     _.flatten(Object.values(errors)).length > 0
                   }>
-                  {t('signup: next create a profile')}
+                  {t('signup:next create a profile')}
                 </Button>
               )}
             </>
