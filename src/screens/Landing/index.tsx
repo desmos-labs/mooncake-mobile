@@ -4,7 +4,7 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, View } from 'react-native';
+import { Image, Platform, View } from 'react-native';
 import { Box, Text, useTheme } from 'native-base';
 import { usePerformImportAccount } from 'screens/Landing/hooks';
 import Typography from 'components/Typography';
@@ -95,11 +95,13 @@ const Landing = () => {
         <View style={styles.loginDivider} />
       </View>
       <View style={styles.bottomIcons}>
-        <ImageButton
-          image={appleLoginIcon}
-          style={styles.loginLogo}
-          onPress={() => importFromSocial(Web3AuthLoginProvider.Apple)}
-        />
+        {Platform.OS === 'ios' && (
+          <ImageButton
+            image={appleLoginIcon}
+            style={styles.loginLogo}
+            onPress={() => importFromSocial(Web3AuthLoginProvider.Apple)}
+          />
+        )}
         <ImageButton
           image={googleLoginIcon}
           style={styles.loginLogo}

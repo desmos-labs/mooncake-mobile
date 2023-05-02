@@ -62,9 +62,7 @@ export interface ImportAccountCallbacks {
  * 5b. Show the list of addresses from which the user can select the account
  * to import.
  *
- * Case Web3Auth:
- * 3b. Select the login provider;
- * 4b. Display the account that can be imported.
+ * Case Web3Auth (moved to a specific implementation):
  *
  * @param options - Import account options.
  */
@@ -102,10 +100,6 @@ const useImportAccount = (options: ImportAccountOptions) => {
             break;
           case WalletType.Ledger:
             navigation.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP);
-            break;
-          case WalletType.Web3Auth:
-            console.warn('Import with Web3Auth not supported');
-            onCancelFunction();
             break;
         }
       }

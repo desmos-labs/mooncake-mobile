@@ -14,6 +14,10 @@ import ROUTES from 'navigation/routes';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 
+/**
+ * Hook that allows to login using the Web3Auth protocol.
+ * @param chain the chain to use.
+ */
 const useLoginWithWeb3Auth = (chain: SupportedChain) => {
   const navigation = useNavigation<NavigationProp<RootNavigatorParamList>>();
   const checkAccountBalance = useSearchOnChainAccount();
@@ -23,6 +27,11 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
   const createOrSaveProfile = useSaveProfile();
 
   const [loginLoading, setLoginLoading] = useState(false);
+
+  /**
+   * Function called when the user wants to login using the Web3Auth protocol.
+   * @param loginProvider the login provider to use (google/apple).
+   */
   const login = useCallback(
     async (loginProvider: Web3AuthLoginProvider) => {
       const keyProvider = new Web3AuthKeyProvider(newWeb3AuthClient(), {
