@@ -340,7 +340,13 @@ const RootNavigator = () => {
       {/* --- POST SCREENS --- */}
       {/* -------------------- */}
 
-      <Stack.Screen name={ROUTES.POST_CREATE} component={CreatePost} />
+      <Stack.Screen
+        name={ROUTES.POST_CREATE}
+        component={CreatePost}
+        options={({ route }) => ({
+          gestureEnabled: !route?.params?.disableBackSwipe,
+        })}
+      />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
 
       {/* ------------------------ */}
