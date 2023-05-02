@@ -75,6 +75,7 @@ enum ROUTES {
   SETTINGS_ENABLE_BIOMETRICS = 'SETTINGS_ENABLE_BIOMETRICS',
   SETTINGS_INVITES = 'SETTINGS_INVITES',
   UNLOCK_WALLET = 'UNLOCK_WALLET',
+  BLOCKED_USERS = 'BLOCKED_USERS',
 
   // -------------------------------------------------------------------------------------
   // --- CONNECT TO LEDGER SCREENS

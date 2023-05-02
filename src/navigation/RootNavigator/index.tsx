@@ -73,6 +73,7 @@ import {
   ModalPresentationIOS,
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
+import BlockedUsers from 'screens/BlockedUsers';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -148,6 +149,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.SETTINGS_INVITES]: undefined;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
+  [ROUTES.BLOCKED_USERS]: undefined;
 
   // -------------------------------------------------------------------------------------
   // --- CONNECT TO LEDGER SCREENS
@@ -353,6 +355,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.SETTINGS_INVITES} component={Invites} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
+      <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
 
       {/* --------------------------------- */}
       {/* --- CONNECT TO LEDGER SCREENS --- */}

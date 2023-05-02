@@ -45,7 +45,7 @@ const useBlocked = (address?: string, usersPerPage: number = 50) => {
     (data: any) => {
       if (!data) return;
 
-      const onChainUsers = data.following.map(convertGraphQLBlockedUser);
+      const onChainUsers = data.user_block.map(convertGraphQLBlockedUser);
 
       // Update the users list
       setUsers(currentUsers => {
@@ -67,7 +67,7 @@ const useBlocked = (address?: string, usersPerPage: number = 50) => {
     [updatePendingBlockedRelationships, userAddress],
   );
 
-  // Query used to get the following list
+  // Query used to get the blocked list
   const { fetchMore, refetch } = useQuery(GetAccountBlocked, {
     variables: {
       subspaceId,
@@ -91,7 +91,7 @@ const useBlocked = (address?: string, usersPerPage: number = 50) => {
           if (!fetchMoreResult) return prev;
           if (fetchMoreResult.blocked.length === 0) setFetchingMore(false);
           return {
-            blocked: [...prev.blocked, ...fetchMoreResult.blocked],
+            blocked: [...prev.user_block, ...fetchMoreResult.user_block],
           };
         },
       });

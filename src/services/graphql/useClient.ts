@@ -45,7 +45,7 @@ const cache = new InMemoryCache({
         return `profile:${object.address}`;
       case 'user_relationship':
         // @ts-ignore
-        return `user_relationship:${object.subspace_id}-${object.creator.address}-${object.counterparty?.address}`;
+        return `user_relationship:${object.subspace_id}-${object.creator.address}-${object.counterparty.address}`;
       case 'reaction':
         // @ts-ignore
         if (object.post?.subspace_id && object.author?.address && object.post?.id && object.value) {
