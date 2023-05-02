@@ -54,6 +54,7 @@ import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePi
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
 import PopupMenu from 'components/PopupMenu';
+import Button from 'components/Button';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -252,6 +253,39 @@ const Profile = () => {
   }, [blockOrUnblockUser, profile]);
 
   // -------------------------------------------------------------------------------------
+  // --- Memoized values
+  // -------------------------------------------------------------------------------------
+  const ProfileInteractionButton = React.useMemo(() => {
+    if (!isActiveAccount) {
+      if (isBlocked) {
+        return (
+          <Button
+            mt="s"
+            backgroundColor="surfaceGrey"
+            minWidth="80px"
+            size={32}
+            onPress={handlePressBlock}
+            textColor="surfaceBlack">
+            {t('profile:unblock')}
+          </Button>
+        );
+      }
+      return (
+        <Button
+          mt="s"
+          backgroundColor="surfaceGrey"
+          minWidth="80px"
+          size={32}
+          onPress={handlePressFollow}
+          textColor="surfaceBlack">
+          {isFollowing ? t('following') : t('follow')}
+        </Button>
+      );
+    }
+    return undefined;
+  }, [handlePressBlock, handlePressFollow, isActiveAccount, isBlocked, isFollowing, t]);
+
+  // -------------------------------------------------------------------------------------
   // --- Conditional rendering
   // -------------------------------------------------------------------------------------
   const PopupContextMenu = React.useMemo(() => {
@@ -426,9 +460,7 @@ const Profile = () => {
           {isActiveAccount && <EditProfileSection profile={profile} />}
 
           {/* Follow/Unfollow button */}
-          {!isActiveAccount && (
-            <FollowUnfollowButton isFollowing={isFollowing} onPress={handlePressFollow} />
-          )}
+          {ProfileInteractionButton}
 
           <Spacer paddingVertical={theme.spacing.s} />
           <View style={styles.divider} />
