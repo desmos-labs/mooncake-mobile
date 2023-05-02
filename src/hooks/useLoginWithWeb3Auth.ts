@@ -57,9 +57,10 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
       setLoginLoading(true);
       const account = await generateWeb3AuthWallet(chain.prefix, loginProvider, privateKey.key);
 
-      // Check if the wallet is already on the chain.
+      // Check if the wallet is already on chain
       if (account.wallet.address) {
         const result = await checkAccountBalance(account.wallet.address);
+        // If the wallet is on chain we can now check if the user has a profile or not
         if (result) {
           // The account is already on the chain, so we need to save it
           // and check if it has a profile
@@ -81,6 +82,8 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
               storeProfile(account.account.address, profile);
           }
         } else {
+          // The wallet is not on chain or there is no wallet linked to this web3auth auth method, so we need to create one
+          // In order to do this we need to redeem an invite giving the user 2 tokens to perform the wallet creation
           setLoginLoading(false);
           navigation.navigate(ROUTES.SIGNUP, { account });
         }
