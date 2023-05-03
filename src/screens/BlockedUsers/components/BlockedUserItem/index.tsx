@@ -4,7 +4,6 @@ import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
 import { HStack, VStack } from 'native-base';
 import Typography from 'components/Typography';
-import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { useTranslation } from 'react-i18next';
@@ -21,22 +20,22 @@ interface Props {
 const BlockedUserItem = ({ profile }: Props) => {
   const { t } = useTranslation('blockedUsers');
   const styles = useStyles();
-  const isBlocked = useIsBlocked(profile.address);
 
   const handleBlockOrUnblockUser = useBlockOrUnblockUser();
+  const { isBlocked } = useIsBlocked(profile.address);
 
   const BlockOrUnblockButton = React.useMemo(() => {
     return (
       <Button
         mt="s"
-        backgroundColor="surfaceBlack"
-        textColor="white"
+        backgroundColor={isBlocked ? 'surfaceBlack' : 'surfaceGrey'}
+        textColor={isBlocked ? 'white' : 'surfaceBlack'}
         minWidth="80px"
         size={32}
         onPress={() => {
           handleBlockOrUnblockUser(profile);
         }}>
-        {t('unblock')}
+        {isBlocked ? t('unblock') : t('block')}
       </Button>
     );
   }, [isBlocked, t, handleBlockOrUnblockUser, profile]);
