@@ -9,13 +9,9 @@ import convertGQLInvite from 'lib/GraphQLUtils/invites';
 const useInvites = () => {
   const { data, loading, refetch, error } = useQuery<GqlInvites>(GetInvites, {
     fetchPolicy: 'no-cache',
-    onError: error1 => {
-      console.log('error', error1);
-    },
   });
 
   const invites = React.useMemo(() => {
-    console.log('invites', data);
     return data?.invite?.map(convertGQLInvite);
   }, [data]);
 
