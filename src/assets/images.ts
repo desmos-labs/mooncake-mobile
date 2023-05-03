@@ -149,6 +149,8 @@ export const emptyListPlaceholder = require('./images/emptyListsPlaceholders/emp
 
 export const block = require('./images/block.png');
 
+export const settingsNavbarIcon = require('./images/settingsNavbarIcon.png');
+
 // TX
 
 export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');
