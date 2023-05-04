@@ -5,6 +5,7 @@ import PostNotificationToken from 'services/axios/requests/PostNotificationToken
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import { useAppStateValue } from '@recoil/appState';
 import { err, ok, Result } from 'neverthrow';
+import useLogin from 'hooks/useLogin';
 
 /**
  * A hook that restores axios bearer token and redirects the user to the login screen
@@ -12,6 +13,7 @@ import { err, ok, Result } from 'neverthrow';
  */
 const useRefreshSession = () => {
   const bearerToken = useAppStateValue('bearerToken');
+  const handleLogin = useLogin();
 
   return useCallback(async (): Promise<Result<void, Error>> => {
     // Bearer token refresh
@@ -24,23 +26,28 @@ const useRefreshSession = () => {
       Authorization: `Bearer ${bearerToken}`,
     };
 
-    // Refresh the session
-    const refreshResult = await RefreshSession();
-    if (refreshResult.isErr()) {
-      return err(refreshResult.error);
-    }
-
-    // Refresh the notification token
-    const notificationsToken = await messaging().getToken();
-    if (notificationsToken) {
-      const postNotificationResult = await PostNotificationToken(notificationsToken);
-      if (postNotificationResult.isErr()) {
-        return err(postNotificationResult.error);
+    try {
+      // Refresh the session
+      const refreshResult = await RefreshSession();
+      if (refreshResult.isErr()) {
+        return err(refreshResult.error);
       }
-    }
 
-    // Return the ok result
-    return ok(undefined);
+      // Refresh the notification token
+      const notificationsToken = await messaging().getToken();
+      if (notificationsToken) {
+        const postNotificationResult = await PostNotificationToken(notificationsToken);
+        if (postNotificationResult.isErr()) {
+          return err(postNotificationResult.error);
+        }
+      }
+
+      // Return the ok result
+      return ok(undefined);
+    } catch (error: any) {
+      handleLogin();
+      return ok(undefined);
+    }
   }, [bearerToken]);
 };
 
