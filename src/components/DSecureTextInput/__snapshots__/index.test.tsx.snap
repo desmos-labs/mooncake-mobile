@@ -17,6 +17,7 @@ exports[`component: DSecureTextInput renders 1`] = `
           "backgroundColor": "#FFFFFF",
         },
         undefined,
+        undefined,
       ],
     ]
   }
@@ -24,8 +25,8 @@ exports[`component: DSecureTextInput renders 1`] = `
   <TextInput
     onBlur={[Function]}
     onFocus={[Function]}
-    placeHolderColor="#AFAFAF"
-    placeholderTextColor="#AFAFAF"
+    placeHolderColor="#9D9D9D"
+    placeholderTextColor="#9D9D9D"
     rightElement={
       <Memo
         accessibilityLabel="undefined-hidden"
@@ -38,10 +39,15 @@ exports[`component: DSecureTextInput renders 1`] = `
             }
           }
           style={
-            {
-              "height": 17.25,
-              "width": 24,
-            }
+            [
+              {
+                "height": 17.25,
+                "width": 24,
+              },
+              {
+                "tintColor": "#9D9D9D",
+              },
+            ]
           }
         />
       </Memo>
@@ -118,10 +124,15 @@ exports[`component: DSecureTextInput renders 1`] = `
           }
         }
         style={
-          {
-            "height": 17.25,
-            "width": 24,
-          }
+          [
+            {
+              "height": 17.25,
+              "width": 24,
+            },
+            {
+              "tintColor": "#9D9D9D",
+            },
+          ]
         }
       />
     </View>

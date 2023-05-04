@@ -8,8 +8,8 @@ import useInitializeAppData from 'hooks/useInitializeAppData';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
 import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
-import Signup from 'screens/Signup';
-import Landing from 'screens/Landing';
+import Signup, { SignupParams } from 'screens/Signup';
+import Landing, { LandingParams } from 'screens/Landing';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
@@ -85,9 +85,9 @@ export type RootNavigatorParamList = {
   // --- INITIAL SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.LANDING]: undefined;
+  [ROUTES.LANDING]: LandingParams;
   [ROUTES.ONBOARDING]: OnboardingParams;
-  [ROUTES.SIGNUP]: undefined;
+  [ROUTES.SIGNUP]: SignupParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
 
