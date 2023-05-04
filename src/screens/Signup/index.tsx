@@ -1,10 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
-import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import PasswordReqGroup from 'components/PasswordReqGroup';
 import Spacer from 'components/Spacer';
@@ -16,8 +15,8 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Linking, ScrollView, TextInput, View } from 'react-native';
+import { Box, useTheme } from 'native-base';
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -26,10 +25,23 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useResetSignUpState } from '@recoil/screens/signUpState';
 import useCustomToast from 'hooks/extended/useCustomToast';
+import { AccountWithWallet } from 'types/account';
+import StyledSpinner from 'components/StyledSpinner';
+import * as Yup from 'yup';
+import DTextInput from 'components/DTextInput';
+import ImageButton from 'components/ImageButton';
+import { infoIcon } from 'assets/images';
 import { SignUpStatus, useInitialFormValues, useSubmitForm } from './hooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
+
+export interface SignupParams {
+  /**
+   * Account generated with web3auth
+   */
+  account: AccountWithWallet;
+}
 
 /**
  * Screen that allows a user to sign up for a new account by inserting a password and an invitation code.
@@ -37,14 +49,26 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
  */
 const Signup = () => {
   const { t } = useTranslation('passwordManipulation');
-  const { reset, goBack } = useNavigation<NavProps['navigation']>();
+  const { reset, goBack, navigate } = useNavigation<NavProps['navigation']>();
+  const {
+    params: { account },
+  } = useRoute<NavProps['route']>();
   const theme = useTheme();
   const styles = useStyles();
   const toast = useCustomToast();
+  const confirmPasswordRef = useRef<TextInput>(null);
 
   // Form state
   const initialFormValues = useInitialFormValues();
   const resetSignUpInfo = useResetSignUpState();
+
+  const validationSchema = React.useMemo(() => {
+    return Yup.object().shape({
+      confirmPassword: Yup.string()
+        .required(t('error:required'))
+        .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
+    });
+  }, [t]);
 
   // Animations
   const [animatedPswChecksVisible, setAnimatedPswChecksVisible] = useState(false);
@@ -75,14 +99,25 @@ const Signup = () => {
   // Callback that is used when the signup procedure raises any error
   const onError = useCallback(
     (error: Error) => {
-      // TODO: Show the error here, maybe in a modal
       toast.errorNoRetry(error.message);
     },
     [toast],
   );
 
+  const openInviteInfoModal = useCallback(() => {
+    navigate(ROUTES.CONFIRM_MODAL, {
+      title: t('signup:invite info title'),
+      subtitle: t('signup:invite info body'),
+      subtitleStyle: styles.inviteInfoBody,
+      primaryButtonLabel: t('signup:join butter discord'),
+      onPressPrimary: () => {
+        Linking.openURL('https://discord.gg/KsdUmerM5U');
+      },
+    });
+  }, [navigate, styles.inviteInfoBody, t]);
+
   // Hook that is used in order to submit the form
-  const { handleFormSubmit, signUpStatus } = useSubmitForm(onSuccess, onError);
+  const { handleFormSubmit, signUpStatus } = useSubmitForm(account, onSuccess, onError);
 
   // Check if the sign up flow is completed
   // TODO: Probably this indication can be improved with a more explicit UI that tells the steps being done
@@ -120,13 +155,13 @@ const Signup = () => {
     (values: any) => {
       return (
         animatedPswChecksVisible && (
-          <Animated.View style={animatedStyle}>
+          <Animated.View style={[animatedStyle, styles.pswCheck]}>
             <PasswordReqGroup passwordToCheck={values.newPassword} />
           </Animated.View>
         )
       );
     },
-    [animatedPswChecksVisible, animatedStyle],
+    [animatedPswChecksVisible, animatedStyle, styles.pswCheck],
   );
 
   return (
@@ -141,81 +176,121 @@ const Signup = () => {
         </View>
       }>
       <Typography.H3 style={styles.headerText}>{t('signup:signup')}</Typography.H3>
-      <Formik initialValues={initialFormValues} onSubmit={handleFormSubmit}>
+      <Formik
+        initialValues={initialFormValues}
+        onSubmit={handleFormSubmit}
+        validationSchema={validationSchema}>
         {({ handleSubmit, values, errors, setFieldValue }) => {
           return (
             <>
-              <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                style={styles.buttonGroup}>
-                <ScrollView ref={scrollViewRef} keyboardDismissMode="on-drag">
-                  <View style={styles.formContainer}>
-                    <View style={styles.labelGroup}>
-                      <Typography.Subtitle2>{t('signup:password')}</Typography.Subtitle2>
-                      {values.newPassword.length >= MIN_PW_LENGTH && (
-                        <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
-                          {t(passwordStrength(values.newPassword).value)}
-                        </Typography.Subtitle4>
-                      )}
-                    </View>
+              <ScrollView
+                contentContainerStyle={{ flexGrow: 1 }}
+                ref={scrollViewRef}
+                keyboardDismissMode="on-drag">
+                <View style={styles.labelGroup}>
+                  <Typography.Subtitle2 style={styles.topLabel}>
+                    {t('signup:password')}
+                  </Typography.Subtitle2>
+                  {values.newPassword.length >= MIN_PW_LENGTH && (
+                    <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
+                      {t(passwordStrength(values.newPassword).value)}
+                    </Typography.Subtitle4>
+                  )}
+                </View>
 
-                    <DSecureTextInput
-                      onOuterFocus={() => {
-                        setAnimatedPswChecksVisible(true);
-                        animatedOpacity.value = withTiming(1);
-                      }}
-                      value={values.newPassword}
-                      onChangeText={(value: string) => {
-                        setFieldValue('newPassword', value, true);
-                      }}
-                      style={styles.inputLabel}
-                      placeholder={t('signup:enter password')}
-                    />
+                <DSecureTextInput
+                  error={errors.newPassword !== undefined}
+                  onOuterFocus={() => {
+                    setAnimatedPswChecksVisible(true);
+                    animatedOpacity.value = withTiming(1);
+                  }}
+                  value={values.newPassword}
+                  onChangeText={(value: string) => {
+                    setFieldValue('newPassword', value, true);
+                  }}
+                  style={[styles.inputLabel, styles.inputStandard]}
+                  placeholder={t('signup:enter password')}
+                />
+                {errors.newPassword && (
+                  <Typography.Caption1 style={styles.errorText}>
+                    {errors.newPassword}
+                  </Typography.Caption1>
+                )}
 
-                    {errors.newPassword && (
-                      <Typography.Caption1 style={styles.errorText}>
-                        {errors.newPassword}
-                      </Typography.Caption1>
-                    )}
-                    {animatedPasswordChecks(values)}
-                    <Spacer paddingBottom={theme.spacing.m} />
-                    <Typography.Subtitle2 style={{ marginBottom: theme.spacing.s }}>
-                      {t('signup:invite code')}
-                    </Typography.Subtitle2>
-                    <DTextInput
-                      onFocus={() => {
-                        setTimeout(
-                          () =>
-                            scrollViewRef.current?.scrollToEnd({
-                              animated: true,
-                            }),
-                          400,
-                        );
-                      }}
-                      value={values.inviteCode}
-                      onChangeText={(value: string) => {
-                        setFieldValue('inviteCode', value, true);
-                      }}
-                      style={styles.inputLabel}
-                      placeholder={t('signup:invite code')}
-                    />
-                  </View>
-                </ScrollView>
-              </KeyboardAvoidingView>
-              <Button
-                onPress={handleSubmit}
-                isLoading={loading}
-                backgroundColor={theme.colors.surfaceBlack}
-                size={44}
-                textColor={theme.colors.white}
-                disabled={
-                  !values.newPassword ||
-                  !values.inviteCode ||
-                  _.flatten(Object.values(errors)).length > 0
-                }>
-                {t('common:next')}
-              </Button>
+                {animatedPasswordChecks(values)}
+
+                <Typography.Subtitle2 style={styles.bottomLabel}>
+                  {t('confirmPw')}
+                </Typography.Subtitle2>
+                <DSecureTextInput
+                  error={errors.confirmPassword !== undefined}
+                  testID="confirmPasswordField"
+                  inputRef={confirmPasswordRef}
+                  onOuterFocus={() =>
+                    setTimeout(
+                      () =>
+                        scrollViewRef.current?.scrollToEnd({
+                          animated: true,
+                        }),
+                      300,
+                    )
+                  }
+                  placeholder={t('signup:enter password')}
+                  value={values.confirmPassword}
+                  style={[styles.inputLabel, styles.inputStandard]}
+                  onChangeText={(value: string) => setFieldValue('confirmPassword', value, true)}
+                />
+                {errors.confirmPassword && (
+                  <Typography.Caption1 style={styles.errorText}>
+                    {errors.confirmPassword}
+                  </Typography.Caption1>
+                )}
+                <Box flexDir="row" style={styles.bottomLabel}>
+                  <Typography.Subtitle2>{t('signup:invite code')}</Typography.Subtitle2>
+                  <ImageButton
+                    image={infoIcon}
+                    style={styles.infoIcon}
+                    onPress={openInviteInfoModal}
+                  />
+                </Box>
+
+                <DTextInput
+                  onFocus={() => {
+                    setTimeout(
+                      () =>
+                        scrollViewRef.current?.scrollToEnd({
+                          animated: true,
+                        }),
+                      400,
+                    );
+                  }}
+                  value={values.inviteCode}
+                  onChangeText={(value: string) => {
+                    setFieldValue('inviteCode', value, true);
+                  }}
+                  style={[styles.inputLabel, styles.inputStandard]}
+                  placeholder={t('signup:enter invite code')}
+                />
+              </ScrollView>
+              {loading ? (
+                <Box alignItems="center" py="m">
+                  <StyledSpinner />
+                </Box>
+              ) : (
+                <Button
+                  size={44}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  textColor={theme.colors.white}
+                  onPress={() => handleSubmit()}
+                  disabled={
+                    loading ||
+                    values.confirmPassword.length === 0 ||
+                    values.newPassword.length === 0 ||
+                    _.flatten(Object.values(errors)).length > 0
+                  }>
+                  {t('signup:next create a profile')}
+                </Button>
+              )}
             </>
           );
         }}

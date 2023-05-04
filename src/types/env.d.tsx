@@ -8,4 +8,6 @@ declare module '@env' {
   export const SENTRY_AUTH_TOKEN: string;
   export const APP_SUBSPACE_ID: string;
   export const DEV_MNEMONIC: string;
+  export const WEB3_AUTH_CLIENT_ID_MAINNET: string;
+  export const WEB3_AUTH_CLIENT_ID_TESTNET: string;
 }

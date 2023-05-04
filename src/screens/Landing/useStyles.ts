@@ -47,6 +47,33 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'contain',
     marginRight: theme.spacing.s,
   },
+  loginWithContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  invitedLabel: {
+    marginVertical: theme.spacing.m,
+    color: theme.colors.white,
+  },
+  loginWithLabel: {
+    color: theme.colors.white,
+  },
+  loginDivider: {
+    flex: 1,
+    backgroundColor: theme.colors.white,
+    height: 1,
+  },
+  loginLogo: {
+    width: 44,
+    height: 44,
+    marginHorizontal: 10,
+  },
+  bottomIcons: {
+    flexDirection: 'row',
+    marginTop: theme.spacing.l,
+  },
 }));
 
 export default useStyles;

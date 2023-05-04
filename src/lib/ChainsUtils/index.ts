@@ -39,8 +39,8 @@ const supportedBalanceDenoms = [DesmosMainnet, DesmosTestnet]
 /**
  * Filters the given {@param coins} array, returning only the coins that are supported by the app.
  */
-export const filterCoins = (coins: Coin[]): Coin[] => {
-  return coins.filter(coin => supportedBalanceDenoms.includes(coin.denom));
+export const filterCoins = (coins: Coin[] | []): Coin[] => {
+  return coins?.filter(coin => supportedBalanceDenoms.includes(coin.denom));
 };
 
 /**

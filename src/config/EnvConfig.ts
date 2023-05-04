@@ -9,6 +9,8 @@ import {
   FORBOLE_GQL,
   SENTRY_AUTH_TOKEN,
   SENTRY_DSN,
+  WEB3_AUTH_CLIENT_ID_MAINNET,
+  WEB3_AUTH_CLIENT_ID_TESTNET,
 } from '@env';
 
 const EnvConfig = {
@@ -22,6 +24,8 @@ const EnvConfig = {
   SENTRY_AUTH_TOKEN,
   APP_SUBSPACE_ID,
   DEV_MNEMONIC,
+  WEB3_AUTH_CLIENT_ID_MAINNET,
+  WEB3_AUTH_CLIENT_ID_TESTNET,
 };
 
 export default EnvConfig;

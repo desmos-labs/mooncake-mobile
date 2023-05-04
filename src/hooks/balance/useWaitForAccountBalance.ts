@@ -9,7 +9,7 @@ import { filterCoins } from 'lib/ChainsUtils';
  * @param data {any} - Data retrieved from the GraphQL APIs.
  */
 const hasBalance = (data: any | undefined): boolean => {
-  const balance = data?.balance || [];
+  const balance = data?.balance?.coins || [];
   return filterCoins(balance).length > 0;
 };
 
@@ -52,7 +52,7 @@ const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number =
     () =>
       setTimeout(() => {
         stopPolling();
-        accept.current(err(new Error('Accept invite request timeout')));
+        accept.current(err(new Error('Request timeout')));
       }, timeout),
     [stopPolling, timeout],
   );
