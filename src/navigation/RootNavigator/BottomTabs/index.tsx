@@ -2,7 +2,6 @@ import notifee from '@notifee/react-native';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   bottomActivitiesIcon,
-  bottomCommunitiesIcon,
   bottomHomeIcon,
   bottomProfileIcon,
   middleButtonIcon,
