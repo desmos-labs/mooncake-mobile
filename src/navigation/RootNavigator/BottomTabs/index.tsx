@@ -2,10 +2,10 @@ import notifee from '@notifee/react-native';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   bottomActivitiesIcon,
-  bottomCommunitiesIcon,
   bottomHomeIcon,
   bottomProfileIcon,
   middleButtonIcon,
+  settingsNavbarIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
@@ -18,9 +18,9 @@ import PingAnimation from 'screens/Profile/components/PingAnimation';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import Communities from 'screens/Communities';
 import Activities from 'screens/Activities';
 import Profile from 'screens/Profile';
+import Settings from 'screens/Settings';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {}
@@ -30,7 +30,9 @@ export interface Props extends BottomTabBarProps {}
  */
 export type BottomTabsParamList = {
   [ROUTES.HOME_TABS]: HomeTabsParams | undefined;
-  [ROUTES.COMMUNITIES]: undefined;
+  [ROUTES.SETTINGS]: undefined;
+  /* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */
+  // [ROUTES.COMMUNITIES]: undefined;
   [ROUTES.ACTIVITIES]: undefined;
   [ROUTES.CREATE_BUTTON]: undefined;
   [ROUTES.PROFILE]: undefined;
@@ -54,8 +56,11 @@ const getCorrectImage = (routeName: string) => {
       return bottomProfileIcon;
     case ROUTES.ACTIVITIES:
       return bottomActivitiesIcon;
-    case ROUTES.COMMUNITIES:
-      return bottomCommunitiesIcon;
+    case ROUTES.SETTINGS:
+      return settingsNavbarIcon;
+    /* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */
+    // case ROUTES.COMMUNITIES:
+    //   return bottomCommunitiesIcon;
   }
 };
 
@@ -174,9 +179,11 @@ const BottomTabsNavigator = () => {
         initialRouteName={ROUTES.HOME_TABS}
         screenOptions={{ headerShown: false }}>
         <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
-        <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} />
-        <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
+        {/* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */}
+        {/* <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} /> */}
         <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
+        <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
+        <Tab.Screen name={ROUTES.SETTINGS} component={Settings} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
       </Tab.Navigator>
     </Box>

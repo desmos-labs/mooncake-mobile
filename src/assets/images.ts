@@ -149,6 +149,7 @@ export const emptyListPlaceholder = require('./images/emptyListsPlaceholders/emp
 
 export const block = require('./images/block.png');
 
+export const settingsNavbarIcon = require('./images/settingsNavbarIcon.png');
 export const googleLoginIcon = require('./images/googleLoginIcon.png');
 export const appleLoginIcon = require('./images/appleLoginIcon.png');
 
