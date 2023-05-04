@@ -9,10 +9,10 @@ const CommentItemSkeleton = () => {
     <HStack style={styles.container}>
       <Skeleton style={styles.avatar} />
       <VStack flex={1}>
-        <Skeleton mb="s" width="75%" height={4} borderRadius={12} />
-        <Skeleton width="75%" height={4} borderRadius={12} />
+        <Skeleton mb="s" width="75%" height={3} borderRadius={12} />
+        <Skeleton width="75%" height={3} borderRadius={12} />
         <Skeleton my="m" height={12} borderRadius={12} />
-        <Skeleton height={4} borderRadius={12} />
+        <Skeleton height={3} borderRadius={12} />
       </VStack>
     </HStack>
   );
