@@ -176,6 +176,7 @@ const Login = () => {
               size={56}
               textColor="white"
               disabled={loading || !password}
+              bgColor="none"
               isLoading={loading}
               onPress={handleSubmit}
               borderColor={theme.colors.white}
