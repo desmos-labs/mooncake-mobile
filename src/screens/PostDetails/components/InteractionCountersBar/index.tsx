@@ -3,10 +3,9 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Box } from 'native-base';
+import { Box, Skeleton } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 type Props = {
@@ -37,7 +36,9 @@ const InteractionCountersBar = (props: Props) => {
   }, [interactionAuthors.length]);
 
   return loading ? (
-    <StyledSpinner />
+    <View style={styles.container}>
+      <Skeleton h="4" borderRadius="4" />
+    </View>
   ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
