@@ -23,7 +23,7 @@ const useLogin = () => {
         } else navigateToHome(ROUTES.HOME_TAB_DISCOVER);
       },
     });
-  }, [navigateToHome, replace]);
+  }, [followingAddresses.length, navigateToHome, replace]);
 };
 
 export default useLogin;
