@@ -104,7 +104,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),
         onPress: () => handlePressBlockOrUnblock(post.author),
-        icon: unblock,
+        icon: isBlocked ? unblock : block,
       },
     ];
 

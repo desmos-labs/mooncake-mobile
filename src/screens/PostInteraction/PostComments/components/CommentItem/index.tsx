@@ -151,7 +151,7 @@ const CommentItem = (props: CommentItemProps) => {
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),
         onPress: () => handlePressBlock(comment.author),
-        icon: unblock,
+        icon: isBlocked ? unblock : block,
       },
     ];
 

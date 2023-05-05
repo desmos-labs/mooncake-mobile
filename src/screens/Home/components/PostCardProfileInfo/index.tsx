@@ -126,10 +126,10 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),
         onPress: onPressBlock,
-        icon: unblock,
+        icon: isBlocked ? unblock : block,
       },
     ],
-    [isFollowing, t, onPressFollow, onPressReport],
+    [isFollowing, t, onPressFollow, onPressReport, isBlocked, onPressBlock],
   );
 
   // -------------------------------------------------------------------------------------

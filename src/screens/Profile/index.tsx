@@ -305,7 +305,7 @@ const Profile = () => {
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),
         onPress: () => handlePressBlock(),
-        icon: unblock,
+        icon: isBlocked ? unblock : block,
       },
     ];
 
