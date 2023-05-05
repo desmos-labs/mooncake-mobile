@@ -3,6 +3,7 @@ import { Toast } from 'native-base';
 import { InterfaceToastProps } from 'native-base/lib/typescript/components/composites/Toast';
 import CustomToast from 'components/Toasts/CustomToast';
 import { v4 as uuidV4 } from 'uuid';
+import NewPostToast from 'components/Toasts/NewPostToast';
 
 /**
  * Enums that represent the possible types of toasts
@@ -11,21 +12,22 @@ export enum ToastConfig {
   SUCCESS = 'BUTTER_SUCCESS',
   ERROR = 'BUTTER_ERROR',
   ERROR_NO_RETRY = 'BUTTER_ERROR_NO_RETRY',
+  NEW_POST = 'NEW_POST',
 }
 
 /**
  * Toast options for SUCCESS and ERROR_NO_RETRY toasts
  */
-interface ShowToastOptions {
+interface CustomSuccessToastOptions {
   id?: string;
   handlePressToast?: () => void;
 }
 
 /**
  * Toast options for ERROR toasts
- * extends {@link ShowToastOptions}
+ * extends {@link CustomSuccessToastOptions}
  */
-interface ShowErrorToastOptions extends ShowToastOptions {
+interface CustomErrorToastOptions extends CustomSuccessToastOptions {
   handlePressRetry: () => void;
 }
 
@@ -49,42 +51,84 @@ const BaseToastConfig: Pick<InterfaceToastProps, 'placement' | 'duration'> = {
  */
 const useCustomToast = () => {
   const showToast = React.useCallback(
-    (type: ToastConfig, message: string, options: ShowToastOptions | ShowErrorToastOptions) => {
-      const toastId = generateToastId(options.id);
+    ({
+      type,
+      message,
+      options,
+      additionalToastOptions,
+    }: {
+      type: ToastConfig;
+      message?: string;
+      options?: CustomSuccessToastOptions | CustomErrorToastOptions;
+      additionalToastOptions?: InterfaceToastProps;
+    }) => {
+      const toastId = generateToastId(options?.id);
 
       if (Toast.isActive(toastId)) return;
 
       Toast.show({
         ...BaseToastConfig,
+        ...additionalToastOptions,
         id: toastId,
-        render: () => (
-          <CustomToast message={message} type={type} options={{ ...options, id: toastId }} />
-        ),
+        render: () => {
+          switch (type) {
+            case ToastConfig.NEW_POST:
+              return <NewPostToast />;
+            default:
+              return (
+                // false positive
+                // @ts-ignore
+                <CustomToast message={message} type={type} options={{ ...options, id: toastId }} />
+              );
+          }
+        },
       });
     },
     [],
   );
 
   const success = React.useCallback(
-    (message: string, options?: ShowToastOptions) => {
-      showToast(ToastConfig.SUCCESS, message, options || {});
+    (message: string, options?: CustomSuccessToastOptions) => {
+      showToast({
+        type: ToastConfig.SUCCESS,
+        message,
+        options,
+      });
     },
     [showToast],
   );
 
   const error = React.useCallback(
-    (message: string, options?: ShowErrorToastOptions) => {
-      showToast(ToastConfig.ERROR, message, options || {});
+    (message: string, options?: CustomErrorToastOptions) => {
+      showToast({
+        type: ToastConfig.ERROR,
+        message,
+        options,
+      });
     },
     [showToast],
   );
 
   const errorNoRetry = React.useCallback(
-    (message: string, options?: ShowToastOptions) => {
-      showToast(ToastConfig.ERROR_NO_RETRY, message, options || {});
+    (message: string, options?: CustomSuccessToastOptions) => {
+      showToast({
+        type: ToastConfig.NEW_POST,
+        message,
+        options,
+      });
     },
     [showToast],
   );
+
+  const newPost = React.useCallback(() => {
+    showToast({
+      type: ToastConfig.NEW_POST,
+      options: {
+        // use a hard-coded toast id to ensure it is only shown once at any given instance
+        id: 'new-post-toast',
+      },
+    });
+  }, [showToast]);
 
   const closeAll = () => Toast.closeAll();
 
@@ -93,6 +137,7 @@ const useCustomToast = () => {
     error,
     errorNoRetry,
     closeAll,
+    newPost,
   };
 };
 

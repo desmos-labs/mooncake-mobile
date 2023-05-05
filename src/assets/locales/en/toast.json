@@ -9,5 +9,6 @@
   "postTxInProgress": "Posting... Please wait!",
   "retry": "Retry",
   "transactionSuccess": "Transaction success!",
-  "transactionFailed": "Transaction failed!"
+  "transactionFailed": "Transaction failed!",
+  "newPost": "New Post"
 }
