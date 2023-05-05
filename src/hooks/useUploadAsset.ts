@@ -4,6 +4,10 @@ import { UploadAssetType, UploadMedia } from 'services/axios/requests/UploadMedi
 export interface UploadAssetResult {
   readonly uri: string;
   readonly mimeType: string;
+  readonly size: {
+    width: number;
+    height: number;
+  };
 }
 
 /**
@@ -15,6 +19,10 @@ const useUploadAsset = () => {
     return uploadResult.map(result => ({
       uri: result.url,
       mimeType: asset.type ?? '', // TODO: Estimate the type here instead of using an empty string
+      size: {
+        width: asset.width,
+        height: asset.height,
+      },
     }));
   }, []);
 };

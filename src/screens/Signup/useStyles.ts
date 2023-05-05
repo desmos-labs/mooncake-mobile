@@ -17,7 +17,6 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   inputLabel: {
-    borderColor: theme.colors.lightGrey01,
     borderWidth: 1,
     marginBottom: theme.spacing.s,
   },
@@ -31,7 +30,7 @@ const useStyles = makeStyle(theme => ({
   },
   errorText: {
     marginTop: theme.spacing.xs,
-    marginBottom: theme.spacing.xs,
+    marginBottom: theme.spacing.s,
     color: theme.colors.pink01,
   },
   errorTextDtag: {
@@ -86,6 +85,26 @@ const useStyles = makeStyle(theme => ({
   loadingView: {
     alignItems: 'center',
     paddingVertical: theme.spacing.m,
+  },
+  bottomLabel: {
+    marginVertical: theme.spacing.s,
+  },
+  topLabel: {
+    marginTop: theme.spacing.m,
+  },
+  pswCheck: {
+    marginVertical: theme.spacing.s,
+  },
+  inputStandard: {
+    borderColor: theme.colors.lightGrey01,
+  },
+  infoIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: theme.spacing.xs,
+  },
+  inviteInfoBody: {
+    textAlign: 'left',
   },
 }));
 

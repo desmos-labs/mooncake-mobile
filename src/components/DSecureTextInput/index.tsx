@@ -11,7 +11,11 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur
   const theme = useTheme();
   const styles = useStyles();
   const [hideText, setHideText] = useState(true);
-  const iconColor = focused ? theme.colors.surfaceBlack : theme.colors.iconGrey;
+  const iconColor = () => {
+    if (focused && !rest.error) return theme.colors.surfaceBlack;
+    if (rest.error) return theme.colors.pink01;
+    return theme.colors.grey01;
+  };
 
   const a11yLabel = rest.accessibilityLabel;
 
@@ -32,19 +36,18 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur
       }}
       secureTextEntry={hideText}
       textAlignVertical="center"
-      placeHolderColor={iconColor}
-      style={[
-        styles.input,
-        rest.style,
-        // error && styles.error, focused && styles.focused
-      ]}
+      placeHolderColor={iconColor()}
+      style={[styles.input, rest.style, rest.error && styles.error]}
       rightElement={
         <Pressable
           accessibilityLabel={`${a11yLabel}-${hideText ? 'hidden' : 'visible'}`}
           onPress={() => {
             setHideText(old => !old);
           }}>
-          <Image style={styles.icon} source={hideText ? eyeOpen : eyeClosed} />
+          <Image
+            style={[styles.icon, { tintColor: iconColor() }]}
+            source={hideText ? eyeOpen : eyeClosed}
+          />
         </Pressable>
       }
     />

@@ -21,10 +21,6 @@ const useInitializeDynamicLinks = () => {
     (link: FirebaseDynamicLinksTypes.DynamicLink | null) => {
       if (link && !activeAddress) {
         const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
-        console.log('Invite code found:', inviteCode);
-
-        // TODO: Improve this alert - The OS UI sucks
-        Alert.alert('You received an invite!', `${inviteCode}`);
         setInviteCode(inviteCode);
         navigate(ROUTES.ONBOARDING, { invited: true });
       } else if (link && activeAddress) {

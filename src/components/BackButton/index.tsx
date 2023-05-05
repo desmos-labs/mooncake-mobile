@@ -1,29 +1,22 @@
 import { makeStyle } from 'config/theme';
 import React from 'react';
-import { ColorValue, StyleProp, ViewStyle } from 'react-native';
+import { ColorValue } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CommonStyles from 'config/theme/CommonStyles';
 
-export type Props = {
-  /**
-   * What to do when the button is pressed.
-   */
-  onPress: () => void;
-  /**
-   * The style of the button's container.
-   */
-  style?: StyleProp<ViewStyle>;
+export interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   /**
    * The tint color of the back arrow.
    */
   iconColor?: ColorValue;
-};
+}
 
 /**
  * A button with a back arrow image.
  */
-export const BackButton: React.FC<Props> = ({ onPress, style, iconColor }) => {
+export const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColor }) => {
   const theme = useTheme();
   const styles = useStyles();
   return (
@@ -31,9 +24,11 @@ export const BackButton: React.FC<Props> = ({ onPress, style, iconColor }) => {
       accessibilityLabel="back-button"
       hitSlop={{ top: 50, bottom: 50, right: 50, left: 50 }}
       onPress={onPress}
+      disabled={disabled}
       style={[styles.button, style]}>
       <Icon
         name="angle-left"
+        style={disabled && CommonStyles.opacity['50']}
         color={iconColor || theme.colors.surfaceBlack}
         size={32}
         allowFontScaling

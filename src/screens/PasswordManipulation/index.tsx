@@ -15,7 +15,7 @@ import _ from 'lodash';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
 import { Box, useTheme } from 'native-base';
@@ -24,6 +24,12 @@ import { AccountWithWallet } from 'types/account';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -93,6 +99,30 @@ const PasswordManipulation = () => {
     initialFormValues,
   } = useHooks();
 
+  // Animations
+  const [animatedPswChecksVisible, setAnimatedPswChecksVisible] = useState(false);
+  const animatedOpacity = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(animatedOpacity.value, [0, 1], [0, 1]),
+    };
+  });
+
+  // Child components
+
+  const animatedPasswordChecks = useCallback(
+    (values: any) => {
+      return (
+        animatedPswChecksVisible && (
+          <Animated.View style={[animatedStyle, styles.marginXs]}>
+            <PasswordReqGroup passwordToCheck={values.newPassword} />
+          </Animated.View>
+        )
+      );
+    },
+    [animatedPswChecksVisible, animatedStyle, styles.marginXs],
+  );
+
   return (
     <DView style={styles.container} topBar={<TopBar />} backgroundColor={theme.colors.white}>
       <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
@@ -132,6 +162,14 @@ const PasswordManipulation = () => {
 
                   <DSecureTextInput
                     testID="newPasswordField"
+                    onOuterFocus={() => {
+                      setAnimatedPswChecksVisible(true);
+                      animatedOpacity.value = withTiming(1);
+                    }}
+                    onOuterBlur={() => {
+                      animatedOpacity.value = withTiming(0);
+                      setAnimatedPswChecksVisible(false);
+                    }}
                     value={values.newPassword}
                     onChangeText={(value: string) => setFieldValue('newPassword', value, true)}
                     style={styles.inputLabel}
@@ -145,12 +183,13 @@ const PasswordManipulation = () => {
                     </Typography.Caption1>
                   )}
 
-                  <PasswordReqGroup passwordToCheck={values.newPassword} />
+                  {animatedPasswordChecks(values)}
 
                   <Typography.Subtitle2 style={styles.bottomLabel}>
                     {t('confirmPw')}
                   </Typography.Subtitle2>
                   <DSecureTextInput
+                    error={errors.confirmPassword !== undefined}
                     testID="confirmPasswordField"
                     inputRef={confirmPasswordRef}
                     onOuterFocus={() =>
@@ -166,7 +205,6 @@ const PasswordManipulation = () => {
                     value={values.confirmPassword}
                     style={styles.inputLabel}
                     onChangeText={(value: string) => setFieldValue('confirmPassword', value, true)}
-                    // error={!!errors.confirmPassword}
                   />
                   {errors.confirmPassword && (
                     <Typography.Caption1 style={styles.errorText}>

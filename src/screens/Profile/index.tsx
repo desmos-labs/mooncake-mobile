@@ -357,6 +357,16 @@ const Profile = () => {
           onPress={goBack}
         />
       )}
+      {/* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */}
+      {/* /!* Edit and scan buttons *!/ */}
+      {/* {isActiveAccount && ( */}
+      {/*  <ImageButton */}
+      {/*    image={profileSettings} */}
+      {/*    buttonStyle={[styles.buttonStyleRight, styles.r20]} */}
+      {/*    style={styles.topBarImage} */}
+      {/*    onPress={() => navigate(ROUTES.SETTINGS)} */}
+      {/*  /> */}
+      {/* )} */}
 
       <View style={styles.contextButtonPosition}>{PopupContextMenu}</View>
 
@@ -381,13 +391,10 @@ const Profile = () => {
           </Typography.Subtitle3>
         </View>
       </Animated.View>
-
       {/* Banner */}
       <AnimatedBannerPicture profile={profile} scrollY={scrollY} />
-
       {/* Profile image */}
       <AnimatedProfilePicture profile={profile} scrollY={scrollY} scrollOffset={scrollOffset} />
-
       <Animated.ScrollView
         overScrollMode="never"
         pinchGestureEnabled={false}

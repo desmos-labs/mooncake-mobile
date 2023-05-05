@@ -6,7 +6,6 @@
   "dtag info": "DTag is a unique identifier for your profile that is easy for others to search and remember.",
   "completeProfile": "Complete profile",
   "password": "Password",
-  "enter password": "Enter password",
   "invite code": "Invite Code",
   "congratulations": "Congratulations!",
   "profile created": "Your profile has been imported",
@@ -16,5 +15,11 @@
   "understand": "I understand",
   "backup phrase": "Backup Secret Recovery Phrase",
   "why backup": "Why do I need to backup Secret Recovery Phrase?",
-  "backup phrase text": "A Secret Recovery Phrase is a group of words with which you can recover your account. It is extremely important to keep your secret recovery phrase safe, as you could need it to restore your account. Also, if someone else has it, it can steal your account and funds."
+  "backup phrase text": "A Secret Recovery Phrase is a group of words with which you can recover your account. It is extremely important to keep your secret recovery phrase safe, as you could need it to restore your account. Also, if someone else has it, it can steal your account and funds.",
+  "next create a profile": "Next, Create a Profile",
+  "join butter discord": "Join Butter Discord",
+  "enter password": "Enter password",
+  "enter invite code": "Enter invite code",
+  "invite info title": "Invite Code",
+  "invite info body": "If you're not sure how to get an invite code, don't worry!\n\nYou can still join our Discord community to get an invite code"
 }

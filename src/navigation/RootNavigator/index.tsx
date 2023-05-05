@@ -8,8 +8,8 @@ import useInitializeAppData from 'hooks/useInitializeAppData';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
 import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
-import Signup from 'screens/Signup';
-import Landing from 'screens/Landing';
+import Signup, { SignupParams } from 'screens/Signup';
+import Landing, { LandingParams } from 'screens/Landing';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
@@ -86,9 +86,9 @@ export type RootNavigatorParamList = {
   // --- INITIAL SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.LANDING]: undefined;
+  [ROUTES.LANDING]: LandingParams;
   [ROUTES.ONBOARDING]: OnboardingParams;
-  [ROUTES.SIGNUP]: undefined;
+  [ROUTES.SIGNUP]: SignupParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
 
@@ -342,7 +342,13 @@ const RootNavigator = () => {
       {/* --- POST SCREENS --- */}
       {/* -------------------- */}
 
-      <Stack.Screen name={ROUTES.POST_CREATE} component={CreatePost} />
+      <Stack.Screen
+        name={ROUTES.POST_CREATE}
+        component={CreatePost}
+        options={({ route }) => ({
+          gestureEnabled: !route?.params?.disableBackSwipe,
+        })}
+      />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
 
       {/* ------------------------ */}
