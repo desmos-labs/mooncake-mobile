@@ -120,15 +120,19 @@ const useCustomToast = () => {
     [showToast],
   );
 
-  const newPost = React.useCallback(() => {
-    showToast({
-      type: ToastConfig.NEW_POST,
-      options: {
-        // use a hard-coded toast id to ensure it is only shown once at any given instance
-        id: 'new-post-toast',
-      },
-    });
-  }, [showToast]);
+  const newPost = React.useCallback(
+    (options?: CustomSuccessToastOptions) => {
+      showToast({
+        type: ToastConfig.NEW_POST,
+        options: {
+          // use a hard-coded toast id to ensure it is only shown once at any given instance
+          id: 'new-post-toast',
+          ...options,
+        },
+      });
+    },
+    [showToast],
+  );
 
   const closeAll = () => Toast.closeAll();
 

@@ -14,8 +14,6 @@
   "days ago": "{{count}} day ago",
   "days ago_plural": "{{count}} days ago",
   "no posts to display": "No posts to display",
-  "newDiscoverPost": "There are new Posts! Tap to refresh.",
-  "newFollowingPost": "There are new Posts from your following list! Tap to refresh.",
   "search something": "Search something",
   "block": "Block"
 }

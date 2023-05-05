@@ -75,8 +75,7 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
 
   const onNewDiscoveryPosts = useCallback(() => {
     if (!isFocused || routeName !== ROUTES.HOME_TAB_DISCOVER) return;
-    console.log('Received new discover posts');
-    toast.success(t('newDiscoverPost'), {
+    toast.newPost({
       handlePressToast: onPressNotification,
     });
   }, [isFocused, onPressNotification, routeName, t, toast]);
@@ -107,8 +106,7 @@ const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
 
   const onNewFollowingPosts = useCallback(() => {
     if (!isFocused || routeName !== ROUTES.HOME_TAB_FOLLOWING) return;
-    console.log('Received new followers posts');
-    toast.success(t('newFollowingPost'), {
+    toast.newPost({
       handlePressToast: onPressNotification,
     });
   }, [isFocused, onPressNotification, routeName, t, toast]);
