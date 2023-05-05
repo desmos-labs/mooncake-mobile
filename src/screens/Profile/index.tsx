@@ -5,8 +5,8 @@ import {
   profileBack,
   profileContextButton,
   profileSettings,
-  reportIcon,
-} from 'assets/images';
+  reportIcon, unblock,
+} from "assets/images";
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -305,7 +305,7 @@ const Profile = () => {
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),
         onPress: () => handlePressBlock(),
-        icon: block,
+        icon: unblock,
       },
     ];
 

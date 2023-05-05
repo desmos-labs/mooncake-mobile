@@ -7,6 +7,7 @@ import {
   followBlackIcon,
   reportIcon,
   tipIcon,
+  unblock,
   unfollowBlackIcon,
 } from 'assets/images';
 import ThemedLottieView from 'components/ThemedLottieView';
@@ -150,7 +151,7 @@ const CommentItem = (props: CommentItemProps) => {
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),
         onPress: () => handlePressBlock(comment.author),
-        icon: block,
+        icon: unblock,
       },
     ];
 
