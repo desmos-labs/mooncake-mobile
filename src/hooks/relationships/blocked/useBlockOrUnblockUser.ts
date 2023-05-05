@@ -17,6 +17,7 @@ import {
   useSetBlockedUserStatus,
 } from '@recoil/blockedRelationships';
 import { MsgBlockUserTypeUrl } from '@desmoslabs/desmjs/build/const/relationships';
+import usePromptConfirmUnblock from 'hooks/usePromptConfirmUnblock';
 
 /**
  * Hook that allows to block a user both remotely and locally.
@@ -62,11 +63,20 @@ const useBlockUser = () => {
 const useUnblockUser = () => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
+  const promptConfirmUnblock = usePromptConfirmUnblock();
 
   const setBlockedUserStatus = useSetBlockedUserStatus();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
+      // Display counterparty's dTag if they have not set a nickname
+      const confirmationResult = await promptConfirmUnblock(
+        counterparty.nickname || `@${counterparty.dTag}`,
+      );
+
+      // early exit if the user denies the prompt above.
+      if (!confirmationResult.isOk()) return;
+
       // Delete the blocked relationship locally
       setBlockedUserStatus(user, counterparty.address, DataStatus.DELETED_LOCALLY);
 

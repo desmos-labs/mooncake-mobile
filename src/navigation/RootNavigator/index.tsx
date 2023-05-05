@@ -74,6 +74,9 @@ import {
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 import BlockedUsers from 'screens/BlockedUsers';
+import UnblockConfirmationModal, {
+  UnlockConfirmationModalParams,
+} from 'screens/Modals/UnblockConfirmationModal';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -222,6 +225,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.UPLOAD_PROFILE_PICTURES_MODALS]: SaveProfileModalParams;
   [ROUTES.AUTHORIZATION_MODAL]: AuthorizationModalParams;
+  [ROUTES.UNBLOCK_CONFIRMATION_MODAL]: UnlockConfirmationModalParams;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -445,6 +449,11 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
+        <Stack.Screen
+          name={ROUTES.UNBLOCK_CONFIRMATION_MODAL}
+          component={UnblockConfirmationModal}
+        />
+
         <Stack.Screen
           name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}
           component={UploadProfilePicturesModal}
