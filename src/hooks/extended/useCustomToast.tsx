@@ -1,7 +1,7 @@
 import React from 'react';
 import { Toast } from 'native-base';
 import { InterfaceToastProps } from 'native-base/lib/typescript/components/composites/Toast';
-import CustomToast from 'components/CustomToast';
+import CustomToast from 'components/Toasts/CustomToast';
 import { v4 as uuidV4 } from 'uuid';
 
 /**
