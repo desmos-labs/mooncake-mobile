@@ -6,12 +6,12 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import ROUTES from 'navigation/routes';
 import { err, ok, Result } from 'neverthrow';
 import { CanceledBlockError, CanceledOperationError } from 'types/error';
-import { bool } from 'yup';
-import { EncodeObject } from '@cosmjs/proto-signing';
+import { useTranslation } from 'react-i18next';
 
 const usePromptConfirmUnblock = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const activeAccountAddress = useActiveAccountAddress();
+  const { t } = useTranslation('unblock');
 
   return React.useCallback(
     async (userToUnblock: string) => {
@@ -20,15 +20,19 @@ const usePromptConfirmUnblock = () => {
       }
 
       return new Promise<Result<Boolean, Error>>(resolve => {
-        navigation.navigate(ROUTES.UNBLOCK_CONFIRMATION_MODAL, {
-          onPressYes: () => resolve(ok(true)),
-          onPressNo: () => resolve(err(new CanceledBlockError())),
+        navigation.navigate(ROUTES.CONFIRM_MODAL, {
+          onPressPrimary: () => resolve(ok(true)),
+          onPressSecondary: () => resolve(err(new CanceledBlockError())),
           onDismiss: () => resolve(err(new CanceledOperationError())),
-          userToUnblock,
+          title: t('unblock'),
+          primaryButtonLabel: t('unblock'),
+          secondaryButtonLabel: t('common:no'),
+          subtitle: t('content', { username: userToUnblock }),
+          removeModalAfterButtonPress: true,
         });
       });
     },
-    [activeAccountAddress, navigation],
+    [activeAccountAddress, navigation, t],
   );
 };
 
