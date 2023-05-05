@@ -5,7 +5,7 @@ import PostNotificationToken from 'services/axios/requests/PostNotificationToken
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import { useAppStateValue } from '@recoil/appState';
 import { err, ok, Result } from 'neverthrow';
-import useLogin from 'hooks/useLogin';
+import useRedirectToLogin from 'hooks/useRedirectToLogin';
 
 /**
  * A hook that restores axios bearer token and redirects the user to the login screen
@@ -13,7 +13,7 @@ import useLogin from 'hooks/useLogin';
  */
 const useRefreshSession = () => {
   const bearerToken = useAppStateValue('bearerToken');
-  const handleLogin = useLogin();
+  const handleLogin = useRedirectToLogin();
 
   return useCallback(async (): Promise<Result<void, Error>> => {
     // Bearer token refresh

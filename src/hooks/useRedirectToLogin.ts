@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 
-const useLogin = () => {
+const useRedirectToLogin = () => {
   const { replace } = useNavigation<any>();
   const navigateToHome = useNavigateToHome();
   const followingAddresses = useFollowingAddresses();
@@ -26,4 +26,4 @@ const useLogin = () => {
   }, [followingAddresses.length, navigateToHome, replace]);
 };
 
-export default useLogin;
+export default useRedirectToLogin;
