@@ -26,6 +26,7 @@ import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
 import useStyles from './useStyles';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 
@@ -211,7 +212,15 @@ const PostDetails = () => {
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={comments}
-        ListEmptyComponent={<EmptyListComponent label="No comments yet" />}
+        // Conditionally render the comment item skeleton here so it seamlessly transitions
+        // from a lazy loading to ready state
+        ListEmptyComponent={
+          (firstLoad && areCommentsLoading) || areCommentsLoading ? (
+            <CommentItemSkeleton />
+          ) : (
+            <EmptyListComponent label="No comments yet" />
+          )
+        }
         keyboardDismissMode="on-drag"
         onEndReached={fetchMoreComments}
       />

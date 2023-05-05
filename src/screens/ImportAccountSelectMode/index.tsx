@@ -54,11 +54,13 @@ const ImportAccountSelectMode = (props: NavProps) => {
     <DView style={styles.container} topBar={<TopBar />}>
       <Typography.H3>{t('header')}</Typography.H3>
       <Spacer paddingVertical={theme.spacing.m} />
-      <ShadowButton
-        buttonImage={importPhrase}
-        buttonText={t('import recovery phrase')}
-        handlePress={onImportWithMnemonic}
-      />
+      {__DEV__ && (
+        <ShadowButton
+          buttonImage={importPhrase}
+          buttonText={t('import recovery phrase')}
+          handlePress={onImportWithMnemonic}
+        />
+      )}
       <Spacer paddingBottom={theme.spacing.l} />
       <ShadowButton
         buttonImage={connectLedger}

@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { profileBack, profileSettings } from 'assets/images';
+import { profileBack } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -262,7 +262,6 @@ const Profile = () => {
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-
       {/* Back button */}
       {!isActiveAccount && (
         <ImageButton
@@ -272,17 +271,16 @@ const Profile = () => {
           onPress={goBack}
         />
       )}
-
-      {/* Edit and scan buttons */}
-      {isActiveAccount && (
-        <ImageButton
-          image={profileSettings}
-          buttonStyle={[styles.buttonStyleRight, styles.r20]}
-          style={styles.topBarImage}
-          onPress={() => navigate(ROUTES.SETTINGS)}
-        />
-      )}
-
+      {/* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */}
+      {/* /!* Edit and scan buttons *!/ */}
+      {/* {isActiveAccount && ( */}
+      {/*  <ImageButton */}
+      {/*    image={profileSettings} */}
+      {/*    buttonStyle={[styles.buttonStyleRight, styles.r20]} */}
+      {/*    style={styles.topBarImage} */}
+      {/*    onPress={() => navigate(ROUTES.SETTINGS)} */}
+      {/*  /> */}
+      {/* )} */}
       {/* DTag */}
       <Animated.View style={[styles.animatedDtag, animatedDTagStyle]}>
         <View
@@ -294,13 +292,10 @@ const Profile = () => {
           </Typography.Subtitle3>
         </View>
       </Animated.View>
-
       {/* Banner */}
       <AnimatedBannerPicture profile={profile} scrollY={scrollY} />
-
       {/* Profile image */}
       <AnimatedProfilePicture profile={profile} scrollY={scrollY} scrollOffset={scrollOffset} />
-
       <Animated.ScrollView
         overScrollMode="never"
         pinchGestureEnabled={false}

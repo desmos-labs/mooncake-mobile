@@ -10,8 +10,6 @@ const useStyles = makeStyle(theme => ({
     borderColor: theme.colors.primary,
   },
   error: {
-    borderWidth: 1,
-    borderRadius: theme.roundness,
     borderColor: theme.colors.pink01,
   },
   icon: {

@@ -1,6 +1,6 @@
 import { EnglishMnemonic } from '@cosmjs/crypto';
 
-export const MIN_PW_LENGTH = 10;
+export const MIN_PW_LENGTH = 6;
 
 /**
  * Validate a given mnemonic.

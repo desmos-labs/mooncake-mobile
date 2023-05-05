@@ -16,7 +16,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   bottomLabel: {
-    marginBottom: theme.spacing.s,
+    marginVertical: theme.spacing.s,
   },
   inputLabel: {
     borderWidth: 0.5,
@@ -46,6 +46,7 @@ const useStyles = makeStyle(theme => ({
   strongPw: {
     color: theme.colors.accentGreen01,
   },
+  marginXs: { marginTop: theme.spacing.xs },
 }));
 
 export default useStyles;

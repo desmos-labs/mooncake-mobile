@@ -1,7 +1,9 @@
 {
   "butter": "Butter",
-  "header": "Your decentralized social network",
+  "header": "Connect safely, without compromise",
   "signUp": "Sign up",
-  "signUp with wallet": "Sign Up with wallet",
-  "connectLedger": "Connect Ledger"
+  "signUp with wallet": "Sign Up with Wallet",
+  "connectLedger": "Connect Ledger",
+  "or sign in with": "Or sign in with",
+  "you have been invited": "You have been invited!"
 }
