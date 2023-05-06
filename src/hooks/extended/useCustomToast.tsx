@@ -129,6 +129,10 @@ const useCustomToast = () => {
           id: 'new-post-toast',
           ...options,
         },
+        additionalToastOptions: {
+          // a null duration means the toast will not dismiss automatically
+          duration: null,
+        },
       });
     },
     [showToast],
