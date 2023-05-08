@@ -170,6 +170,7 @@ const Home = () => {
     },
     [
       handleNavigateToProfile,
+      handlePressBlock,
       handlePressComments,
       handlePressDetails,
       handlePressFollow,
@@ -215,7 +216,7 @@ const Home = () => {
         </View>
       );
     }
-  }, [loading, posts.length]);
+  }, [loading, posts.length, styles.emptyImage, styles.emptyView, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Component rendering
