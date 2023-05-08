@@ -370,16 +370,6 @@ const Profile = () => {
 
       <View style={styles.contextButtonPosition}>{PopupContextMenu}</View>
 
-      {/* Edit and scan buttons */}
-      {isActiveAccount && (
-        <ImageButton
-          image={profileSettings}
-          buttonStyle={[styles.buttonStyleRight, styles.r20]}
-          style={styles.topBarImage}
-          onPress={() => navigate(ROUTES.SETTINGS)}
-        />
-      )}
-
       {/* DTag */}
       <Animated.View style={[styles.animatedDtag, animatedDTagStyle]}>
         <View
