@@ -57,7 +57,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
   const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(post.author.address);
   const { count: commentsCount } = usePostCommentsCount(post);
-  const isAuthorActiveUser = useIsAuthorActiveUser(post);
+  const isAuthorActiveUser = useIsAuthorActiveUser(post.author.address);
 
   // -------------------------------------------------------------------------------------
   // --- Actions

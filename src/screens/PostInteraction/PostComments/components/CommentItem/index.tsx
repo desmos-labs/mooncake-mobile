@@ -72,7 +72,7 @@ const CommentItem = (props: CommentItemProps) => {
   const { isFollowing } = useIsFollowing(comment.author.address);
   const { isBlocked } = useIsBlocked(comment.author.address);
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
-  const isAuthorActiveUser = useIsAuthorActiveUser(comment);
+  const isAuthorActiveUser = useIsAuthorActiveUser(comment.author.address);
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
