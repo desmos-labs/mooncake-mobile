@@ -15,6 +15,8 @@ import {
   MsgDeleteRelationshipTypeUrl,
   MsgDeleteSubspaceTypeUrl,
   MsgRemoveReactionTypeUrl,
+  MsgBlockUserTypeUrl,
+  MsgUnblockUserTypeUrl,
 } from '@desmoslabs/desmjs';
 import { useStoredProfiles } from '@recoil/profiles';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
@@ -59,6 +61,9 @@ const MsgsThatRequiresProfile = [
   // Relationships
   MsgCreateRelationshipTypeUrl,
   MsgDeleteRelationshipTypeUrl,
+  // Block/unblock
+  MsgBlockUserTypeUrl,
+  MsgUnblockUserTypeUrl,
 ];
 
 /**
