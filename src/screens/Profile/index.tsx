@@ -4,7 +4,6 @@ import {
   block,
   profileBack,
   profileContextButton,
-  profileSettings,
   reportIcon,
   unblock,
 } from 'assets/images';
