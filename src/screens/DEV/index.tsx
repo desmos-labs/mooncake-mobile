@@ -76,10 +76,12 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   // -------------------------------------------------------------------------------------
 
   const showToast = () => {
-    toast.error('hello world', {
-      handlePressToast: () => console.log('hello world'),
-      handlePressRetry: () => console.log('retry'),
-    });
+    // toast.error('hello world', {
+    //   handlePressToast: () => console.log('hello world'),
+    //   handlePressRetry: () => console.log('retry'),
+    // });
+
+    toast.newPost();
   };
 
   const acceptInvite = useCallback(async (code: string) => {
