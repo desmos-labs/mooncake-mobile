@@ -32,7 +32,7 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  contextButtonStyle:{
+  contextButtonStyle: {
     height: 32,
     width: 32,
   },

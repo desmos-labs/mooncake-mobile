@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from 'components/Typography';
-import { Image, ImageSourcePropType, ViewStyle } from 'react-native';
+import { Image, ImageSourcePropType } from 'react-native';
 import { Box, Divider, HStack, Menu, Pressable } from 'native-base';
 import { moreBlackIcon } from 'assets/images';
 import { InterfaceMenuProps } from 'native-base/src/components/composites/Menu/types';

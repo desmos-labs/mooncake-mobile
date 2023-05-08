@@ -37,7 +37,6 @@ import TransactionRow from 'screens/BroadcastTxOnChain/components/TransactionRow
 import { formatCoins } from 'lib/FormatUtils';
 import TopBar from 'components/TopBar';
 import { MsgExecuteContractTypeUrl } from 'config/AutzGrants';
-import { MsgBlockUser } from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
 import { MsgBlockUserTypeUrl } from '@desmoslabs/desmjs/build/const/relationships';
 import useBroadcastTx from './useBroadcastTx';
 import useStyles from './useStyles';

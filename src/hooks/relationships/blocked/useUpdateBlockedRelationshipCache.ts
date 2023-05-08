@@ -1,10 +1,4 @@
 import React from 'react';
-import {
-  useAddRelationship,
-  useGetRelationship,
-  useRemoveFollowedUser,
-  useUpdateRelationshipStatus,
-} from '@recoil/relationships';
 import useUpdateCachedData from 'hooks/useUpdateCachedData';
 import { DesmosProfile } from 'types/desmos';
 import { DataStatus } from 'types/cache';

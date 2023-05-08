@@ -3,7 +3,7 @@ import useBlocked from 'hooks/relationships/blocked/useBlocked';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
-import { Image, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 import Typography from 'components/Typography';
 import { Box, Divider } from 'native-base';

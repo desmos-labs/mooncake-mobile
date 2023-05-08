@@ -5,8 +5,9 @@ import {
   profileBack,
   profileContextButton,
   profileSettings,
-  reportIcon, unblock,
-} from "assets/images";
+  reportIcon,
+  unblock,
+} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -47,7 +48,6 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
-import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import StyledSpinner from 'components/StyledSpinner';
 import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
