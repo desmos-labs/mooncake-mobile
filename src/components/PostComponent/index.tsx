@@ -47,7 +47,7 @@ const PostComponent = (props: Props) => {
       return (
         <View>
           {MediaAttachment}
-          <Typography.Body6 style={{ margin: theme.spacing.m }}>{post.text}</Typography.Body6>
+          <Typography.Body5 style={{ margin: theme.spacing.m }}>{post.text}</Typography.Body5>
         </View>
       );
     }

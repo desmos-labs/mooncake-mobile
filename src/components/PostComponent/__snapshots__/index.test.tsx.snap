@@ -83,10 +83,11 @@ exports[`component: PostComponent renders textImage posts 1`] = `
             },
             {
               "fontFamily": "Poppins-Regular",
-              "fontSize": 14,
+              "fontSize": 16,
               "fontStyle": "normal",
               "fontWeight": "400",
-              "letterSpacing": 0.025,
+              "letterSpacing": 0.005,
+              "lineHeight": 22,
               "textAlign": "left",
             },
           ],
