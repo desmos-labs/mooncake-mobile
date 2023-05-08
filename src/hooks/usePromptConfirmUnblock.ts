@@ -22,7 +22,7 @@ const usePromptConfirmUnblock = () => {
         throw new Error('Unblock user without an active account');
       }
 
-      return new Promise<Result<Boolean, Error>>(resolve => {
+      return new Promise<Result<boolean, Error>>(resolve => {
         navigation.navigate(ROUTES.CONFIRM_MODAL, {
           onPressPrimary: () => resolve(ok(true)),
           onPressSecondary: () => resolve(err(new CanceledBlockError())),

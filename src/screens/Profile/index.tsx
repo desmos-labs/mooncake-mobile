@@ -242,6 +242,7 @@ const Profile = () => {
   }, [followOrUnfollowUser, profile]);
 
   const handlePressBlock = useCallback(async () => {
+    // This assertion is necessary, otherwise it will throw a ts error
     await blockOrUnblockUser(profile!);
   }, [blockOrUnblockUser, profile]);
 
