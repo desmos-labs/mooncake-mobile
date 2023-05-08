@@ -97,7 +97,7 @@ const useUnblockUser = () => {
         setBlockedUserStatus(user, counterparty.address, DataStatus.SYNCED);
       }
     },
-    [setBlockedUserStatus, subspaceId, broadcastTx],
+    [promptConfirmUnblock, setBlockedUserStatus, subspaceId, broadcastTx],
   );
 };
 
