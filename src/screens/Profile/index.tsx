@@ -1,12 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import {
-  block,
-  profileBack,
-  profileContextButton,
-  reportIcon,
-  unblock,
-} from 'assets/images';
+import { block, profileBack, profileContextButton, reportIcon, unblock } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
