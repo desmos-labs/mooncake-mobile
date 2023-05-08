@@ -62,7 +62,6 @@ const BlockedUserItem = ({ profile }: Props) => {
         </HStack>
 
         {BlockOrUnblockButton}
-        {/* Button to follow or unfollow a user */}
       </HStack>
     </TouchableOpacity>
   );

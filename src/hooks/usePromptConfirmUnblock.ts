@@ -8,6 +8,9 @@ import { err, ok, Result } from 'neverthrow';
 import { CanceledBlockError, CanceledOperationError } from 'types/error';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * A hook that prompts the user to confirm an unblock operation.
+ */
 const usePromptConfirmUnblock = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const activeAccountAddress = useActiveAccountAddress();
