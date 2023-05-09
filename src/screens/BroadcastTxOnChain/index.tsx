@@ -36,6 +36,7 @@ import TransactionRow from 'screens/BroadcastTxOnChain/components/TransactionRow
 import { formatCoins } from 'lib/FormatUtils';
 import TopBar from 'components/TopBar';
 import { MsgExecuteContractTypeUrl } from 'config/AutzGrants';
+import { usePostHog } from 'posthog-react-native';
 import useBroadcastTx from './useBroadcastTx';
 import useStyles from './useStyles';
 
@@ -82,7 +83,7 @@ const BroadcastTxOnChain: React.FC = () => {
   const toast = useCustomToast();
   const estimateFees = useEstimateTransactionFees();
   const broadcastTx = useBroadcastTx();
-
+  const posthog = usePostHog();
   // -----------------------------------------------------------------------
   // --- State
   // -----------------------------------------------------------------------
@@ -229,12 +230,20 @@ const BroadcastTxOnChain: React.FC = () => {
       setBroadcastingTx(false);
 
       if (result.isErr() && !isCanceledOperationError(result.error)) {
-        toast.success(result.error.message);
+        toast.errorNoRetry(result.error.message);
       } else if (result.isOk() && onSuccess) {
         onSuccess(result.value);
+        posthog?.capture('transaction_performed', {
+          creation_time: result.value.timestamp,
+          address: result.value.user,
+          txHash: result.value.hash,
+          fees: result.value.fees,
+          messages: result.value.messages,
+          memo,
+        });
       }
     }
-  }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess, toast]);
+  }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess, posthog, toast]);
 
   const broadcastTxAnimation = React.useMemo(() => {
     if (broadcastingTx) {
