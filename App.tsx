@@ -41,7 +41,7 @@ function App(): JSX.Element {
           <NativeBaseProvider theme={lightTheme}>
             <ButterApolloClientProvider>
               <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>
-                <PostHogProvider apiKey={POSTHOG_API_KEY}>
+                <PostHogProvider apiKey={POSTHOG_API_KEY} autocapture={false}>
                   <RootNavigator />
                 </PostHogProvider>
               </NavigationContainer>
