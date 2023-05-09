@@ -37,6 +37,11 @@ interface PostCardProps {
    * What to do if the post tip button is pressed.
    */
   onPressTip: () => void;
+
+  /**
+   * What to do if the hide post button is pressed.
+   */
+  onPressHide: () => void;
 }
 
 /**
@@ -58,6 +63,7 @@ const PostCard = (props: PostCardProps) => {
     onPressComment,
     onPressTip,
     onPressDetails,
+    onPressHide,
   } = props;
 
   // -------------------------------------------------------------------------------------
@@ -85,6 +91,7 @@ const PostCard = (props: PostCardProps) => {
         onPressAuthor={onPressAuthor}
         onPressFollow={onPressFollow}
         onPressReport={onPressReport}
+        onPressHide={onPressHide}
       />
 
       {/* Post text */}

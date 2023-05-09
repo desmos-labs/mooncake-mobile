@@ -10,5 +10,7 @@
   "retry": "Retry",
   "transactionSuccess": "Transaction success!",
   "transactionFailed": "Transaction failed!",
-  "newPost": "New Posts"
+  "newPost": "New Posts",
+  "postHidden": "Post hidden!",
+  "errorHidePost": "An error occurred. Please try again."
 }

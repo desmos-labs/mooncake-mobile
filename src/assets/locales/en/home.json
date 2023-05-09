@@ -15,5 +15,6 @@
   "days ago_plural": "{{count}} days ago",
   "no posts to display": "No posts to display",
   "search something": "Search something",
-  "block": "Block"
+  "block": "Block",
+  "hide": "Hide Post"
 }
