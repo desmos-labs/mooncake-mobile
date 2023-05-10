@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Divider, HStack, useTheme, VStack } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Coin } from '@cosmjs/stargate';
@@ -12,7 +12,6 @@ import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfil
 import StyledSpinner from 'components/StyledSpinner';
 import ImageButton from 'components/ImageButton';
 import { infoIcon } from 'assets/images';
-import { useNavigation } from '@react-navigation/native';
 import useStyles from './useStyles';
 
 export interface BalanceSectionProps {
