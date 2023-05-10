@@ -165,7 +165,7 @@ const Home = () => {
             handlePressReport(item);
           }}
           onPressHide={() => {
-            handlePressHidePost();
+            handlePressHidePost(item.id);
           }}
         />
       );
