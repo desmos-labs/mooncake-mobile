@@ -15,7 +15,6 @@ import CommonStyles from 'config/theme/CommonStyles';
 import * as Sentry from '@sentry/react-native';
 import EnvConfig from 'config/EnvConfig';
 import { PostHogProvider } from 'posthog-react-native';
-import { POSTHOG_API_KEY } from '@env';
 
 Sentry.init({
   dsn: EnvConfig.SENTRY_DSN,
@@ -41,7 +40,7 @@ function App(): JSX.Element {
           <NativeBaseProvider theme={lightTheme}>
             <ButterApolloClientProvider>
               <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>
-                <PostHogProvider apiKey={POSTHOG_API_KEY} autocapture={false}>
+                <PostHogProvider apiKey={EnvConfig.POSTHOG_API_KEY} autocapture={false}>
                   <RootNavigator />
                 </PostHogProvider>
               </NavigationContainer>

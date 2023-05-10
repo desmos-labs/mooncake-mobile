@@ -97,7 +97,15 @@ const usePerformSignUp = (account: AccountWithWallet) => {
       setStatus(SignUpStatus.DONE);
       return ok({ account } as SignUpSuccess);
     },
-    [acceptInvite, account, appInviteCode, performLogin, setActiveAccountAddress, storeAccount],
+    [
+      acceptInvite,
+      account,
+      appInviteCode,
+      performLogin,
+      posthog,
+      setActiveAccountAddress,
+      storeAccount,
+    ],
   );
 
   return {
