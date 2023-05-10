@@ -2,6 +2,8 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { usePostHog } from 'posthog-react-native';
 import { useActiveProfile } from '@recoil/profiles';
 import { useEffect } from 'react';
+import { useGetCurrentChainInfo } from '@recoil/settings';
+import { identifyPostHogUser } from 'lib/PostHog/utils';
 
 /**
  * Hook that allows to identify the user on PostHog.
@@ -10,21 +12,15 @@ const usePosthogIdentification = () => {
   const activeAddress = useActiveAccountAddress();
   const activeProfile = useActiveProfile();
   const posthog = usePostHog();
+  const getChainInfo = useGetCurrentChainInfo();
 
   useEffect(() => {
     if (!posthog) {
       return;
     }
-    // If the user has an active profile, we identify them with their address and dTag
-    if (activeAddress && activeProfile) {
-      posthog.identify(activeAddress, {
-        dTag: activeProfile.dTag,
-      });
-      // If the user does not have an active profile, we identify them with their address only
-    } else if (activeAddress) {
-      posthog.identify(activeAddress);
-    }
-  }, [posthog, activeAddress, activeProfile]);
+
+    identifyPostHogUser(posthog, activeAddress!, getChainInfo(), activeProfile);
+  }, [posthog, activeAddress, activeProfile, getChainInfo]);
 };
 
 export default usePosthogIdentification;

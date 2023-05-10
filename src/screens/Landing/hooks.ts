@@ -5,6 +5,8 @@ import { useStoreProfile } from '@recoil/profiles';
 import useImportAccount from 'hooks/accounts/useImportAccount';
 import { DesmosChain } from 'config/LinkableChains';
 import { usePostHog } from 'posthog-react-native';
+import { useGetCurrentChainInfo } from '@recoil/settings';
+import { identifyPostHogUser } from 'lib/PostHog/utils';
 
 /**
  * Hook that allows to properly perform the import of an existing account.
@@ -21,6 +23,7 @@ export const usePerformImportAccount = () => {
   const createOrSaveProfile = useSaveProfile();
   const posthog = usePostHog();
   const storeProfile = useStoreProfile();
+  const getChainInfo = useGetCurrentChainInfo();
 
   return React.useCallback(() => {
     importAccount({
@@ -40,11 +43,9 @@ export const usePerformImportAccount = () => {
             // The user has a profile, so we need to save both the account and the profile
             saveAccount(account);
             storeProfile(account.account.address, profile);
-            posthog?.identify(profile.address, {
-              dtag: profile.dTag,
-            });
+            identifyPostHogUser(posthog!, account.account.address, getChainInfo(), profile);
         }
       },
     });
-  }, [importAccount, createOrSaveProfile, saveAccount, storeProfile, posthog]);
+  }, [importAccount, createOrSaveProfile, saveAccount, storeProfile, posthog, getChainInfo]);
 };
