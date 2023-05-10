@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   InteractionManager,
   RefreshControl,
@@ -45,6 +45,7 @@ import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import StyledSpinner from 'components/StyledSpinner';
 import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
+import * as WebBrowser from '@toruslabs/react-native-web-browser';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -70,7 +71,7 @@ const Profile = () => {
 
   const route = useRoute<NavProps['route']>();
   const navigation = useNavigation<NavProps['navigation']>();
-  const { navigate, goBack } = navigation;
+  const { navigate, goBack, pop } = navigation;
 
   const { params } = route;
   const givenAddress = params?.address;
@@ -233,6 +234,31 @@ const Profile = () => {
     await followOrUnfollowUser(profile!);
   }, [followOrUnfollowUser, profile]);
 
+  const handlePressBalanceInfo = useCallback(() => {
+    const BalanceInfoContents = (
+      <Typography.Body5>
+        {t('profile:balanceInfo')}
+        <Trans
+          i18nKey="profile:desmosNetworkLink"
+          components={[
+            <Typography.Body5
+              style={styles.linkText}
+              onPress={() => {
+                WebBrowser.openBrowserAsync('https://desmos.network');
+              }}
+            />,
+          ]}
+        />
+      </Typography.Body5>
+    );
+
+    navigate(ROUTES.CONFIRM_MODAL, {
+      subtitle: BalanceInfoContents,
+      primaryButtonLabel: t('common:OK'),
+      onPressPrimary: pop,
+    });
+  }, [t, styles.linkText, navigate, pop]);
+
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
@@ -380,7 +406,12 @@ const Profile = () => {
           {/* Lower section (balance, posts, NFTs, badges, etc) */}
           <View style={styles.container}>
             {/* Balance */}
-            <BalanceSection address={address} balance={balance} isLoading={isBalanceLoading} />
+            <BalanceSection
+              address={address}
+              balance={balance}
+              isLoading={isBalanceLoading}
+              handlePressBalanceInfo={handlePressBalanceInfo}
+            />
 
             <View style={styles.divider} />
 

@@ -43,5 +43,7 @@
   "connectWallet": "Connect Wallet",
   "manageConnectedTwitter": "Manage Connected Twitter",
   "manageConnectedWallets": "Manage Connected Wallets",
-  "no posts": "No created, liked or tipped posts yet"
+  "no posts": "No created, liked or tipped posts yet",
+  "balanceInfo": "DSM powers Butter, the decentralized social network. It keeps the network secure without asking for your data. Interactions cost <1 cent in DSM. Get more by buying on exchanges like Osmosis, or sell and make a profit!\n\nLearn more at ",
+  "desmosNetworkLink": "<0>desmos.network</0>"
 }

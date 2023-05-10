@@ -85,6 +85,9 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
   r20: {
     right: 20,
   },
+  linkText: {
+    color: theme.colors.accentBlue01,
+  },
 }));
 
 export default useStyles;
