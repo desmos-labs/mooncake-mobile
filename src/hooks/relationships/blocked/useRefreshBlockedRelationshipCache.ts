@@ -35,7 +35,6 @@ const useRefreshBlockedRelationshipCache = () => {
         // Skip all relationships with people that do not have a profile
         return;
       }
-
       // Get the relationship existence from the server
       const data = await getLazyData({
         variables: {
@@ -43,6 +42,7 @@ const useRefreshBlockedRelationshipCache = () => {
           blockerAddress: activeAccountAddress,
           blockedAddress: counterparty,
         },
+        fetchPolicy: 'network-only',
       });
       const isBlocked = data?.user_block?.length > 0;
 
