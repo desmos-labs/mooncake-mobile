@@ -21,11 +21,11 @@ const useUpdateBlockedRelationshipCache = () => {
   const updateCachedData = useUpdateCachedData();
 
   return React.useCallback(
-    (user: string, counterparty: DesmosProfile, isFollowing: boolean) => {
+    (user: string, counterparty: DesmosProfile, isBlocked: boolean) => {
       const cachedRelationship = getBlocked(user, counterparty.address);
       updateCachedData(
         cachedRelationship,
-        isFollowing,
+        isBlocked,
         () => addBlocked(user, counterparty),
         (status: DataStatus) => setBlockedRelationshipState(user, counterparty.address, status),
         () => removeBlocked(user, counterparty.address),

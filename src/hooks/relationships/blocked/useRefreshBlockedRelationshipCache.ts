@@ -44,10 +44,10 @@ const useRefreshBlockedRelationshipCache = () => {
           blockedAddress: counterparty,
         },
       });
-      const isFollowing = data?.user_block?.length > 0;
+      const isBlocked = data?.user_block?.length > 0;
 
       // Update the cache
-      updateBlockedRelationshipCache(activeAccountAddress, counterpartyProfile, isFollowing);
+      updateBlockedRelationshipCache(activeAccountAddress, counterpartyProfile, isBlocked);
     },
     [activeAccountAddress, getLazyData, getProfile, subspaceId, updateBlockedRelationshipCache],
   );
