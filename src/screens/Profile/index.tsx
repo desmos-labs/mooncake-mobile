@@ -235,29 +235,21 @@ const Profile = () => {
   }, [followOrUnfollowUser, profile]);
 
   const handlePressBalanceInfo = useCallback(() => {
-    const BalanceInfoContents = (
-      <Typography.Body5>
-        {t('profile:balanceInfo')}
-        <Trans
-          i18nKey="profile:desmosNetworkLink"
-          components={[
-            <Typography.Body5
-              style={styles.linkText}
-              onPress={() => {
-                WebBrowser.openBrowserAsync('https://desmos.network');
-              }}
-            />,
-          ]}
-        />
-      </Typography.Body5>
-    );
-
     navigate(ROUTES.CONFIRM_MODAL, {
-      subtitle: BalanceInfoContents,
-      primaryButtonLabel: t('common:OK'),
-      onPressPrimary: pop,
+      title: t('common:DSM'),
+      // Subtitle needs to be passed as a component, as Trans component in the default implementation will cause
+      // unwanted interpolation of the less than (<) character in the string
+      subtitle: <Typography.Body5>{t('profile:balanceInfo')}</Typography.Body5>,
+      subtitleStyle: { textAlign: 'left' },
+      primaryButtonLabel: t('profile:learnMore'),
+      onPressPrimary: () => {
+        WebBrowser.openBrowserAsync('https://desmos.network');
+      },
+      secondaryButtonLabel: t('common:cancel'),
+      // goBack will make the underlying screen goBack, instead of hiding the modal, so pop is used instead.
+      onPressSecondary: pop,
     });
-  }, [t, styles.linkText, navigate, pop]);
+  }, [t, navigate, pop]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
