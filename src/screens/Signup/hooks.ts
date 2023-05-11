@@ -7,6 +7,8 @@ import { AccountWithWallet } from 'types/account';
 import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
+import { usePostHog } from 'posthog-react-native';
+import { capturePostHogInviteRedeemEvent } from 'lib/PostHog/utils';
 
 interface FormValues {
   readonly newPassword: string;
@@ -48,7 +50,7 @@ export interface SignUpSuccess {
  */
 const usePerformSignUp = (account: AccountWithWallet) => {
   const [status, setStatus] = useState<SignUpStatus>(SignUpStatus.UNDEFINED);
-
+  const posthog = usePostHog();
   const appInviteCode = useAppStateValue('inviteCode');
   const performLogin = usePerformLogin();
   const acceptInvite = useAcceptInvite();
@@ -78,6 +80,8 @@ const usePerformSignUp = (account: AccountWithWallet) => {
       if (inviteResult.isErr()) {
         setStatus(SignUpStatus.DONE);
         return err(inviteResult.error);
+      } else {
+        capturePostHogInviteRedeemEvent(posthog!, inviteCode);
       }
 
       // Save the account locally
@@ -93,7 +97,15 @@ const usePerformSignUp = (account: AccountWithWallet) => {
       setStatus(SignUpStatus.DONE);
       return ok({ account } as SignUpSuccess);
     },
-    [acceptInvite, account, appInviteCode, performLogin, setActiveAccountAddress, storeAccount],
+    [
+      acceptInvite,
+      account,
+      appInviteCode,
+      performLogin,
+      posthog,
+      setActiveAccountAddress,
+      storeAccount,
+    ],
   );
 
   return {
