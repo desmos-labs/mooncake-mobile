@@ -2,6 +2,7 @@ import { FollowedUser } from 'types/relationships';
 import { DataStatus } from 'types/cache';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils/profiles';
 import { BlockedUser } from 'types/blockedRelationships';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Converts a GraphQL followed user into a FollowedUser.
@@ -23,7 +24,11 @@ export const convertGraphQLFollowedUser = (data: any): FollowedUser => {
  * [Kevin]: this is a break from the pattern of separating blocked relationships with "followed"
  * relationships, but I feel like these helper functions can be grouped together like so.
  */
-export const convertGraphQLBlockedUser = (data: any): BlockedUser => {
+export const convertGraphQLBlockedUser = (data: {
+  blocked: DesmosProfile;
+  blocker: DesmosProfile;
+  reason: string;
+}): BlockedUser => {
   return {
     user: convertGraphQLProfile(data.blocked),
     status: DataStatus.SYNCED,
