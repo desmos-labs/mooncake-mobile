@@ -1,6 +1,5 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { usePostHog } from 'posthog-react-native';
-import { useActiveProfile } from '@recoil/profiles';
 import { useEffect } from 'react';
 import { useGetCurrentChainInfo } from '@recoil/settings';
 import { identifyPostHogUser } from 'lib/PostHog/utils';
@@ -10,7 +9,6 @@ import { identifyPostHogUser } from 'lib/PostHog/utils';
  */
 const usePosthogIdentification = () => {
   const activeAddress = useActiveAccountAddress();
-  const activeProfile = useActiveProfile();
   const posthog = usePostHog();
   const getChainInfo = useGetCurrentChainInfo();
 
@@ -19,8 +17,8 @@ const usePosthogIdentification = () => {
       return;
     }
 
-    identifyPostHogUser(posthog, activeAddress!, getChainInfo(), activeProfile);
-  }, [posthog, activeAddress, activeProfile, getChainInfo]);
+    identifyPostHogUser(posthog, activeAddress!, getChainInfo());
+  }, [posthog, activeAddress, getChainInfo]);
 };
 
 export default usePosthogIdentification;
