@@ -5,6 +5,7 @@ import {
   commentLiked,
   commentLikeEmptyIcon,
   followBlackIcon,
+  hidePost,
   reportIcon,
   tipIcon,
   unfollowBlackIcon,
@@ -25,7 +26,11 @@ import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import PopupMenu from 'components/PopupMenu';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
+import {
+  useHandlePressFollow,
+  useHandlePressHidePost,
+  useHandlePressReport,
+} from 'screens/Home/hooks';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import {
@@ -97,6 +102,7 @@ const CommentItem = (props: CommentItemProps) => {
   const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
+  const handlePressHidePost = useHandlePressHidePost();
 
   const handlePressLike = () => {
     if (isPostPending(comment)) return;
@@ -136,6 +142,13 @@ const CommentItem = (props: CommentItemProps) => {
         icon: reportIcon,
       },
       {
+        label: t('home:hide'),
+        onPress: async () => {
+          await handlePressHidePost(comment.id);
+        },
+        icon: hidePost,
+      },
+      {
         label: t('home:block'),
         onPress: () => {
           // TODO: implement
@@ -145,7 +158,15 @@ const CommentItem = (props: CommentItemProps) => {
     ];
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
-  }, [comment, handlePressFollow, handlePressMore, handlePressReport, isFollowing, t]);
+  }, [
+    comment,
+    handlePressFollow,
+    handlePressHidePost,
+    handlePressMore,
+    handlePressReport,
+    isFollowing,
+    t,
+  ]);
 
   return (
     <View style={[styles.container, styles.flexRow]}>

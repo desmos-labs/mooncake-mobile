@@ -7,7 +7,7 @@ import BackButton from 'components/BackButton';
 import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import { block, followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
+import { block, followBlackIcon, hidePost, reportIcon, unfollowBlackIcon } from 'assets/images';
 import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
 import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
@@ -18,6 +18,7 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
 import { useHandlePressReport } from 'screens/Home/hooks';
+import useHidePost from 'hooks/posts/useHidePost';
 import useStyles from './useStyles';
 
 interface Props {
@@ -59,6 +60,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
   const handlePressReport = useHandlePressReport();
+  const handlePressHidePost = useHidePost();
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -88,6 +90,16 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         label: t('home:report'),
         onPress: () => handlePressReport(post),
         icon: reportIcon,
+      },
+      {
+        label: t('home:hide'),
+        onPress: async () => {
+          await handlePressHidePost(post.id);
+
+          // just reuse the default back button press behavior here and goBack one screen in the stack.
+          onBackButtonPress();
+        },
+        icon: hidePost,
       },
       {
         label: t('home:block'),

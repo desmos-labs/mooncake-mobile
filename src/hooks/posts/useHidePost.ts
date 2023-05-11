@@ -4,6 +4,11 @@ import HidePost from 'services/axios/requests/HidePost';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import { useTranslation } from 'react-i18next';
 import { useStorePosts } from '@recoil/posts';
+import { err, ok, Result } from 'neverthrow';
+
+export interface SuccessfulHidePost {
+  readonly postID: number;
+}
 
 const useHidePost = () => {
   const activeAccountAddress = useActiveAccountAddress();
@@ -17,17 +22,21 @@ const useHidePost = () => {
   const storePosts = useStorePosts(activeAccountAddress);
 
   return React.useCallback(
-    async (postID: number) => {
+    async (postID: number): Promise<Result<SuccessfulHidePost, Error>> => {
+      console.log(postID);
       const hidePostResult = await HidePost(postID);
 
       if (hidePostResult.isErr()) {
         toast.errorNoRetry(t('errorHidePost'));
+        return err(new Error('Error occurred while hiding post'));
       }
-      if (hidePostResult.isOk()) {
-        // Remove the hidden post from stored posts
-        storePosts(storedPosts => storedPosts.filter(post => post.id !== postID));
-        toast.success(t('postHidden'));
-      }
+
+      // Remove the hidden post from stored posts
+      storePosts(storedPosts => storedPosts.filter(post => post.id !== postID));
+      toast.success(t('postHidden'));
+      return ok({
+        postID,
+      });
     },
     [storePosts, t, toast],
   );

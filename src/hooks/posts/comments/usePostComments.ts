@@ -71,6 +71,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
 
   // Query used to get the comments
   const getQueryReactionValue = useGetQueryReactionValue();
+  console.log(post.id);
   const { refetch, fetchMore } = useQuery(GetPostComments, {
     variables: {
       subspaceId: post.subspaceId,
