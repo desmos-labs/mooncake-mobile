@@ -206,12 +206,7 @@ export const useSubmitForm = (
         if (result.isErr()) {
           return err(result.error);
         } else {
-          identifyPostHogUser(
-            posthog!,
-            profileToSaveOnChain.address,
-            getChainInfo(),
-            profileToSaveOnChain,
-          );
+          await identifyPostHogUser(posthog!, profileToSaveOnChain.address, getChainInfo());
         }
       }
 

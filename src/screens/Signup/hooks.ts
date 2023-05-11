@@ -81,7 +81,7 @@ const usePerformSignUp = (account: AccountWithWallet) => {
         setStatus(SignUpStatus.DONE);
         return err(inviteResult.error);
       } else {
-        capturePostHogInviteRedeemEvent(posthog!, account.account.address, inviteCode);
+        capturePostHogInviteRedeemEvent(posthog!, inviteCode);
       }
 
       // Save the account locally

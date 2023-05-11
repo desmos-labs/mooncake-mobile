@@ -1,6 +1,7 @@
 import { ChainInfo } from '@desmoslabs/desmjs/build/types/chains';
 import { PostHog } from 'posthog-react-native';
 import { PendingTransaction } from 'types/transactions';
+import Aes from 'react-native-aes-crypto';
 
 /**
  * Identifies the user on PostHog.
@@ -8,10 +9,19 @@ import { PendingTransaction } from 'types/transactions';
  * @param address The address of the user to identify
  * @param chainInfo The chain info of the chain the user is currently using
  */
-export const identifyPostHogUser = (posthog: PostHog, address: string, chainInfo: ChainInfo) => {
-  posthog.identify(address, {
-    ChainID: chainInfo.chainName,
-  });
+export const identifyPostHogUser = async (
+  posthog: PostHog,
+  address: string,
+  chainInfo: ChainInfo,
+) => {
+  if (address && chainInfo) {
+    // We hash the address to avoid sending it in plain text
+    const addressHash = await Aes.sha256(address);
+    // We identify the user on PostHog
+    posthog.identify(addressHash, {
+      ChainID: chainInfo.chainName,
+    });
+  }
 };
 
 /**

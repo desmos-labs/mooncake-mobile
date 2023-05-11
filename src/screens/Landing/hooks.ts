@@ -43,7 +43,7 @@ export const usePerformImportAccount = () => {
             // The user has a profile, so we need to save both the account and the profile
             saveAccount(account);
             storeProfile(account.account.address, profile);
-            identifyPostHogUser(posthog!, account.account.address, getChainInfo(), profile);
+            identifyPostHogUser(posthog!, account.account.address, getChainInfo());
         }
       },
     });

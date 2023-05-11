@@ -166,7 +166,7 @@ const useBroadcastTx = () => {
       return result.andThen(pendingTx => {
         // Store the transaction locally
         storePendingTransaction(pendingTx);
-        capturePostHogTransactionEvent(posthog!, pendingTx, txOptions.memo);
+        capturePostHogTransactionEvent(posthog!, pendingTx);
         // Return the proper data
         return ok({
           txHash: pendingTx.hash,
