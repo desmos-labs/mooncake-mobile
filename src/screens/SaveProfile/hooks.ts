@@ -209,7 +209,7 @@ export const useSubmitForm = (
 
       return ok(undefined);
     },
-    [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile],
+    [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile, trackUser],
   );
 
   return {

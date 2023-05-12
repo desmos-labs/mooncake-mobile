@@ -181,6 +181,7 @@ const useBroadcastTx = () => {
       storedProfiles,
       promptAccountPermissions,
       storePendingTransaction,
+      trackTransactionPerformed,
     ],
   );
 };
