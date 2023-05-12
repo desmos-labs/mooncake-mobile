@@ -48,7 +48,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const activeAddress = useActiveAccountAddress();
   const formatDate = useFormatTimeForPostDetails();
 
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
@@ -117,9 +116,11 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   }, [
     activeAddress,
     handlePressFollowOrUnfollow,
+    handlePressHidePost,
     handlePressMore,
     handlePressReport,
     isFollowing,
+    onBackButtonPress,
     post,
     t,
   ]);

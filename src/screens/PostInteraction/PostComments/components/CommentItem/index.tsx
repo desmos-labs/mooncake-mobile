@@ -168,6 +168,7 @@ const CommentItem = (props: CommentItemProps) => {
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
+    activeAddress,
     comment,
     handlePressFollow,
     handlePressHidePost,
