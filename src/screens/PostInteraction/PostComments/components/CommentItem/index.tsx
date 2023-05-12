@@ -39,6 +39,7 @@ import {
   useHandlePressShowCommentDetailsWithFocus,
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -70,6 +71,7 @@ const CommentItem = (props: CommentItemProps) => {
   const { count: tipsCount } = usePostTipsCount(comment);
   const { isFollowing } = useIsFollowing(comment.author.address);
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
+  const activeAddress = useActiveAccountAddress();
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -132,6 +134,8 @@ const CommentItem = (props: CommentItemProps) => {
    * the user can follow or report the comment author.
    */
   const PressMoreComponent = React.useMemo(() => {
+    // The context menu should not be visible if the user is the author of the comment
+    if (comment.author.address === activeAddress) return undefined;
     const menuItems = [
       {
         label: isFollowing ? t('home:unfollow') : t('home:follow'),
@@ -170,6 +174,7 @@ const CommentItem = (props: CommentItemProps) => {
     handlePressMore,
     handlePressReport,
     isFollowing,
+    returnToRootPost,
     t,
   ]);
 

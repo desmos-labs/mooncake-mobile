@@ -42,6 +42,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
+  const activeAddress = useActiveAccountAddress();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -78,6 +79,8 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   // -------------------------------------------------------------------------------------
 
   const PressMoreComponent = React.useMemo(() => {
+    // Hide the context menu if the user is the author of the post
+    if (post.author.address === activeAddress) return undefined;
     const menuItems = [
       post.author.address !== activeAddress
         ? {
