@@ -62,11 +62,6 @@ export type Props = {
    * A reference to the comment input box.
    */
   textInputRef: any;
-
-  /**
-   * Is the app processing posting a new comment?
-   */
-  isCommentPosting?: boolean;
 };
 
 /**
@@ -78,7 +73,7 @@ const EnterCommentBottomBar = (props: Props) => {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
   const navigation = useNavigation<NavProps['navigation']>();
-  const { author, onIconPress, handlePostComment, textInputRef, loading, isCommentPosting } = props;
+  const { author, onIconPress, handlePostComment, textInputRef, loading } = props;
 
   // -------------------------------------------------------------------------------------
   // --- State
@@ -236,6 +231,8 @@ const EnterCommentBottomBar = (props: Props) => {
                 placeholderTextColor={theme.colors.grey02}
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
+                contextMenuHidden={loading}
+                caretHidden={loading}
               />
             </ScrollView>
             <View
@@ -252,14 +249,21 @@ const EnterCommentBottomBar = (props: Props) => {
         {keyboardShow && (
           <MediaBottomPanel
             imageSelected={false}
-            handlePressGallery={imageFromLibrary}
-            handlePressCamera={imageFromCamera}
+            loading={loading}
+            handlePressGallery={() => {
+              if (loading) return;
+              imageFromLibrary();
+            }}
+            handlePressCamera={() => {
+              if (loading) return;
+              imageFromCamera();
+            }}
             rightComponent={RightButtonComponent}
             commentLength={comment.length}
           />
         )}
       </Shadow>
-      {isCommentPosting && <CommentBottomBarLoadingOverlay />}
+      {loading && <CommentBottomBarLoadingOverlay />}
     </KeyboardAvoidingView>
   );
 };

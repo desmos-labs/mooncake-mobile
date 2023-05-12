@@ -108,8 +108,6 @@ export const useHandleCreateComment = () => {
   const toast = useCustomToast();
   const handleCreateComment = React.useCallback(
     async (post: Post) => {
-      // When the user clicks on the button, dismiss the keyboard
-      Keyboard.dismiss();
       const result = await createPost(post);
       if (result.isErr()) {
         console.error('Error inside useHandleCreateComment', result.error.message);

@@ -7,7 +7,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { SafeAreaView } from 'react-native';
+import { Keyboard, SafeAreaView } from 'react-native';
 import { useTheme } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
@@ -27,8 +27,6 @@ import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
-import { useRecoilValue } from 'recoil';
-import { useCreatePostState } from '@recoil/screens/createPostState';
 import { CreatePostStateType } from 'hooks/posts/useCreatePost';
 import useStyles from './useStyles';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
@@ -69,8 +67,6 @@ const PostDetails = () => {
   const { params } = useRoute<NavProps['route']>();
   const { subspaceId, postId } = params;
   const postData = { subspaceId, id: postId } as Pick<Post, 'subspaceId' | 'id'>;
-
-  const createPostState = useCreatePostState();
 
   // -------------------------------------------------------------------------------------
   // --- Loading states
@@ -169,10 +165,11 @@ const PostDetails = () => {
   }, []);
 
   /**
-   * Disable the UI blocker once the createPost state has reached the broadcasting step.
+   * Hide the keyboard once the comment has reached broadcasting status.
    */
   useEffect(() => {
     if (state.type === CreatePostStateType.BROADCASTING_TRANSACTION) {
+      Keyboard.dismiss();
       setCommentPosting(false);
     }
   }, [state, commentPosting]);
@@ -250,8 +247,7 @@ const PostDetails = () => {
       {/* Bottom bar allowing to create a new comment */}
       <EnterCommentBottomBar
         author={activeProfile}
-        loading={areCommentsLoading}
-        isCommentPosting={commentPosting}
+        loading={commentPosting || areCommentsLoading}
         handlePostComment={handlePressCreateComment}
         textInputRef={textInputRef}
         onIconPress={() => handleExpandCommentView(post)}
