@@ -12,6 +12,9 @@ import { useStoreProfile } from '@recoil/profiles';
 import { err, ok, Result } from 'neverthrow';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import { identifyPostHogUser } from 'lib/PostHog/utils';
+import { useGetCurrentChainInfo } from '@recoil/settings';
+import { usePostHog } from 'posthog-react-native';
 import { NavProps } from './index';
 
 /**
@@ -155,6 +158,8 @@ export const useSubmitForm = (
 ) => {
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
+  const posthog = usePostHog();
+  const getChainInfo = useGetCurrentChainInfo();
   const { status, saveProfile } = useSaveProfileOnChain();
 
   // Callback used when the user pressed the button to save the profile
@@ -200,12 +205,23 @@ export const useSubmitForm = (
         const result = await saveProfile(profileToSaveOnChain, account);
         if (result.isErr()) {
           return err(result.error);
+        } else {
+          await identifyPostHogUser(posthog!, profileToSaveOnChain.address, getChainInfo());
         }
       }
 
       return ok(undefined);
     },
-    [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile],
+    [
+      account,
+      profile,
+      getOnChainProfile,
+      storeProfile,
+      saveOnChain,
+      saveProfile,
+      posthog,
+      getChainInfo,
+    ],
   );
 
   return {

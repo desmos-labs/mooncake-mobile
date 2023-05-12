@@ -82,7 +82,6 @@ const BroadcastTxOnChain: React.FC = () => {
   const toast = useCustomToast();
   const estimateFees = useEstimateTransactionFees();
   const broadcastTx = useBroadcastTx();
-
   // -----------------------------------------------------------------------
   // --- State
   // -----------------------------------------------------------------------
@@ -229,7 +228,7 @@ const BroadcastTxOnChain: React.FC = () => {
       setBroadcastingTx(false);
 
       if (result.isErr() && !isCanceledOperationError(result.error)) {
-        toast.success(result.error.message);
+        toast.errorNoRetry(result.error.message);
       } else if (result.isOk() && onSuccess) {
         onSuccess(result.value);
       }
