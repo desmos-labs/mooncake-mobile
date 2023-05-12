@@ -19,7 +19,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { isCommentReply, isPostPending, Post } from 'types/posts';
+import { isPostPending, Post } from 'types/posts';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
@@ -45,6 +45,10 @@ import useStyles from './useStyles';
 export interface CommentItemProps {
   readonly comment: Post;
   readonly disableInnerComment?: boolean;
+  /**
+   * Whether the CommentItem is being rendered as the main post (at the top).
+   */
+  readonly renderedAsMainPost?: boolean;
   // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
   // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
   readonly handlePressMore?: () => void;
@@ -60,7 +64,7 @@ const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
 
-  const { comment, handlePressMore, disableInnerComment } = props;
+  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -105,7 +109,7 @@ const CommentItem = (props: CommentItemProps) => {
   const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
-  const handlePressHidePost = useHandlePressHidePost();
+  const handleHidePost = useHandlePressHidePost();
   const returnToRootPost = useReturnToRootPost();
 
   const handlePressLike = () => {
@@ -123,6 +127,15 @@ const CommentItem = (props: CommentItemProps) => {
   const handlePressCommentWithFocus = () => {
     if (isPostPending(comment)) return;
     handleShowCommentDetailsWithFocus(comment);
+  };
+  const handlePressHidePost = async () => {
+    if (isPostPending(comment)) return;
+    // Return to the main post first, so the usePostComments hook can catch the modified
+    // localHiddenPosts state.
+    if (renderedAsMainPost) {
+      returnToRootPost();
+    }
+    await handleHidePost(comment.id);
   };
 
   // -------------------------------------------------------------------------------------
@@ -149,12 +162,7 @@ const CommentItem = (props: CommentItemProps) => {
       },
       {
         label: t('home:hide'),
-        onPress: async () => {
-          await handlePressHidePost(comment.id);
-          if (!isCommentReply(comment)) {
-            returnToRootPost(comment);
-          }
-        },
+        onPress: () => handlePressHidePost(),
         icon: hidePost,
       },
       {

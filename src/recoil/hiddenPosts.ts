@@ -40,10 +40,7 @@ export const useAddPostToHiddenPosts = () => {
 
   return React.useCallback(
     (postID: number) => {
-      setHiddenPostsState(prev => {
-        console.log(prev);
-        return [...prev, postID];
-      });
+      setHiddenPostsState(prev => [...prev, postID]);
     },
     [setHiddenPostsState],
   );
