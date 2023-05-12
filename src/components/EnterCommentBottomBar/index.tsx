@@ -34,6 +34,7 @@ import usePostsParams from 'hooks/posts/usePostsParams';
 import StyledSpinner from 'components/StyledSpinner';
 import { useNavigation } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
+import CommentBottomBarLoadingOverlay from 'components/EnterCommentBottomBar/components/CommentBottomBarLoadingOverlay';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -61,6 +62,11 @@ export type Props = {
    * A reference to the comment input box.
    */
   textInputRef: any;
+
+  /**
+   * Is the app processing posting a new comment?
+   */
+  isCommentPosting?: boolean;
 };
 
 /**
@@ -72,7 +78,7 @@ const EnterCommentBottomBar = (props: Props) => {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
   const navigation = useNavigation<NavProps['navigation']>();
-  const { author, onIconPress, handlePostComment, textInputRef, loading } = props;
+  const { author, onIconPress, handlePostComment, textInputRef, loading, isCommentPosting } = props;
 
   // -------------------------------------------------------------------------------------
   // --- State
@@ -253,6 +259,7 @@ const EnterCommentBottomBar = (props: Props) => {
           />
         )}
       </Shadow>
+      {isCommentPosting && <CommentBottomBarLoadingOverlay />}
     </KeyboardAvoidingView>
   );
 };

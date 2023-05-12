@@ -27,6 +27,9 @@ import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
+import { useRecoilValue } from 'recoil';
+import { useCreatePostState } from '@recoil/screens/createPostState';
+import { CreatePostStateType } from 'hooks/posts/useCreatePost';
 import useStyles from './useStyles';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 
@@ -67,11 +70,14 @@ const PostDetails = () => {
   const { subspaceId, postId } = params;
   const postData = { subspaceId, id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
+  const createPostState = useCreatePostState();
+
   // -------------------------------------------------------------------------------------
   // --- Loading states
   // -------------------------------------------------------------------------------------
   const [firstLoad, setFirstLoad] = useState(false);
   const [pageRefreshing, setPageRefreshing] = useState(false);
+  const [commentPosting, setCommentPosting] = useState(false);
 
   // -------------------------------------------------------------------------------------
   // --- Views references
@@ -112,10 +118,17 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
 
   // TODO: Properly display the state of the comment creation
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const { state, handleCreateComment } = useHandleCreateComment();
 
   const handleExpandCommentView = useHandleExpandCommentView();
+
+  const handlePressCreateComment = useCallback(async () => {
+    if (!post) return;
+    setCommentPosting(true);
+    await handleCreateComment(post);
+    // we will unlock the comment bottom bar using a useEffect that watches the comment recoil.
+  }, [post, handleCreateComment]);
 
   // Method used to refresh the post data
   const refreshPage = useCallback(async () => {
@@ -154,6 +167,15 @@ const PostDetails = () => {
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /**
+   * Disable the UI blocker once the createPost state has reached the broadcasting step.
+   */
+  useEffect(() => {
+    if (state.type === CreatePostStateType.BROADCASTING_TRANSACTION) {
+      setCommentPosting(false);
+    }
+  }, [state, commentPosting]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -229,7 +251,8 @@ const PostDetails = () => {
       <EnterCommentBottomBar
         author={activeProfile}
         loading={areCommentsLoading}
-        handlePostComment={() => handleCreateComment(post)}
+        isCommentPosting={commentPosting}
+        handlePostComment={handlePressCreateComment}
         textInputRef={textInputRef}
         onIconPress={() => handleExpandCommentView(post)}
       />
