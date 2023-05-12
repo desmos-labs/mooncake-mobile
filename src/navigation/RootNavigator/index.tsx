@@ -73,7 +73,7 @@ import {
   ModalPresentationIOS,
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
-import usePosthogIdentification from 'hooks/usePosthogIdentification';
+import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
