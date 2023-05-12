@@ -112,7 +112,7 @@ const useCustomToast = () => {
   const errorNoRetry = React.useCallback(
     (message: string, options?: CustomSuccessToastOptions) => {
       showToast({
-        type: ToastConfig.NEW_POST,
+        type: ToastConfig.ERROR_NO_RETRY,
         message,
         options,
       });
