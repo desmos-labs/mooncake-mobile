@@ -5,6 +5,7 @@ import useCustomToast from 'hooks/extended/useCustomToast';
 import { useTranslation } from 'react-i18next';
 import { useStorePosts } from '@recoil/posts';
 import { err, ok, Result } from 'neverthrow';
+import { useAddPostToHiddenPosts } from '@recoil/hiddenPosts';
 
 export interface SuccessfulHidePost {
   readonly postID: number;
@@ -20,10 +21,10 @@ const useHidePost = () => {
   const toast = useCustomToast();
   const { t } = useTranslation('toast');
   const storePosts = useStorePosts(activeAccountAddress);
+  const addPostToHidden = useAddPostToHiddenPosts();
 
   return React.useCallback(
     async (postID: number): Promise<Result<SuccessfulHidePost, Error>> => {
-      console.log(postID);
       const hidePostResult = await HidePost(postID);
 
       if (hidePostResult.isErr()) {
@@ -33,6 +34,10 @@ const useHidePost = () => {
 
       // Remove the hidden post from stored posts
       storePosts(storedPosts => storedPosts.filter(post => post.id !== postID));
+
+      // Add postID to local hidden posts
+      addPostToHidden(postID);
+
       toast.success(t('postHidden'));
       return ok({
         postID,

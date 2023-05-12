@@ -19,7 +19,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { isPostPending, Post } from 'types/posts';
+import { isCommentReply, isPostPending, Post } from 'types/posts';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
@@ -37,6 +37,7 @@ import {
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
+  useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
 import useStyles from './useStyles';
 
@@ -103,6 +104,7 @@ const CommentItem = (props: CommentItemProps) => {
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
   const handlePressHidePost = useHandlePressHidePost();
+  const returnToRootPost = useReturnToRootPost();
 
   const handlePressLike = () => {
     if (isPostPending(comment)) return;
@@ -145,6 +147,9 @@ const CommentItem = (props: CommentItemProps) => {
         label: t('home:hide'),
         onPress: async () => {
           await handlePressHidePost(comment.id);
+          if (!isCommentReply(comment)) {
+            returnToRootPost(comment);
+          }
         },
         icon: hidePost,
       },

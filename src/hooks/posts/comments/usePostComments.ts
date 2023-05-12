@@ -8,6 +8,7 @@ import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
 import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
+import { useIsPostHiddenLocally } from '@recoil/hiddenPosts';
 
 /**
  * Hook that allows to get the comments for a given post.
@@ -21,7 +22,11 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     throw new Error('Trying to get post comments without active user');
   }
 
+  const { isPostHiddenLocally, localHiddenPosts } = useIsPostHiddenLocally();
+
   const [comments, setComments] = useState<Post[]>([]);
+
+  // returnToRootPost(comments[0]);
 
   // Get the comments to be synced
   const commentsToSync = usePostCommentsToSync(activeAccountAddress, post.subspaceId, post.id);
@@ -30,10 +35,11 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   React.useEffect(() => {
     // Update the comments
     setComments(currentComments => {
-      const [merged] = mergePosts(currentComments, commentsToSync);
+      const filteredComments = currentComments.filter(x => !isPostHiddenLocally(x.id));
+      const [merged] = mergePosts(filteredComments, commentsToSync);
       return merged;
     });
-  }, [commentsToSync]);
+  }, [localHiddenPosts, commentsToSync, isPostHiddenLocally]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
@@ -71,7 +77,6 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
 
   // Query used to get the comments
   const getQueryReactionValue = useGetQueryReactionValue();
-  console.log(post.id);
   const { refetch, fetchMore } = useQuery(GetPostComments, {
     variables: {
       subspaceId: post.subspaceId,

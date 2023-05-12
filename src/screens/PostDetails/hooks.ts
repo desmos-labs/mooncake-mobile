@@ -60,6 +60,20 @@ export const useHandlePressShowCommentDetails = () => {
 };
 
 /**
+ * A hook that brings the user back to the root post, if they hide a comment from the comment details screen.
+ */
+export const useReturnToRootPost = () => {
+  const navigateToPost = useNavigateToPost();
+
+  return React.useCallback(
+    (post: Post) => {
+      navigateToPost(post.subspaceId, post.conversationId);
+    },
+    [navigateToPost],
+  );
+};
+
+/**
  * Hook that allows to handle the action performed when the user clicks on a comment button of a reply.
  *
  */

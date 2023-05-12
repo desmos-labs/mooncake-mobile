@@ -54,7 +54,9 @@ export interface PostDetailsParams {
    * TODO: Implement the scrolling of the list to this post
    */
   readonly focusPostId?: number;
-
+  /**
+   * Pre-loaded post data passed in via the home screen to reduce load times.
+   */
   readonly initialPostData?: Post;
 }
 
