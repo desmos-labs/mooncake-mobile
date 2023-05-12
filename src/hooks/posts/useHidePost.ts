@@ -43,7 +43,7 @@ const useHidePost = () => {
         postID,
       });
     },
-    [storePosts, t, toast],
+    [addPostToHidden, storePosts, t, toast],
   );
 };
 

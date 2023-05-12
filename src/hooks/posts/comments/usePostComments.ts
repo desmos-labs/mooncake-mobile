@@ -35,11 +35,14 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   React.useEffect(() => {
     // Update the comments
     setComments(currentComments => {
-      const filteredComments = currentComments.filter(x => !isPostHiddenLocally(x.id));
+      // Don't show comments that have been hidden locally.
+      const filteredComments = currentComments.filter(
+        comment => !localHiddenPosts.includes(comment.id),
+      );
       const [merged] = mergePosts(filteredComments, commentsToSync);
       return merged;
     });
-  }, [localHiddenPosts, commentsToSync, isPostHiddenLocally]);
+  }, [commentsToSync, localHiddenPosts, isPostHiddenLocally]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);

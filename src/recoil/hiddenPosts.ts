@@ -1,5 +1,6 @@
 import React from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { Post } from 'types/posts';
 
 /**
  * An atom that keeps track of the posts hidden by the user for the given session.
@@ -18,12 +19,13 @@ export const useIsPostHiddenLocally = () => {
   const localHiddenPosts = useRecoilValue(hiddenPostsState);
 
   const isPostHiddenLocally = React.useCallback(
-    (postID: number) => {
-      return localHiddenPosts.includes(postID);
+    (post: Post) => {
+      return localHiddenPosts.includes(post.id);
     },
     [localHiddenPosts],
   );
 
+  // expose the callback as well as the hiddenPosts array, in the event a useEffect watching localHiddenPosts is needed
   return {
     isPostHiddenLocally,
     localHiddenPosts,
