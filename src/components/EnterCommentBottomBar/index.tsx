@@ -233,6 +233,7 @@ const EnterCommentBottomBar = (props: Props) => {
                 textAlignVertical="center"
                 contextMenuHidden={loading}
                 caretHidden={loading}
+                editable={!loading}
               />
             </ScrollView>
             <View
