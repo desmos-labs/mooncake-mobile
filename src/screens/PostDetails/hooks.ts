@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
-import { Keyboard } from 'react-native';
 import { NavProps } from 'screens/PostDetails/index';
 import { isCommentReply, Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
@@ -108,8 +107,6 @@ export const useHandleCreateComment = () => {
   const toast = useCustomToast();
   const handleCreateComment = React.useCallback(
     async (post: Post) => {
-      // When the user clicks on the button, dismiss the keyboard
-      Keyboard.dismiss();
       const result = await createPost(post);
       if (result.isErr()) {
         console.error('Error inside useHandleCreateComment', result.error.message);

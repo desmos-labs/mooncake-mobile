@@ -713,6 +713,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           >
             <View>
               <TextInput
+                editable={true}
                 maxLength={500}
                 multiline={true}
                 onChangeText={[Function]}
