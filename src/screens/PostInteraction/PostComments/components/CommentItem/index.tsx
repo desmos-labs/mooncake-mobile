@@ -5,6 +5,7 @@ import {
   commentLiked,
   commentLikeEmptyIcon,
   followBlackIcon,
+  hidePost,
   reportIcon,
   tipIcon,
   unfollowBlackIcon,
@@ -25,19 +26,29 @@ import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import PopupMenu from 'components/PopupMenu';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
+import {
+  useHandlePressFollow,
+  useHandlePressHidePost,
+  useHandlePressReport,
+} from 'screens/Home/hooks';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import {
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
+  useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
   readonly comment: Post;
   readonly disableInnerComment?: boolean;
+  /**
+   * Whether the CommentItem is being rendered as the main post (at the top).
+   */
+  readonly renderedAsMainPost?: boolean;
   // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
   // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
   readonly handlePressMore?: () => void;
@@ -53,7 +64,7 @@ const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
 
-  const { comment, handlePressMore, disableInnerComment } = props;
+  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -64,6 +75,7 @@ const CommentItem = (props: CommentItemProps) => {
   const { count: tipsCount } = usePostTipsCount(comment);
   const { isFollowing } = useIsFollowing(comment.author.address);
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
+  const activeAddress = useActiveAccountAddress();
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -97,6 +109,8 @@ const CommentItem = (props: CommentItemProps) => {
   const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
+  const handleHidePost = useHandlePressHidePost();
+  const returnToRootPost = useReturnToRootPost();
 
   const handlePressLike = () => {
     if (isPostPending(comment)) return;
@@ -114,6 +128,15 @@ const CommentItem = (props: CommentItemProps) => {
     if (isPostPending(comment)) return;
     handleShowCommentDetailsWithFocus(comment);
   };
+  const handlePressHidePost = async () => {
+    if (isPostPending(comment)) return;
+    // Return to the main post first, so the usePostComments hook can catch the modified
+    // localHiddenPosts state.
+    if (renderedAsMainPost) {
+      returnToRootPost();
+    }
+    await handleHidePost(comment.id);
+  };
 
   // -------------------------------------------------------------------------------------
   // --- Conditional Rendering
@@ -124,6 +147,8 @@ const CommentItem = (props: CommentItemProps) => {
    * the user can follow or report the comment author.
    */
   const PressMoreComponent = React.useMemo(() => {
+    // The context menu should not be visible if the user is the author of the comment
+    if (comment.author.address === activeAddress) return undefined;
     const menuItems = [
       {
         label: isFollowing ? t('home:unfollow') : t('home:follow'),
@@ -136,6 +161,11 @@ const CommentItem = (props: CommentItemProps) => {
         icon: reportIcon,
       },
       {
+        label: t('home:hide'),
+        onPress: () => handlePressHidePost(),
+        icon: hidePost,
+      },
+      {
         label: t('home:block'),
         onPress: () => {
           // TODO: implement
@@ -145,7 +175,17 @@ const CommentItem = (props: CommentItemProps) => {
     ];
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
-  }, [comment, handlePressFollow, handlePressMore, handlePressReport, isFollowing, t]);
+  }, [
+    activeAddress,
+    comment,
+    handlePressFollow,
+    handlePressHidePost,
+    handlePressMore,
+    handlePressReport,
+    isFollowing,
+    returnToRootPost,
+    t,
+  ]);
 
   return (
     <View style={[styles.container, styles.flexRow]}>

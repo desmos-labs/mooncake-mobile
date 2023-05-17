@@ -14,7 +14,7 @@ import { parseISO } from 'date-fns';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
+import { followBlackIcon, hidePost, reportIcon, unfollowBlackIcon } from 'assets/images';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useStyles from './useStyles';
 
@@ -23,6 +23,7 @@ export interface PostCardProfileInfoProps {
   readonly onPressAuthor: () => void;
   readonly onPressFollow: () => void;
   readonly onPressReport: () => void;
+  readonly onPressHide: () => void;
 }
 
 /**
@@ -34,7 +35,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
 
-  const { post, onPressAuthor, onPressFollow, onPressReport } = props;
+  const { post, onPressAuthor, onPressFollow, onPressReport, onPressHide } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -117,6 +118,11 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         label: t('report'),
         onPress: onPressReport,
         icon: reportIcon,
+      },
+      {
+        label: t('hide'),
+        onPress: onPressHide,
+        icon: hidePost,
       },
     ],
     [isFollowing, t, onPressFollow, onPressReport],

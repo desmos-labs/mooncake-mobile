@@ -92,7 +92,7 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
         </>
       ) : (
         <>
-          <CommentItem comment={post!} />
+          <CommentItem comment={post!} renderedAsMainPost />
           <Spacer paddingVertical={16} />
           <Divider style={styles.divider} />
         </>

@@ -11,6 +11,8 @@ import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import { useTranslation } from 'react-i18next';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import usePost from 'hooks/posts/usePost';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 
 /**
  * Hook that allows to report a user.
@@ -56,6 +58,17 @@ export const useHandlePressShowCommentDetails = () => {
     },
     [navigateToPost],
   );
+};
+
+/**
+ * A hook that brings the user back to the root post, if they hide a comment from the comment details screen.
+ */
+export const useReturnToRootPost = () => {
+  const { pop } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
+
+  return React.useCallback(() => {
+    pop();
+  }, [pop]);
 };
 
 /**

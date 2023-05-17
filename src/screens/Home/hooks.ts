@@ -6,6 +6,7 @@ import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser
 import { isPostPending, Post } from 'types/posts';
 import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
+import useHidePost from 'hooks/posts/useHidePost';
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.
@@ -48,6 +49,20 @@ export const useHandlePressReport = () => {
       });
     },
     [navigate],
+  );
+};
+
+/**
+ * A hook that handles the logic behind hiding a post on the home screen.
+ */
+export const useHandlePressHidePost = () => {
+  const hidePost = useHidePost();
+
+  return React.useCallback(
+    (postID: number) => {
+      hidePost(postID);
+    },
+    [hidePost],
   );
 };
 

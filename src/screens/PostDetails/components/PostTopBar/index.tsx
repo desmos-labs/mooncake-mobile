@@ -7,7 +7,7 @@ import BackButton from 'components/BackButton';
 import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import { block, followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
+import { block, followBlackIcon, hidePost, reportIcon, unfollowBlackIcon } from 'assets/images';
 import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
 import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
@@ -18,6 +18,7 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
 import { useHandlePressReport } from 'screens/Home/hooks';
+import useHidePost from 'hooks/posts/useHidePost';
 import useStyles from './useStyles';
 
 interface Props {
@@ -41,12 +42,12 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
+  const activeAddress = useActiveAccountAddress();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const activeAddress = useActiveAccountAddress();
   const formatDate = useFormatTimeForPostDetails();
 
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
@@ -59,6 +60,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
   const handlePressReport = useHandlePressReport();
+  const handlePressHidePost = useHidePost();
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -76,6 +78,8 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   // -------------------------------------------------------------------------------------
 
   const PressMoreComponent = React.useMemo(() => {
+    // Hide the context menu if the user is the author of the post
+    if (post.author.address === activeAddress) return undefined;
     const menuItems = [
       post.author.address !== activeAddress
         ? {
@@ -90,6 +94,16 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         icon: reportIcon,
       },
       {
+        label: t('home:hide'),
+        onPress: async () => {
+          await handlePressHidePost(post.id);
+
+          // just reuse the default back button press behavior here and goBack one screen in the stack.
+          onBackButtonPress();
+        },
+        icon: hidePost,
+      },
+      {
         label: t('home:block'),
         onPress: () => {
           // TODO: implement
@@ -102,9 +116,11 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   }, [
     activeAddress,
     handlePressFollowOrUnfollow,
+    handlePressHidePost,
     handlePressMore,
     handlePressReport,
     isFollowing,
+    onBackButtonPress,
     post,
     t,
   ]);
