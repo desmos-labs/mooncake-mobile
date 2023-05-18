@@ -7,7 +7,14 @@ import BackButton from 'components/BackButton';
 import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import { block, followBlackIcon, hidePost, reportIcon, unblock, unfollowBlackIcon } from 'assets/images';
+import {
+  block,
+  followBlackIcon,
+  hidePost,
+  reportIcon,
+  unblock,
+  unfollowBlackIcon,
+} from 'assets/images';
 import {
   useHandlePressBlockOrUnblock,
   useHandlePressFollowOrUnfollow,

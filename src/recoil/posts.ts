@@ -315,3 +315,24 @@ export const useRemovePost = (user: string) => {
     [setPosts, user],
   );
 };
+
+export const useRemovePostByID = (user: string) => {
+  const setPosts = useSetRecoilState(postsState);
+
+  return React.useCallback(
+    (postID: number) => {
+      setPosts(currentTimeline => {
+        const updatedPosts: Record<string, Post[]> = {
+          ...currentTimeline,
+        };
+
+        // Update the user posts by filtering out the post with matching postID
+        const userPosts = updatedPosts[user] ?? [];
+        updatedPosts[user] = userPosts.filter(post => post.id !== postID);
+
+        return updatedPosts;
+      });
+    },
+    [setPosts, user],
+  );
+};

@@ -593,13 +593,13 @@ PODS:
     - React-Core
   - RNBootSplash (4.4.1):
     - React-Core
-  - RNCAsyncStorage (1.17.11):
+  - RNCAsyncStorage (1.18.1):
     - React-Core
   - RNCClipboard (1.11.1):
     - React-Core
   - RNCMaskedView (0.2.8):
     - React-Core
-  - RNDeviceInfo (10.3.0):
+  - RNDeviceInfo (10.6.0):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
@@ -1073,10 +1073,10 @@ SPEC CHECKSUMS:
   ReactCommon: 0c43eaeaaee231d7d8dc24fc5a6e4cf2b75bf196
   RNBluetoothStateManager: ae6a26260cbdf1827b58bd3bcc563527d61e6488
   RNBootSplash: 4f968c1e098c7ec97939ace039f735e3d335bd4b
-  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
+  RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
-  RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
+  RNDeviceInfo: 475a4c447168d0ad4c807e48ef5e0963a0f4eb1b
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBAnalytics: e1c916bd60f2f8ea9a46999b3b3842e0031eec37
   RNFBApp: dd22a306a31189e99126a35962498c83b06520ab

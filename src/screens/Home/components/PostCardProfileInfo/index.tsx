@@ -14,7 +14,14 @@ import { parseISO } from 'date-fns';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { followBlackIcon, hidePost, reportIcon, unfollowBlackIcon, unblock, block } from 'assets/images';
+import {
+  followBlackIcon,
+  hidePost,
+  reportIcon,
+  unfollowBlackIcon,
+  unblock,
+  block,
+} from 'assets/images';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useStyles from './useStyles';

@@ -41,7 +41,6 @@ import {
   useHandlePressShowCommentDetailsWithFocus,
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
