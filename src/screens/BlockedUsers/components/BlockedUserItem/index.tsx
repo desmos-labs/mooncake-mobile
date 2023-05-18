@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DesmosProfile } from 'types/desmos';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
@@ -24,8 +24,14 @@ const BlockedUserItem = ({ profile }: Props) => {
   const styles = useStyles();
 
   const handleBlockOrUnblockUser = useBlockOrUnblockUser();
-  const { isBlocked } = useIsBlocked(profile.address);
+  const { isBlocked, refetch: refreshBlockedCacheForUser } = useIsBlocked(profile.address);
   const navigateToProfile = useNavigateToProfile();
+
+  useEffect(() => {
+    refreshBlockedCacheForUser();
+    // safe to ignore as we only want to run the effect once
+    // eslint-disable-next-line  react-hooks/exhaustive-deps
+  }, []);
 
   const BlockOrUnblockButton = React.useMemo(() => {
     return (
