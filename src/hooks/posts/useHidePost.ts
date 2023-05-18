@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useStorePosts } from '@recoil/posts';
 import { err, ok, Result } from 'neverthrow';
 import { useAddPostToHiddenPosts } from '@recoil/hiddenPosts';
+import { useRemoveStoredPostById } from 'hooks/posts/useRemoveStoredPost';
 
 export interface SuccessfulHidePost {
   readonly postID: number;
@@ -21,6 +22,7 @@ const useHidePost = () => {
   const toast = useCustomToast();
   const { t } = useTranslation('toast');
   const storePosts = useStorePosts(activeAccountAddress);
+  const removeStoredPostById = useRemoveStoredPostById();
   const addPostToHidden = useAddPostToHiddenPosts();
 
   return React.useCallback(
@@ -33,7 +35,7 @@ const useHidePost = () => {
       }
 
       // Remove the hidden post from stored posts
-      storePosts(storedPosts => storedPosts.filter(post => post.id !== postID));
+      removeStoredPostById(postID);
 
       // Add postID to local hidden posts
       addPostToHidden(postID);
