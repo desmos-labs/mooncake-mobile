@@ -18,16 +18,23 @@ import {
 } from '@recoil/blockedRelationships';
 import { MsgBlockUserTypeUrl } from '@desmoslabs/desmjs/build/const/relationships';
 import usePromptConfirmUnblock from 'hooks/usePromptConfirmUnblock';
+import { useRemovePostsByAuthor } from '@recoil/posts';
 
 /**
  * Hook that allows to block a user both remotely and locally.
  */
 const useBlockUser = () => {
+  const activeAccount = useActiveAccountAddress();
+
+  if (!activeAccount) {
+    throw new Error('Trying to block or unblock, without an active account');
+  }
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
   const addBlockedUser = useAddBlockedUser();
   const removeBlockedUser = useRemoveBlockedUser();
+  const removePostsForUser = useRemovePostsByAuthor(activeAccount);
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
@@ -48,12 +55,16 @@ const useBlockUser = () => {
 
       // Broadcast the transaction
       const result = await broadcastTx([messageBlockUser], { optimistic: true });
+
+      // remove cached posts for the blocked user.
+      removePostsForUser(counterparty);
+
       if (result.isErr()) {
         // If the transaction is canceled or errors, remove the added blocked relationship
         removeBlockedUser(user, counterparty.address);
       }
     },
-    [addBlockedUser, subspaceId, broadcastTx, removeBlockedUser],
+    [addBlockedUser, subspaceId, broadcastTx, removePostsForUser, removeBlockedUser],
   );
 };
 
