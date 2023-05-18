@@ -2,7 +2,7 @@ import Typography from 'components/Typography';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { Divider, useTheme } from 'native-base';
+import { Divider, HStack, useTheme, VStack } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Coin } from '@cosmjs/stargate';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -10,6 +10,8 @@ import { formatCoins, formatNumber } from 'lib/FormatUtils';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfileOperations';
 import StyledSpinner from 'components/StyledSpinner';
+import ImageButton from 'components/ImageButton';
+import { infoIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 export interface BalanceSectionProps {
@@ -25,6 +27,10 @@ export interface BalanceSectionProps {
    * Whether the balance is loading.
    */
   readonly isLoading: boolean;
+  /**
+   * What to do when the info button in the balance section is pressed.
+   */
+  readonly handlePressBalanceInfo: () => void;
 }
 
 /**
@@ -36,7 +42,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
   const styles = useStyles();
   const { t } = useTranslation('profile');
 
-  const { address, balance, isLoading } = props;
+  const { address, balance, isLoading, handlePressBalanceInfo } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -70,13 +76,24 @@ const BalanceSection = (props: BalanceSectionProps) => {
     <View>
       {balance && !isLoading ? (
         <View style={styles.container}>
-          <Typography.Body6>{t('balance')}</Typography.Body6>
-          <Typography.H3
-            style={{
-              color: theme.colors.surfaceBlack,
-            }}>
-            {formatCoins(balance, ', ')}
-          </Typography.H3>
+          <VStack>
+            <HStack>
+              <Typography.Body6>{t('balance')}</Typography.Body6>
+
+              <ImageButton
+                style={styles.infoButtonIcon}
+                image={infoIcon}
+                onPress={handlePressBalanceInfo}
+              />
+            </HStack>
+
+            <Typography.H3
+              style={{
+                color: theme.colors.surfaceBlack,
+              }}>
+              {formatCoins(balance, ', ')}
+            </Typography.H3>
+          </VStack>
 
           {/* Fiat amount (USD, EUR, etc) */}
           {isFiatAmountLoading ? (

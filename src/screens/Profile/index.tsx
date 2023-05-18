@@ -44,6 +44,7 @@ import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
 import StyledSpinner from 'components/StyledSpinner';
 import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
+import * as WebBrowser from '@toruslabs/react-native-web-browser';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
 import PopupMenu from 'components/PopupMenu';
@@ -73,7 +74,7 @@ const Profile = () => {
 
   const route = useRoute<NavProps['route']>();
   const navigation = useNavigation<NavProps['navigation']>();
-  const { navigate, goBack } = navigation;
+  const { navigate, goBack, pop } = navigation;
 
   const { params } = route;
   const givenAddress = params?.address;
@@ -246,6 +247,23 @@ const Profile = () => {
     await blockOrUnblockUser(profile!);
   }, [blockOrUnblockUser, profile]);
 
+  const handlePressBalanceInfo = useCallback(() => {
+    navigate(ROUTES.CONFIRM_MODAL, {
+      title: t('common:DSM'),
+      // Subtitle needs to be passed as a component, as Trans component in the default implementation will cause
+      // unwanted interpolation of the less than (<) character in the string
+      subtitle: <Typography.Body5>{t('profile:balanceInfo')}</Typography.Body5>,
+      subtitleStyle: { textAlign: 'left' },
+      primaryButtonLabel: t('profile:learnMore'),
+      onPressPrimary: () => {
+        WebBrowser.openBrowserAsync('https://desmos.network');
+      },
+      secondaryButtonLabel: t('common:cancel'),
+      // goBack will make the underlying screen goBack, instead of hiding the modal, so pop is used instead.
+      onPressSecondary: pop,
+    });
+  }, [t, navigate, pop]);
+
   // -------------------------------------------------------------------------------------
   // --- Memoized values
   // -------------------------------------------------------------------------------------
@@ -312,6 +330,7 @@ const Profile = () => {
     );
   }, [handlePressBlock, isActiveAccount, isBlocked, styles.contextButtonStyle, t]);
 
+
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
@@ -341,7 +360,6 @@ const Profile = () => {
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-
       {/* Back button */}
       {!isActiveAccount && (
         <ImageButton
@@ -461,7 +479,12 @@ const Profile = () => {
           {/* Lower section (balance, posts, NFTs, badges, etc) */}
           <View style={styles.container}>
             {/* Balance */}
-            <BalanceSection address={address} balance={balance} isLoading={isBalanceLoading} />
+            <BalanceSection
+              address={address}
+              balance={balance}
+              isLoading={isBalanceLoading}
+              handlePressBalanceInfo={handlePressBalanceInfo}
+            />
 
             <View style={styles.divider} />
 

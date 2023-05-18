@@ -23,6 +23,7 @@ import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import usePromptRequestSaveProfile from 'hooks/transactions/usePrompRequestSaveProfile';
 import usePromptRequestCentralizedAPIsPermissions from 'hooks/transactions/usePromptRequestCentralizedAPIsPermissions';
 import { useStorePendingTransaction } from '@recoil/transactions';
+import useTrackTransactionPerformed from 'hooks/analytics/useTrackTransactionPerformed';
 
 export interface BroadcastOptions {
   /**
@@ -101,6 +102,7 @@ const useBroadcastTx = () => {
   const broadcastTxOnChain = useBroadcastTxOnChain();
   const broadcastTxWithApi = useBroadcastTxWithApi();
   const storePendingTransaction = useStorePendingTransaction();
+  const trackTransactionPerformed = useTrackTransactionPerformed();
 
   return React.useCallback(
     async (
@@ -168,7 +170,7 @@ const useBroadcastTx = () => {
       return result.andThen(pendingTx => {
         // Store the transaction locally
         storePendingTransaction(pendingTx);
-
+        trackTransactionPerformed(pendingTx);
         // Return the proper data
         return ok({
           txHash: pendingTx.hash,
@@ -184,6 +186,7 @@ const useBroadcastTx = () => {
       storedProfiles,
       promptAccountPermissions,
       storePendingTransaction,
+      trackTransactionPerformed,
     ],
   );
 };

@@ -7,20 +7,20 @@ import BackButton from 'components/BackButton';
 import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import { block, followBlackIcon, reportIcon, unblock, unfollowBlackIcon } from 'assets/images';
+import { block, followBlackIcon, hidePost, reportIcon, unblock, unfollowBlackIcon } from 'assets/images';
 import {
   useHandlePressBlockOrUnblock,
   useHandlePressFollowOrUnfollow,
 } from 'screens/PostDetails/hooks';
 import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { useTranslation } from 'react-i18next';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
 import { useHandlePressReport } from 'screens/Home/hooks';
+import useHidePost from 'hooks/posts/useHidePost';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
@@ -51,7 +51,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const activeAddress = useActiveAccountAddress();
   const formatDate = useFormatTimeForPostDetails();
 
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
@@ -66,6 +65,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
   const handlePressReport = useHandlePressReport();
+  const handlePressHidePost = useHidePost();
   const handlePressBlockOrUnblock = useHandlePressBlockOrUnblock();
 
   // -------------------------------------------------------------------------------------
@@ -85,21 +85,29 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   // -------------------------------------------------------------------------------------
 
   const PressMoreComponent = React.useMemo(() => {
-    // Temporary: The use shouldn't be able to follow, report, or block themselves
+    // Hide the context menu if the user is the author of the post
     if (isAuthorActiveUser) return undefined;
 
     const menuItems = [
-      post.author.address !== activeAddress
-        ? {
-            label: isFollowing ? t('home:unfollow') : t('home:follow'),
-            onPress: () => handlePressFollowOrUnfollow(post.author),
-            icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
-          }
-        : undefined,
+      {
+        label: isFollowing ? t('home:unfollow') : t('home:follow'),
+        onPress: () => handlePressFollowOrUnfollow(post.author),
+        icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
+      },
       {
         label: t('home:report'),
         onPress: () => handlePressReport(post),
         icon: reportIcon,
+      },
+      {
+        label: t('home:hide'),
+        onPress: async () => {
+          await handlePressHidePost(post.id);
+
+          // just reuse the default back button press behavior here and goBack one screen in the stack.
+          onBackButtonPress();
+        },
+        icon: hidePost,
       },
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),
@@ -111,13 +119,14 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
     isAuthorActiveUser,
-    activeAddress,
-    handlePressBlockOrUnblock,
     handlePressFollowOrUnfollow,
+    handlePressBlockOrUnblock,
+    handlePressHidePost,
     handlePressMore,
     handlePressReport,
     isBlocked,
     isFollowing,
+    onBackButtonPress,
     post,
     t,
   ]);

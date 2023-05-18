@@ -42,6 +42,11 @@ interface PostCardProps {
    * What to do if the block popup menu is pressed.
    */
   onPressBlock: () => void;
+
+  /**
+   * What to do if the hide post button is pressed.
+   */
+  onPressHide: () => void;
 }
 
 /**
@@ -64,6 +69,7 @@ const PostCard = (props: PostCardProps) => {
     onPressTip,
     onPressDetails,
     onPressBlock,
+    onPressHide,
   } = props;
 
   // -------------------------------------------------------------------------------------
@@ -92,6 +98,7 @@ const PostCard = (props: PostCardProps) => {
         onPressFollow={onPressFollow}
         onPressReport={onPressReport}
         onPressBlock={onPressBlock}
+        onPressHide={onPressHide}
       />
 
       {/* Post text */}

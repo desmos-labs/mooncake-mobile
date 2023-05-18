@@ -7,6 +7,7 @@ import { AccountWithWallet } from 'types/account';
 import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
+import useTrackInviteRedeemed from 'hooks/analytics/useTrackInviteRedeemed';
 
 interface FormValues {
   readonly newPassword: string;
@@ -48,12 +49,12 @@ export interface SignUpSuccess {
  */
 const usePerformSignUp = (account: AccountWithWallet) => {
   const [status, setStatus] = useState<SignUpStatus>(SignUpStatus.UNDEFINED);
-
   const appInviteCode = useAppStateValue('inviteCode');
   const performLogin = usePerformLogin();
   const acceptInvite = useAcceptInvite();
   const storeAccount = useStoreAccount();
   const setActiveAccountAddress = useSetActiveAccountAddress();
+  const trackInviteRedeemed = useTrackInviteRedeemed();
 
   const performSignUp = React.useCallback(
     async (values: FormValues): Promise<Result<SignUpSuccess, Error>> => {
@@ -78,6 +79,8 @@ const usePerformSignUp = (account: AccountWithWallet) => {
       if (inviteResult.isErr()) {
         setStatus(SignUpStatus.DONE);
         return err(inviteResult.error);
+      } else {
+        await trackInviteRedeemed(inviteCode);
       }
 
       // Save the account locally
@@ -93,7 +96,15 @@ const usePerformSignUp = (account: AccountWithWallet) => {
       setStatus(SignUpStatus.DONE);
       return ok({ account } as SignUpSuccess);
     },
-    [acceptInvite, account, appInviteCode, performLogin, setActiveAccountAddress, storeAccount],
+    [
+      acceptInvite,
+      account,
+      appInviteCode,
+      performLogin,
+      setActiveAccountAddress,
+      storeAccount,
+      trackInviteRedeemed,
+    ],
   );
 
   return {

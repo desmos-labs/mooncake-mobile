@@ -73,6 +73,7 @@ import {
   ModalPresentationIOS,
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
+import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
 import BlockedUsers from 'screens/BlockedUsers';
 
 export type RootNavigatorParamList = {
@@ -260,6 +261,7 @@ const RootNavigator = () => {
   useInitializeAppData();
   useInitializeNotifications();
   useInitializeDynamicLinks();
+  usePosthogIdentification();
 
   //  To allow going back to previous screen via swipe left.
   const { height, width } = Dimensions.get('window');

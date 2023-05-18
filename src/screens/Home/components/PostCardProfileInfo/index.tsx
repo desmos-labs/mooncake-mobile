@@ -14,7 +14,7 @@ import { parseISO } from 'date-fns';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { block, followBlackIcon, reportIcon, unblock, unfollowBlackIcon } from 'assets/images';
+import { followBlackIcon, hidePost, reportIcon, unfollowBlackIcon, unblock, block } from 'assets/images';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useStyles from './useStyles';
@@ -24,6 +24,7 @@ export interface PostCardProfileInfoProps {
   readonly onPressAuthor: () => void;
   readonly onPressFollow: () => void;
   readonly onPressReport: () => void;
+  readonly onPressHide: () => void;
   readonly onPressBlock: () => void;
 }
 
@@ -36,7 +37,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
 
-  const { post, onPressAuthor, onPressFollow, onPressBlock, onPressReport } = props;
+  const { post, onPressAuthor, onPressFollow, onPressReport, onPressHide, onPressBlock } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -122,6 +123,11 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         label: t('report'),
         onPress: onPressReport,
         icon: reportIcon,
+      },
+      {
+        label: t('hide'),
+        onPress: onPressHide,
+        icon: hidePost,
       },
       {
         label: isBlocked ? t('home:unblock') : t('home:block'),

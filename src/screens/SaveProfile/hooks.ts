@@ -12,6 +12,7 @@ import { useStoreProfile } from '@recoil/profiles';
 import { err, ok, Result } from 'neverthrow';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import useTrackUser from 'hooks/analytics/useTrackUser';
 import { NavProps } from './index';
 
 /**
@@ -155,6 +156,7 @@ export const useSubmitForm = (
 ) => {
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
+  const trackUser = useTrackUser();
   const { status, saveProfile } = useSaveProfileOnChain();
 
   // Callback used when the user pressed the button to save the profile
@@ -200,12 +202,14 @@ export const useSubmitForm = (
         const result = await saveProfile(profileToSaveOnChain, account);
         if (result.isErr()) {
           return err(result.error);
+        } else {
+          await trackUser(profileToSaveOnChain.address);
         }
       }
 
       return ok(undefined);
     },
-    [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile],
+    [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile, trackUser],
   );
 
   return {

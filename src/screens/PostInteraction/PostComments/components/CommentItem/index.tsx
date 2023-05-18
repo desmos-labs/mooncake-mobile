@@ -5,6 +5,7 @@ import {
   commentLiked,
   commentLikeEmptyIcon,
   followBlackIcon,
+  hidePost,
   reportIcon,
   tipIcon,
   unblock,
@@ -29,6 +30,7 @@ import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import {
   useHandlePressBlock,
   useHandlePressFollow,
+  useHandlePressHidePost,
   useHandlePressReport,
 } from 'screens/Home/hooks';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
@@ -37,7 +39,9 @@ import {
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
+  useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
@@ -45,6 +49,10 @@ import useStyles from './useStyles';
 export interface CommentItemProps {
   readonly comment: Post;
   readonly disableInnerComment?: boolean;
+  /**
+   * Whether the CommentItem is being rendered as the main post (at the top).
+   */
+  readonly renderedAsMainPost?: boolean;
   // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
   // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
   readonly handlePressMore?: () => void;
@@ -60,7 +68,7 @@ const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
 
-  const { comment, handlePressMore, disableInnerComment } = props;
+  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -106,6 +114,8 @@ const CommentItem = (props: CommentItemProps) => {
   const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
+  const handleHidePost = useHandlePressHidePost();
+  const returnToRootPost = useReturnToRootPost();
   const handlePressBlock = useHandlePressBlock();
 
   const handlePressLike = () => {
@@ -124,6 +134,15 @@ const CommentItem = (props: CommentItemProps) => {
     if (isPostPending(comment)) return;
     handleShowCommentDetailsWithFocus(comment);
   };
+  const handlePressHidePost = async () => {
+    if (isPostPending(comment)) return;
+    // Return to the main post first, so the usePostComments hook can catch the modified
+    // localHiddenPosts state.
+    if (renderedAsMainPost) {
+      returnToRootPost();
+    }
+    await handleHidePost(comment.id);
+  };
 
   // -------------------------------------------------------------------------------------
   // --- Conditional Rendering
@@ -134,7 +153,7 @@ const CommentItem = (props: CommentItemProps) => {
    * the user can follow or report the comment author.
    */
   const PressMoreComponent = React.useMemo(() => {
-    // Temporary: The use shouldn't be able to follow, report, or block themselves
+    // The context menu should not be visible if the user is the author of the comment
     if (isAuthorActiveUser) return undefined;
 
     const menuItems = [
@@ -149,6 +168,11 @@ const CommentItem = (props: CommentItemProps) => {
         icon: reportIcon,
       },
       {
+        label: t('home:hide'),
+        onPress: () => handlePressHidePost(),
+        icon: hidePost,
+      },
+      {
         label: isBlocked ? t('home:unblock') : t('home:block'),
         onPress: () => handlePressBlock(comment.author),
         icon: isBlocked ? unblock : block,
@@ -159,13 +183,15 @@ const CommentItem = (props: CommentItemProps) => {
   }, [
     isAuthorActiveUser,
     comment,
-    handlePressBlock,
     handlePressFollow,
+    handlePressHidePost,
     handlePressMore,
     handlePressReport,
-    isBlocked,
     isFollowing,
+    returnToRootPost,
     t,
+    handlePressBlock,
+    isBlocked,
   ]);
 
   return (

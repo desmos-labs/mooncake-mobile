@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
-import { Keyboard } from 'react-native';
 import { NavProps } from 'screens/PostDetails/index';
 import { isCommentReply, Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
@@ -12,6 +11,8 @@ import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import { useTranslation } from 'react-i18next';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import usePost from 'hooks/posts/usePost';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
 
 /**
@@ -74,6 +75,17 @@ export const useHandlePressShowCommentDetails = () => {
 };
 
 /**
+ * A hook that brings the user back to the root post, if they hide a comment from the comment details screen.
+ */
+export const useReturnToRootPost = () => {
+  const { pop } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
+
+  return React.useCallback(() => {
+    pop();
+  }, [pop]);
+};
+
+/**
  * Hook that allows to handle the action performed when the user clicks on a comment button of a reply.
  *
  */
@@ -122,8 +134,6 @@ export const useHandleCreateComment = () => {
   const toast = useCustomToast();
   const handleCreateComment = React.useCallback(
     async (post: Post) => {
-      // When the user clicks on the button, dismiss the keyboard
-      Keyboard.dismiss();
       const result = await createPost(post);
       if (result.isErr()) {
         console.error('Error inside useHandleCreateComment', result.error.message);

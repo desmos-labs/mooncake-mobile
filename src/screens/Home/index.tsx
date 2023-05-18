@@ -16,6 +16,7 @@ import {
   useHandlePressComments,
   useHandlePressDetails,
   useHandlePressFollow,
+  useHandlePressHidePost,
   useHandlePressReport,
   useHandlePressTip,
 } from 'screens/Home/hooks';
@@ -69,6 +70,7 @@ const Home = () => {
   const handlePressReport = useHandlePressReport();
   const handlePressComments = useHandlePressComments();
   const handlePressTip = useHandlePressTip();
+  const handlePressHidePost = useHandlePressHidePost();
 
   // -------------------------------------------------------------------------------------
   // --- Data queries
@@ -164,6 +166,9 @@ const Home = () => {
               return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
             }
             handlePressReport(item);
+          }}
+          onPressHide={() => {
+            handlePressHidePost(item.id);
           }}
         />
       );

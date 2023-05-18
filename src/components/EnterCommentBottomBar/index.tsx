@@ -34,6 +34,7 @@ import usePostsParams from 'hooks/posts/usePostsParams';
 import StyledSpinner from 'components/StyledSpinner';
 import { useNavigation } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
+import CommentBottomBarLoadingOverlay from 'components/EnterCommentBottomBar/components/CommentBottomBarLoadingOverlay';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -230,6 +231,9 @@ const EnterCommentBottomBar = (props: Props) => {
                 placeholderTextColor={theme.colors.grey02}
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
+                contextMenuHidden={loading}
+                caretHidden={loading}
+                editable={!loading}
               />
             </ScrollView>
             <View
@@ -246,13 +250,21 @@ const EnterCommentBottomBar = (props: Props) => {
         {keyboardShow && (
           <MediaBottomPanel
             imageSelected={false}
-            handlePressGallery={imageFromLibrary}
-            handlePressCamera={imageFromCamera}
+            loading={loading}
+            handlePressGallery={() => {
+              if (loading) return;
+              imageFromLibrary();
+            }}
+            handlePressCamera={() => {
+              if (loading) return;
+              imageFromCamera();
+            }}
             rightComponent={RightButtonComponent}
             commentLength={comment.length}
           />
         )}
       </Shadow>
+      {loading && <CommentBottomBarLoadingOverlay />}
     </KeyboardAvoidingView>
   );
 };

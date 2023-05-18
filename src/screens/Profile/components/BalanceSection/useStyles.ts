@@ -16,6 +16,11 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     flexDirection: 'row',
   },
+  infoButtonIcon: {
+    marginLeft: theme.spacing.xs,
+    height: 20,
+    width: 20,
+  },
 }));
 
 export default useStyles;

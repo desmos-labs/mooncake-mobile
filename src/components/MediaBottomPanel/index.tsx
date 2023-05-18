@@ -32,6 +32,10 @@ type MediaBottomPanelProps = {
    * Optional right component (usefull for the EnterCommentBottomBar)
    */
   rightComponent?: React.ReactNode;
+  /**
+   * Is the app processing a comment?
+   */
+  loading?: boolean;
 };
 
 const MediaBottomPanel = ({
@@ -41,6 +45,7 @@ const MediaBottomPanel = ({
   imageSelected,
   rightComponent,
   style,
+  loading,
 }: MediaBottomPanelProps) => {
   const styles = useStyles();
 
@@ -72,7 +77,7 @@ const MediaBottomPanel = ({
         </View>
 
         <View style={styles.rightGroup}>
-          <RadialTextCounter max={params.maxTextLength} current={commentLength} />
+          {!loading && <RadialTextCounter max={params.maxTextLength} current={commentLength} />}
           {rightComponent}
         </View>
       </SafeAreaView>
