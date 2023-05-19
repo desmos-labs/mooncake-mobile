@@ -17,8 +17,8 @@ import { useTranslation } from 'react-i18next';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
-import { useHandlePressReport } from 'screens/Home/hooks';
 import useHidePost from 'hooks/posts/useHidePost';
+import { useHandlePressReport } from 'components/PostCard/hooks';
 import useStyles from './useStyles';
 
 interface Props {
