@@ -5,21 +5,10 @@ import { useTheme } from 'native-base';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import StyledSpinner from 'components/StyledSpinner';
 import { FlashList } from '@shopify/flash-list';
-import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
-import PostCard from 'screens/Home/components/PostCard';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import {
-  useHandlePressComments,
-  useHandlePressDetails,
-  useHandlePressFollow,
-  useHandlePressHidePost,
-  useHandlePressReport,
-  useHandlePressTip,
-} from 'screens/Home/hooks';
-import useCustomToast from 'hooks/extended/useCustomToast';
-import { useTranslation } from 'react-i18next';
+import PostCard from 'components/PostCard';
 import { AndroidColor } from '@notifee/react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
+import { useGetPostType } from 'components/PostCard/hooks';
 import useStyles from './useStyles';
 
 export interface UserPostsListProps {
@@ -60,9 +49,6 @@ export interface UserPostsListProps {
  */
 const UserPostsList = (props: UserPostsListProps) => {
   const styles = useStyles();
-
-  const toast = useCustomToast();
-  const { t } = useTranslation();
   const theme = useTheme();
 
   const {
@@ -82,80 +68,20 @@ const UserPostsList = (props: UserPostsListProps) => {
   // --- Actions
   // -------------------------------------------------------------------------------------
 
-  const handleNavigateToProfile = useNavigateToProfile();
-  const handlePressFollow = useHandlePressFollow();
-  const handlePressDetails = useHandlePressDetails();
-  const handlePressReport = useHandlePressReport();
-  const handlePressComments = useHandlePressComments();
-  const handlePressTip = useHandlePressTip();
-  const handlePressHidePost = useHandlePressHidePost();
+  const getPostType = useGetPostType();
 
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
     await refreshPosts();
   }, [refreshPosts]);
 
-  const getPostType = useCallback((item: Post) => {
-    if (item.attachments && item.attachments.length > 0 && item.text) {
-      return 'text+media';
-    }
-    if (item.attachments && item.attachments.length > 0) {
-      return 'media';
-    }
-    if (item.text) {
-      return 'text';
-    }
-    return 'default';
-  }, []);
-
   // -------------------------------------------------------------------------------------
   // --- Children components
   // -------------------------------------------------------------------------------------
 
-  const renderPosts = React.useCallback(
-    ({ item }: ListRenderItemInfo<Post>) => {
-      if (!item) {
-        return (
-          <View style={styles.loaderView}>
-            <HomePostContentLoader />
-          </View>
-        );
-      }
-      return (
-        <PostCard
-          post={item}
-          onPressAuthor={() => handleNavigateToProfile(item.author.address)}
-          onPressDetails={() => {
-            handlePressDetails(item);
-          }}
-          onPressComment={() => {
-            handlePressComments(item);
-          }}
-          onPressTip={() => {
-            handlePressTip(item);
-          }}
-          onPressFollow={() => handlePressFollow(item.author)}
-          onPressReport={() => {
-            handlePressReport(item);
-          }}
-          onPressHide={() => {
-            handlePressHidePost(item.id);
-          }}
-        />
-      );
-    },
-    [
-      handleNavigateToProfile,
-      handlePressComments,
-      handlePressDetails,
-      handlePressFollow,
-      handlePressReport,
-      handlePressTip,
-      styles.loaderView,
-      t,
-      toast,
-    ],
-  );
+  const renderPosts = React.useCallback(({ item }: ListRenderItemInfo<Post>) => {
+    return <PostCard post={item} />;
+  }, []);
 
   const emptyComponent = useCallback(() => {
     return <EmptyPostComponent textLabel={emptyListText} buttonLabel={emptyListButtonText} />;

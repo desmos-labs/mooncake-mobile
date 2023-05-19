@@ -8,16 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import StyledSpinner from 'components/StyledSpinner';
-import PostCard from 'screens/Home/components/PostCard';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import {
-  useHandlePressComments,
-  useHandlePressDetails,
-  useHandlePressFollow,
-  useHandlePressHidePost,
-  useHandlePressReport,
-  useHandlePressTip,
-} from 'screens/Home/hooks';
+import PostCard from 'components/PostCard';
 import useStyles from './useStyles';
 
 export interface PostsSectionProps {
@@ -54,18 +45,6 @@ const PostsSection = (props: PostsSectionProps) => {
   const isGuestProfile = useMemo(() => address === activeAddress, [activeAddress, address]);
 
   // -------------------------------------------------------------------------------------
-  // --- Actions
-  // -------------------------------------------------------------------------------------
-
-  const handleNavigateToProfile = useNavigateToProfile();
-  const handlePressFollow = useHandlePressFollow();
-  const handlePressDetails = useHandlePressDetails();
-  const handlePressReport = useHandlePressReport();
-  const handlePressComments = useHandlePressComments();
-  const handlePressTip = useHandlePressTip();
-  const handlePressHidePost = useHandlePressHidePost();
-
-  // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
@@ -84,18 +63,7 @@ const PostsSection = (props: PostsSectionProps) => {
 
       {/* Posts list, or loading indicator */}
       {!isLoading ? (
-        <PostCard
-          post={posts[0]}
-          onPressAuthor={() => handleNavigateToProfile(posts[0].author.address)}
-          onPressReport={() => {
-            handlePressReport(posts[0]);
-          }}
-          onPressFollow={() => handlePressFollow(posts[0].author)}
-          onPressDetails={() => handlePressDetails(posts[0])}
-          onPressComment={() => handlePressComments(posts[0])}
-          onPressTip={() => handlePressTip(posts[0])}
-          onPressHide={() => handlePressHidePost(posts[0].id)}
-        />
+        <PostCard post={posts[0]} />
       ) : (
         <View style={styles.activityIndicatorView}>
           <StyledSpinner />
