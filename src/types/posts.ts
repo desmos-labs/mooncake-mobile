@@ -126,6 +126,7 @@ export interface PostReference {
 }
 
 const getReplyId = (post: Post): number | undefined => {
+  console.log('getReplyID', post.references);
   return post.references.find(r => r.type === PostReferenceType.POST_REFERENCE_TYPE_REPLY)?.postId;
 };
 

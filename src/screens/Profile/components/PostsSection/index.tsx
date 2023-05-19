@@ -13,6 +13,16 @@ import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import StyledSpinner from 'components/StyledSpinner';
+import PostCard from 'screens/Home/components/PostCard';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import {
+  useHandlePressComments,
+  useHandlePressDetails,
+  useHandlePressFollow,
+  useHandlePressHidePost,
+  useHandlePressReport,
+  useHandlePressTip,
+} from 'screens/Home/hooks';
 import useStyles from './useStyles';
 
 export interface PostsSectionProps {
@@ -66,6 +76,18 @@ const PostsSection = (props: PostsSectionProps) => {
   );
 
   // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  const handleNavigateToProfile = useNavigateToProfile();
+  const handlePressFollow = useHandlePressFollow();
+  const handlePressDetails = useHandlePressDetails();
+  const handlePressReport = useHandlePressReport();
+  const handlePressComments = useHandlePressComments();
+  const handlePressTip = useHandlePressTip();
+  const handlePressHidePost = useHandlePressHidePost();
+
+  // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
 
@@ -115,14 +137,17 @@ const PostsSection = (props: PostsSectionProps) => {
 
       {/* Posts list, or loading indicator */}
       {!isLoading ? (
-        <FlatList
-          keyExtractor={keyExtractor}
-          contentContainerStyle={styles.tweetsListContainer}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          data={posts}
-          renderItem={renderPost}
-          ListEmptyComponent={EmptyComponent}
+        <PostCard
+          post={posts[0]}
+          onPressAuthor={() => handleNavigateToProfile(posts[0].author.address)}
+          onPressReport={() => {
+            handlePressReport(posts[0]);
+          }}
+          onPressFollow={() => handlePressFollow(posts[0].author)}
+          onPressDetails={() => handlePressDetails(posts[0])}
+          onPressComment={() => handlePressComments(posts[0])}
+          onPressTip={() => handlePressTip(posts[0])}
+          onPressHide={() => handlePressHidePost(posts[0].id)}
         />
       ) : (
         <View style={styles.activityIndicatorView}>
