@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native';
-import { isPostPending, Post } from 'types/posts';
+import { Post } from 'types/posts';
 import { useTheme } from 'native-base';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import StyledSpinner from 'components/StyledSpinner';
@@ -35,10 +35,7 @@ export interface UserPostsListProps {
    * Action to be performed when the user scrolls to the end of the list.
    */
   fetchMore: () => void;
-  /**
-   * Whether more data is being loaded or not.
-   */
-  fetchingMore: boolean;
+
   /**
    * Action to be performed when the user pulls down the list.
    */

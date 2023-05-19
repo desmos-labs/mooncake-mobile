@@ -1,15 +1,10 @@
-import { useNavigation } from '@react-navigation/native';
-import { emptyPostsIcon } from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import ROUTES from 'navigation/routes';
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, ListRenderItemInfo, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Center, useTheme } from 'native-base';
+import { TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import StyledSpinner from 'components/StyledSpinner';
@@ -52,28 +47,11 @@ const PostsSection = (props: PostsSectionProps) => {
   const { t } = useTranslation('profile');
   const theme = useTheme();
   const styles = useStyles();
-  const { navigate } = useNavigation<any>();
 
   const { address, onPress, posts, loading: isLoading } = props;
 
   const activeAddress = useActiveAccountAddress();
   const isGuestProfile = useMemo(() => address === activeAddress, [activeAddress, address]);
-
-  // -------------------------------------------------------------------------------------
-  // --- Actions
-  // -------------------------------------------------------------------------------------
-
-  // Callback used to navigate to the post details screen
-  const handlePostPressed = React.useCallback(
-    (post: Post) => {
-      navigate(ROUTES.POST_DETAILS, {
-        subspaceId: post.subspaceId,
-        postId: post.id,
-        focusCommentBox: false,
-      });
-    },
-    [navigate],
-  );
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -86,37 +64,6 @@ const PostsSection = (props: PostsSectionProps) => {
   const handlePressComments = useHandlePressComments();
   const handlePressTip = useHandlePressTip();
   const handlePressHidePost = useHandlePressHidePost();
-
-  // -------------------------------------------------------------------------------------
-  // --- Child components
-  // -------------------------------------------------------------------------------------
-
-  // Function to extract the key of a post
-  const keyExtractor = useCallback((item: Post) => item.externalId, []);
-
-  // Callback used to render a post within the list
-  const renderPost = useCallback(
-    ({ item }: ListRenderItemInfo<Post>) => (
-      <ProfilePostCard
-        post={item}
-        postsMargin={2}
-        postsSize={104}
-        onPress={() => handlePostPressed(item)}
-      />
-    ),
-    [handlePostPressed],
-  );
-
-  // Component to be rendered when the list is empty
-  const EmptyComponent = useMemo(
-    () => (
-      <Center flex={1}>
-        <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
-        <Typography.Body7 style={{ color: theme.colors.midGrey }}>{t('no posts')}</Typography.Body7>
-      </Center>
-    ),
-    [styles.emptyImage, t, theme.colors.midGrey],
-  );
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
