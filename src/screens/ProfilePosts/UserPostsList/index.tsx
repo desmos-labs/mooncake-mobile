@@ -1,11 +1,14 @@
 import React, { useCallback } from 'react';
-import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native';
 import { Post } from 'types/posts';
-import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
-import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
-import { Center } from 'native-base';
+import { useTheme } from 'native-base';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import StyledSpinner from 'components/StyledSpinner';
+import { FlashList } from '@shopify/flash-list';
+import PostCard from 'components/PostCard';
+import { AndroidColor } from '@notifee/react-native';
+import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
+import { useGetPostType } from 'components/PostCard/hooks';
 import useStyles from './useStyles';
 
 export interface UserPostsListProps {
@@ -21,10 +24,7 @@ export interface UserPostsListProps {
    * Action to be performed when the user scrolls to the end of the list.
    */
   fetchMore: () => void;
-  /**
-   * Whether more data is being loaded or not.
-   */
-  fetchingMore: boolean;
+
   /**
    * Action to be performed when the user pulls down the list.
    */
@@ -49,37 +49,39 @@ export interface UserPostsListProps {
  */
 const UserPostsList = (props: UserPostsListProps) => {
   const styles = useStyles();
+  const theme = useTheme();
 
   const {
     posts,
     isLoading,
     fetchMore,
-    fetchingMore,
+    // fetchingMore,
     refreshPosts,
     refreshing,
     emptyListText,
     emptyListButtonText,
   } = props;
 
-  const navigateToPost = useNavigateToPost();
+  // const navigateToPost = useNavigateToPost();
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  const getPostType = useGetPostType();
+
+  // Function called when the user manually refreshes the list
+  const onRefresh = useCallback(async () => {
+    await refreshPosts();
+  }, [refreshPosts]);
 
   // -------------------------------------------------------------------------------------
   // --- Children components
   // -------------------------------------------------------------------------------------
 
-  const renderPosts = useCallback(
-    ({ item: post }: ListRenderItemInfo<Post>) => {
-      return (
-        <ProfilePostCard
-          post={post}
-          postsSize={97}
-          postsMargin={6}
-          onPress={() => navigateToPost(post.subspaceId, post.id)}
-        />
-      );
-    },
-    [navigateToPost],
-  );
+  const renderPosts = React.useCallback(({ item }: ListRenderItemInfo<Post>) => {
+    return <PostCard post={item} />;
+  }, []);
 
   const emptyComponent = useCallback(() => {
     return <EmptyPostComponent textLabel={emptyListText} buttonLabel={emptyListButtonText} />;
@@ -99,26 +101,26 @@ const UserPostsList = (props: UserPostsListProps) => {
 
   return (
     <View style={styles.contentContainer}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        refreshing={refreshing}
-        onRefresh={refreshPosts}
+      <FlashList
+        keyExtractor={(item, index) => `${index}item+${item.id}`}
         data={posts}
-        renderItem={renderPosts}
-        numColumns={3}
-        onEndReached={({ distanceFromEnd }) => {
-          if (distanceFromEnd < 0) return;
-          fetchMore();
-        }}
-        contentContainerStyle={styles.contentContainerStyle}
-        ListEmptyComponent={emptyComponent}
-        ListFooterComponent={
-          fetchingMore ? (
-            <Center my="m">
-              <StyledSpinner />
-            </Center>
-          ) : null
+        refreshControl={
+          <RefreshControl
+            tintColor={theme.colors.surfaceBlack}
+            colors={[AndroidColor.BLACK]}
+            enabled
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+            progressViewOffset={Platform.OS === 'android' ? 30 : 0}
+          />
         }
+        renderItem={renderPosts}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={emptyComponent}
+        estimatedItemSize={180}
+        ItemSeparatorComponent={HomeItemSeparatorComponent}
+        onEndReached={fetchMore}
+        getItemType={getPostType}
       />
     </View>
   );
