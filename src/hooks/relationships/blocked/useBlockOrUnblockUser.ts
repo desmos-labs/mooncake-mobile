@@ -56,12 +56,12 @@ const useBlockUser = () => {
       // Broadcast the transaction
       const result = await broadcastTx([messageBlockUser], { optimistic: true });
 
-      // remove cached posts for the blocked user.
-      removePostsForUser(counterparty);
-
       if (result.isErr()) {
         // If the transaction is canceled or errors, remove the added blocked relationship
         removeBlockedUser(user, counterparty.address);
+      } else {
+        // remove cached posts for the blocked user.
+        removePostsForUser(counterparty);
       }
     },
     [addBlockedUser, subspaceId, broadcastTx, removePostsForUser, removeBlockedUser],
