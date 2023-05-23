@@ -7,11 +7,20 @@ import BackButton from 'components/BackButton';
 import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import { block, followBlackIcon, hidePost, reportIcon, unfollowBlackIcon } from 'assets/images';
-import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
+import {
+  block,
+  followBlackIcon,
+  hidePost,
+  reportIcon,
+  unblock,
+  unfollowBlackIcon,
+} from 'assets/images';
+import {
+  useHandlePressBlockOrUnblock,
+  useHandlePressFollowOrUnfollow,
+} from 'screens/PostDetails/hooks';
 import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { useTranslation } from 'react-i18next';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
@@ -19,6 +28,8 @@ import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
 import useHidePost from 'hooks/posts/useHidePost';
 import { useHandlePressReport } from 'components/PostCard/hooks';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
 
 interface Props {
@@ -42,7 +53,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
-  const activeAddress = useActiveAccountAddress();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -51,7 +61,9 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
+  const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(post.author.address);
   const { count: commentsCount } = usePostCommentsCount(post);
+  const isAuthorActiveUser = useIsAuthorActiveUser(post.author.address);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -61,6 +73,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
   const handlePressReport = useHandlePressReport();
   const handlePressHidePost = useHidePost();
+  const handlePressBlockOrUnblock = useHandlePressBlockOrUnblock();
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -68,6 +81,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
 
   useEffect(() => {
     refreshFollowing();
+    refreshIsBlocked();
 
     // It's safe to disable the linter here as we only want to run this effect once
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,15 +93,14 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
 
   const PressMoreComponent = React.useMemo(() => {
     // Hide the context menu if the user is the author of the post
-    if (post.author.address === activeAddress) return undefined;
+    if (isAuthorActiveUser) return undefined;
+
     const menuItems = [
-      post.author.address !== activeAddress
-        ? {
-            label: isFollowing ? t('home:unfollow') : t('home:follow'),
-            onPress: () => handlePressFollowOrUnfollow(post.author),
-            icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
-          }
-        : undefined,
+      {
+        label: isFollowing ? t('home:unfollow') : t('home:follow'),
+        onPress: () => handlePressFollowOrUnfollow(post.author),
+        icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
+      },
       {
         label: t('home:report'),
         onPress: () => handlePressReport(post),
@@ -104,21 +117,21 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         icon: hidePost,
       },
       {
-        label: t('home:block'),
-        onPress: () => {
-          // TODO: implement
-        },
-        icon: block,
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: () => handlePressBlockOrUnblock(post.author),
+        icon: isBlocked ? unblock : block,
       },
     ];
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
-    activeAddress,
+    isAuthorActiveUser,
     handlePressFollowOrUnfollow,
+    handlePressBlockOrUnblock,
     handlePressHidePost,
     handlePressMore,
     handlePressReport,
+    isBlocked,
     isFollowing,
     onBackButtonPress,
     post,

@@ -50,3 +50,12 @@ export const isCanceledOperationError = (e: Error): e is CanceledOperationError 
   const { type } = e as CanceledOperationError;
   return type === 'CanceledOperationError';
 };
+
+export class CanceledBlockError extends Error {
+  readonly type: 'CanceledBlockError';
+
+  constructor() {
+    super('User aborted cancel flow.');
+    this.type = 'CanceledBlockError';
+  }
+}

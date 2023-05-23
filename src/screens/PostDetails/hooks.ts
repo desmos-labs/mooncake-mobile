@@ -13,6 +13,7 @@ import useCustomToast from 'hooks/extended/useCustomToast';
 import usePost from 'hooks/posts/usePost';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
 
 /**
  * Hook that allows to report a user.
@@ -34,6 +35,19 @@ export const useHandlePressFollowOrUnfollow = () => {
       await followOrUnfollow(user);
     },
     [followOrUnfollow],
+  );
+};
+
+/**
+ * Hook that allows to follow or unfollow a user.
+ */
+export const useHandlePressBlockOrUnblock = () => {
+  const blockOrUnblock = useBlockOrUnblockUser();
+  return React.useCallback(
+    async (user: DesmosProfile) => {
+      await blockOrUnblock(user);
+    },
+    [blockOrUnblock],
   );
 };
 

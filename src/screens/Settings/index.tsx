@@ -99,6 +99,10 @@ const Settings = (props: NavProps) => {
     }
   }, [changePassword, t, unlockWallet]);
 
+  const handlePressBlockedUsers = useCallback(() => {
+    navigate(ROUTES.BLOCKED_USERS);
+  }, [navigate]);
+
   // -------------------------------------------------------------------------------------
   // --- View rendering
   // -------------------------------------------------------------------------------------
@@ -124,6 +128,7 @@ const Settings = (props: NavProps) => {
           />
         )}
         <SectionButton label={t('change password')} onPress={handlePressChangePassword} />
+        <SectionButton label={t('blockedUsers')} onPress={handlePressBlockedUsers} />
         {canShowPrivateKey && (
           <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
         )}

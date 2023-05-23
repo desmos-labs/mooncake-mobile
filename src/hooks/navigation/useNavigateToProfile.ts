@@ -30,7 +30,7 @@ const useNavigateToProfile = () => {
           break;
       }
     },
-    [navigate],
+    [activeAccountAddress, navigate],
   );
 };
 

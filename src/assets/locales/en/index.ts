@@ -56,6 +56,8 @@ import importAccountSelectMode from './importAccountSelectMode.json';
 import a11y from './a11y.json';
 import uploadProfilePictures from './uploadProfilePictures.json';
 import search from './search.json';
+import blockedUsers from "./blockedUsers.json";
+import unblock from './unblock.json';
 
 const en = {
   common,
@@ -116,6 +118,8 @@ const en = {
   a11y,
   uploadProfilePictures,
   search,
+  blockedUsers,
+  unblock
 };
 
 export default en;

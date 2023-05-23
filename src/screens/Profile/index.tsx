@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { profileBack } from 'assets/images';
+import { block, profileBack, profileContextButton, reportIcon, unblock } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -43,11 +43,14 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
-import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import StyledSpinner from 'components/StyledSpinner';
 import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
 import * as WebBrowser from '@toruslabs/react-native-web-browser';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
+import PopupMenu from 'components/PopupMenu';
+import Button from 'components/Button';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -124,6 +127,9 @@ const Profile = () => {
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(address);
   const followOrUnfollowUser = useFollowOrUnfollowUser();
 
+  const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(address);
+  const blockOrUnblockUser = useBlockOrUnblockUser();
+
   // -------------------------------------------------------------------------------------
   // --- Local state
   // -------------------------------------------------------------------------------------
@@ -140,6 +146,7 @@ const Profile = () => {
     setPageRefreshing(true);
 
     await refreshFollowing();
+    await refreshIsBlocked();
     await refreshProfile();
     await refreshFollowageCount();
     await refreshFollowersCount();
@@ -152,6 +159,7 @@ const Profile = () => {
     refreshFollowageCount,
     refreshFollowersCount,
     refreshFollowing,
+    refreshIsBlocked,
     refreshPosts,
     refreshPostsCount,
     refreshProfile,
@@ -269,6 +277,11 @@ const Profile = () => {
     await followOrUnfollowUser(profile!);
   }, [followOrUnfollowUser, profile]);
 
+  const handlePressBlock = useCallback(async () => {
+    // This assertion is necessary, otherwise it will throw a ts error
+    await blockOrUnblockUser(profile!);
+  }, [blockOrUnblockUser, profile]);
+
   const handlePressBalanceInfo = useCallback(() => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('common:DSM'),
@@ -285,6 +298,72 @@ const Profile = () => {
       onPressSecondary: pop,
     });
   }, [t, navigate, pop]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Memoized values
+  // -------------------------------------------------------------------------------------
+  // This button will only be rendered if visiting another user's profile
+  const ProfileInteractionButton = React.useMemo(() => {
+    if (!isActiveAccount) {
+      // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
+      if (isBlocked) {
+        return (
+          <Button
+            mt="s"
+            backgroundColor="surfaceGrey"
+            minWidth="80px"
+            size={32}
+            onPress={handlePressBlock}
+            textColor="surfaceBlack">
+            {t('profile:unblock')}
+          </Button>
+        );
+      }
+      return (
+        <Button
+          mt="s"
+          backgroundColor="surfaceGrey"
+          minWidth="80px"
+          size={32}
+          onPress={handlePressFollow}
+          textColor="surfaceBlack">
+          {isFollowing ? t('following') : t('follow')}
+        </Button>
+      );
+    }
+    return undefined;
+  }, [handlePressBlock, handlePressFollow, isActiveAccount, isBlocked, isFollowing, t]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Conditional rendering
+  // -------------------------------------------------------------------------------------
+  const PopupContextMenu = React.useMemo(() => {
+    // Don't show PopupMenu if active user
+    if (isActiveAccount) return undefined;
+
+    const menuItems = [
+      {
+        label: t('home:report'),
+        onPress: () => {
+          // implement
+        },
+        icon: reportIcon,
+      },
+      {
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: () => handlePressBlock(),
+        icon: isBlocked ? unblock : block,
+      },
+    ];
+
+    return (
+      <PopupMenu
+        menuItems={menuItems}
+        menuIcon={profileContextButton}
+        menuIconStyle={styles.contextButtonStyle}
+      />
+    );
+  }, [handlePressBlock, isActiveAccount, isBlocked, styles.contextButtonStyle, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -334,6 +413,9 @@ const Profile = () => {
       {/*    onPress={() => navigate(ROUTES.SETTINGS)} */}
       {/*  /> */}
       {/* )} */}
+
+      <View style={styles.contextButtonPosition}>{PopupContextMenu}</View>
+
       {/* DTag */}
       <Animated.View style={[styles.animatedDtag, animatedDTagStyle]}>
         <View
@@ -425,9 +507,7 @@ const Profile = () => {
           {isActiveAccount && <EditProfileSection profile={profile} />}
 
           {/* Follow/Unfollow button */}
-          {!isActiveAccount && (
-            <FollowUnfollowButton isFollowing={isFollowing} onPress={handlePressFollow} />
-          )}
+          {ProfileInteractionButton}
 
           <Spacer paddingVertical={theme.spacing.s} />
           <View style={styles.divider} />

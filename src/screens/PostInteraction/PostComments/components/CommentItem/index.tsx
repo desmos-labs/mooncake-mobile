@@ -8,6 +8,7 @@ import {
   hidePost,
   reportIcon,
   tipIcon,
+  unblock,
   unfollowBlackIcon,
 } from 'assets/images';
 import ThemedLottieView from 'components/ThemedLottieView';
@@ -27,6 +28,7 @@ import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import PopupMenu from 'components/PopupMenu';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import {
+  useHandlePressBlock,
   useHandlePressFollow,
   useHandlePressHidePost,
   useHandlePressReport,
@@ -39,7 +41,8 @@ import {
   useHandlePressShowCommentDetailsWithFocus,
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
-import { useActiveAccountAddress } from '@recoil/accounts';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -74,8 +77,9 @@ const CommentItem = (props: CommentItemProps) => {
   const { count: reactionsCount } = usePostReactionsCount(comment);
   const { count: tipsCount } = usePostTipsCount(comment);
   const { isFollowing } = useIsFollowing(comment.author.address);
+  const { isBlocked } = useIsBlocked(comment.author.address);
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
-  const activeAddress = useActiveAccountAddress();
+  const isAuthorActiveUser = useIsAuthorActiveUser(comment.author.address);
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -111,6 +115,7 @@ const CommentItem = (props: CommentItemProps) => {
   const handlePressReport = useHandlePressReport();
   const handleHidePost = useHandlePressHidePost();
   const returnToRootPost = useReturnToRootPost();
+  const handlePressBlock = useHandlePressBlock();
 
   const handlePressLike = () => {
     if (isPostPending(comment)) return;
@@ -148,7 +153,8 @@ const CommentItem = (props: CommentItemProps) => {
    */
   const PressMoreComponent = React.useMemo(() => {
     // The context menu should not be visible if the user is the author of the comment
-    if (comment.author.address === activeAddress) return undefined;
+    if (isAuthorActiveUser) return undefined;
+
     const menuItems = [
       {
         label: isFollowing ? t('home:unfollow') : t('home:follow'),
@@ -166,17 +172,15 @@ const CommentItem = (props: CommentItemProps) => {
         icon: hidePost,
       },
       {
-        label: t('home:block'),
-        onPress: () => {
-          // TODO: implement
-        },
-        icon: block,
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: () => handlePressBlock(comment.author),
+        icon: isBlocked ? unblock : block,
       },
     ];
 
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
-    activeAddress,
+    isAuthorActiveUser,
     comment,
     handlePressFollow,
     handlePressHidePost,
@@ -185,6 +189,8 @@ const CommentItem = (props: CommentItemProps) => {
     isFollowing,
     returnToRootPost,
     t,
+    handlePressBlock,
+    isBlocked,
   ]);
 
   return (

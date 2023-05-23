@@ -16,6 +16,7 @@ import { Box, HStack, VStack } from 'native-base';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.BLOCKED_USERS,
   ROUTES.BROADCAST_TX_ON_CHAIN,
   ROUTES.SETTINGS_ENABLE_BIOMETRICS,
   ROUTES.SAVE_PROFILE,

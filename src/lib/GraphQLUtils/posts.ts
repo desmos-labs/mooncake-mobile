@@ -63,8 +63,8 @@ const convertGraphQLPostAttachment = (attachment: any): PostAttachment => {
 const convertGraphQLPostReference = (reference: any): PostReference => {
   return {
     type: PostReferenceType[reference.type as keyof typeof PostReferenceType],
-    postId: reference.reference.id,
-    position: reference.position_index,
+    postId: reference?.reference?.id,
+    position: reference?.position_index,
   };
 };
 

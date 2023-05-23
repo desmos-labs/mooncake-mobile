@@ -16,5 +16,7 @@
   "type": "Type",
   "header": "Transaction Details",
   "fee": "Fee",
-  "errorOccurredPleaseTryAgain": "Error occurred. Please try again."
+  "errorOccurredPleaseTryAgain": "Error occurred. Please try again.",
+  "blockUser": "Block a user",
+  "unblockUser": "Unblock a user"
 }

@@ -9,7 +9,9 @@ import {
   MsgRemovePostAttachmentTypeUrl,
   MsgRemoveReactionTypeUrl,
   MsgSaveProfileTypeUrl,
+  MsgUnblockUserTypeUrl,
 } from '@desmoslabs/desmjs';
+import { MsgBlockUserTypeUrl } from '@desmoslabs/desmjs/build/const/relationships';
 
 export const MsgExecuteContractTypeUrl = '/cosmwasm.wasm.v1.MsgExecuteContract';
 
@@ -36,4 +38,8 @@ export const RequiredMessageTypesGrant = [
 
   // Contract execution permission
   MsgExecuteContractTypeUrl,
+
+  // Block/Unblock
+  MsgBlockUserTypeUrl,
+  MsgUnblockUserTypeUrl,
 ];

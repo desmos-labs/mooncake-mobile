@@ -7,6 +7,7 @@ import { isPostPending, Post } from 'types/posts';
 import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import useHidePost from 'hooks/posts/useHidePost';
+import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.
@@ -14,6 +15,11 @@ import useHidePost from 'hooks/posts/useHidePost';
 export const useHandlePressFollow = () => {
   const followOrUnfollow = useFollowOrUnfollowUser();
   return React.useCallback(followOrUnfollow, [followOrUnfollow]);
+};
+
+export const useHandlePressBlock = () => {
+  const blockOrUnblock = useBlockOrUnblockUser();
+  return React.useCallback(blockOrUnblock, [blockOrUnblock]);
 };
 
 /**

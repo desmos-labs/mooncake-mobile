@@ -3,6 +3,7 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { findSamePost } from 'lib/PostsUtils';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
@@ -307,6 +308,56 @@ export const useRemovePost = (user: string) => {
         const userPosts = updatedPosts[user] ?? [];
         updatedPosts[user] = userPosts.filter(
           p => p.subspaceId !== subspaceId || p.externalId !== externalId,
+        );
+
+        return updatedPosts;
+      });
+    },
+    [setPosts, user],
+  );
+};
+
+/**
+ * A hook that allows removal of cached timeline posts of the active user via the postID.
+ */
+export const useRemovePostByID = (user: string) => {
+  const setPosts = useSetRecoilState(postsState);
+
+  return React.useCallback(
+    (postID: number) => {
+      setPosts(currentTimeline => {
+        const updatedPosts: Record<string, Post[]> = {
+          ...currentTimeline,
+        };
+
+        // Update the user posts by filtering out the post with matching postID
+        const userPosts = updatedPosts[user] ?? [];
+        updatedPosts[user] = userPosts.filter(post => post.id !== postID);
+
+        return updatedPosts;
+      });
+    },
+    [setPosts, user],
+  );
+};
+
+/**
+ * A hook that allows removal of cached timeline posts for a given user by the author.
+ */
+export const useRemovePostsByAuthor = (user: string) => {
+  const setPosts = useSetRecoilState(postsState);
+
+  return React.useCallback(
+    (authorToRemove: DesmosProfile) => {
+      setPosts(currentTimeline => {
+        const updatedPosts: Record<string, Post[]> = {
+          ...currentTimeline,
+        };
+
+        // Update the user posts by filtering out the post with matching author
+        const userPosts = updatedPosts[user] ?? [];
+        updatedPosts[user] = userPosts.filter(
+          post => post.author.address !== authorToRemove.address,
         );
 
         return updatedPosts;

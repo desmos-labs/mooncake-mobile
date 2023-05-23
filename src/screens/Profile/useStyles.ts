@@ -24,6 +24,18 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  contextButtonPosition: {
+    zIndex: 3,
+    position: 'absolute',
+    top: props.insets.top + 6,
+    right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  contextButtonStyle: {
+    height: 32,
+    width: 32,
+  },
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,

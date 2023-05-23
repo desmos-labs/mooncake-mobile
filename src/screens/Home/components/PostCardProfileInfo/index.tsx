@@ -14,8 +14,16 @@ import { parseISO } from 'date-fns';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { followBlackIcon, hidePost, reportIcon, unfollowBlackIcon } from 'assets/images';
+import {
+  followBlackIcon,
+  hidePost,
+  reportIcon,
+  unfollowBlackIcon,
+  unblock,
+  block,
+} from 'assets/images';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useStyles from './useStyles';
 
 export interface PostCardProfileInfoProps {
@@ -24,6 +32,7 @@ export interface PostCardProfileInfoProps {
   readonly onPressFollow: () => void;
   readonly onPressReport: () => void;
   readonly onPressHide: () => void;
+  readonly onPressBlock: () => void;
 }
 
 /**
@@ -35,7 +44,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
 
-  const { post, onPressAuthor, onPressFollow, onPressReport, onPressHide } = props;
+  const { post, onPressAuthor, onPressFollow, onPressReport, onPressHide, onPressBlock } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -45,6 +54,8 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
+
+  const { isBlocked, refetch: refreshBlocked } = useIsBlocked(post.author.address);
 
   // -------------------------------------------------------------------------------------
   // --- Local state
@@ -58,6 +69,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
 
   useEffect(() => {
     refreshFollowing();
+    refreshBlocked();
 
     // It's fine to disable the following line because we want to run this effect only once
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,8 +136,13 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         onPress: onPressHide,
         icon: hidePost,
       },
+      {
+        label: isBlocked ? t('home:unblock') : t('home:block'),
+        onPress: onPressBlock,
+        icon: isBlocked ? unblock : block,
+      },
     ],
-    [isFollowing, t, onPressFollow, onPressReport],
+    [isFollowing, t, onPressFollow, onPressReport, isBlocked, onPressBlock],
   );
 
   // -------------------------------------------------------------------------------------
