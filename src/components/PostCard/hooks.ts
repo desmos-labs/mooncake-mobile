@@ -110,3 +110,21 @@ export const useHandlePressTip = () => {
     [navigate],
   );
 };
+
+/**
+ * A hook that exposes a function that returns the type of a given post.
+ */
+export const useGetPostType = () => {
+  return React.useCallback((item: Post) => {
+    if (item.attachments && item.attachments.length > 0 && item.text) {
+      return 'text+media';
+    }
+    if (item.attachments && item.attachments.length > 0) {
+      return 'media';
+    }
+    if (item.text) {
+      return 'text';
+    }
+    return 'default';
+  }, []);
+};

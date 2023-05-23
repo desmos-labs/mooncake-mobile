@@ -6,6 +6,15 @@ import { useTheme } from 'native-base';
 import { isPostPending, Post } from 'types/posts';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import {
+  useHandlePressComments,
+  useHandlePressDetails,
+  useHandlePressHidePost,
+  useHandlePressReport,
+  useHandlePressTip,
+} from 'components/PostCard/hooks';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -13,40 +22,6 @@ interface PostCardProps {
    * Post that is related to this card.
    */
   post: Post;
-  /**
-   * What to do when the author's avatar, name, or DTag is pressed.
-   */
-  onPressAuthor: () => void;
-  /**
-   * What to do when the report button is pressed.
-   */
-  onPressReport: () => void;
-  /**
-   * What to do if the follow button is pressed.
-   */
-  onPressFollow: () => void;
-  /**
-   * What to do if the entire post is pressed.
-   */
-  onPressDetails: () => void;
-  /**
-   * What to do if the post comment button is pressed.
-   */
-  onPressComment: () => void;
-  /**
-   * What to do if the post tip button is pressed.
-   */
-  onPressTip: () => void;
-
-  /**
-   * What to do if the block popup menu is pressed.
-   */
-  onPressBlock: () => void;
-
-  /**
-   * What to do if the hide post button is pressed.
-   */
-  onPressHide: () => void;
 }
 
 /**
@@ -60,17 +35,52 @@ const PostCard = (props: PostCardProps) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const {
-    post,
-    onPressAuthor,
-    onPressFollow,
-    onPressReport,
-    onPressComment,
-    onPressTip,
-    onPressDetails,
-    onPressBlock,
-    onPressHide,
-  } = props;
+  const { post } = props;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+  const navigateToProfile = useNavigateToProfile();
+  const followOrUnfollowUser = useFollowOrUnfollowUser();
+  const handlePressDetails = useHandlePressDetails();
+  const handlePressHidePost = useHandlePressHidePost();
+  const handlePressComments = useHandlePressComments();
+  const handlePressTip = useHandlePressTip();
+  const handlePressReport = useHandlePressReport();
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+  const onPressAuthor = React.useCallback(() => {
+    if (isPostPending(post)) return;
+    navigateToProfile(post.author.address);
+  }, [navigateToProfile, post]);
+
+  const onPressFollowOrUnFollow = React.useCallback(() => {
+    followOrUnfollowUser(post.author);
+  }, [followOrUnfollowUser, post]);
+
+  const onPressDetails = React.useCallback(() => {
+    if (isPostPending(post)) return;
+    handlePressDetails(post);
+  }, [handlePressDetails, post]);
+
+  const onPressReport = React.useCallback(() => {
+    handlePressReport(post);
+  }, [handlePressReport, post]);
+
+  const onPressHide = React.useCallback(() => {
+    handlePressHidePost(post.id);
+  }, [handlePressHidePost, post.id]);
+
+  const onPressComment = React.useCallback(() => {
+    if (isPostPending(post)) return;
+    handlePressComments(post);
+  }, [handlePressComments, post]);
+
+  const onPressTip = React.useCallback(() => {
+    handlePressTip(post);
+  }, [handlePressTip, post]);
 
   // -------------------------------------------------------------------------------------
   // --- Memoized variables
@@ -95,9 +105,8 @@ const PostCard = (props: PostCardProps) => {
       <PostCardProfileInfo
         post={post}
         onPressAuthor={onPressAuthor}
-        onPressFollow={onPressFollow}
+        onPressFollow={onPressFollowOrUnFollow}
         onPressReport={onPressReport}
-        onPressBlock={onPressBlock}
         onPressHide={onPressHide}
       />
 

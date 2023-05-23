@@ -8,8 +8,8 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
 import { useTheme } from 'native-base';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
+import PostCard from 'components/PostCard';
 import PostCard from 'screens/Home/components/PostCard';
 import {
   useHandlePressBlock,
@@ -22,14 +22,14 @@ import {
 } from 'screens/Home/hooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import { isPostPending, Post } from 'types/posts';
+import { Post } from 'types/posts';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import ROUTES from 'navigation/routes';
 import { emptyListPlaceholder } from 'assets/images';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import SearchViewComponent from 'screens/Home/components/SearchViewComponent';
 import HomePostListContentLoader from 'components/Loaders/HomePostListContentLoader';
+import { useGetPostType } from 'components/PostCard/hooks';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
@@ -40,7 +40,6 @@ export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.
  * @constructor
  */
 const Home = () => {
-  const toast = useCustomToast();
   const { t } = useTranslation('home');
   const styles = useStyles();
   const theme = useTheme();
@@ -58,19 +57,6 @@ const Home = () => {
 
   // Ask the user the permission to access the device notification
   useRequestNotificationsPermission();
-
-  // -------------------------------------------------------------------------------------
-  // --- Actions
-  // -------------------------------------------------------------------------------------
-
-  const handleNavigateToProfile = useNavigateToProfile();
-  const handlePressFollow = useHandlePressFollow();
-  const handlePressBlock = useHandlePressBlock();
-  const handlePressDetails = useHandlePressDetails();
-  const handlePressReport = useHandlePressReport();
-  const handlePressComments = useHandlePressComments();
-  const handlePressTip = useHandlePressTip();
-  const handlePressHidePost = useHandlePressHidePost();
 
   // -------------------------------------------------------------------------------------
   // --- Data queries
@@ -111,18 +97,7 @@ const Home = () => {
   // --- Utility functions
   // -------------------------------------------------------------------------------------
 
-  const getPostType = useCallback((item: Post) => {
-    if (item.attachments && item.attachments.length > 0 && item.text) {
-      return 'text+media';
-    }
-    if (item.attachments && item.attachments.length > 0) {
-      return 'media';
-    }
-    if (item.text) {
-      return 'text';
-    }
-    return 'default';
-  }, []);
+  const getPostType = useGetPostType();
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -137,54 +112,9 @@ const Home = () => {
           </View>
         );
       }
-      return (
-        <PostCard
-          post={item}
-          onPressAuthor={() => handleNavigateToProfile(item.author.address)}
-          onPressDetails={() => {
-            if (isPostPending(item)) {
-              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
-            }
-            handlePressDetails(item);
-          }}
-          onPressComment={() => {
-            if (isPostPending(item)) {
-              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
-            }
-            handlePressComments(item);
-          }}
-          onPressTip={() => {
-            if (isPostPending(item)) {
-              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
-            }
-            handlePressTip(item);
-          }}
-          onPressFollow={() => handlePressFollow(item.author)}
-          onPressBlock={() => handlePressBlock(item.author)}
-          onPressReport={() => {
-            if (isPostPending(item) || !item.author) {
-              return toast.success(t('toast:postTxInProgress'), { id: `${item.id}` });
-            }
-            handlePressReport(item);
-          }}
-          onPressHide={() => {
-            handlePressHidePost(item.id);
-          }}
-        />
-      );
+      return <PostCard post={item} />;
     },
-    [
-      handleNavigateToProfile,
-      handlePressBlock,
-      handlePressComments,
-      handlePressDetails,
-      handlePressFollow,
-      handlePressReport,
-      handlePressTip,
-      styles.loaderView,
-      t,
-      toast,
-    ],
+    [styles.loaderView],
   );
 
   // Function called when the user manually refreshes the list
@@ -221,7 +151,7 @@ const Home = () => {
         </View>
       );
     }
-  }, [loading, posts.length, styles.emptyImage, styles.emptyView, t]);
+  }, [loading, posts.length]);
 
   // -------------------------------------------------------------------------------------
   // --- Component rendering

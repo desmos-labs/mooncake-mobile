@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   InteractionManager,
+  LayoutChangeEvent,
   RefreshControl,
   SafeAreaView,
   StatusBar,
@@ -23,6 +24,7 @@ import Animated, {
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -192,13 +194,46 @@ const Profile = () => {
   // --- Animations
   // -------------------------------------------------------------------------------------
 
-  const scrollY = useSharedValue(0);
+  const scrollY = useSharedValue(1);
   const scrollOffset = useSharedValue(45 + HEADER_HEIGHT_EXPANDED);
 
-  const animatedDTagStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(scrollY.value, [160, 200], [0, 1]);
+  // Start these initial values small so the dTag does not flash on initial load
+  const scrollContentSize = useSharedValue(0.2);
+  const scrollSize = useSharedValue(0.1);
 
-    const translateY = interpolate(scrollY.value, [140, 200], [30, 0], {
+  /**
+   * Measure the size of the scrollView onLayout
+   * @param event - Layout change event
+   */
+  const onLayout = (event: LayoutChangeEvent) => {
+    scrollSize.value = event.nativeEvent.layout.height;
+  };
+
+  /**
+   * Measure the total size of the scroll content (onLayout)
+   * @param _ - The width, underscore so it is ignored by eslint.
+   * @param h - The height of the content
+   */
+  const onContentSizeChange = (_: number, h: number) => {
+    scrollContentSize.value = h;
+  };
+
+  /**
+   * Derived value that represents the total progress of the scrollView that has
+   * been scrolled.
+   *
+   * Example: 0 = scrollView has not been scrolled
+   *          1 = scrollView has been completely scrolled to the bottom
+   */
+  const scrollPercent = useDerivedValue(() => {
+    // Math.max to prevent division by 0
+    return scrollY.value / Math.max(scrollContentSize.value - scrollSize.value, 0.01);
+  });
+
+  const animatedDTagStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(scrollPercent.value, [0, 0.8], [0, 1]);
+
+    const translateY = interpolate(scrollPercent.value, [0, 0.8], [30, 0], {
       extrapolateRight: Extrapolation.CLAMP,
       extrapolateLeft: Extrapolation.CLAMP,
     });
@@ -207,7 +242,7 @@ const Profile = () => {
       opacity,
       transform: [{ translateY }],
     };
-  });
+  }, [scrollPercent]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
@@ -409,6 +444,8 @@ const Profile = () => {
             tintColor={theme.colors.white}
           />
         }
+        onLayout={onLayout}
+        onContentSizeChange={onContentSizeChange}
         scrollEventThrottle={1}
         style={{
           marginTop: HEADER_HEIGHT_COMPACT,

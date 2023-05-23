@@ -32,7 +32,7 @@ import {
   useHandlePressFollow,
   useHandlePressHidePost,
   useHandlePressReport,
-} from 'screens/Home/hooks';
+} from 'components/PostCard/hooks';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import {
