@@ -46,17 +46,6 @@ const PostsSection = (props: PostsSectionProps) => {
   const activeAddress = useActiveAccountAddress();
   const isGuestProfile = useMemo(() => address === activeAddress, [activeAddress, address]);
 
-  // Component to be rendered when the list is empty
-  const EmptyComponent = useMemo(
-    () => (
-      <Center flex={1}>
-        <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
-        <Typography.Body7 style={{ color: theme.colors.midGrey }}>{t('no posts')}</Typography.Body7>
-      </Center>
-    ),
-    [styles.emptyImage, t, theme.colors.midGrey],
-  );
-
   const Content = useMemo(() => {
     if (posts.length === 0) {
       return (
