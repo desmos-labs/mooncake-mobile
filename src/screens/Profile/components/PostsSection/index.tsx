@@ -3,12 +3,14 @@ import Typography from 'components/Typography';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Center, useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import StyledSpinner from 'components/StyledSpinner';
 import PostCard from 'components/PostCard';
+import FastImage from 'react-native-fast-image';
+import { emptyPostsIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 export interface PostsSectionProps {
@@ -44,6 +46,21 @@ const PostsSection = (props: PostsSectionProps) => {
   const activeAddress = useActiveAccountAddress();
   const isGuestProfile = useMemo(() => address === activeAddress, [activeAddress, address]);
 
+  const Content = useMemo(() => {
+    if (posts.length === 0) {
+      return (
+        <Center flex={1}>
+          <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
+          <Typography.Body7 style={{ color: theme.colors.midGrey }}>
+            {t('no posts')}
+          </Typography.Body7>
+        </Center>
+      );
+    }
+
+    return <PostCard post={posts[0]} />;
+  }, [posts, styles.emptyImage, t, theme.colors.midGrey]);
+
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
@@ -63,7 +80,7 @@ const PostsSection = (props: PostsSectionProps) => {
 
       {/* Posts list, or loading indicator */}
       {!isLoading ? (
-        <PostCard post={posts[0]} />
+        Content
       ) : (
         <View style={styles.activityIndicatorView}>
           <StyledSpinner />
