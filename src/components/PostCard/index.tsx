@@ -9,6 +9,7 @@ import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import {
+  useHandlePressBlock,
   useHandlePressComments,
   useHandlePressDetails,
   useHandlePressHidePost,
@@ -47,6 +48,7 @@ const PostCard = (props: PostCardProps) => {
   const handlePressComments = useHandlePressComments();
   const handlePressTip = useHandlePressTip();
   const handlePressReport = useHandlePressReport();
+  const handlePressBlock = useHandlePressBlock();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -82,6 +84,10 @@ const PostCard = (props: PostCardProps) => {
     handlePressTip(post);
   }, [handlePressTip, post]);
 
+  const onPressBlock = React.useCallback(() => {
+    handlePressBlock(post.author);
+  }, [handlePressBlock, post.author]);
+
   // -------------------------------------------------------------------------------------
   // --- Memoized variables
   // -------------------------------------------------------------------------------------
@@ -108,6 +114,7 @@ const PostCard = (props: PostCardProps) => {
         onPressFollow={onPressFollowOrUnFollow}
         onPressReport={onPressReport}
         onPressHide={onPressHide}
+        onPressBlock={onPressBlock}
       />
 
       {/* Post text */}
