@@ -10,16 +10,6 @@ import { Image, Platform, RefreshControl, View } from 'react-native';
 import { useTheme } from 'native-base';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'components/PostCard';
-import PostCard from 'screens/Home/components/PostCard';
-import {
-  useHandlePressBlock,
-  useHandlePressComments,
-  useHandlePressDetails,
-  useHandlePressFollow,
-  useHandlePressHidePost,
-  useHandlePressReport,
-  useHandlePressTip,
-} from 'screens/Home/hooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import { Post } from 'types/posts';
