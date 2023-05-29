@@ -12,10 +12,11 @@ import ImageButton from 'components/ImageButton';
 import useLoginWithWeb3Auth from 'hooks/useLoginWithWeb3Auth';
 import { DesmosChain } from 'config/LinkableChains';
 import { Web3AuthLoginProvider } from 'types/web3auth';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import { useAppStateValue } from '@recoil/appState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -32,9 +33,11 @@ export interface LandingParams {
 
 const Landing = () => {
   const theme = useTheme();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { t } = useTranslation('landing');
   const styles = useStyles();
+  const consentGiven = useAppStateValue('consentGiven');
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -57,6 +60,28 @@ const Landing = () => {
   const onSignUpWithWallet = React.useCallback(() => {
     performImportAccount();
   }, [performImportAccount]);
+
+  const onSignUp = React.useCallback(
+    (option: 'normal' | Web3AuthLoginProvider) => {
+      // Handle the post consent behavior with a reusable callback.
+      const handlePostConsent = () => {
+        if (option === 'normal') {
+          onSignUpWithWallet();
+        } else {
+          importFromSocial(option);
+        }
+      };
+
+      if (!consentGiven) {
+        navigate(ROUTES.CONSENT_AGREEMENT, {
+          onConsentAgree: handlePostConsent,
+        });
+      } else {
+        handlePostConsent();
+      }
+    },
+    [consentGiven, importFromSocial, navigate, onSignUpWithWallet],
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -82,7 +107,7 @@ const Landing = () => {
         </Typography.Body6>
       )}
       <Box alignSelf="stretch">
-        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={onSignUpWithWallet}>
+        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('normal')}>
           {t('signUp with wallet')}
         </Button>
       </Box>
@@ -99,13 +124,13 @@ const Landing = () => {
           <ImageButton
             image={appleLoginIcon}
             style={styles.loginLogo}
-            onPress={() => importFromSocial(Web3AuthLoginProvider.Apple)}
+            onPress={() => onSignUp(Web3AuthLoginProvider.Apple)}
           />
         )}
         <ImageButton
           image={googleLoginIcon}
           style={styles.loginLogo}
-          onPress={() => importFromSocial(Web3AuthLoginProvider.Google)}
+          onPress={() => onSignUp(Web3AuthLoginProvider.Google)}
         />
       </View>
     </DView>

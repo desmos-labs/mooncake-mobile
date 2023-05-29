@@ -30,4 +30,6 @@ const EnvConfig = {
   POSTHOG_API_KEY,
 };
 
+console.log(EnvConfig);
+
 export default EnvConfig;

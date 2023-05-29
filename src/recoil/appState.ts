@@ -52,6 +52,10 @@ export interface AppState {
    * Last tab that the user has opened in the home screen.
    */
   readonly lastHomeTab: HomeTabsParams['initialRouteName'];
+  /**
+   * Whether the user has given consent to agree to the Terms of Conditions and Privacy Policy.
+   */
+  readonly consentGiven: boolean;
 }
 
 const DefaultAppState: AppState = {
@@ -69,6 +73,7 @@ const DefaultAppState: AppState = {
   butterConfig: undefined,
   notificationsCount: 0,
   lastHomeTab: ROUTES.HOME_TAB_DISCOVER,
+  consentGiven: false,
 };
 
 const appState = atom<AppState>({

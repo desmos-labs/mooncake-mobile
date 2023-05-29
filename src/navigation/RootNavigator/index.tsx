@@ -75,6 +75,7 @@ import {
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
 import BlockedUsers from 'screens/BlockedUsers';
+import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -92,6 +93,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SIGNUP]: SignupParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
+  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
@@ -453,6 +455,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
+        <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
         <Stack.Screen
           name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}
