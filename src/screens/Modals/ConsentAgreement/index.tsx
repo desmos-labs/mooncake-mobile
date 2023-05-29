@@ -9,7 +9,9 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import { useTheme } from 'native-base';
+import { Box, Checkbox, HStack, useTheme } from 'native-base';
+import CustomCheckbox from 'components/CustomCheckbox';
+import CommonStyles from 'config/theme/CommonStyles';
 import ConsentButtonGroup from './components/ConsentButtonGroup';
 import useStyles from './useStyles';
 
@@ -33,6 +35,8 @@ const ConsentAgreement = () => {
   const { params } = useRoute<NavProps['route']>();
   const { goBack } = useNavigation<NavProps['navigation']>();
 
+  const [checkboxChecked, setCheckboxChecked] = React.useState(false);
+
   const setConsentGiven = useSetAppStateValue('consentGiven');
 
   const handlePressTOS = React.useCallback(() => {
@@ -54,17 +58,28 @@ const ConsentAgreement = () => {
   return (
     <BottomUpModalWrapper goBack={goBack}>
       <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-      <Typography.Body5>{t('description')}</Typography.Body5>
+      {/* <Typography.Body5>{t('description')}</Typography.Body5> */}
 
-      <Spacer paddingVertical={40}>
+      <Spacer paddingVertical={20}>
         <ConsentButtonGroup
           handlePressTOS={handlePressTOS}
           handlePressPP={handlePressPrivacyPolicy}
         />
       </Spacer>
 
+      <HStack mb="m">
+        <Box mr="s" justifyContent="center">
+          <CustomCheckbox
+            handlePress={() => setCheckboxChecked(prev => !prev)}
+            checked={checkboxChecked}
+          />
+        </Box>
+        <Typography.Body5 style={CommonStyles.flex['1']}>{t('useDisclaimer')}</Typography.Body5>
+      </HStack>
+
       <Button
         size={44}
+        disabled={!checkboxChecked}
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={handlePressContinue}>
