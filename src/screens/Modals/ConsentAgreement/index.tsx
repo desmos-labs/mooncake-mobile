@@ -54,6 +54,13 @@ const ConsentAgreement = () => {
 
     // Call the callback, if provided
     params?.onConsentAgree();
+
+    // hide the modal on acceptance.
+    goBack();
+
+    // safe to ignore as the parameters and navigation helpers won't change
+    // past initial render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
