@@ -1,10 +1,9 @@
 import Web3Auth, { OPENLOGIN_NETWORK, SdkLoginParams } from '@web3auth/react-native-sdk';
 import * as WebBrowser from '@toruslabs/react-native-web-browser';
 
-import {
-  // WEB3_AUTH_CLIENT_ID_MAINNET,
-  WEB3_AUTH_CLIENT_ID_TESTNET,
-} from '@env';
+// false positive
+// eslint-disable-next-line import/no-unresolved
+import { WEB3_AUTH_CLIENT_ID_TESTNET } from '@env';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
 // Remember to change this value also in android/app/src/main/AndroidManifest.xml.
