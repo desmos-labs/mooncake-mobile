@@ -11,7 +11,7 @@
   "backup explanation" : "Why do I need to backup Secret Recovery Phrase?",
   "welcome to": "Welcome to {{product}}",
   "continue": "Continue",
-  "termsOfUse": "Terms of Use",
+  "termsAndConditions": "Terms and Conditions",
   "privacyPolicy": "Privacy Policy",
   "retry": "Retry",
   "atLeastChar": "At least {{length}} characters",

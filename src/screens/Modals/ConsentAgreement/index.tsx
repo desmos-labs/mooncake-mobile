@@ -9,7 +9,8 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import { Box, Checkbox, HStack, useTheme } from 'native-base';
+import { Box, HStack, useTheme } from 'native-base';
+import * as WebBrowser from '@toruslabs/react-native-web-browser';
 import CustomCheckbox from 'components/CustomCheckbox';
 import CommonStyles from 'config/theme/CommonStyles';
 import ConsentButtonGroup from './components/ConsentButtonGroup';
@@ -40,11 +41,11 @@ const ConsentAgreement = () => {
   const setConsentGiven = useSetAppStateValue('consentGiven');
 
   const handlePressTOS = React.useCallback(() => {
-    console.warn('Implement handle press TOS');
+    WebBrowser.openBrowserAsync('https://butter.social/terms-and-conditions');
   }, []);
 
   const handlePressPrivacyPolicy = React.useCallback(() => {
-    console.warn('Implement handle press Privacy Policy');
+    WebBrowser.openBrowserAsync('https://butter.social/privacy-policy');
   }, []);
 
   const handlePressContinue = React.useCallback(() => {

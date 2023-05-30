@@ -24,7 +24,7 @@ const ConsentButtonGroup = ({ handlePressTOS, handlePressPP }: Props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressTOS} style={styles.buttonGroup}>
-        <Typography.Body5>{t('common:termsOfUse')}</Typography.Body5>
+        <Typography.Body5>{t('common:termsAndConditions')}</Typography.Body5>
 
         <Image source={arrowRight} style={styles.arrowRight} />
       </TouchableOpacity>
