@@ -654,7 +654,7 @@
 				CODE_SIGN_ENTITLEMENTS = Butter/ButterDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 140099;
+				CURRENT_PROJECT_VERSION = 150099;
 				DEVELOPMENT_TEAM = S7CFLM85H9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Butter/Info.plist;
@@ -663,7 +663,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -690,7 +690,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 140099;
+				CURRENT_PROJECT_VERSION = 150099;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S7CFLM85H9;
 				INFOPLIST_FILE = Butter/Info.plist;
@@ -699,7 +699,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
