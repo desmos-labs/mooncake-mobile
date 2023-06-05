@@ -52,16 +52,11 @@ const ConsentAgreement = () => {
     // Set the consent given within the application state
     setConsentGiven(true);
 
-    // Call the callback, if provided
-    params?.onConsentAgree();
-
     // hide the modal on acceptance.
     goBack();
-
-    // safe to ignore as the parameters and navigation helpers won't change
-    // past initial render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // Call the callback, if provided
+    params?.onConsentAgree();
+  }, [goBack, params, setConsentGiven]);
 
   return (
     <BottomUpModalWrapper goBack={goBack}>
