@@ -1,5 +1,5 @@
 import { DesmosProfile } from 'types/desmos';
-import { Entities, ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import { Entities, ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 
 export enum PostStatus {
   SYNCED = 'synced',

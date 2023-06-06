@@ -1,7 +1,7 @@
 // MVP grant list: https://forbole.atlassian.net/browse/DFP-331?focusedCommentId=13674
 export enum GrantEnums {
   // see desmjs/build/encodeObjects
-  MsgCreatePost = '/desmos.posts.v2.MsgCreatePost',
+  MsgCreatePost = '/desmos.posts.v3.MsgCreatePost',
   // follow/unfollow
   MsgCreateRelationship = '/desmos.relationships.v1.MsgCreateRelationship',
   MsgDeleteRelationship = '/desmos.relationships.v1.MsgDeleteRelationship',
