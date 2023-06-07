@@ -48,7 +48,13 @@ const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentConten
       } as PostMediaAttachment;
 
     default:
-      throw new Error('Poll conversion not implemented');
+      console.warn('Poll conversion not implemented');
+      // TODO: implement polls conversion
+      return {
+        type: PostAttachmentType.MEDIA,
+        uri: '',
+        mimeType: '',
+      };
   }
 };
 
