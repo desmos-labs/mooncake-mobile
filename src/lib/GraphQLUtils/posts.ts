@@ -40,6 +40,8 @@ const convertGraphQLPostAttachmentSize = (
 
 const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentContent => {
   switch (content['@type']) {
+    // Support posts created before desmjs 5.0.0
+    case '/desmos.posts.v2.Media':
     case MediaTypeUrl:
       return {
         type: PostAttachmentType.MEDIA,
@@ -48,13 +50,7 @@ const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentConten
       } as PostMediaAttachment;
 
     default:
-      console.warn('Poll conversion not implemented');
-      // TODO: implement polls conversion
-      return {
-        type: PostAttachmentType.MEDIA,
-        uri: '',
-        mimeType: '',
-      };
+      throw new Error('Poll conversion not implemented');
   }
 };
 
