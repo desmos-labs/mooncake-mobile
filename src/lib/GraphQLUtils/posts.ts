@@ -40,6 +40,8 @@ const convertGraphQLPostAttachmentSize = (
 
 const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentContent => {
   switch (content['@type']) {
+    // Support posts created before desmjs 5.0.0
+    case '/desmos.posts.v2.Media':
     case MediaTypeUrl:
       return {
         type: PostAttachmentType.MEDIA,
