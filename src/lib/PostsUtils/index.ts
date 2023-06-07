@@ -6,7 +6,7 @@ import {
   Media,
   PostReference as DesmJSPostReference,
   PostReferenceType,
-} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+} from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
 
 /**

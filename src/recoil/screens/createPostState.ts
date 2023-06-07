@@ -1,7 +1,7 @@
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import React from 'react';
-import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 import { Post } from 'types/posts';
 
 /**

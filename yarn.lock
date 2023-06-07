@@ -1504,13 +1504,13 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.30.1.tgz#6d92582341be3c2ec8d82090253cfa4b7f959edb"
   integrity sha512-KvvX58MGMWh7xA+N+deCfunkA/ZNDvFLw4YbOmX3f/XBIkqrVY7qlotfy2aNb1kgp6h4B6Yc8YawJPDTfvWX7g==
 
-"@desmoslabs/desmjs-types@4.7.10":
-  version "4.7.10"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.7.10.tgz#891d4e7b615494875bce6206ebf1cb8eb20c175c"
-  integrity sha512-PmYkqStRpiP8E4NXU+Z2tJTVW/fvaF4wdv3w7BgnC+Kr7kdchia5ks3SjoUEM/9h0ChIYzPtHOckulf56ytJyw==
+"@desmoslabs/desmjs-types@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-5.0.0.tgz#259e8834f9d903fede84a48e73c23ea5fce83b71"
+  integrity sha512-n0mjEDDI9UHCShIX5iNkkF6+H2Bj3Ud5JZf6zs8kFhUOLludUaQN7zQzRr0Qwmkv+AwQmXP3SSqAlUL/q6W+BQ==
   dependencies:
     long "^4.0.0"
-    protobufjs "^7.2.2"
+    protobufjs "^7.2.3"
 
 "@desmoslabs/desmjs-types@workspace:packages/types":
   version "4.7.3"
@@ -1530,7 +1530,26 @@
     "@web3auth/react-native-sdk" "^3.5.0"
     react-native "^0.71.5"
 
-"@desmoslabs/desmjs@4.7.10", "@desmoslabs/desmjs@workspace:packages/core":
+"@desmoslabs/desmjs@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-5.0.0.tgz#099eacc8f66f3570df14b4087c4d1827ea49c03b"
+  integrity sha512-sbaTPkM/Z4Coon2AIQ2YPY1WYFt+oSFVPc+0cq9ZjsAmG8hCDVzWGHZ71N9807xOuI/69GWaVl7Fp/JYIxVW+w==
+  dependencies:
+    "@cosmjs/amino" "0.30.1"
+    "@cosmjs/cosmwasm-stargate" "0.30.1"
+    "@cosmjs/crypto" "0.30.1"
+    "@cosmjs/encoding" "0.30.1"
+    "@cosmjs/math" "0.30.1"
+    "@cosmjs/proto-signing" "0.30.1"
+    "@cosmjs/stargate" "0.30.1"
+    "@cosmjs/tendermint-rpc" "0.30.1"
+    "@cosmjs/utils" "^0.30.1"
+    "@desmoslabs/desmjs-types" "workspace:packages/types"
+    cosmjs-types "^0.5.2"
+    cosmos-wallet "^1.2.0"
+    long "^4.0.0"
+
+"@desmoslabs/desmjs@workspace:packages/core":
   version "4.7.10"
   resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.7.10.tgz#76e969670316c0b2d871862df1cf065f5b57f787"
   integrity sha512-8C3waIr9TNt+4QFYvUuxvgqdb9a9qcNeT1IjcfBlTHswR+vWWNIL0OKjoW4CknNLjs23mDQudvM5MRXEz14ZRQ==
@@ -12179,10 +12198,10 @@ protobufjs@^7.1.2:
     "@types/node" ">=13.7.0"
     long "^5.0.0"
 
-protobufjs@^7.2.2:
-  version "7.2.2"
-  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.2.tgz#2af401d8c547b9476fb37ffc65782cf302342ca3"
-  integrity sha512-++PrQIjrom+bFDPpfmqXfAGSQs40116JRrqqyf53dymUMvvb5d/LMRyicRoF1AUKoXVS1/IgJXlEgcpr4gTF3Q==
+protobufjs@^7.2.3:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.3.tgz#01af019e40d9c6133c49acbb3ff9e30f4f0f70b2"
+  integrity sha512-TtpvOqwB5Gdz/PQmOjgsrGH1nHjAQVCN7JG4A6r1sXRWESL5rNMAiRcBQlCAdKxZcAbstExQePYG8xof/JVRgg==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
