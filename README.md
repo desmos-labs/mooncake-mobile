@@ -1,7 +1,7 @@
 # Butter
 <p align="center">
-  <a href="https://github.com/osmosis-labs/osmojs">
-    <img width="150" src="https://raw.githubusercontent.com/desmos-labs/butter-mobile/main/butter_logo_1.svg?token=GHSAT0AAAAAACEOOTDAEUP2KVOKGO75BREKZGSKN7Q">
+  <a href="https://github.com/desmos-labs/butter-mobile">
+    <img width="150" src="./butter_logo_1.svg" alt="Butter logo" />
   </a>
 </p>
 
