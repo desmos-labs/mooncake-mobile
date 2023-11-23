@@ -64,6 +64,7 @@ buck-out/
 
 
 .env
+.prebuild.env
 .eslintcache
 storyLoader.js
 keystore.jks
