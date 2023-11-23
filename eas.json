@@ -1,0 +1,62 @@
+{
+  "cli": {
+    "version": ">= 3.13.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "base": {
+      "node": "18.18.0"
+    },
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "development"
+      },
+      "android": {
+        "gradleCommand": ":app:assembleDevelopmentDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug",
+        "scheme": "Butter-dev"
+      }
+    },
+    "preview": {
+      "extends": "base",
+      "env": { "BRANCH_API_KEY": "branchApiKey" },
+      "distribution": "internal"
+    },
+    "production": {
+      "extends": "base",
+      "env": { "BRANCH_API_KEY": "branchApiKey" },
+      "autoIncrement": true,
+      "ios": {
+        "buildConfiguration": "Release",
+        "scheme": "Butter"
+      }
+    }
+  },
+  "submit": {
+    "internal": {
+      "ios": {
+        "companyName": "Desmos Labs Limited"
+      },
+      "android": {
+        "track": "internal",
+        "releaseStatus": "draft",
+        "changesNotSentForReview": true
+      }
+    },
+    "production": {
+      "ios": {
+        "companyName": "Desmos Labs Limited"
+      },
+      "android": {
+        "track": "production",
+        "releaseStatus": "draft",
+        "changesNotSentForReview": true
+      }
+    }
+  }
+}

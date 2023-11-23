@@ -5,11 +5,12 @@ module.exports = {
   },
   extends: ['airbnb', '@react-native-community'],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react-native'],
+  plugins: ['@typescript-eslint', 'react-native', 'eslint-plugin-prettier', 'react-hooks'],
   globals: {
     window: true,
     fetch: false,
   },
+  ignorePatterns: ['**/src/screens/DEMO/**', '**/src/screens/DEV/**'],
   rules: {
     'react/jsx-filename-extension': [
       1,
@@ -17,6 +18,7 @@ module.exports = {
         extensions: ['.jsx', '.tsx'],
       },
     ],
+    'global-require': 0,
     'import/extensions': 0,
     'import/no-extraneous-dependencies': 0,
     'react/jsx-props-no-spreading': 0,

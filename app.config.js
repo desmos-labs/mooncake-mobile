@@ -24,6 +24,9 @@ export default {
       supportsTablet: false,
       config: {
         usesNonExemptEncryption: false,
+        branch: {
+          apiKey: "APP-ID-known-as-API-KEY"
+        }
       },
       bundleIdentifier: 'mobile.butter.app',
       infoPlist: {
@@ -35,6 +38,11 @@ export default {
       associatedDomains: ['applinks:butter.social', 'applinks:bondscape.app.link'],
     },
     android: {
+      config: {
+        branch: {
+          apiKey: "APP-ID-known-as-API-KEY"
+        }
+      },
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#FEB027',
@@ -129,13 +137,6 @@ export default {
             'By allowing the application to access your calendar, you streamline event management. Dates sync seamlessly, enhancing your scheduling convenience within the app while respecting your privacy.',
         },
       ],
-      [
-        '@config-plugins/react-native-branch',
-        {
-          apiKey: process.env.BRANCH_API_KEY,
-          iosAppDomain: 'butter.social',
-        },
-      ],
       'react-native-compressor',
       '@react-native-firebase/app',
       '@react-native-firebase/dynamic-links',
@@ -151,6 +152,11 @@ export default {
           },
         },
       ],
+    },
+    extra: {
+      eas: {
+        projectId: 'a484cef2-20d2-4864-b940-f59bbc956049',
+      },
     },
     updates: {
       enabled: false,
