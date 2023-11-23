@@ -81,3 +81,8 @@ contents.xcworkspacedata
 
 # SonarQube files
 .scannerwork/
+
+#EXPO
+.expo/
+android/
+ios/
