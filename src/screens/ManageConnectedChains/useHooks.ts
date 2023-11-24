@@ -1,25 +1,12 @@
-import { ChainLink } from 'types/desmos';
-import React from 'react';
-import useImportAccount from 'hooks/accounts/useImportAccount';
-import LinkableChains from 'config/LinkableChains';
-import { SupportedChain } from 'types/chains';
-import { Account, AccountWithWallet, SelectedAccount } from 'types/account';
+import { toHex } from '@cosmjs/encoding';
+import { SignerData } from '@cosmjs/stargate';
 import {
   getPubKeyRawBytes,
   getSignatureBytes,
   getSignedBytes,
-  MsgLinkChainAccountEncodeObject,
-  MsgLinkChainAccountTypeUrl,
   SigningMode,
   StdFee,
 } from '@desmoslabs/desmjs';
-import { getAddress } from 'lib/ChainsUtils';
-import { SignerData } from '@cosmjs/stargate';
-import useSignTx from 'hooks/transactions/useSignTx';
-import { useActiveAccount } from '@recoil/accounts';
-import { err, ok, Result } from 'neverthrow';
-import { toHex } from '@cosmjs/encoding';
-import { singleSignatureToAny } from '@desmoslabs/desmjs/build/aminomessages/profiles';
 import {
   Bech32Address,
   Proof,
@@ -27,10 +14,25 @@ import {
   SingleSignature,
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { PubKey } from 'cosmjs-types/cosmos/crypto/secp256k1/keys';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
-import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
+import {
+  MsgLinkChainAccountEncodeObject,
+  MsgLinkChainAccountTypeUrl,
+  singleSignatureToAny,
+} from '@desmoslabs/desmjs/build/modules/profiles/v3';
+import { useActiveAccount } from '@recoil/accounts';
 import { useStoreUserChainLinks } from '@recoil/chainLinks';
+import LinkableChains from 'config/LinkableChains';
+import { PubKey } from 'cosmjs-types/cosmos/crypto/secp256k1/keys';
+import useImportAccount from 'hooks/accounts/useImportAccount';
+import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import useSignTx from 'hooks/transactions/useSignTx';
+import { getAddress } from 'lib/ChainsUtils';
+import { err, ok, Result } from 'neverthrow';
+import React from 'react';
+import { Account, AccountWithWallet, SelectedAccount } from 'types/account';
+import { SupportedChain } from 'types/chains';
+import { ChainLink } from 'types/desmos';
 
 /**
  * Hook used to generate the proof used to link an external wallet to a Desmos Profile.

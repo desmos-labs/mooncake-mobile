@@ -24,6 +24,7 @@ import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
@@ -192,7 +193,7 @@ const ProfileOperations = () => {
 
     return (
       <Center flex={1}>
-        <FastImage resizeMode="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
+        <Image contentFit="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
         <Typography.Body5>{t('no operations')}</Typography.Body5>
       </Center>
     );

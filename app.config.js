@@ -22,12 +22,6 @@ export default {
     },
     ios: {
       supportsTablet: false,
-      config: {
-        usesNonExemptEncryption: false,
-        branch: {
-          apiKey: "APP-ID-known-as-API-KEY"
-        }
-      },
       bundleIdentifier: 'mobile.butter.app',
       infoPlist: {
         NSFaceIDUsageDescription: 'Allow $(PRODUCT_NAME) to use Face ID.',
@@ -38,11 +32,6 @@ export default {
       associatedDomains: ['applinks:butter.social', 'applinks:bondscape.app.link'],
     },
     android: {
-      config: {
-        branch: {
-          apiKey: "APP-ID-known-as-API-KEY"
-        }
-      },
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#FEB027',
@@ -58,11 +47,6 @@ export default {
             {
               scheme: 'https',
               host: 'butter.social',
-              pathPrefix: '/',
-            },
-            {
-              scheme: 'https',
-              host: 'bondscape.app.link',
               pathPrefix: '/',
             },
           ],
@@ -139,7 +123,6 @@ export default {
       ],
       'react-native-compressor',
       '@react-native-firebase/app',
-      '@react-native-firebase/dynamic-links',
       './plugins/withBackgroundActions',
     ],
     hooks: {

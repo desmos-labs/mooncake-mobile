@@ -68,7 +68,7 @@ const getPictureData = (picture: Asset | string | undefined, defaultImage: Image
  */
 export const getProfilePicture = (
   profile: DesmosProfile | undefined,
-): Source | ImageRequireSource => {
+): ImageSource | ImageRequireSource => {
   return getPictureData(profile?.profilePicture, defaultProfilePic);
 };
 
@@ -102,7 +102,7 @@ export const getProfileDisplayName = (profile: DesmosProfile): string | undefine
  * Returns the source that should be used to display the image of the given chain link.
  * @param chain {ChainLink} - Chain link for which to display the image.
  */
-export const getChainLinkImage = (chain: ChainLink): Source => {
+export const getChainLinkImage = (chain: ChainLink): ImageSource => {
   return (
     LinkableChains.find(y => y.chainConfig.name === chain.chainName)?.icon || defaultProfilePic
   );

@@ -122,7 +122,7 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
       {/* 2. It's extremely hard to implement, and completely useless in the first place */}
       {!isCurrentUserAuthor && (
         <TouchableOpacity onPress={checkUserAndHandleSendTips} style={styles.tipButton}>
-          <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
+          <Image contentFit="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
           <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
             {t('tip')}
           </Typography.Subtitle3>

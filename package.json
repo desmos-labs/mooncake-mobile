@@ -47,7 +47,6 @@
     "@react-native-community/blur": "4.2.0",
     "@react-native-firebase/analytics": "18.3.1",
     "@react-native-firebase/app": "18.3.1",
-    "@react-native-firebase/dynamic-links": "18.3.1",
     "@react-native-firebase/messaging": "18.3.1",
     "@react-native-masked-view/masked-view": "0.2.9",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -215,7 +214,7 @@
     "uri-scheme": "^1.1.0"
   },
   "resolutions": {
-    "@types/react": "^18.2.0"
+    "@types/react": "~18.2.14"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --quiet"

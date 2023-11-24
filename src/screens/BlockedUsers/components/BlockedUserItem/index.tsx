@@ -1,5 +1,6 @@
 import Button from 'components/Button';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
@@ -54,7 +55,6 @@ const BlockedUserItem = ({ profile }: Props) => {
         {/* Profile picture */}
         <HStack alignItems="center">
           <Image source={getProfilePicture(profile)} style={styles.pic} />
-
           {/* Profile DTag and nickname */}
           <VStack ml="s">
             <Typography.Subtitle3 numberOfLines={1} ellipsizeMode="tail">

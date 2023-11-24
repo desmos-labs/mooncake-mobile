@@ -1,29 +1,20 @@
-import { AppPermissions, AppPermissionStatus } from 'types/permissions';
-import React from 'react';
-import { AppState, Platform } from 'react-native';
-import * as Permissions from 'react-native-permissions';
-import { PERMISSIONS } from 'react-native-permissions';
-import {
-  usePermissionsRequestCount,
-  useSetPermissionsRequestCount,
-} from '@recoil/permissionsRequestCount';
 import { useSetAppState } from '@recoil/appState';
-import DeviceInfo from 'react-native-device-info';
+import { PermissionResponse, PermissionStatus } from 'expo-image-picker';
+import React from 'react';
+import { AppState, Linking, Platform } from 'react-native';
+import { AppPermissionStatus } from 'types/permissions';
 
-const isMultipleRejected = (permissions: Record<any, Permissions.PermissionStatus>): boolean =>
-  Object.entries(permissions).find(([permission, permissionResult]) => {
-    // IOS.PHOTO_LIBRARY will fail on ios simulator, so we skip permission check on emulators
-    // https://github.com/zoontek/react-native-permissions/issues/498
-    if (
-      DeviceInfo.isEmulatorSync() &&
-      Platform.OS === 'ios' &&
-      permission === PERMISSIONS.IOS.PHOTO_LIBRARY
-    ) {
-      return false;
-    }
-
-    return permissionResult === 'denied' || permissionResult === 'blocked';
-  }) !== undefined;
+/**
+ * Utility function to convert a `PermissionResponse` from expo into a `AppPermissionStatus`.
+ * @param response - The expo response to convert.
+ */
+const convertExpoResponse = (response: PermissionResponse): AppPermissionStatus => {
+  if (response.granted) {
+    return AppPermissionStatus.Granted;
+  } else {
+    return response.canAskAgain ? AppPermissionStatus.Denied : AppPermissionStatus.Blocked;
+  }
+};
 
 /**
  * Function that opens the application settings to ask the user
@@ -32,80 +23,71 @@ const isMultipleRejected = (permissions: Record<any, Permissions.PermissionStatu
  * returning to the app from the settings screen.
  */
 const openSettingsAndCheckPermissions = async (
-  permissionsCheck: () => Promise<AppPermissionStatus>,
+  permissionsCheck: () => Promise<PermissionResponse>,
 ) => {
   // Prepare the promise that will check the settings after the application
   // come back to focus.
   const promise = new Promise<AppPermissionStatus>((resolve, reject) => {
     const subscription = AppState.addEventListener('change', async state => {
       if (state === 'active') {
-        // Unsubscribe from the event listener when the app is in focus.
         subscription.remove();
-        // Resolve the promise with the result of the provided permissions check function.
-        permissionsCheck().then(resolve).catch(reject);
+        permissionsCheck().then(convertExpoResponse).then(resolve).catch(reject);
       }
     });
   });
 
   // Open the settings
-  await Permissions.openSettings();
+  if (Platform.OS === 'ios') {
+    await Linking.openURL('app-settings:');
+  } else {
+    await Linking.openSettings();
+  }
 
   return promise;
 };
 
-const usePermissions = (permission: AppPermissions) => {
-  const requestsCount = usePermissionsRequestCount();
-  const setRequestsCount = useSetPermissionsRequestCount();
+/**
+ * Permissions request options.
+ */
+export interface PermissionOptions {
+  /**
+   * Function to get the permission status.
+   */
+  getMethod: () => Promise<PermissionResponse>;
+  /**
+   * Function to request the permission.
+   */
+  requestMethod: () => Promise<PermissionResponse>;
+  /**
+   * True if the hook should check the permission status, false otherwise.
+   * If this field is undefined will default to `true`.
+   */
+  get?: boolean;
+  /**
+   * True if the hook should request the permissions.
+   * If this field is undefined will default to `true`.
+   */
+  request?: boolean;
+}
+
+/**
+ * Hook that provides the status of a permission, a function to get the status of a permission
+ * and a function to request the permission to the user.
+ * @param options - Hook options.
+ */
+const useAppPermissions = (options: PermissionOptions) => {
+  const { getMethod, requestMethod } = options;
   const setAppState = useSetAppState();
+  const [permissionStatus, setPermissionStatus] = React.useState<AppPermissionStatus>();
 
-  // List of permissions that we should request.
-  const permissionsList = React.useMemo(() => {
-    switch (permission) {
-      case AppPermissions.Camera:
-        return Platform.select({
-          ios: [PERMISSIONS.IOS.CAMERA],
-          android: [PERMISSIONS.ANDROID.CAMERA],
-        })!;
-      case AppPermissions.Bluetooth:
-        return Platform.select({
-          ios: [Permissions.PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL],
-          android: [
-            Permissions.PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-            Permissions.PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-            Permissions.PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-          ],
-        })!;
-      case AppPermissions.Storage:
-        return Platform.select({
-          android: [PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE],
-          ios: [PERMISSIONS.IOS.PHOTO_LIBRARY],
-        })!;
-
-      default:
-        throw new Error(`unsupported permission ${permission}`);
-    }
-  }, [permission]);
-
-  // Number of time that we can ask the user the permissions before
-  // the os tell us that the permissions are not granted without prompting
-  // the permissions request to the user.
-  const maxAllowedRequests = React.useMemo(
-    () =>
-      Platform.select({
-        ios: 1,
-        android: 2,
-      })!,
-    [],
-  );
-
-  // Function to perform the permission request.
   const requestPermission = React.useCallback(async () => {
-    const updatedCount = {
-      ...requestsCount,
-      [permission]: (requestsCount[permission] ?? 0) + 1,
-    };
-
-    if ((updatedCount[permission] ?? 0) <= maxAllowedRequests) {
+    const currentPermissionStatus = await getMethod();
+    // Check if we can request the permissions, or if the user already rejected
+    // more than the allowed times.
+    if (
+      currentPermissionStatus.status === PermissionStatus.DENIED ||
+      currentPermissionStatus.status === PermissionStatus.UNDETERMINED
+    ) {
       // Don't lock the app when displaying the permission popup.
       if (Platform.OS === 'ios') {
         setAppState(currentState => ({ ...currentState, noSplashScreen: true }));
@@ -117,48 +99,53 @@ const usePermissions = (permission: AppPermissions) => {
         }));
       }
 
-      const permissionsRejected = await Permissions.requestMultiple(permissionsList).then(
-        isMultipleRejected,
-      );
-      if (permissionsRejected) {
-        setRequestsCount(updatedCount);
+      const status = await requestMethod().then(convertExpoResponse);
+      setPermissionStatus(status);
+      if (status === AppPermissionStatus.Blocked) {
+        // Already asked the user the permission to many times, open the settings.
+        const statusAfterSettings = await openSettingsAndCheckPermissions(getMethod);
+        setPermissionStatus(statusAfterSettings);
+        return statusAfterSettings;
       }
-      return permissionsRejected ? AppPermissionStatus.Denied : AppPermissionStatus.Granted;
+      return status;
     }
+    setPermissionStatus(convertExpoResponse(currentPermissionStatus));
+    return convertExpoResponse(currentPermissionStatus);
+  }, [getMethod, requestMethod, setAppState]);
 
-    // Already asked the user the permission to many times, open the settings.
-    return openSettingsAndCheckPermissions(async () => {
-      const rejected = await Permissions.requestMultiple(permissionsList).then(isMultipleRejected);
-      return rejected ? AppPermissionStatus.Blocked : AppPermissionStatus.Granted;
-    });
-  }, [
-    requestsCount,
-    permission,
-    maxAllowedRequests,
-    setAppState,
-    permissionsList,
-    setRequestsCount,
-  ]);
-
-  // Function to check if the permissions have been granted.
   const checkPermission = React.useCallback(async () => {
-    const permissionsDenied = await Permissions.checkMultiple(permissionsList).then(
-      isMultipleRejected,
-    );
-    const requestCount = requestsCount[permission] ?? 0;
+    return getMethod().then(convertExpoResponse);
+  }, [getMethod]);
 
-    if (permissionsDenied) {
-      return requestCount >= maxAllowedRequests
-        ? AppPermissionStatus.Blocked
-        : AppPermissionStatus.Denied;
+  React.useEffect(() => {
+    const getPermissions = options?.get ?? true;
+    if (getPermissions) {
+      checkPermission().then(setPermissionStatus);
     }
-    return AppPermissionStatus.Granted;
-  }, [maxAllowedRequests, permission, permissionsList, requestsCount]);
+  }, [options?.get, checkPermission]);
+
+  React.useEffect(() => {
+    const requestPermissions = options?.request ?? true;
+    const requestPermissionsFunction = async () => {
+      const currentStatus = await checkPermission();
+      // Perform the request only if the permission state is `Denied`
+      // because if is `Blocked` means that the user should grant
+      // the permission through the settings screen.
+      if (currentStatus === AppPermissionStatus.Denied) {
+        requestPermission();
+      }
+    };
+
+    if (requestPermissions) {
+      requestPermissionsFunction();
+    }
+  }, [checkPermission, options?.request, requestPermission]);
 
   return {
+    permissionStatus,
     requestPermission,
     checkPermission,
   };
 };
 
-export default usePermissions;
+export default useAppPermissions;

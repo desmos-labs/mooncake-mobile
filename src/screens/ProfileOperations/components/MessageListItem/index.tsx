@@ -1,6 +1,6 @@
 import { Coin } from '@cosmjs/stargate';
 import Typography from 'components/Typography';
-import { Image } from 'expo-image';
+import { Image, ImageSource } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatCoins } from 'lib/FormatUtils';
 import { HStack } from 'native-base';
@@ -12,7 +12,7 @@ export interface MessageListItemProps {
   /**
    * Image to be displayed associated with this message.
    */
-  readonly image: Source;
+  readonly image: ImageSource;
   /**
    * Title to be displayed.
    */

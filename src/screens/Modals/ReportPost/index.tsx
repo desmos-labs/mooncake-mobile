@@ -113,7 +113,7 @@ const ReportPost = () => {
   const alreadyReportedComponent = useMemo(() => {
     return (
       <View style={styles.successfulReport}>
-        <FastImage source={reportSuccessIcon} style={styles.reportIcon} />
+        <Image source={reportSuccessIcon} style={styles.reportIcon} />
         <Typography.H4 style={styles.headerText}>{t('already reported')}</Typography.H4>
         <Spacer paddingBottom={theme.spacing.m} />
         <Typography.Body5 style={styles.reportSuccessText}>

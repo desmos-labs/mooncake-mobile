@@ -1,25 +1,25 @@
-import { AuthzGrant, FeeGrant } from 'types/authorizations';
+import { EncodeObject } from '@cosmjs/proto-signing';
+import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
+import {
+  MsgGrantEncodeObject,
+  MsgRevokeEncodeObject,
+} from '@desmoslabs/desmjs/build/modules/authz/v1beta1';
 import {
   AllowedMsgAllowanceTypeUrl,
   BasicAllowanceTypeUrl,
   MsgGrantAllowanceEncodeObject,
   MsgGrantAllowanceTypeUrl,
-  MsgGrantEncodeObject,
   MsgRevokeAllowanceEncodeObject,
-  MsgRevokeEncodeObject,
-  timestampFromDate,
-} from '@desmoslabs/desmjs';
-import { MsgGrantAllowance, MsgRevokeAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
-import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
-import { genericAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/cosmos/authz/authorizations';
+} from '@desmoslabs/desmjs/build/modules/feegrant/v1beta1';
+import { timestampFromDate } from '@desmoslabs/desmjs/build/utils/timestamp';
 import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
-import { genericSubspaceAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
-import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import Long from 'long';
 import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
-import { EncodeObject } from '@cosmjs/proto-signing';
+import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
+import { MsgGrantAllowance, MsgRevokeAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
+import Long from 'long';
+import { AuthzGrant, FeeGrant } from 'types/authorizations';
 
 /**
  * Computes the list of missing messages grant.

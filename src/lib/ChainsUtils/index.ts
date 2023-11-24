@@ -1,11 +1,11 @@
-import { SupportedChain } from 'types/chains';
-import SupportedChains from 'config/LinkableChains';
-import { WalletType } from 'types/wallet';
-import { AccountWithWallet } from 'types/account';
-import { bech32AddressToAny } from '@desmoslabs/desmjs/build/aminomessages/profiles';
-import { Bech32Address } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import { Coin } from '@cosmjs/stargate';
 import { DesmosMainnet, DesmosTestnet } from '@desmoslabs/desmjs';
+import { Bech32Address } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
+import { bech32AddressToAny } from '@desmoslabs/desmjs/build/modules/profiles/v3';
+import SupportedChains from 'config/LinkableChains';
+import { AccountWithWallet } from 'types/account';
+import { SupportedChain } from 'types/chains';
+import { WalletType } from 'types/wallet';
 
 /**
  * Finds the chain info with the given {@param chainName} inside the supported chains.

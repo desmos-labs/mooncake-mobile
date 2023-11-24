@@ -4,11 +4,10 @@ import { formatCoins } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { View } from 'react-native';
-import { PostTip } from 'types/desmos';
 import useStyles from './useStyles';
 
 type Props = {
-  tip: PostTip;
+  tip: any;
 };
 
 /**

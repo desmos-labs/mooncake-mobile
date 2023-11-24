@@ -1,16 +1,18 @@
-import React from 'react';
-import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
-import { MsgCreateReportEncodeObject } from '@desmoslabs/desmjs';
 import { MsgCreateReport } from '@desmoslabs/desmjs-types/desmos/reports/v1/msgs';
-import Long from 'long';
-import { Post } from 'types/posts';
-import { postTargetToAny } from '@desmoslabs/desmjs/build/aminomessages/reports';
+import {
+  MsgCreateReportEncodeObject,
+  postTargetToAny,
+} from '@desmoslabs/desmjs/build/modules/reports/v1';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/transactions/useBroadcastTx';
-import useHasReportedPost from 'hooks/reports/useHasReportedPost';
-import { err, Result } from 'neverthrow';
-import { PostAlreadyReportedError } from 'types/error';
 import { useAppStateValue } from '@recoil/appState';
+import useHasReportedPost from 'hooks/reports/useHasReportedPost';
+import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/transactions/useBroadcastTx';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
+import Long from 'long';
+import { err, Result } from 'neverthrow';
+import React from 'react';
+import { PostAlreadyReportedError } from 'types/error';
+import { Post } from 'types/posts';
 
 /**
  * Hook that allows to report the given post for a given reason and with an optional message.
