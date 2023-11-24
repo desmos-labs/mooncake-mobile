@@ -2,18 +2,18 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { invitesBanner2 } from 'assets/images';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
+import { HStack, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { HStack, useTheme } from 'native-base';
-import InvitesList from 'screens/ManageInvites/components/InvitesList';
 import { useTranslation } from 'react-i18next';
-import CommonStyles from 'config/theme/CommonStyles';
-import StyledSpinner from 'components/StyledSpinner';
+import { View } from 'react-native';
+import InvitesList from 'screens/ManageInvites/components/InvitesList';
 import useGetSectionedInvites from './hooks';
 import useStyles from './useStyles';
 
@@ -44,7 +44,7 @@ const ManageInvites = () => {
             <StyledSpinner style={CommonStyles.flex[1]} />
           )}
         </View>
-        <FastImage resizeMode="cover" source={invitesBanner2} style={styles.banner} />
+        <Image contentFit="cover" source={invitesBanner2} style={styles.banner} />
       </HStack>
       <InvitesList
         loading={loading}

@@ -1,13 +1,13 @@
+import { useActiveAccountAddress } from '@recoil/accounts';
+import FollowUnfollowButton from 'components/FollowUnfollowButton';
+import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import Typography from 'components/Typography';
-import FastImage from 'react-native-fast-image';
 import { DesmosProfile } from 'types/desmos';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import useStyles from './useStyles';
 
 interface UserListItemProps {
@@ -67,7 +67,7 @@ const UserListItem = (props: UserListItemProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       {/* Profile picture */}
-      <FastImage source={getProfilePicture(user)} style={styles.pic} />
+      <Image source={getProfilePicture(user)} style={styles.pic} />
 
       {/* Profile DTag and nickname */}
       <View style={styles.names}>

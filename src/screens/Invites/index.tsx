@@ -13,20 +13,20 @@ import {
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import { ResultAsync } from 'neverthrow';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Share, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Box, useTheme } from 'native-base';
-import useCustomToast from 'hooks/extended/useCustomToast';
+import { Share, TouchableOpacity, View } from 'react-native';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import { useGenerateInvite, useGetActiveAccountInvitesInfo } from 'screens/Invites/hooks';
-import { ResultAsync } from 'neverthrow';
-import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_INVITES>;
@@ -113,7 +113,7 @@ const Invites = () => {
       style={styles.container}
       scrollable={true}
       topBar={<TopBar rightElement={rightElement} style={{ paddingBottom: theme.spacing.m }} />}>
-      <FastImage resizeMode="cover" source={invitesBanner} style={styles.banner} />
+      <Image contentFit="cover" source={invitesBanner} style={styles.banner} />
 
       <View style={styles.subtitleContainer}>
         <Typography.H3>{t('invite friends')}</Typography.H3>

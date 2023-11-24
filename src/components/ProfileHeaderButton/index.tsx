@@ -1,8 +1,8 @@
+import { Image } from 'expo-image';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { DesmosProfile } from 'types/desmos';
-import { getProfilePicture } from 'lib/ProfileUtils';
 
 type Props = {
   /**
@@ -28,7 +28,7 @@ type Props = {
   /**
    * Override image style
    */
-  style?: React.ComponentProps<typeof FastImage>['style'];
+  style?: React.ComponentProps<typeof Image>['style'];
   tintColor?: string;
 };
 
@@ -42,8 +42,8 @@ const ProfileHeaderButton = (props: Props) => {
 
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
-      <FastImage
-        resizeMode="cover"
+      <Image
+        contentFit="cover"
         source={source}
         style={style || styles.defaultStyle}
         tintColor={tintColor}

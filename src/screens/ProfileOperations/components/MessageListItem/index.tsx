@@ -1,11 +1,11 @@
+import { Coin } from '@cosmjs/stargate';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import { formatCoins } from 'lib/FormatUtils';
+import { HStack } from 'native-base';
 import React, { memo, ReactNode } from 'react';
 import { View } from 'react-native';
-import FastImage, { Source } from 'react-native-fast-image';
-import { formatCoins } from 'lib/FormatUtils';
-import { Coin } from '@cosmjs/stargate';
-import { HStack } from 'native-base';
 import useStyles from './useStyles';
 
 export interface MessageListItemProps {
@@ -44,7 +44,7 @@ const MessageListItem = (props: MessageListItemProps) => {
   return (
     <View style={styles.container}>
       <HStack alignItems="center">
-        <FastImage style={styles.avatar} source={image} />
+        <Image style={styles.avatar} source={image} />
         <View style={styles.profileView}>
           <Typography.Subtitle3>{title}</Typography.Subtitle3>
           <Typography.Body7 style={styles.formattedDate}>{formattedDate}</Typography.Body7>

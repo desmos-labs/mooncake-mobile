@@ -1,10 +1,10 @@
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import { formatCoins } from 'lib/FormatUtils';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { PostTip } from 'types/desmos';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import { formatCoins } from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
 type Props = {
@@ -21,7 +21,7 @@ const TipItem = (props: Props) => {
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <FastImage source={getProfilePicture(tip.sender)} style={styles.avatarStyle} />
+      <Image source={getProfilePicture(tip.sender)} style={styles.avatarStyle} />
 
       <View style={styles.textGroup}>
         <Typography.Subtitle3 style={styles.textStyle} numberOfLines={1}>

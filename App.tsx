@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { NativeBaseProvider } from 'native-base';
 import RootNavigator from 'navigation/RootNavigator';
 import React from 'react';
-import RNBootSplash from 'react-native-bootsplash';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 import useClient from 'services/graphql/useClient';
@@ -11,13 +10,13 @@ import { ViewProps } from 'react-native';
 import lightTheme from 'config/theme/LightTheme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CommonStyles from 'config/theme/CommonStyles';
-
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from 'sentry-expo';
 import EnvConfig from 'config/EnvConfig';
 import { PostHogProvider } from 'posthog-react-native';
 
 Sentry.init({
   dsn: EnvConfig.SENTRY_DSN,
+  enableInExpoDevelopment: false,
   tracesSampleRate: 1.0,
 });
 
@@ -32,15 +31,17 @@ const ButterApolloClientProvider = (props: ViewProps) => {
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
 
-function App(): JSX.Element {
+export default function App() {
   return (
     <GestureHandlerRootView style={CommonStyles.flex[1]}>
       <SafeAreaProvider>
         <RecoilRoot>
           <NativeBaseProvider theme={lightTheme}>
             <ButterApolloClientProvider>
-              <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>
-                <PostHogProvider apiKey={EnvConfig.POSTHOG_API_KEY} autocapture={false}>
+              <NavigationContainer>
+                <PostHogProvider apiKey={EnvConfig.POSTHOG_API_KEY} autocapture={false} options={{
+                  host: 'https://eu.posthog.com'
+                }} >
                   <RootNavigator />
                 </PostHogProvider>
               </NavigationContainer>
@@ -51,5 +52,3 @@ function App(): JSX.Element {
     </GestureHandlerRootView>
   );
 }
-
-export default Sentry.wrap(App);

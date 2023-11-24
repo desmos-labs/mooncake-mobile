@@ -1,5 +1,5 @@
+import { Image } from 'expo-image';
 import React from 'react';
-import FastImage from 'react-native-fast-image';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
@@ -21,7 +21,7 @@ const PostAttachmentsPreview = (props: NotificationImageProps) => {
   }
 
   // TODO: Support multiple attachments
-  return <FastImage style={styles.postImage} source={{ uri: post.attachments[0].content.uri }} />;
+  return <Image style={styles.postImage} source={{ uri: post.attachments[0].content.uri }} />;
 };
 
 export default PostAttachmentsPreview;

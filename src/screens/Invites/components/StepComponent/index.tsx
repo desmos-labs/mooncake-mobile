@@ -1,13 +1,13 @@
 import Typography from 'components/Typography';
+import { Image, ImageSource } from 'expo-image';
+import { HStack, useTheme, VStack } from 'native-base';
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { View } from 'react-native';
-import FastImage, { Source } from 'react-native-fast-image';
-import { HStack, useTheme, VStack } from 'native-base';
 import useStyles from './useStyles';
 
 interface Props {
-  image: Source;
+  image: ImageSource;
   number: number;
   text: string;
   disableLine?: boolean;
@@ -20,7 +20,7 @@ const StepComponent = ({ image, number, text, disableLine }: Props) => {
   return (
     <HStack>
       <VStack alignItems="center">
-        <FastImage source={image} style={styles.image} />
+        <Image source={image} style={styles.image} />
         {!disableLine && <View style={styles.disabledContainer} />}
       </VStack>
       <View style={styles.container}>

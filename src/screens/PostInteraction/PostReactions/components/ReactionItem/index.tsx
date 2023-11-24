@@ -1,11 +1,10 @@
 import { commentLiked } from 'assets/images';
 import Typography from 'components/Typography';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { PostReaction } from 'types/desmos';
-import { getProfilePicture } from 'lib/ProfileUtils';
 import useStyles from './useStyles';
 
 type Props = {
@@ -22,7 +21,7 @@ const ReactionItem = ({ reaction }: Props) => {
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <FastImage source={getProfilePicture(reaction.author)} style={styles.avatarStyle} />
+      <Image source={getProfilePicture(reaction.author)} style={styles.avatarStyle} />
       <View style={styles.textGroup}>
         <View>
           <Typography.Subtitle3 style={styles.textStyle}>

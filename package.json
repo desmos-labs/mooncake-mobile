@@ -136,7 +136,6 @@
     "react-native-localize": "^2.2.3",
     "react-native-mmkv": "^2.10.1",
     "react-native-pager-view": "6.2.0",
-    "react-native-permissions": "^3.3.1",
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "~3.3.0",
     "react-native-redash": "^18.1.0",
@@ -216,7 +215,7 @@
     "uri-scheme": "^1.1.0"
   },
   "resolutions": {
-    "@types/react": "^18"
+    "@types/react": "^18.2.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --quiet"

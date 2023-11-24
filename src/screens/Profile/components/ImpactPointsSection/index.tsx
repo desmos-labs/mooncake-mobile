@@ -2,15 +2,15 @@ import { useNavigation } from '@react-navigation/native';
 import { infoIcon } from 'assets/images';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
+import { HStack, useTheme } from 'native-base';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { HStack, useTheme } from 'native-base';
-import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
-import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 /**
@@ -66,7 +66,7 @@ const ImpactPointsSection = () => {
             <Typography.Body6 style={styles.infoButtonText}>
               {t('convertible points')}
             </Typography.Body6>
-            <FastImage source={infoIcon} style={styles.infoButtonIcon} />
+            <Image source={infoIcon} style={styles.infoButtonIcon} />
           </TouchableOpacity>
 
           {/* Link to know how to earn impact points */}

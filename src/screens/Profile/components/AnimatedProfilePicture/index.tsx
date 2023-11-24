@@ -1,18 +1,17 @@
-import React from 'react';
+import { makeStyle } from 'config/theme';
+import { Image } from 'expo-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import React from 'react';
 import Animated, {
   Extrapolation,
   interpolate,
   SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import { DesmosProfile } from 'types/desmos';
-import { makeStyle } from 'config/theme';
-import FastImage from 'react-native-fast-image';
 import { HEADER_HEIGHT_EXPANDED } from 'screens/Profile';
+import { DesmosProfile } from 'types/desmos';
 
-// @ts-ignore
-const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 interface Props {
   profile: DesmosProfile;
@@ -55,7 +54,7 @@ const AnimatedProfilePicture = ({ profile, scrollY, scrollOffset }: Props) => {
   });
 
   return (
-    <AnimatedFastImage
+    <AnimatedImage
       source={getProfilePicture(profile)}
       style={[styles.profileImage, animatedProfilePicStyle]}
     />

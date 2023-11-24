@@ -1,37 +1,42 @@
 /**
  * @format
  */
-import React from 'react';
 import './shim';
 import './src/assets/locales/i18n';
 import 'fastestsmallesttextencoderdecoder';
-import { AppRegistry } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
-import { parseRemoteNotification } from 'lib/NotificationsUtils';
-import { isSocialNotification } from 'types/notifications';
-import createBackgroundNotificationData from 'hooks/notifications/backgroundNotificationsUtils';
 import App from './App';
-import { name as appName } from './app.json';
-import AppSilent from './AppSilent';
+import { LogBox } from 'react-native';
+import branch from 'react-native-branch';
+import { registerRootComponent } from 'expo';
 
-// Notification creation for both iOS and Android
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  const notification = parseRemoteNotification(remoteMessage.data);
-  if (isSocialNotification(notification)) {
-    await createBackgroundNotificationData(notification);
-  }
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+  '`useBottomSheetDynamicSnapPoints` will be deprecated in the next major release! please use the new introduce prop `enableDynamicSizing`',
+]);
+
+// Init branch.
+branch.subscribe(({ params, error }) => {
+  /*  if (error === null) {
+    const parsedAction = parseBranchParams(params);
+    if (parsedAction !== undefined) {
+      if (__DEV__) {
+        console.log('[Branch]:', 'Parsed action', parsedAction);
+      }
+      setCachedUriAction(parsedAction);
+    }
+  } else {
+    if (__DEV__) {
+      console.error('[Branch]:', error);
+    }
+  }*/
 });
 
-// Fake app spawn if a notification is coming from FCM
-function HeadlessCheck({ isHeadless }) {
-  if (isHeadless) {
-    // Hack to open the app on ios when a notification is received
-    // JSX not allowed in files with extension -> we can ignore safely, it is just a fake app container
-    // eslint-disable-next-line react/jsx-filename-extension
-    return <AppSilent />;
-  }
+// Init backgroud norification logic
+/*
+messaging().setBackgroundMessageHandler(backgroundNotificationHandler);
+*/
 
-  return <App />;
-}
-
-AppRegistry.registerComponent(appName, () => HeadlessCheck);
+// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
+// It also ensures that whether you load the app in Expo Go or in a native build,
+// the environment is set up appropriately
+registerRootComponent(App);

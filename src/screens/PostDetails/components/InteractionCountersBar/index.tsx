@@ -1,11 +1,11 @@
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import { Box, Skeleton } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Box, Skeleton } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
-import { getProfilePicture } from 'lib/ProfileUtils';
 import useStyles from './useStyles';
 
 type Props = {
@@ -46,7 +46,7 @@ const InteractionCountersBar = (props: Props) => {
           <Box width={calculatedWidth} height="30px">
             {interactionAuthors.map((value, index) => {
               return (
-                <FastImage
+                <Image
                   key={value.address}
                   source={getProfilePicture(value)}
                   style={[styles.icon, { transform: [{ translateX: 21 * index }] }]}

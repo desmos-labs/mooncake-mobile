@@ -1,26 +1,26 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useAppStateValue } from '@recoil/appState';
+import { reportSuccessIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Button from 'components/Button';
 import CustomRadioGroup, { RadioValue } from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import useReportPost from 'hooks/reports/useReportPost';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { useTheme } from 'native-base';
-import { Post } from 'types/posts';
-import { useAppStateValue } from '@recoil/appState';
-import useReportPost from 'hooks/reports/useReportPost';
-import FastImage from 'react-native-fast-image';
-import { reportSuccessIcon } from 'assets/images';
 import { isPostAlreadyReportedError } from 'types/error';
-import CommonStyles from 'config/theme/CommonStyles';
-import StyledSpinner from 'components/StyledSpinner';
-import useCustomToast from 'hooks/extended/useCustomToast';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -93,7 +93,7 @@ const ReportPost = () => {
   const successfulReportComponent = useMemo(() => {
     return (
       <View style={styles.successfulReport}>
-        <FastImage source={reportSuccessIcon} style={styles.reportIcon} />
+        <Image source={reportSuccessIcon} style={styles.reportIcon} />
         <Typography.H4 style={styles.headerText}>{t('thanks for reporting')}</Typography.H4>
         <Spacer paddingBottom={theme.spacing.m} />
         <Typography.Body5 style={styles.reportSuccessText}>

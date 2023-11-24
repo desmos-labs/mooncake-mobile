@@ -2,17 +2,17 @@ import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import CommonStyles from 'config/theme/CommonStyles';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import { clearMMKV } from 'lib/MMKVStorage';
 import { resetSecureStorage } from 'lib/SecureStorage';
+import { Box, HStack, VStack } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { FC, useCallback } from 'react';
 import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
-import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
-import useCustomToast from 'hooks/extended/useCustomToast';
-import CommonStyles from 'config/theme/CommonStyles';
-import { Box, HStack, VStack } from 'native-base';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -143,6 +143,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       />
       <Spacer paddingVertical={4} />
       <Box mx="s">
+        <Box></Box>
         <Button
           backgroundColor="rgb(0,140,0)"
           textColor="white"

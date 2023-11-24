@@ -4,13 +4,13 @@ import { addNewProfileIcon, addProfileIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import { Divider, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Divider, useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 export type AddProfileModalParams = {
@@ -51,12 +51,12 @@ const AddProfileModal = () => {
       <Spacer paddingVertical={20}>
         <Divider style={styles.divider} />
         <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
-          <FastImage source={addProfileIcon} style={styles.image} />
+          <Image source={addProfileIcon} style={styles.image} />
           <Typography.Body6>{t('addProfile')}</Typography.Body6>
         </TouchableOpacity>
         <Divider style={styles.divider} />
         <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
-          <FastImage source={addNewProfileIcon} style={styles.image} />
+          <Image source={addNewProfileIcon} style={styles.image} />
           <Typography.Body6>{t('createNewProfile')}</Typography.Body6>
         </TouchableOpacity>
         <Divider style={styles.divider} />

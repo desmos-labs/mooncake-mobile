@@ -1,10 +1,9 @@
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
+import { Box } from 'native-base';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
-import { Box } from 'native-base';
 import useStyles from './useStyles';
 
 export interface Props {
@@ -14,7 +13,7 @@ export interface Props {
 
 const NftComponent = ({ data, onPress }: Props) => {
   const styles = useStyles();
-  const Image = createImageProgress(FastImage);
+  const Image = createImageProgress(Image);
   return (
     <Box flex={1} m="s">
       <DropShadowWrapper

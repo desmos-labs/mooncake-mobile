@@ -1,16 +1,16 @@
+import { useActiveAccountAddress } from '@recoil/accounts';
+import { emptyPostsIcon } from 'assets/images';
+import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import { Center, useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { Center, useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Post } from 'types/posts';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import StyledSpinner from 'components/StyledSpinner';
-import PostCard from 'components/PostCard';
-import FastImage from 'react-native-fast-image';
-import { emptyPostsIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 export interface PostsSectionProps {
@@ -50,7 +50,7 @@ const PostsSection = (props: PostsSectionProps) => {
     if (posts.length === 0) {
       return (
         <Center flex={1}>
-          <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
+          <Image contentFit="contain" source={emptyPostsIcon} style={styles.emptyImage} />
           <Typography.Body7 style={{ color: theme.colors.midGrey }}>
             {t('no posts')}
           </Typography.Body7>

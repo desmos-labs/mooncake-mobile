@@ -1,5 +1,7 @@
+import { Image, ImageSource } from 'expo-image';
 import React, { ReactNode, useEffect, useState } from 'react';
 import {
+  ImageStyle,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -7,14 +9,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import FastImage, { ImageStyle, Source } from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 export interface Props extends TouchableOpacityProps {
   /**
    * The source of the image.
    */
-  image: Source | number;
+  image: ImageSource | number;
 
   /**
    * The image's style.
@@ -72,7 +73,7 @@ const ImageButton = (props: Props) => {
 
   return (
     <TouchableOpacity style={[styles.baseButtonStyle, buttonStyle]} hitSlop={hitSlop} {...rest}>
-      <FastImage resizeMode="cover" style={style} source={imageSource} tintColor={tintColor} />
+      <Image contentFit="cover" style={style} source={imageSource} tintColor={tintColor} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, { ...overlayPosition }]}>
           {overlayComponent}

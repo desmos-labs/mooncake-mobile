@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
-import { DesmosProfile } from 'types/desmos';
-import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
-import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
-import { HStack, VStack } from 'native-base';
-import Typography from 'components/Typography';
-import FastImage from 'react-native-fast-image';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import { useTranslation } from 'react-i18next';
 import Button from 'components/Button';
+import Typography from 'components/Typography';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import { HStack, VStack } from 'native-base';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
+import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
 interface Props {
@@ -54,7 +53,7 @@ const BlockedUserItem = ({ profile }: Props) => {
       <HStack px="m" alignItems="center" justifyContent="space-between">
         {/* Profile picture */}
         <HStack alignItems="center">
-          <FastImage source={getProfilePicture(profile)} style={styles.pic} />
+          <Image source={getProfilePicture(profile)} style={styles.pic} />
 
           {/* Profile DTag and nickname */}
           <VStack ml="s">

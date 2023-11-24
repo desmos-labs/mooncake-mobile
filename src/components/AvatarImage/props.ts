@@ -1,5 +1,4 @@
-import { ImageStyle } from 'react-native-fast-image';
-import { StyleProp } from 'react-native';
+import { ImageStyle, StyleProp } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 
 interface AvatarImageProps {

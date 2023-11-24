@@ -5,11 +5,10 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import { Box, HStack, useTheme, VStack } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Box, HStack, useTheme, VStack } from 'native-base';
 import { Invite } from 'types/invites';
 import useStyles from './useStyles';
 

@@ -1,10 +1,10 @@
+import StyledSpinner from 'components/StyledSpinner';
+import { Image } from 'expo-image';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { TouchableWithoutFeedback, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import StyledSpinner from 'components/StyledSpinner';
-import useStyles from './useStyles';
 import AvatarImageProps from './props';
+import useStyles from './useStyles';
 
 /**
  * Component that allows displaying a Desmos Profile picture.
@@ -17,10 +17,10 @@ const AvatarImage: React.FC<AvatarImageProps> = props => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.container}>
-        <FastImage
+        <Image
           style={[style, styles.image]}
           source={getProfilePicture(profile)}
-          resizeMode="cover"
+          contentFit="cover"
         />
         {loading === true && <StyledSpinner style={styles.indicator} />}
       </View>
