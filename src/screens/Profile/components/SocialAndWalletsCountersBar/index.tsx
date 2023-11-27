@@ -87,7 +87,8 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
               marginRight: -10 * chainLinks.length,
             }}>
             {chainLinks.map((x, idx) => (
-              <FastImage
+              <Image
+                recyclingKey={`${x.toString()}-${Math.random()}`}
                 key={`${x.toString()}-${Math.random()}`}
                 source={getChainLinkImage(x)}
                 style={[styles.iconStyle, { left: -10 * idx }]}

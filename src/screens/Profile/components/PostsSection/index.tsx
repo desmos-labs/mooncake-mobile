@@ -1,3 +1,4 @@
+import { FontAwesome } from '@expo/vector-icons';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { emptyPostsIcon } from 'assets/images';
 import PostCard from 'components/PostCard';
@@ -9,7 +10,6 @@ import { Center, useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
@@ -97,7 +97,12 @@ const PostsSection = (props: PostsSectionProps) => {
             }}>
             {t('see more')}
           </Typography.Body6>
-          <Icon name="angle-right" color={theme.colors.butterOrange01} size={22} allowFontScaling />
+          <FontAwesome
+            name="angle-right"
+            color={theme.colors.butterOrange01}
+            size={22}
+            allowFontScaling
+          />
         </TouchableOpacity>
       )}
     </View>
