@@ -2,11 +2,7 @@
 /* eslint-disable import/no-unresolved */
 import {
   APP_SUBSPACE_ID,
-  BUTTER_GQL,
-  BUTTER_REST,
-  DESMOS_GQL,
   DEV_MNEMONIC,
-  FORBOLE_GQL,
   POSTHOG_API_KEY,
   SENTRY_AUTH_TOKEN,
   SENTRY_DSN,
@@ -16,11 +12,10 @@ import {
 
 const EnvConfig = {
   GQL_ENDPOINT: {
-    forbole: FORBOLE_GQL,
-    desmos: DESMOS_GQL,
-    butter: BUTTER_GQL,
+    forbole: 'https://gql.desmos.forbole.com',
+    desmos: 'https://gql.mainnet.desmos.network',
+    butter: 'https://gql.testnet.butter.social',
   },
-  BUTTER_REST,
   SENTRY_DSN,
   SENTRY_AUTH_TOKEN,
   APP_SUBSPACE_ID,
