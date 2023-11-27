@@ -31,7 +31,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     letterSpacing: -0.015,
   },
   Display2: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontWeight: '600',
     fontSize: 54,
     letterSpacing: -0.005,
