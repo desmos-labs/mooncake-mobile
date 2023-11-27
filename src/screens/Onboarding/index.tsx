@@ -8,20 +8,20 @@ import {
   onboarding4,
   onboardingLogo,
 } from 'assets/images';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
+import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Animated as ClassicAnimated, Dimensions, Linking, View } from 'react-native';
 import { ScalingDot } from 'react-native-animated-pagination-dots';
-import FastImage, { Source } from 'react-native-fast-image';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
-import { Box, useTheme } from 'native-base';
-import CommonStyles from 'config/theme/CommonStyles';
-import Button from 'components/Button';
 import useStyles from './useStyles';
 
 const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);
@@ -110,7 +110,7 @@ const Onboarding = () => {
     (item: OnboardingData) => {
       return (
         <View key={item.title} style={styles.itemView}>
-          <FastImage source={item.imageSrc} style={styles.image} resizeMode="cover" />
+          <Image source={item.imageSrc} style={styles.image} contentFit="cover" />
           <Typography.H3 style={{ marginTop: theme.spacing.xl }}>{item.title}</Typography.H3>
           <Spacer paddingVertical={theme.spacing.s} />
           <Typography.Body6 style={CommonStyles.textAlign.center}>{item.subtitle}</Typography.Body6>
@@ -127,7 +127,7 @@ const Onboarding = () => {
       backgroundFillScreen={true}
       backgroundImage={bgonboarding}
       backgroundColor={theme.colors.background}>
-      <FastImage source={onboardingLogo} style={styles.onboardingLogo} resizeMode="contain" />
+      <Image source={onboardingLogo} style={styles.onboardingLogo} contentFit="contain" />
       <AnimatedPagerView
         testID="onboardingPagerView"
         ref={ref}

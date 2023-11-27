@@ -1,12 +1,13 @@
+import { Image } from 'expo-image';
+import { ImageContentFit } from 'expo-image/src/Image.types';
 import React, { useState } from 'react';
 import { Dimensions, ImageStyle, StyleProp, StyleSheet } from 'react-native';
-import FastImage, { ResizeMode } from 'react-native-fast-image';
 import { PostAttachment, PostAttachmentType } from 'types/posts';
 
 export interface MediaRenderOptions {
   readonly imageStyle?: StyleProp<ImageStyle>;
   readonly useAutoSize?: boolean;
-  readonly resizeMode: ResizeMode;
+  readonly resizeMode: ImageContentFit;
   readonly horizontalPaddingWithAutoSize?: number;
 }
 
@@ -41,8 +42,9 @@ const useRenderMediaAttachment = (
       }
 
       return (
-        <FastImage
-          resizeMode={resizeMode}
+        <Image
+          recyclingKey={attachment.content.uri}
+          contentFit={resizeMode}
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
           source={{ uri: attachment.content.uri }}

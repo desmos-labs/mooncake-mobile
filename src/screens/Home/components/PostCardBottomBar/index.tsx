@@ -1,17 +1,17 @@
-import { TouchableOpacity, View } from 'react-native';
-import ImageButton from 'components/ImageButton';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { postLikedIcon, postToCommentIcon, postToLikeIcon, postToTipIcon } from 'assets/images';
+import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
-import FastImage from 'react-native-fast-image';
+import { Image } from 'expo-image';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import { useTheme } from 'native-base';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'native-base';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
+import { TouchableOpacity, View } from 'react-native';
 import { isPostPending, Post } from 'types/posts';
-import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import useCustomToast from 'hooks/extended/useCustomToast';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 export interface PostBottomBarProps {
@@ -104,8 +104,8 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
         {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
         {/* 2. It's extremely hard to implement, and completely useless in the first place */}
         <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
-          <FastImage
-            resizeMode="cover"
+          <Image
+            contentFit="cover"
             tintColor={theme.colors.grey02}
             source={postToCommentIcon}
             style={styles.bottomBarIcon}
@@ -122,7 +122,7 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
       {/* 2. It's extremely hard to implement, and completely useless in the first place */}
       {!isCurrentUserAuthor && (
         <TouchableOpacity onPress={checkUserAndHandleSendTips} style={styles.tipButton}>
-          <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
+          <Image contentFit="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
           <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
             {t('tip')}
           </Typography.Subtitle3>

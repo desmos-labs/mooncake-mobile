@@ -1,9 +1,9 @@
-import { ApplicationLink, ChainLink, DesmosProfile } from 'types/desmos';
-import { Source } from 'react-native-fast-image';
-import { ImageRequireSource, ImageURISource } from 'react-native';
 import { defaultBanner, defaultProfilePic, twitterIcon } from 'assets/images';
-import { Asset } from 'react-native-image-picker';
 import LinkableChains from 'config/LinkableChains';
+import { ImageSource } from 'expo-image';
+import { ImageRequireSource, ImageURISource } from 'react-native';
+import { Asset } from 'react-native-image-picker';
+import { ApplicationLink, ChainLink, DesmosProfile } from 'types/desmos';
 
 /**
  * Tells whether the given picture is a valid URI or not.
@@ -68,7 +68,7 @@ const getPictureData = (picture: Asset | string | undefined, defaultImage: Image
  */
 export const getProfilePicture = (
   profile: DesmosProfile | undefined,
-): Source | ImageRequireSource => {
+): ImageSource | ImageRequireSource => {
   return getPictureData(profile?.profilePicture, defaultProfilePic);
 };
 
@@ -102,7 +102,7 @@ export const getProfileDisplayName = (profile: DesmosProfile): string | undefine
  * Returns the source that should be used to display the image of the given chain link.
  * @param chain {ChainLink} - Chain link for which to display the image.
  */
-export const getChainLinkImage = (chain: ChainLink): Source => {
+export const getChainLinkImage = (chain: ChainLink): ImageSource => {
   return (
     LinkableChains.find(y => y.chainConfig.name === chain.chainName)?.icon || defaultProfilePic
   );
@@ -112,7 +112,7 @@ export const getChainLinkImage = (chain: ChainLink): Source => {
  * Returns the source that should be used to display the image of the given application link.
  * @param app {ApplicationLink} - Application link for which to display the image.
  */
-export const getAppLinkImage = (app: ApplicationLink): Source => {
+export const getAppLinkImage = (app: ApplicationLink): ImageSource => {
   switch (app.application.toLowerCase()) {
     case 'twitter':
       return twitterIcon;

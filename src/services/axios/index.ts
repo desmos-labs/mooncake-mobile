@@ -1,10 +1,9 @@
-import axios from 'axios';
-import EnvConfig from 'config/EnvConfig';
-import React from 'react';
 import { useSetAppStateValue } from '@recoil/appState';
+import axios from 'axios';
+import React from 'react';
 
 const axiosInstance = axios.create({
-  baseURL: EnvConfig.BUTTER_REST,
+  baseURL: 'https://apis.testnet.butter.social',
   timeout: 15000,
 });
 

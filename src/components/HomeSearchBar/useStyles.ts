@@ -22,7 +22,7 @@ const useStyles = makeStyle(theme => ({
   },
   input: {
     backgroundColor: theme.colors.backgroundGrey,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',

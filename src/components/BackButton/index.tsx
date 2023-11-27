@@ -1,10 +1,10 @@
+import { FontAwesome } from '@expo/vector-icons';
 import { makeStyle } from 'config/theme';
+import CommonStyles from 'config/theme/CommonStyles';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { ColorValue } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import CommonStyles from 'config/theme/CommonStyles';
 
 export interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   /**
@@ -26,7 +26,7 @@ export const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColo
       onPress={onPress}
       disabled={disabled}
       style={[styles.button, style]}>
-      <Icon
+      <FontAwesome
         name="angle-left"
         style={disabled && CommonStyles.opacity['50']}
         color={iconColor || theme.colors.surfaceBlack}

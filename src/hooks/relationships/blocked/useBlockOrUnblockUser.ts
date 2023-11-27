@@ -1,24 +1,24 @@
-import React from 'react';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import {
   MsgBlockUserEncodeObject,
+  MsgBlockUserTypeUrl,
   MsgUnblockUserEncodeObject,
   MsgUnblockUserTypeUrl,
-} from '@desmoslabs/desmjs';
+} from '@desmoslabs/desmjs/build/modules/relationships/v1';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
-import Long from 'long';
-import { DataStatus } from 'types/cache';
-import { DesmosProfile } from 'types/desmos';
 import {
   useAddBlockedUser,
   useHasBlockedUser,
   useRemoveBlockedUser,
   useSetBlockedUserStatus,
 } from '@recoil/blockedRelationships';
-import { MsgBlockUserTypeUrl } from '@desmoslabs/desmjs/build/const/relationships';
-import usePromptConfirmUnblock from 'hooks/usePromptConfirmUnblock';
 import { useRemovePostsByAuthor } from '@recoil/posts';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import usePromptConfirmUnblock from 'hooks/usePromptConfirmUnblock';
+import Long from 'long';
+import React from 'react';
+import { DataStatus } from 'types/cache';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Hook that allows to block a user both remotely and locally.

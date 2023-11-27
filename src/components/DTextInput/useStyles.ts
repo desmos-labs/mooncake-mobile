@@ -13,7 +13,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     // borderWidth: 1,
   },
   input: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',

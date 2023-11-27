@@ -64,6 +64,7 @@ buck-out/
 
 
 .env
+.prebuild.env
 .eslintcache
 storyLoader.js
 keystore.jks
@@ -76,8 +77,17 @@ contents.xcworkspacedata
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
 
+# Google services files
+**/google-services.json
+**/GoogleService-Info.plist
+/ios/Bondscape.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 
 .reassure
 
 # SonarQube files
 .scannerwork/
+
+#EXPO
+.expo/
+android/
+ios/

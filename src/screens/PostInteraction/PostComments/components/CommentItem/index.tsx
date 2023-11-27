@@ -11,38 +11,37 @@ import {
   unblock,
   unfollowBlackIcon,
 } from 'assets/images';
-import ThemedLottieView from 'components/ThemedLottieView';
-import Typography from 'components/Typography';
-import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
-import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import { formatNumShorthand } from 'lib/FormatUtils';
-import React, { memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Image, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { isPostPending, Post } from 'types/posts';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import usePostTipsCount from 'hooks/tips/usePostTipsCount';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import PopupMenu from 'components/PopupMenu';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import {
   useHandlePressBlock,
   useHandlePressFollow,
   useHandlePressHidePost,
   useHandlePressReport,
 } from 'components/PostCard/hooks';
-import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
+import ThemedLottieView from 'components/ThemedLottieView';
+import Typography from 'components/Typography';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
+import usePostTipsCount from 'hooks/tips/usePostTipsCount';
+import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
+import { formatNumShorthand } from 'lib/FormatUtils';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Image, TouchableOpacity, View } from 'react-native';
 import {
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
-import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
-import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
+import { isPostPending, Post } from 'types/posts';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -196,7 +195,7 @@ const CommentItem = (props: CommentItemProps) => {
   return (
     <View style={[styles.container, styles.flexRow]}>
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
-        <FastImage source={getProfilePicture(comment.author)} style={styles.avatar} />
+        <Image source={getProfilePicture(comment.author)} style={styles.avatar} />
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handlePress} style={styles.flex}>

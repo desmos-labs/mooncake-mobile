@@ -1,11 +1,25 @@
+import { useNavigation } from '@react-navigation/native';
+import {
+  useAddCreatePostAttachment,
+  useCreatePostValue,
+  useRemoveCreatePostAttachment,
+  useResetCreatePostState,
+  useSetCreatePostValue,
+} from '@recoil/screens/createPostState';
 import { expandCommentIcon } from 'assets/images';
 import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
+import CommentBottomBarLoadingOverlay from 'components/EnterCommentBottomBar/components/CommentBottomBarLoadingOverlay';
 import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
+import { Image } from 'expo-image';
+import usePostsParams from 'hooks/posts/usePostsParams';
 import useImageFromDevice from 'hooks/useImageFromDevice';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import { useTheme } from 'native-base';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,24 +31,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
-import {
-  useAddCreatePostAttachment,
-  useCreatePostValue,
-  useRemoveCreatePostAttachment,
-  useResetCreatePostState,
-  useSetCreatePostValue,
-} from '@recoil/screens/createPostState';
-import { DesmosProfile } from 'types/desmos';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import usePostsParams from 'hooks/posts/usePostsParams';
-import StyledSpinner from 'components/StyledSpinner';
-import { useNavigation } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
-import CommentBottomBarLoadingOverlay from 'components/EnterCommentBottomBar/components/CommentBottomBarLoadingOverlay';
+import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -205,7 +205,7 @@ const EnterCommentBottomBar = (props: Props) => {
         startColor="rgba(51, 51, 51, 0.1)"
         distance={30}>
         <View style={styles.container}>
-          <FastImage source={getProfilePicture(author)} style={styles.profilePic} />
+          <Image source={getProfilePicture(author)} style={styles.profilePic} />
           <View style={styles.textInputContainer}>
             {/* TODO: Allow to have multiple attachments here */}
             {attachment && (

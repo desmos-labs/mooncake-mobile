@@ -1,81 +1,80 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
-import ROUTES from 'navigation/routes';
-import React from 'react';
-import DevScreen from 'screens/DEV';
-import MnemonicInput from 'screens/MnemonicInput';
+import {
+  BottomSheetAndroid,
+  ModalPresentationIOS,
+} from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
+import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
-import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
-import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
-import Signup, { SignupParams } from 'screens/Signup';
-import Landing, { LandingParams } from 'screens/Landing';
-import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
-import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
+import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
-import { NavigatorScreenParams } from '@react-navigation/native';
-import Onboarding, { OnboardingParams } from 'screens/Onboarding';
-import ImportAccountSelectProfile, {
-  SelectAccountParamList,
-} from 'screens/ImportAccountSelectProfile';
-import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
-import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
-import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
 import ConnectToLedgerStack, {
   ConnectToLedgerStackParams,
 } from 'navigation/RootNavigator/ConnectToLedgerStack';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
-import ImportAccountSelectLedgerApp from 'screens/ImportAccountSelectLedgerApp';
-import Settings from 'screens/Settings';
-import ManageConnectedChains from 'screens/ManageConnectedChains';
-import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
-import BroadcastTxOnChain, { BroadcastTxParams } from 'screens/BroadcastTxOnChain';
-import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
-import WelcomeBack from 'screens/WelcomeBack';
-import CreatePost, { CreatePostParams } from 'screens/CreatePost';
-import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
-import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 import PostInteractionTabs, {
   PostInteractionTabParams,
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
-import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
-import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
-import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
-import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
-import ManageConnectedApps from 'screens/ManageConnectedApps';
-import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
-import Invites from 'screens/Invites';
-import ManageInvites from 'screens/ManageInvites';
-import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
-import Community from 'screens/Community';
-import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import { Dimensions, Platform } from 'react-native';
 import Activities from 'screens/Activities';
+import BlockedUsers from 'screens/BlockedUsers';
+import BroadcastTxOnChain, { BroadcastTxParams } from 'screens/BroadcastTxOnChain';
+import Community from 'screens/Community';
+import CreatePost, { CreatePostParams } from 'screens/CreatePost';
+import DevScreen from 'screens/DEV';
+import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
+import ImportAccountSelectLedgerApp from 'screens/ImportAccountSelectLedgerApp';
+import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
+import ImportAccountSelectProfile, {
+  SelectAccountParamList,
+} from 'screens/ImportAccountSelectProfile';
+import Invites from 'screens/Invites';
+import Landing, { LandingParams } from 'screens/Landing';
+import Login, { LoginParams } from 'screens/Login';
+import ManageConnectedApps from 'screens/ManageConnectedApps';
+import ManageConnectedChains from 'screens/ManageConnectedChains';
+import ManageInvites from 'screens/ManageInvites';
+import MnemonicInput from 'screens/MnemonicInput';
+import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
+import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
+import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
+import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
+import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
+import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
+import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
+import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
+import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
+import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
+import UploadProfilePicturesModal, {
+  SaveProfileModalParams,
+} from 'screens/Modals/UploadProfilePicturesModal';
+import Onboarding, { OnboardingParams } from 'screens/Onboarding';
+import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
+import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
+import Profile, { ProfileParams } from 'screens/Profile';
 import ManageConnectionsModal, {
   ManageConnectionsModalParams,
 } from 'screens/Profile/components/ManageConnectionsModal';
-import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
-import Profile, { ProfileParams } from 'screens/Profile';
-import { Dimensions, Platform } from 'react-native';
 import ProfileConnections, {
   ProfileConnectionsParams,
   ProfileConnectionsTabParams,
 } from 'screens/ProfileConnections';
 import ProfileOperations, { ProfileOperationsParams } from 'screens/ProfileOperations';
+import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
+import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
+import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
-import Login, { LoginParams } from 'screens/Login';
-import UploadProfilePicturesModal, {
-  SaveProfileModalParams,
-} from 'screens/Modals/UploadProfilePicturesModal';
-import {
-  BottomSheetAndroid,
-  ModalPresentationIOS,
-} from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
-import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
-import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
-import BlockedUsers from 'screens/BlockedUsers';
-import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
+import Settings from 'screens/Settings';
+import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
+import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
+import Signup, { SignupParams } from 'screens/Signup';
+import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
+import WelcomeBack from 'screens/WelcomeBack';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -262,7 +261,6 @@ const RootNavigator = () => {
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
   useInitializeNotifications();
-  useInitializeDynamicLinks();
   usePosthogIdentification();
 
   //  To allow going back to previous screen via swipe left.

@@ -6,13 +6,13 @@ import DropShadowWrapper from 'components/DropShadowWrapper';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
-import { Box, useTheme } from 'native-base';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -37,7 +37,7 @@ const NftDetails = () => {
   const {
     params: { nftData },
   } = useRoute<NavProps['route']>();
-  const Image = createImageProgress(FastImage);
+  const ImageProgress = createImageProgress(Image);
 
   const scrollProgress = useSharedValue(0);
 
@@ -61,7 +61,7 @@ const NftDetails = () => {
       <>
         <Animated.View style={animatedOpacityStyle}>
           <View style={styles.imageAbsolute}>
-            <Image source={{ uri: nftData.image }} imageStyle={styles.backgroundImage} />
+            <ImageProgress source={{ uri: nftData.image }} imageStyle={styles.backgroundImage} />
           </View>
         </Animated.View>
         <BlurView
@@ -87,7 +87,7 @@ const NftDetails = () => {
               startColor: 'rgba(16, 24, 40, 0.03)',
               distance: 10,
             }}>
-            <Image
+            <ImageProgress
               source={{ uri: nftData.image }}
               style={styles.nftImageContainer}
               imageStyle={styles.nftImage}

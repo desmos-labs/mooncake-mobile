@@ -1,13 +1,16 @@
-import { Post, PostAttachment, PostAttachmentType, PostReference, PostStatus } from 'types/posts';
-import Long from 'long';
-import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { mediaToAny } from '@desmoslabs/desmjs/build/aminomessages/posts';
 import {
   Media,
   PostReference as DesmJSPostReference,
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
-import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
+import {
+  mediaToAny,
+  MsgCreatePostEncodeObject,
+  MsgCreatePostTypeUrl,
+} from '@desmoslabs/desmjs/build/modules/posts/v3';
+import Long from 'long';
+import { Post, PostAttachment, PostAttachmentType, PostReference, PostStatus } from 'types/posts';
 
 /**
  * Gets the conversation id to be used when creating a post.

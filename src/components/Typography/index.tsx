@@ -1,6 +1,6 @@
+import { ICustomTheme, useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
-import { ICustomTheme, useTheme } from 'native-base';
 
 export type TypographyComponentProps = React.ComponentProps<typeof Text>;
 
@@ -25,32 +25,32 @@ function createTextComponent(
 
 export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
   Display1: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontWeight: '600',
     fontSize: 64,
     letterSpacing: -0.015,
   },
   Display2: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontWeight: '600',
     fontSize: 54,
     letterSpacing: -0.005,
   },
   Display3: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontWeight: '600',
     fontSize: 48,
     lineHeight: 72,
   },
   H1: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 40,
     fontStyle: 'normal',
     fontWeight: '600',
     textAlign: 'left',
   },
   H2: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 32,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -58,7 +58,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   H3: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 24,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -66,28 +66,28 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   H4: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 22,
     letterSpacing: 0.0015,
   },
   H5: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 20,
     letterSpacing: -0.0015,
   },
   H6: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 18,
     letterSpacing: -0.0015,
   },
   Subtitle1: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 18,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -95,7 +95,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Subtitle2: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -104,7 +104,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     lineHeight: 24,
   },
   Subtitle3: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -112,14 +112,14 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Subtitle4: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
     textAlign: 'left',
   },
   Body1: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 24,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -127,7 +127,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Body2: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 22,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -135,7 +135,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Body3: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 20,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -143,7 +143,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Body4: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 18,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -151,7 +151,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Body5: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -160,7 +160,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Body6: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -168,7 +168,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Body7: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -176,7 +176,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Link1: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -184,7 +184,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Button1: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -192,7 +192,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Button2: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -201,7 +201,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Button3: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -210,7 +210,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     lineHeight: 18,
   },
   Caption1: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -218,7 +218,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Caption2: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 10,
     fontStyle: 'normal',
     fontWeight: '400',
@@ -226,7 +226,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     textAlign: 'left',
   },
   Caption3: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 10,
     fontStyle: 'normal',
     fontWeight: '600',

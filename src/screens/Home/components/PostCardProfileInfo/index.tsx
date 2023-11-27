@@ -1,29 +1,29 @@
-import { TouchableOpacity, View } from 'react-native';
-import CommonStyles from 'config/theme/CommonStyles';
-import FastImage from 'react-native-fast-image';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import { Center, HStack, useTheme, VStack } from 'native-base';
-import Typography from 'components/Typography';
-import React, { useEffect, useMemo } from 'react';
-import { isPostPending, Post } from 'types/posts';
-import ThemedLottieView from 'components/ThemedLottieView';
-import { loadingYellow } from 'assets/animations';
-import PopupMenu from 'components/PopupMenu';
-import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import { parseISO } from 'date-fns';
-import { formatMsToHumanReadable } from 'lib/FormatUtils';
-import { useTranslation } from 'react-i18next';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { loadingYellow } from 'assets/animations';
 import {
+  block,
   followBlackIcon,
   hidePost,
   reportIcon,
-  unfollowBlackIcon,
   unblock,
-  block,
+  unfollowBlackIcon,
 } from 'assets/images';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import PopupMenu from 'components/PopupMenu';
+import ThemedLottieView from 'components/ThemedLottieView';
+import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { parseISO } from 'date-fns';
+import { Image } from 'expo-image';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import { formatMsToHumanReadable } from 'lib/FormatUtils';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import { Center, HStack, useTheme, VStack } from 'native-base';
+import React, { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TouchableOpacity, View } from 'react-native';
+import { isPostPending, Post } from 'types/posts';
 import useStyles from './useStyles';
 
 export interface PostCardProfileInfoProps {
@@ -160,7 +160,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   return (
     <View style={styles.profileInfoView}>
       <TouchableOpacity style={CommonStyles.flexDirection.row} onPress={onPressAuthor}>
-        <FastImage source={getProfilePicture(post.author)} style={styles.profilePic} />
+        <Image source={getProfilePicture(post.author)} style={styles.profilePic} />
         <VStack>
           <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
           <HStack>

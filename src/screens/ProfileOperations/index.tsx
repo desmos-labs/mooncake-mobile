@@ -20,25 +20,25 @@ import DView from 'components/DView';
 import OperationContentLoader from 'components/Loaders/OperationContentLoader';
 import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
+import useAccountBalance from 'hooks/balance/useAccountBalance';
+import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
+import { Center, Divider, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Center, Divider, useTheme } from 'native-base';
-import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
-import useAccountBalance from 'hooks/balance/useAccountBalance';
-import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
-import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
-import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import CommonStyles from 'config/theme/CommonStyles';
-import StyledSpinner from 'components/StyledSpinner';
-import useStyles from './useStyles';
+import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
+import useStyles from './useStyles';
 
 export interface ProfileOperationsParams {
   /**
@@ -193,7 +193,7 @@ const ProfileOperations = () => {
 
     return (
       <Center flex={1}>
-        <FastImage resizeMode="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
+        <Image contentFit="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
         <Typography.Body5>{t('no operations')}</Typography.Body5>
       </Center>
     );

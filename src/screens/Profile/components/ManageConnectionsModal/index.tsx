@@ -4,13 +4,13 @@ import { connectTwitterProfileIcon, manageConnectedTwitterProfileIcon } from 'as
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import { Divider, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Divider, useTheme } from 'native-base';
 import { ApplicationLink } from 'types/desmos';
 import useStyles from './useStyles';
 
@@ -54,7 +54,7 @@ const ManageConnectionsModal = () => {
     <BottomUpModalWrapper goBack={goBack}>
       {/* Button to connect Twitter */}
       <TouchableOpacity style={styles.button} onPress={onPressConnectTwitter}>
-        <FastImage
+        <Image
           source={connectTwitterProfileIcon}
           style={styles.image}
           tintColor={theme.colors.butterOrange01}
@@ -64,7 +64,7 @@ const ManageConnectionsModal = () => {
       {appLinks.length > 0 && (
         <>
           <TouchableOpacity style={styles.button} onPress={onPressManageConnectedTwitter}>
-            <FastImage
+            <Image
               source={manageConnectedTwitterProfileIcon}
               style={styles.image}
               tintColor={theme.colors.butterOrange01}

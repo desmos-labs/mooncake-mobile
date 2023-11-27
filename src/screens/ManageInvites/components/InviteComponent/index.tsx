@@ -3,13 +3,13 @@ import { copyIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import { Box, HStack, useTheme, VStack } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Box, HStack, useTheme, VStack } from 'native-base';
 import { Invite } from 'types/invites';
 import useStyles from './useStyles';
 
@@ -39,7 +39,7 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
             </HStack>
             <Spacer paddingBottom={theme.spacing.s} />
             <HStack alignItems="center">
-              <FastImage style={styles.avatar} source={getProfilePicture(invite.claimer)} />
+              <Image style={styles.avatar} source={getProfilePicture(invite.claimer)} />
               <View style={styles.profileView}>
                 {invite.claimer ? (
                   <>

@@ -1,0 +1,18 @@
+#Ignore native code
+/android
+/ios
+
+#Ignore generated files
+/patches
+
+#Ignore CI and other config files
+/.github
+/.expo
+
+#Ignore assets
+/assets
+/src/assets
+
+#Ignore json files
+*.json
+*.md

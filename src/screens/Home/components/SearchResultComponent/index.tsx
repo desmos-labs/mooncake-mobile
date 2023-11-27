@@ -1,12 +1,12 @@
+import { useActiveAccountAddress } from '@recoil/accounts';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 interface Props {
@@ -32,7 +32,7 @@ const SearchResultComponent = ({ profile }: Props) => {
     <TouchableOpacity
       style={styles.container}
       onPress={() => navigateToProfile(isActiveAddress ? undefined : profile.address)}>
-      <FastImage source={getProfilePicture(profile)} resizeMode="cover" style={styles.avatar} />
+      <Image source={getProfilePicture(profile)} contentFit="cover" style={styles.avatar} />
       <View style={styles.textContainer}>
         <Typography.Subtitle3>{profile.nickname || 'no-nickname'}</Typography.Subtitle3>
         <Typography.Body7 style={{ color: theme.colors.midGrey }}>@{profile.dTag}</Typography.Body7>

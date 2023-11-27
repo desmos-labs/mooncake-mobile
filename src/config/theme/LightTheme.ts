@@ -1,5 +1,5 @@
-import { extendTheme } from 'native-base';
 import { addAlphaToHex } from 'config/theme/index';
+import { extendTheme } from 'native-base';
 
 export const baseSpacing = {
   xs: 4,
@@ -18,6 +18,30 @@ const lightTheme = extendTheme({
   spacing: baseSpacing,
   // duplicated spacings for native-base compatibility
   space: baseSpacing,
+  fontConfig: {
+    Poppins: {
+      400: {
+        normal: 'Poppins_400Regular',
+        italic: 'Poppins_400Regular_Italic',
+      },
+      600: {
+        normal: 'Poppins_600SemiBold',
+        italic: 'Poppins_600SemiBold_Italic',
+      },
+      700: {
+        normal: 'Poppins-Bold',
+        italic: 'Poppins_700Bold_Italic',
+      },
+      800: {
+        normal: 'Poppins_800ExtraBold',
+        italic: 'Poppins_800ExtraBold_Italic',
+      },
+      900: {
+        normal: 'Poppins_900Black',
+        italic: 'Poppins_900Black_Italic',
+      },
+    },
+  },
   roundness: 12,
   colors: {
     primary: '#FEB027',

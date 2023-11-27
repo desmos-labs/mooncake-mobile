@@ -1,17 +1,21 @@
 import {
   MsgAddPostAttachmentTypeUrl,
-  MsgAddReactionTypeUrl,
   MsgCreatePostTypeUrl,
-  MsgCreateRelationshipTypeUrl,
-  MsgCreateReportTypeUrl,
   MsgDeletePostTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
   MsgRemovePostAttachmentTypeUrl,
+} from '@desmoslabs/desmjs/build/modules/posts/v3';
+import { MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs/build/modules/profiles/v3';
+import {
+  MsgAddReactionTypeUrl,
   MsgRemoveReactionTypeUrl,
-  MsgSaveProfileTypeUrl,
+} from '@desmoslabs/desmjs/build/modules/reactions/v1';
+import {
+  MsgBlockUserTypeUrl,
+  MsgCreateRelationshipTypeUrl,
+  MsgDeleteRelationshipTypeUrl,
   MsgUnblockUserTypeUrl,
-} from '@desmoslabs/desmjs';
-import { MsgBlockUserTypeUrl } from '@desmoslabs/desmjs/build/const/relationships';
+} from '@desmoslabs/desmjs/build/modules/relationships/v1';
+import { MsgCreateReportTypeUrl } from '@desmoslabs/desmjs/build/modules/reports/v1';
 
 export const MsgExecuteContractTypeUrl = '/cosmwasm.wasm.v1.MsgExecuteContract';
 

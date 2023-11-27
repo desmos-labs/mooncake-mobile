@@ -1,15 +1,15 @@
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { twitterIcon } from 'assets/images';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import { Image } from 'expo-image';
+import { getChainLinkImage } from 'lib/ProfileUtils';
+import { Box, HStack } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { Box, HStack } from 'native-base';
 import { scale } from 'react-native-size-matters';
 import { ApplicationLink, ChainLink } from 'types/desmos';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import { getChainLinkImage } from 'lib/ProfileUtils';
-import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export interface SocialAndWalletsCountersBarProps {
@@ -64,7 +64,7 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
         {/* Twitter information */}
         {hasTwitterLink && (
           <HStack alignItems="center">
-            <FastImage source={twitterIcon} style={styles.iconStyle} />
+            <Image source={twitterIcon} style={styles.iconStyle} />
             <Box ml="xs">
               <Typography.Body6>{twitterAppLink.username}</Typography.Body6>
             </Box>
@@ -87,7 +87,8 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
               marginRight: -10 * chainLinks.length,
             }}>
             {chainLinks.map((x, idx) => (
-              <FastImage
+              <Image
+                recyclingKey={`${x.toString()}-${Math.random()}`}
                 key={`${x.toString()}-${Math.random()}`}
                 source={getChainLinkImage(x)}
                 style={[styles.iconStyle, { left: -10 * idx }]}

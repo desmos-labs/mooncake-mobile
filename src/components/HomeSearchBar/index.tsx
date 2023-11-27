@@ -1,8 +1,8 @@
 import { magnifyingGlass } from 'assets/images';
+import { Image } from 'expo-image';
+import { useTheme } from 'native-base';
 import React, { useEffect, useRef } from 'react';
 import { TextInput, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {
@@ -29,7 +29,7 @@ const HomeSearchBar = ({ handleChange, searchPlaceHolder, onFocus, onBlur, focus
 
   return (
     <View style={styles.container}>
-      <FastImage style={styles.magnifyingGlass} source={magnifyingGlass} />
+      <Image style={styles.magnifyingGlass} source={magnifyingGlass} />
       <TextInput
         textAlign="left"
         autoCorrect={true}

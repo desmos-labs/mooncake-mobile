@@ -1,26 +1,26 @@
-import React from 'react';
+import {
+  MsgAddReactionEncodeObject,
+  MsgAddReactionTypeUrl,
+  MsgRemoveReactionEncodeObject,
+  MsgRemoveReactionTypeUrl,
+  registeredReactionValueToAny,
+} from '@desmoslabs/desmjs/build/modules/reactions/v1';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { useAppStateValue } from '@recoil/appState';
 import {
   useAddPostReaction,
   useHasPostReaction,
   useRemovePostReaction,
   useUpdatePostReactionStatus,
 } from '@recoil/reactions';
-import { getLikeReactionId } from 'types/desmos';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
-import {
-  MsgAddReactionEncodeObject,
-  MsgAddReactionTypeUrl,
-  MsgRemoveReactionEncodeObject,
-  MsgRemoveReactionTypeUrl,
-} from '@desmoslabs/desmjs';
-import Long from 'long';
-import GetPostReactionsForUser from 'services/graphql/queries/GetPostReactionsForUser';
-import { Post } from 'types/posts';
-import { useAppStateValue } from '@recoil/appState';
-import { registeredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
-import { DataStatus } from 'types/cache';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import Long from 'long';
+import React from 'react';
+import GetPostReactionsForUser from 'services/graphql/queries/GetPostReactionsForUser';
+import { DataStatus } from 'types/cache';
+import { getLikeReactionId } from 'types/desmos';
+import { Post } from 'types/posts';
 
 /**
  * Hook that allows to add a reaction both remotely and locally.
