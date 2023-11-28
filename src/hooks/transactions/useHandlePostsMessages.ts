@@ -1,6 +1,6 @@
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { Post } from 'types/posts';
-import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
+import { Posts } from '@desmoslabs/desmjs';
 import useGetPostByExternalID from 'hooks/posts/useGetPostByExternalID';
 import React from 'react';
 import { PostUpdate, PostUpdateType } from 'lib/PostsUtils';
@@ -17,8 +17,8 @@ const getPostsData = (messages: EncodeObject[]) => {
   return messages
     .map(msg => {
       switch (msg.typeUrl) {
-        case MsgCreatePostTypeUrl: {
-          const value = msg.value as MsgCreatePostEncodeObject['value'];
+        case Posts.v3.MsgCreatePostTypeUrl: {
+          const value = msg.value as Posts.v3.MsgCreatePostEncodeObject['value'];
           return {
             subspaceId: value.subspaceId.toNumber(),
             externalId: value.externalId,

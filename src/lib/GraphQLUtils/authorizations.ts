@@ -7,7 +7,7 @@ import {
 } from 'types/authorizations';
 import { GqlAllowance, GqlFeeGrant } from 'services/graphql/queries/GetAccountFeeGrantAllowance';
 import { coin } from '@cosmjs/stargate';
-import { AllowedMsgAllowanceTypeUrl, BasicAllowanceTypeUrl } from '@desmoslabs/desmjs';
+import { Feegrant } from '@desmoslabs/desmjs';
 import { GQLAuthzGrant } from 'services/graphql/queries/GetAccountAuthzGrants';
 
 export const convertGraphQLAuthzGrant = (grant: GQLAuthzGrant): AuthzGrant => {
@@ -19,15 +19,15 @@ export const convertGraphQLAuthzGrant = (grant: GQLAuthzGrant): AuthzGrant => {
 
 export const convertGraphQLAllowance = (data: GqlAllowance): Allowance => {
   switch (data['@type']) {
-    case BasicAllowanceTypeUrl:
+    case Feegrant.v1beta1.BasicAllowanceTypeUrl:
       return {
-        typeUrl: BasicAllowanceTypeUrl,
+        typeUrl: Feegrant.v1beta1.BasicAllowanceTypeUrl,
         spendingLimit: data.spend_limit.map(c => coin(c.amount, c.denom)),
         expiration: data.expiration ? new Date(data.expiration) : undefined,
       };
-    case AllowedMsgAllowanceTypeUrl:
+    case Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl:
       return {
-        typeUrl: AllowedMsgAllowanceTypeUrl,
+        typeUrl: Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl,
         allowedMessages: data.allowed_messages,
         allowance: convertGraphQLAllowance(data.allowance) as BasicAllowance,
       };

@@ -1,18 +1,8 @@
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {
-  MsgGrantEncodeObject,
-  MsgRevokeEncodeObject,
-} from '@desmoslabs/desmjs/build/modules/authz/v1beta1';
-import {
-  AllowedMsgAllowanceTypeUrl,
-  BasicAllowanceTypeUrl,
-  MsgGrantAllowanceEncodeObject,
-  MsgGrantAllowanceTypeUrl,
-  MsgRevokeAllowanceEncodeObject,
-} from '@desmoslabs/desmjs/build/modules/feegrant/v1beta1';
-import { timestampFromDate } from '@desmoslabs/desmjs/build/utils/timestamp';
+import { Feegrant, Authz, Subspaces } from '@desmoslabs/desmjs';
+import { timestampFromDate } from '@desmoslabs/desmjs';
 import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
@@ -55,8 +45,8 @@ export function getMissingFeeGrantPermissions(
       return feeGrant.expirationDate >= today;
     })
     .flatMap(feeGrant => {
-      if (feeGrant.allowance.typeUrl === AllowedMsgAllowanceTypeUrl) {
-        return feeGrant.allowance.allowedMessages;
+      if (feeGrant.allowance.typeUrl === Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl) {
+        return (feeGrant.allowance as unknown as AllowedMsgAllowance).allowedMessages;
       } else {
         return [];
       }
@@ -75,8 +65,8 @@ export function getMissingFeeGrantPermissions(
 export const buildRevokeAllowanceEncode = (
   grantee: string,
   granter: string,
-): MsgRevokeAllowanceEncodeObject => ({
-  typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
+): Feegrant.v1beta1.MsgRevokeAllowanceEncodeObject => ({
+  typeUrl: Feegrant.v1beta1.MsgRevokeAllowanceTypeUrl,
   value: MsgRevokeAllowance.fromPartial({
     grantee,
     granter,
@@ -95,7 +85,7 @@ export const buildGrantAllowanceEncode = (
   grants: string[],
   grantee: string,
   granter: string,
-): MsgGrantAllowanceEncodeObject => {
+): Feegrant.v1beta1.MsgGrantAllowanceEncodeObject => {
   const basicAllowance: BasicAllowance = {
     spendLimit: [], // This is empty so that there are no limits
     expiration: undefined,
@@ -103,19 +93,19 @@ export const buildGrantAllowanceEncode = (
 
   const allowance: AllowedMsgAllowance = {
     allowance: Any.fromPartial({
-      typeUrl: BasicAllowanceTypeUrl,
+      typeUrl: Feegrant.v1beta1.BasicAllowanceTypeUrl,
       value: BasicAllowance.encode(basicAllowance).finish(),
     }),
     allowedMessages: grants,
   };
 
   return {
-    typeUrl: MsgGrantAllowanceTypeUrl,
+    typeUrl: Feegrant.v1beta1.MsgGrantAllowanceTypeUrl,
     value: MsgGrantAllowance.fromPartial({
       grantee,
       granter,
       allowance: Any.fromPartial({
-        typeUrl: AllowedMsgAllowanceTypeUrl,
+        typeUrl: Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl,
         value: AllowedMsgAllowance.encode(allowance).finish(),
       }),
     }),
@@ -148,8 +138,8 @@ export const buildGrantAllowanceEncodes = (
 
     // Get the list of the current messages that have a fee grant.
     const newAuthorizations = currentFeeGrants.flatMap(feeGrant => {
-      if (feeGrant.allowance.typeUrl === AllowedMsgAllowanceTypeUrl) {
-        return feeGrant.allowance.allowedMessages;
+      if (feeGrant.allowance.typeUrl === Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl) {
+        return (feeGrant.allowance as unknown as AllowedMsgAllowance).allowedMessages;
       } else {
         return [];
       }
@@ -198,8 +188,8 @@ export const buildRevokeAllowanceEncodes = (
     // ones we want to remove.
     const toKeepFeeGrant = currentFeeGrants
       .flatMap(feeGrant => {
-        if (feeGrant.allowance.typeUrl === AllowedMsgAllowanceTypeUrl) {
-          return feeGrant.allowance.allowedMessages;
+        if (feeGrant.allowance.typeUrl === Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl) {
+          return (feeGrant.allowance as unknown as AllowedMsgAllowance).allowedMessages;
         } else {
           return [];
         }
@@ -229,21 +219,27 @@ export const buildGrantMsgEncodes = (
   grants: string[],
   grantee: string,
   granter: string,
-): MsgGrantEncodeObject[] => {
+): Authz.v1beta1.MsgGrantEncodeObject[] => {
   return grants.map(grant => {
     const content =
       grant === GrantEnums.MsgExecuteContract || grant === GrantEnums.MsgSaveProfile
-        ? genericAuthorizationToAny(
+        ? ({
+            typeUrl: Authz.v1beta1.GenericAuthorizationTypeUrl,
+            value:  GenericAuthorization.encode(
             GenericAuthorization.fromPartial({
               msg: grant,
             }),
-          )
-        : genericSubspaceAuthorizationToAny(
+          ).finish()
+        } as Any) 
+        : ({
+            typeUrl: Subspaces.v3.GenericSubspaceAuthorizationTypeUrl,
+            value:  GenericSubspaceAuthorization.encode(
             GenericSubspaceAuthorization.fromPartial({
               subspacesIds: [Long.fromNumber(subspaceId)],
               msg: grant,
-            }),
-          );
+            })).finish(),
+        } as Any);
+
     const _grant: Grant = {
       authorization: content,
       expiration: timestampFromDate(
@@ -252,7 +248,7 @@ export const buildGrantMsgEncodes = (
     };
 
     return {
-      typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+      typeUrl: Authz.v1beta1.MsgGrantTypeUrl,
       value: MsgGrant.fromPartial({
         grantee,
         granter,
@@ -275,10 +271,10 @@ export const buildRevokeGrantMsgEncodes = (
   grants: string[],
   grantee: string,
   granter: string,
-): MsgRevokeEncodeObject[] => {
+): Authz.v1beta1.MsgRevokeEncodeObject[] => {
   return grants.map(grant => {
     return {
-      typeUrl: '/cosmos.authz.v1beta1.MsgRevoke',
+      typeUrl: Authz.v1beta1.MsgRevokeTypeUrl,
       value: MsgRevoke.fromPartial({
         grantee,
         granter,

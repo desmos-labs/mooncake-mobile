@@ -12,7 +12,7 @@ import {
   PostTransaction,
 } from 'types/posts';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils/profiles';
-import { MediaTypeUrl } from '@desmoslabs/desmjs';
+import { Posts } from '@desmoslabs/desmjs';
 import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 
 /**
@@ -42,7 +42,7 @@ const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentConten
   switch (content['@type']) {
     // Support posts created before desmjs 5.0.0
     case '/desmos.posts.v2.Media':
-    case MediaTypeUrl:
+    case  Posts.v3.MediaTypeUrl:
       return {
         type: PostAttachmentType.MEDIA,
         uri: content.uri,

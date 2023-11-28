@@ -6,12 +6,7 @@ import {
   useRemoveFollowedUser,
   useSetFollowedUserStatus,
 } from '@recoil/relationships';
-import {
-  MsgCreateRelationshipEncodeObject,
-  MsgCreateRelationshipTypeUrl,
-  MsgDeleteRelationshipEncodeObject,
-  MsgDeleteRelationshipTypeUrl,
-} from '@desmoslabs/desmjs';
+import { Relationships } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import Long from 'long';
@@ -34,8 +29,8 @@ const useFollowUser = () => {
       addFollowedUser(user, counterparty);
 
       // If the relationship does not exist on the server, create it
-      const messageCreateRelationship: MsgCreateRelationshipEncodeObject = {
-        typeUrl: MsgCreateRelationshipTypeUrl,
+      const messageCreateRelationship: Relationships.v1.MsgCreateRelationshipEncodeObject = {
+        typeUrl: Relationships.v1.MsgCreateRelationshipTypeUrl,
         value: {
           subspaceId: Long.fromNumber(subspaceId),
           counterparty: counterparty.address,
@@ -69,8 +64,8 @@ const useUnfollowUser = () => {
       setFollowedUserStatus(user, counterparty.address, DataStatus.DELETED_LOCALLY);
 
       // If the relationship exists remotely, remote it from the server
-      const messageDeleteRelationship: MsgDeleteRelationshipEncodeObject = {
-        typeUrl: MsgDeleteRelationshipTypeUrl,
+      const messageDeleteRelationship: Relationships.v1.MsgDeleteRelationshipEncodeObject = {
+        typeUrl: Relationships.v1.MsgDeleteRelationshipTypeUrl,
         value: {
           subspaceId: Long.fromNumber(subspaceId),
           counterparty: counterparty.address,

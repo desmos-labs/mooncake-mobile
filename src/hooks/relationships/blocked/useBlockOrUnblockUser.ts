@@ -1,9 +1,4 @@
-import {
-  MsgBlockUserEncodeObject,
-  MsgBlockUserTypeUrl,
-  MsgUnblockUserEncodeObject,
-  MsgUnblockUserTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/relationships/v1';
+import { Relationships } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import {
@@ -42,8 +37,8 @@ const useBlockUser = () => {
       addBlockedUser(user, counterparty);
 
       // If the blocked status does not exist on the server, create it
-      const messageBlockUser: MsgBlockUserEncodeObject = {
-        typeUrl: MsgBlockUserTypeUrl,
+      const messageBlockUser: Relationships.v1.MsgBlockUserEncodeObject = {
+        typeUrl: Relationships.v1.MsgBlockUserTypeUrl,
         value: {
           subspaceId: Long.fromNumber(subspaceId),
           blocker: user,
@@ -92,8 +87,8 @@ const useUnblockUser = () => {
       setBlockedUserStatus(user, counterparty.address, DataStatus.DELETED_LOCALLY);
 
       // If the block exists remotely, remote it from the server
-      const messageUnblock: MsgUnblockUserEncodeObject = {
-        typeUrl: MsgUnblockUserTypeUrl,
+      const messageUnblock: Relationships.v1.MsgUnblockUserEncodeObject = {
+        typeUrl: Relationships.v1.MsgUnblockUserTypeUrl,
         value: {
           subspaceId: Long.fromNumber(subspaceId),
           blocker: user,

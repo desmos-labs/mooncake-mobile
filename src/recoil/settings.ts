@@ -1,5 +1,5 @@
 import React from 'react';
-import { DesmosTestnet } from '@desmoslabs/desmjs/build/types/chains';
+import { DesmosTestnet } from '@desmoslabs/desmjs';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AppSettings } from 'types/settings';

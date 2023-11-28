@@ -1,23 +1,5 @@
 import { StdFee } from '@cosmjs/amino';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { MsgGrantTypeUrl } from '@desmoslabs/desmjs/build/modules/authz/v1beta1';
-import {
-  MsgGrantAllowanceTypeUrl,
-  MsgRevokeAllowanceTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/feegrant/v1beta1';
-import { MsgCreatePostTypeUrl } from '@desmoslabs/desmjs/build/modules/posts/v3';
-import { MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs/build/modules/profiles/v3';
-import {
-  MsgAddReactionTypeUrl,
-  MsgRemoveReactionTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/reactions/v1';
-import {
-  MsgBlockUserTypeUrl,
-  MsgCreateRelationshipTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
-  MsgUnblockUserTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/relationships/v1';
-import { MsgCreateReportTypeUrl } from '@desmoslabs/desmjs/build/modules/reports/v1';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { broadcastAnim } from 'assets/animations';
@@ -44,6 +26,7 @@ import { PendingTransaction } from 'types/transactions';
 import { Wallet } from 'types/wallet';
 import useBroadcastTx from './useBroadcastTx';
 import useStyles from './useStyles';
+import { Authz, Feegrant, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
 
 export type BroadcastTxParams = {
   /**
@@ -161,46 +144,46 @@ const BroadcastTxOnChain: React.FC = () => {
 
     // Authorization
     if (
-      msgTypeObj[MsgRevokeAllowanceTypeUrl] ||
-      msgTypeObj[MsgGrantAllowanceTypeUrl] ||
-      msgTypeObj[MsgGrantTypeUrl]
+      msgTypeObj[Feegrant.v1beta1.MsgRevokeAllowanceTypeUrl] ||
+      msgTypeObj[Feegrant.v1beta1.MsgGrantAllowanceTypeUrl] ||
+      msgTypeObj[Authz.v1beta1.MsgGrantTypeUrl]
     ) {
       txStrings.push(t('broadcastTxOnChain:authorization'));
     }
     // Save a profile
-    if (msgTypeObj[MsgSaveProfileTypeUrl]) {
+    if (msgTypeObj[Profiles.v3.MsgSaveProfileTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:saveProfile'));
     }
     // Create post
-    if (msgTypeObj[MsgCreatePostTypeUrl]) {
+    if (msgTypeObj[Posts.v3.MsgCreatePostTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:createPost'));
     }
     // Like a post
-    if (msgTypeObj[MsgAddReactionTypeUrl]) {
+    if (msgTypeObj[Reactions.v1.MsgAddReactionTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:likePost'));
     }
     // Dislike post
-    if (msgTypeObj[MsgRemoveReactionTypeUrl]) {
+    if (msgTypeObj[Reactions.v1.MsgRemoveReactionTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:dislikePost'));
     }
     // Follow a user
-    if (msgTypeObj[MsgCreateRelationshipTypeUrl]) {
+    if (msgTypeObj[Relationships.v1.MsgCreateRelationshipTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:followUser'));
     }
     // Unfollow a user
-    if (msgTypeObj[MsgDeleteRelationshipTypeUrl]) {
+    if (msgTypeObj[Relationships.v1.MsgDeleteRelationshipTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:unfollowUser'));
     }
     // Report a user
-    if (msgTypeObj[MsgCreateReportTypeUrl]) {
+    if (msgTypeObj[Reports.v1.MsgCreateReportTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:reportPost'));
     }
     // Block a user
-    if (msgTypeObj[MsgBlockUserTypeUrl]) {
+    if (msgTypeObj[Relationships.v1.MsgBlockUserTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:blockUser'));
     }
     // Unblock a user
-    if (msgTypeObj[MsgUnblockUserTypeUrl]) {
+    if (msgTypeObj[Relationships.v1.MsgUnblockUserTypeUrl]) {
       txStrings.push(t('broadcastTxOnChain:unblockUser'));
     }
     // smart contracts
