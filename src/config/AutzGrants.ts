@@ -1,49 +1,30 @@
-import {
-  MsgAddPostAttachmentTypeUrl,
-  MsgCreatePostTypeUrl,
-  MsgDeletePostTypeUrl,
-  MsgRemovePostAttachmentTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/posts/v3';
-import { MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs/build/modules/profiles/v3';
-import {
-  MsgAddReactionTypeUrl,
-  MsgRemoveReactionTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/reactions/v1';
-import {
-  MsgBlockUserTypeUrl,
-  MsgCreateRelationshipTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
-  MsgUnblockUserTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/relationships/v1';
-import { MsgCreateReportTypeUrl } from '@desmoslabs/desmjs/build/modules/reports/v1';
+import { Posts, Profiles, Relationships, Reactions, Reports } from '@desmoslabs/desmjs';
 
 export const MsgExecuteContractTypeUrl = '/cosmwasm.wasm.v1.MsgExecuteContract';
 
 export const RequiredMessageTypesGrant = [
   // Profiles
-  MsgSaveProfileTypeUrl,
+  Profiles.v3.MsgSaveProfileTypeUrl,
 
   // Relationships
-  MsgCreateRelationshipTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
+  Relationships.v1.MsgCreateRelationshipTypeUrl,
+  Relationships.v1.MsgDeleteRelationshipTypeUrl,
+  Relationships.v1.MsgBlockUserTypeUrl,
+  Relationships.v1.MsgUnblockUserTypeUrl,
 
   // Post permissions
-  MsgCreatePostTypeUrl,
-  MsgAddPostAttachmentTypeUrl,
-  MsgRemovePostAttachmentTypeUrl,
-  MsgDeletePostTypeUrl,
+  Posts.v3.MsgCreatePostTypeUrl,
+  Posts.v3.MsgAddPostAttachmentTypeUrl,
+  Posts.v3.MsgRemovePostAttachmentTypeUrl,
+  Posts.v3.MsgDeletePostTypeUrl,
 
   // Reactions
-  MsgAddReactionTypeUrl,
-  MsgRemoveReactionTypeUrl,
+  Reactions.v1.MsgAddReactionTypeUrl,
+  Reactions.v1.MsgRemoveReactionTypeUrl,
 
   // Reports
-  MsgCreateReportTypeUrl,
+  Reports.v1.MsgCreateReportTypeUrl,
 
   // Contract execution permission
   MsgExecuteContractTypeUrl,
-
-  // Block/Unblock
-  MsgBlockUserTypeUrl,
-  MsgUnblockUserTypeUrl,
 ];

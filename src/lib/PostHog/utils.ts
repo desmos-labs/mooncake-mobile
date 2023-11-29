@@ -1,4 +1,4 @@
-import { ChainInfo } from '@desmoslabs/desmjs/build/types/chains';
+import { ChainInfo } from '@desmoslabs/desmjs';
 import { PostHog } from 'posthog-react-native';
 import { PendingTransaction } from 'types/transactions';
 import Aes from 'react-native-aes-crypto';

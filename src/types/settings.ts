@@ -4,7 +4,7 @@
  * - dark: Dark color schema (Future release).
  * - auto: Set the color schema according to the system (Future release).
  */
-import { ChainInfo } from '@desmoslabs/desmjs/build/types/chains';
+import { ChainInfo } from '@desmoslabs/desmjs';
 
 export type AppTheme = 'light' | 'dark' | 'auto';
 

@@ -1,5 +1,5 @@
 import { GasPrice } from '@cosmjs/stargate';
-import { DesmosTestnet } from '@desmoslabs/desmjs/build/types/chains';
+import { DesmosTestnet } from '@desmoslabs/desmjs';
 import { activeAccountAddressState, useActiveAccountAddress } from '@recoil/accounts';
 import { findChainInfoByName } from 'lib/ChainsUtils';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';

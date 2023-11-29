@@ -12,10 +12,7 @@ import { ChainLink } from 'types/desmos';
 import { MsgUnlinkChainAccount } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import { useActiveAccount } from '@recoil/accounts';
-import {
-  MsgUnlinkChainAccountEncodeObject,
-  MsgUnlinkChainAccountTypeUrl,
-} from '@desmoslabs/desmjs';
+import { Profiles } from '@desmoslabs/desmjs';
 import { isCanceledOperationError } from 'types/error';
 import LinkableChains from 'config/LinkableChains';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
@@ -58,8 +55,8 @@ const DisconnectChainModal = () => {
     if (!activeAccount) return;
 
     // Create the message
-    const msgUnlinkChainAccount: MsgUnlinkChainAccountEncodeObject = {
-      typeUrl: MsgUnlinkChainAccountTypeUrl,
+    const msgUnlinkChainAccount: Profiles.v3.MsgUnlinkChainAccountEncodeObject = {
+      typeUrl: Profiles.v3.MsgUnlinkChainAccountTypeUrl,
       value: MsgUnlinkChainAccount.fromPartial({
         chainName: chainLink.chainName,
         owner: activeAccount!.address,

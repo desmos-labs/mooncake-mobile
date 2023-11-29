@@ -1,7 +1,6 @@
 import { Coin } from '@cosmjs/stargate';
-import { DesmosMainnet, DesmosTestnet } from '@desmoslabs/desmjs';
+import { DesmosMainnet, DesmosTestnet, Profiles } from '@desmoslabs/desmjs';
 import { Bech32Address } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
-import { bech32AddressToAny } from '@desmoslabs/desmjs/build/modules/profiles/v3';
 import SupportedChains from 'config/LinkableChains';
 import { AccountWithWallet } from 'types/account';
 import { SupportedChain } from 'types/chains';
@@ -63,7 +62,7 @@ export const getLinkableChainInfoByName = (chainName: string): SupportedChain | 
  * {@param chain} and {@param account} data.
  */
 export const getAddress = (chain: SupportedChain, account: AccountWithWallet) =>
-  bech32AddressToAny(
+  Profiles.v3.bech32AddressToAny(
     Bech32Address.fromPartial({
       value: account.account.address,
       prefix: chain.prefix,

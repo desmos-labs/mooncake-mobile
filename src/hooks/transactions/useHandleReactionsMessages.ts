@@ -1,10 +1,5 @@
 import { EncodeObject } from '@cosmjs/proto-signing';
-import {
-  MsgAddReactionEncodeObject,
-  MsgAddReactionTypeUrl,
-  MsgRemoveReactionEncodeObject,
-  MsgRemoveReactionTypeUrl,
-} from '@desmoslabs/desmjs';
+import { Reactions } from '@desmoslabs/desmjs';
 import React from 'react';
 import sleep from 'lib/sleep';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -18,7 +13,9 @@ import {
 } from '@recoil/reactions';
 
 interface PostReactionData {
-  readonly msgType: typeof MsgAddReactionTypeUrl | typeof MsgRemoveReactionTypeUrl;
+  readonly msgType:
+    | typeof Reactions.v1.MsgAddReactionTypeUrl
+    | typeof Reactions.v1.MsgRemoveReactionTypeUrl;
   readonly reaction: PostReaction;
 }
 
@@ -35,10 +32,10 @@ const useGetReactionsData = () => {
         .map(msg => {
           switch (msg.typeUrl) {
             // Handle pending MsgAddReaction messages
-            case MsgAddReactionTypeUrl: {
-              const value = msg.value as MsgAddReactionEncodeObject['value'];
+            case Reactions.v1.MsgAddReactionTypeUrl: {
+              const value = msg.value as Reactions.v1.MsgAddReactionEncodeObject['value'];
               return {
-                msgType: MsgAddReactionTypeUrl,
+                msgType: Reactions.v1.MsgAddReactionTypeUrl,
                 reaction: getCreatedPostReactionToSync(
                   value.user,
                   value.subspaceId.toNumber(),
@@ -48,10 +45,10 @@ const useGetReactionsData = () => {
             }
 
             // Handle pending MsgRemoveReaction messages
-            case MsgRemoveReactionTypeUrl: {
-              const value = msg.value as MsgRemoveReactionEncodeObject['value'];
+            case Reactions.v1.MsgRemoveReactionTypeUrl: {
+              const value = msg.value as Reactions.v1.MsgRemoveReactionEncodeObject['value'];
               return {
-                msgType: MsgRemoveReactionTypeUrl,
+                msgType: Reactions.v1.MsgRemoveReactionTypeUrl,
                 reaction: getDeletedPostReactionToSync(
                   value.user,
                   value.subspaceId.toNumber(),
@@ -85,7 +82,7 @@ const useGetReactionUpdates = () => {
         // Handle the addition of a new reaction
         // To do this, we simply need to retrieve the reaction from the chain and update the pending one
         // This will make sure the id of the reaction is correct
-        case MsgAddReactionTypeUrl: {
+        case Reactions.v1.MsgAddReactionTypeUrl: {
           let onChainReaction = await getReaction(
             data.reaction.post.subspaceId,
             data.reaction.post.id,
@@ -110,7 +107,7 @@ const useGetReactionUpdates = () => {
 
         // Handle the removal of a reaction
         // To do this, we simply need to remove the pending reaction
-        case MsgRemoveReactionTypeUrl: {
+        case Reactions.v1.MsgRemoveReactionTypeUrl: {
           return {
             type: CachedDataUpdateType.DELETED,
             data: data.reaction,

@@ -5,19 +5,16 @@ import {
   useGetCreatedRelationshipToSync,
   useGetDeletedRelationshipToSync,
 } from '@recoil/relationships';
-import {
-  MsgCreateRelationshipEncodeObject,
-  MsgCreateRelationshipTypeUrl,
-  MsgDeleteRelationshipEncodeObject,
-  MsgDeleteRelationshipTypeUrl,
-} from '@desmoslabs/desmjs';
+import { Relationships } from '@desmoslabs/desmjs';
 import { FollowedUser } from 'types/relationships';
 import { CachedDataUpdate, CachedDataUpdateType } from 'lib/CacheUtils';
 import useUpdatePendingRelationships from 'hooks/relationships/useUpdatePendingRelationships';
 import { DataStatus } from 'types/cache';
 
 interface RelationshipData {
-  readonly msgType: typeof MsgCreateRelationshipTypeUrl | typeof MsgDeleteRelationshipTypeUrl;
+  readonly msgType:
+    | typeof Relationships.v1.MsgCreateRelationshipTypeUrl
+    | typeof Relationships.v1.MsgDeleteRelationshipTypeUrl;
   readonly relationship: FollowedUser;
 }
 
@@ -34,19 +31,21 @@ const useGetRelationshipsData = () => {
         .map(msg => {
           switch (msg.typeUrl) {
             // Handle pending MsgCreateRelationshipTypeUrl messages
-            case MsgCreateRelationshipTypeUrl: {
-              const value = msg.value as MsgCreateRelationshipEncodeObject['value'];
+            case Relationships.v1.MsgCreateRelationshipTypeUrl: {
+              const value =
+                msg.value as Relationships.v1.MsgCreateRelationshipEncodeObject['value'];
               return {
-                msgType: MsgCreateRelationshipTypeUrl,
+                msgType: Relationships.v1.MsgCreateRelationshipTypeUrl,
                 relationship: getCreatedRelationshipToSync(value.signer, value.counterparty),
               };
             }
 
             // Handle pending MsgUnfollow messages
-            case MsgDeleteRelationshipTypeUrl: {
-              const value = msg.value as MsgDeleteRelationshipEncodeObject['value'];
+            case Relationships.v1.MsgDeleteRelationshipTypeUrl: {
+              const value =
+                msg.value as Relationships.v1.MsgDeleteRelationshipEncodeObject['value'];
               return {
-                msgType: MsgDeleteRelationshipTypeUrl,
+                msgType: Relationships.v1.MsgDeleteRelationshipTypeUrl,
                 relationship: getDeletedRelationshipToSync(value.signer, value.counterparty),
               };
             }
@@ -72,7 +71,7 @@ const useGetRelationshipsUpdate = () => {
   return React.useCallback((data: RelationshipData) => {
     switch (data.msgType) {
       // Handle MsgCreateRelationshipTypeUrl messages
-      case MsgCreateRelationshipTypeUrl: {
+      case Relationships.v1.MsgCreateRelationshipTypeUrl: {
         return {
           type: CachedDataUpdateType.UPDATED,
           original: data.relationship,
@@ -84,7 +83,7 @@ const useGetRelationshipsUpdate = () => {
       }
 
       // Handle MsgDeleteRelationshipTypeUrl messages
-      case MsgDeleteRelationshipTypeUrl: {
+      case Relationships.v1.MsgDeleteRelationshipTypeUrl: {
         return {
           type: CachedDataUpdateType.DELETED,
           data: data.relationship,
