@@ -74,7 +74,7 @@ import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
 import Signup, { SignupParams } from 'screens/Signup';
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
-import WelcomeBack from 'screens/WelcomeBack';
+import WelcomePage, { WelcomePageParams } from 'screens/WelcomeScreen';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -93,6 +93,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
   [ROUTES.SERVICE_AND_POLICY]: ServiceAndPolicyParams;
+  [ROUTES.WELCOME_PAGE]: WelcomePageParams;
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
@@ -299,11 +300,11 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
-      <Stack.Screen name={ROUTES.WELCOME} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.SERVICE_AND_POLICY} component={ServiceAndPolicy} />
 
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
+      <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
 
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}

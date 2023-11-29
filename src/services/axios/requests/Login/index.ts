@@ -1,5 +1,5 @@
-import axiosInstance from 'services/axios';
 import { ResultAsync } from 'neverthrow';
+import axiosInstance from 'services/axios';
 
 export interface LoginParams {
   /**
@@ -35,7 +35,7 @@ const Login = ({
   return ResultAsync.fromPromise(
     axiosInstance.post('/login', {
       desmos_address: address,
-      pubkey_bytes: pubkeyBytes,
+      pub_key_bytes: pubkeyBytes,
       signed_bytes: signedBytes,
       signature_bytes: signatureBytes,
     }),

@@ -1,10 +1,8 @@
-import messaging from '@react-native-firebase/messaging';
-import { useCallback } from 'react';
-import axiosInstance from 'services/axios';
-import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
+import React from 'react';
+import { err, ok, Result } from 'neverthrow';
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import { useAppStateValue } from '@recoil/appState';
-import { err, ok, Result } from 'neverthrow';
+import useUpdateAuthToken from 'hooks/axios/useUpdateAuthToken';
 
 /**
  * A hook that restores axios bearer token and redirects the user to the login screen
@@ -12,17 +10,11 @@ import { err, ok, Result } from 'neverthrow';
  */
 const useRefreshSession = () => {
   const bearerToken = useAppStateValue('bearerToken');
-
-  return useCallback(async (): Promise<Result<void, Error>> => {
-    // Bearer token refresh
-    if (!bearerToken) {
-      // TODO: Probably, it's better to just do nothing here. We can always refresh later anyway
-      return err(new Error('No bearer token found'));
-    }
-
-    axiosInstance.defaults.headers.common = {
-      Authorization: `Bearer ${bearerToken}`,
-    };
+  const updateAuthToken = useUpdateAuthToken();
+  return React.useCallback(async (): Promise<Result<void, Error>> => {
+    // Set the bearer token to the one that is currently stored inside the app state.
+    // This is done to ensure that the refresh session request does not fail due to an empty token.
+    updateAuthToken(bearerToken);
 
     // Refresh the session
     const refreshResult = await RefreshSession();
@@ -30,18 +22,12 @@ const useRefreshSession = () => {
       return err(refreshResult.error);
     }
 
-    // Refresh the notification token
-    const notificationsToken = await messaging().getToken();
-    if (notificationsToken) {
-      const postNotificationResult = await PostNotificationToken(notificationsToken);
-      if (postNotificationResult.isErr()) {
-        return err(postNotificationResult.error);
-      }
-    }
+    // Update the bearer token
+    updateAuthToken(refreshResult.value);
 
     // Return the ok result
     return ok(undefined);
-  }, [bearerToken]);
+  }, [bearerToken, updateAuthToken]);
 };
 
 export default useRefreshSession;

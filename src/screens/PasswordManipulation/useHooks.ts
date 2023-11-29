@@ -7,6 +7,7 @@ import useUpdateAccount from 'hooks/accounts/useUpdateAccount';
 import useCheckBiometrics from 'hooks/biometrics/useCheckBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
@@ -165,9 +166,9 @@ const useHooks = () => {
             step: LoginFlowStep.Completed,
           });
           setSigninStatus(SignInStatus.DONE);
-          /*          navigate(ROUTES.WELCOME_PAGE, {
+          navigate(ROUTES.WELCOME_PAGE, {
             action: 'import',
-          }); */
+          });
         } else {
           setLoading(false);
         }
@@ -195,9 +196,9 @@ const useHooks = () => {
             setLoginFlowState({
               step: LoginFlowStep.Completed,
             });
-            /*            navigate(ROUTES.WELCOME_PAGE, {
+            navigate(ROUTES.WELCOME_PAGE, {
               action: 'create',
-            }); */
+            });
           },
         });
         setLoading(false);
