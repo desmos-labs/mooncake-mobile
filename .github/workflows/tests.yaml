@@ -28,7 +28,7 @@ jobs:
         if: env.GIT_DIFF
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: yarn
           cache-dependency-path: |
             yarn.lock

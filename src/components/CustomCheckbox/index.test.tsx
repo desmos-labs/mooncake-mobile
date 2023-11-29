@@ -6,7 +6,7 @@ import { fireEvent } from '@testing-library/react-native';
 import {
   advanceAnimationByTime,
   withReanimatedTimer,
-  // @ts-ignore
+  // eslint-disable-next-line import/no-unresolved
 } from 'react-native-reanimated/lib/reanimated2/jestUtils';
 
 describe('component: CustomCheckbox', () => {
