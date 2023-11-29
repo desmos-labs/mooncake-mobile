@@ -167,7 +167,7 @@ const useHooks = () => {
           setSigninStatus(SignInStatus.DONE);
           /*          navigate(ROUTES.WELCOME_PAGE, {
             action: 'import',
-          });*/
+          }); */
         } else {
           setLoading(false);
         }
@@ -197,7 +197,7 @@ const useHooks = () => {
             });
             /*            navigate(ROUTES.WELCOME_PAGE, {
               action: 'create',
-            });*/
+            }); */
           },
         });
         setLoading(false);
@@ -220,7 +220,7 @@ const useHooks = () => {
         });
         /*        navigate(ROUTES.FEE_GRANT_WAITING_SCREEN, {
           granted: false,
-        });*/
+        }); */
         setLoading(false);
       }
       if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
@@ -234,7 +234,7 @@ const useHooks = () => {
             title: t('success', { ns: 'common' }),
             body: t('pwChangedText'),
             onClose: () => navigate(ROUTES.SETTINGS),
-          });*/
+          }); */
         }
       }
     },

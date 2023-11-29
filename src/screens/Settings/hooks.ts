@@ -133,7 +133,7 @@ export const useToggleBiometrics = () => {
       if (result.isOk()) {
         await enableBiometrics(result.value.password!, true, activeAddress!);
       }
-    }*/
+    } */
   }, [activeAddress, disableBiometrics, enableBiometrics, unlockWalletWithBiometrics]);
 
   return {

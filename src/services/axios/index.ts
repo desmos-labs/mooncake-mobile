@@ -3,7 +3,7 @@ import axios from 'axios';
 import React from 'react';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://apis.testnet.butter.social',
+  baseURL: 'http://57.128.144.235:43000',
   timeout: 15000,
 });
 
