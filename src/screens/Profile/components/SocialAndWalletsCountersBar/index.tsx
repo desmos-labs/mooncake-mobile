@@ -88,8 +88,8 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
             }}>
             {chainLinks.map((x, idx) => (
               <Image
-                recyclingKey={`${x.toString()}-${Math.random()}`}
-                key={`${x.toString()}-${Math.random()}`}
+                recyclingKey={`${x.externalAddress}`}
+                key={`${x.externalAddress}`}
                 source={getChainLinkImage(x)}
                 style={[styles.iconStyle, { left: -10 * idx }]}
               />
