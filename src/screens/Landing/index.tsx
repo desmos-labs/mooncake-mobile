@@ -12,7 +12,6 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, View } from 'react-native';
-import { usePerformImportAccount } from 'screens/Landing/hooks';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 import useStyles from './useStyles';
 
@@ -36,30 +35,17 @@ const Landing = () => {
   const styles = useStyles();
 
   // -------------------------------------------------------------------------------------
-  // --- Hooks
-  // -------------------------------------------------------------------------------------
-
-  const performImportAccount = usePerformImportAccount();
-  // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
-  const onSignUpWithWallet = React.useCallback(() => {
-    performImportAccount();
-  }, [performImportAccount]);
-
   const onSignUp = React.useCallback(
-    (option: 'normal' | Web3AuthLoginProvider) => {
+    (login: 'mnemonic' | Web3AuthLoginProvider) => {
       // Handle the post consent behavior with a reusable callback.
-      if (option === 'normal') {
-        onSignUpWithWallet();
-      } else {
-        navigate(ROUTES.SERVICE_AND_POLICY, {
-          loginProvider: option,
-        });
-      }
+      navigate(ROUTES.SERVICE_AND_POLICY, {
+        loginProvider: login,
+      });
     },
-    [navigate, onSignUpWithWallet],
+    [navigate],
   );
 
   // -------------------------------------------------------------------------------------
@@ -82,7 +68,7 @@ const Landing = () => {
         </Typography.Body6>
       )}
       <Box alignSelf="stretch">
-        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('normal')}>
+        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('mnemonic')}>
           {t('signUp with wallet')}
         </Button>
       </Box>

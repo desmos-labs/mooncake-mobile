@@ -13,14 +13,15 @@ import useLoginWithWeb3Auth from 'hooks/web3Auth/useLoginWithWeb3Auth';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, Platform, TouchableOpacity, View } from 'react-native';
+import { usePerformImportAccount } from 'screens/Landing/hooks';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
 export interface ServiceAndPolicyParams {
-  loginProvider: Web3AuthLoginProvider;
+  loginProvider: 'mnemonic' | Web3AuthLoginProvider;
 }
 
 export type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.SERVICE_AND_POLICY>;
@@ -32,6 +33,15 @@ const ServiceAndPolicy = () => {
   const styles = useStyles();
   const [conditionAndPolicyAccepted, setConditionAndPolicyAccepted] = useState(false);
   const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
+  const performImportAccount = usePerformImportAccount();
+
+  const loginWithSelectedMethod = useCallback(async () => {
+    if (params?.loginProvider === 'mnemonic') {
+      performImportAccount();
+    } else {
+      await loginWithWeb3Auth(params?.loginProvider);
+    }
+  }, []);
 
   return (
     <DView topBar={<TopBar />} style={styles.container} disableHideKeyboardTouchable={true}>
@@ -70,7 +80,7 @@ const ServiceAndPolicy = () => {
         <Button
           size={44}
           disabled={!conditionAndPolicyAccepted || loginLoading}
-          onPress={() => loginWithWeb3Auth(params.loginProvider)}>
+          onPress={() => loginWithSelectedMethod()}>
           {t('accept', { ns: 'common' })}
         </Button>
         <Spacer paddingBottom="m" />

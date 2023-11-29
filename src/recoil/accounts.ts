@@ -1,9 +1,9 @@
-import { deserializeAccounts } from 'lib/AccountUtils/deserialize';
-import { serializeAccounts } from 'lib/AccountUtils/serialize';
-import { deleteMMKV, getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React, { useCallback } from 'react';
 import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Account } from 'types/account';
+import { deserializeAccounts } from 'lib/AccountUtils/deserialize';
+import { deleteMMKV, getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { serializeAccounts } from 'lib/AccountUtils/serialize';
 
 // -------------------------------------------------------------------------------------------------------------------
 // --- STORED ACCOUNTS
@@ -23,6 +23,25 @@ export const accountsAppState = atom<Record<string, Account>>({
     },
   ],
 });
+
+/**
+ * Hook that allows to store a new account inside the app state.
+ */
+export const useStoreAccount = () => {
+  const setAccounts = useSetRecoilState(accountsAppState);
+  return React.useCallback(
+    (account: Account) => {
+      setAccounts(curValue => {
+        const newValue: Record<string, Account> = {
+          ...curValue,
+        };
+        newValue[account.address] = account;
+        return newValue;
+      });
+    },
+    [setAccounts],
+  );
+};
 
 /**
  * Hook that allows to get the accounts stored on the device.
