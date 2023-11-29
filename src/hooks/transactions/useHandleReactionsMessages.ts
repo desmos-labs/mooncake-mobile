@@ -13,7 +13,9 @@ import {
 } from '@recoil/reactions';
 
 interface PostReactionData {
-  readonly msgType: typeof Reactions.v1.MsgAddReactionTypeUrl | typeof Reactions.v1.MsgRemoveReactionTypeUrl;
+  readonly msgType:
+    | typeof Reactions.v1.MsgAddReactionTypeUrl
+    | typeof Reactions.v1.MsgRemoveReactionTypeUrl;
   readonly reaction: PostReaction;
 }
 

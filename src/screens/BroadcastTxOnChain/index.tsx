@@ -24,9 +24,17 @@ import TransactionRow from 'screens/BroadcastTxOnChain/components/TransactionRow
 import { isCanceledOperationError } from 'types/error';
 import { PendingTransaction } from 'types/transactions';
 import { Wallet } from 'types/wallet';
+import {
+  Authz,
+  Feegrant,
+  Posts,
+  Profiles,
+  Reactions,
+  Relationships,
+  Reports,
+} from '@desmoslabs/desmjs';
 import useBroadcastTx from './useBroadcastTx';
 import useStyles from './useStyles';
-import { Authz, Feegrant, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
 
 export type BroadcastTxParams = {
   /**

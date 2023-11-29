@@ -12,7 +12,9 @@ import useUpdatePendingRelationships from 'hooks/relationships/useUpdatePendingR
 import { DataStatus } from 'types/cache';
 
 interface RelationshipData {
-  readonly msgType: typeof Relationships.v1.MsgCreateRelationshipTypeUrl | typeof Relationships.v1.MsgDeleteRelationshipTypeUrl;
+  readonly msgType:
+    | typeof Relationships.v1.MsgCreateRelationshipTypeUrl
+    | typeof Relationships.v1.MsgDeleteRelationshipTypeUrl;
   readonly relationship: FollowedUser;
 }
 
@@ -30,7 +32,8 @@ const useGetRelationshipsData = () => {
           switch (msg.typeUrl) {
             // Handle pending MsgCreateRelationshipTypeUrl messages
             case Relationships.v1.MsgCreateRelationshipTypeUrl: {
-              const value = msg.value as Relationships.v1.MsgCreateRelationshipEncodeObject['value'];
+              const value =
+                msg.value as Relationships.v1.MsgCreateRelationshipEncodeObject['value'];
               return {
                 msgType: Relationships.v1.MsgCreateRelationshipTypeUrl,
                 relationship: getCreatedRelationshipToSync(value.signer, value.counterparty),
@@ -39,7 +42,8 @@ const useGetRelationshipsData = () => {
 
             // Handle pending MsgUnfollow messages
             case Relationships.v1.MsgDeleteRelationshipTypeUrl: {
-              const value = msg.value as Relationships.v1.MsgDeleteRelationshipEncodeObject['value'];
+              const value =
+                msg.value as Relationships.v1.MsgDeleteRelationshipEncodeObject['value'];
               return {
                 msgType: Relationships.v1.MsgDeleteRelationshipTypeUrl,
                 relationship: getDeletedRelationshipToSync(value.signer, value.counterparty),

@@ -1,8 +1,7 @@
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { Feegrant, Authz, Subspaces } from '@desmoslabs/desmjs';
-import { timestampFromDate } from '@desmoslabs/desmjs';
+import { Feegrant, Authz, Subspaces, timestampFromDate } from '@desmoslabs/desmjs';
 import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
@@ -225,20 +224,21 @@ export const buildGrantMsgEncodes = (
       grant === GrantEnums.MsgExecuteContract || grant === GrantEnums.MsgSaveProfile
         ? ({
             typeUrl: Authz.v1beta1.GenericAuthorizationTypeUrl,
-            value:  GenericAuthorization.encode(
-            GenericAuthorization.fromPartial({
-              msg: grant,
-            }),
-          ).finish()
-        } as Any) 
+            value: GenericAuthorization.encode(
+              GenericAuthorization.fromPartial({
+                msg: grant,
+              }),
+            ).finish(),
+          } as Any)
         : ({
             typeUrl: Subspaces.v3.GenericSubspaceAuthorizationTypeUrl,
-            value:  GenericSubspaceAuthorization.encode(
-            GenericSubspaceAuthorization.fromPartial({
-              subspacesIds: [Long.fromNumber(subspaceId)],
-              msg: grant,
-            })).finish(),
-        } as Any);
+            value: GenericSubspaceAuthorization.encode(
+              GenericSubspaceAuthorization.fromPartial({
+                subspacesIds: [Long.fromNumber(subspaceId)],
+                msg: grant,
+              }),
+            ).finish(),
+          } as Any);
 
     const _grant: Grant = {
       authorization: content,

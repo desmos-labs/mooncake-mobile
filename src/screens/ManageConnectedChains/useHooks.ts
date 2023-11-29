@@ -6,6 +6,7 @@ import {
   getSignedBytes,
   SigningMode,
   StdFee,
+  Profiles,
 } from '@desmoslabs/desmjs';
 import {
   Bech32Address,
@@ -14,7 +15,6 @@ import {
   SingleSignature,
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { Profiles } from '@desmoslabs/desmjs';
 import { useActiveAccount } from '@recoil/accounts';
 import { useStoreUserChainLinks } from '@recoil/chainLinks';
 import LinkableChains from 'config/LinkableChains';
