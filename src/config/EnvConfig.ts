@@ -14,7 +14,7 @@ const EnvConfig = {
   GQL_ENDPOINT: {
     forbole: 'https://gql.desmos.forbole.com',
     desmos: 'https://gql.mainnet.desmos.network',
-    butter: 'https://gql.testnet.butter.social',
+    butter: 'https://gql.mainnet.butter.social',
   },
   SENTRY_DSN,
   SENTRY_AUTH_TOKEN,
