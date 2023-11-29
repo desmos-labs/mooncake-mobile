@@ -21,7 +21,7 @@ export const useInitialFormFields = () => {
     () =>
       ({
         mnemonic: '',
-      } as FormField),
+      }) as FormField,
     [],
   );
 };

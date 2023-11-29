@@ -158,12 +158,12 @@ const SendTips = (props: NavProps) => {
                                 borderColor: theme.colors.tabIconGrey,
                               }
                             : values.amount === String(value)
-                            ? {
-                                borderColor: theme.colors.butterOrange01,
-                              }
-                            : {
-                                borderColor: theme.colors.surfaceBlack,
-                              },
+                              ? {
+                                  borderColor: theme.colors.butterOrange01,
+                                }
+                              : {
+                                  borderColor: theme.colors.surfaceBlack,
+                                },
                         ]}
                         onPress={() => {
                           setFieldValue('amount', String(value), true);

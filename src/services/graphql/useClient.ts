@@ -51,10 +51,8 @@ const cache = new InMemoryCache({
         if (object.post?.subspace_id && object.author?.address && object.post?.id && object.value) {
           // @ts-ignore
 
-          return `reaction:${object.post.subspace_id}-${
-            // @ts-ignore
-            object.author?.address
-          }-${object.value.toString()}`;
+          return `reaction:${object.post.subspace_id}-${// @ts-ignore
+          object.author?.address}-${object.value.toString()}`;
         }
         return defaultDataIdFromObject(object);
       case 'notification':

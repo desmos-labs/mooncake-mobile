@@ -46,9 +46,8 @@ export const useGetActiveAccountInvitesInfo = () => {
     }
 
     // Computes the number of invites generated from the user.
-    const generatedInvites = invitesData!?.filter(
-      invite => invite.claimerAddress !== activeAddress,
-    ).length;
+    const generatedInvites = invitesData!?.filter(invite => invite.claimerAddress !== activeAddress)
+      .length;
 
     // Compute the number of invites that this user can generate.
     const generableInvitesCount = 3;
