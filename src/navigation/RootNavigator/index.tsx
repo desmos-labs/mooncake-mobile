@@ -26,6 +26,7 @@ import BroadcastTxOnChain, { BroadcastTxParams } from 'screens/BroadcastTxOnChai
 import Community from 'screens/Community';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
+import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
 import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
 import ImportAccountSelectLedgerApp from 'screens/ImportAccountSelectLedgerApp';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
@@ -94,6 +95,7 @@ export type RootNavigatorParamList = {
   [ROUTES.WELCOME]: undefined;
   [ROUTES.SERVICE_AND_POLICY]: ServiceAndPolicyParams;
   [ROUTES.WELCOME_PAGE]: WelcomePageParams;
+  [ROUTES.FEE_GRANT_WAITING_SCREEN]: FeeGrantWaitingScreenParams;
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
@@ -305,6 +307,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
+      <Stack.Screen name={ROUTES.FEE_GRANT_WAITING_SCREEN} component={FeeGrantWaitingScreen} />
 
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}

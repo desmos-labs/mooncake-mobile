@@ -219,9 +219,9 @@ const useHooks = () => {
         setLoginFlowState({
           step: LoginFlowStep.WaitingFeeGrant,
         });
-        /*        navigate(ROUTES.FEE_GRANT_WAITING_SCREEN, {
+        navigate(ROUTES.FEE_GRANT_WAITING_SCREEN, {
           granted: false,
-        }); */
+        });
         setLoading(false);
       }
       if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
