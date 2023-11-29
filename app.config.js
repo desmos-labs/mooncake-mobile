@@ -90,10 +90,10 @@ export default {
 -keep public class com.bumptech.glide.integration.webp.WebpImage { *; }
 -keep public class com.bumptech.glide.integration.webp.WebpFrame { *; }
 -keep public class com.bumptech.glide.integration.webp.WebpBitmapFactory { *; }`,
-            "extraMavenRepos": [
-              // Extra maven repo to compile @notifee/react-native 
+            extraMavenRepos: [
+              // Extra maven repo to compile @notifee/react-native
               // Ref: https://github.com/invertase/notifee/issues/911#issuecomment-1822234807
-              "../../node_modules/@notifee/react-native/android/libs",
+              '../../node_modules/@notifee/react-native/android/libs',
             ],
           },
         },
