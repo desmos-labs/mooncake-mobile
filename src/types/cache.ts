@@ -197,9 +197,12 @@ export class MultipleUsersCache<T extends CacheableObject, C> {
     values: Record<string, T[]>,
     comparator: Comparator<T, C>,
   ): MultipleUsersCache<T, C> {
-    return Object.entries(values).reduce((previous, [key, cachedValues]) => {
-      return previous.add(key, cachedValues);
-    }, new MultipleUsersCache<T, C>({}, comparator));
+    return Object.entries(values).reduce(
+      (previous, [key, cachedValues]) => {
+        return previous.add(key, cachedValues);
+      },
+      new MultipleUsersCache<T, C>({}, comparator),
+    );
   }
 
   /**

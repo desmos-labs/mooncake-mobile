@@ -31,7 +31,7 @@ export const convertGraphQLSubspaceParams = (subspaceId: number, params: any) =>
           id: reaction.id,
           displayValue: reaction.display_value,
           shortHandCode: reaction.shorthand_code,
-        } as RegisteredReaction),
+        }) as RegisteredReaction,
     ),
     reportReasons: params.report_reasons.map(
       (reason: any) =>
@@ -39,7 +39,7 @@ export const convertGraphQLSubspaceParams = (subspaceId: number, params: any) =>
           id: reason.id,
           title: reason.title,
           description: reason.description,
-        } as ReportReason),
+        }) as ReportReason,
     ),
     tipsContractConfig: convertGraphQLTipsContractConfig(subspaceId, params.contracts),
   } as SubspaceParams;
