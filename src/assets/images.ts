@@ -183,3 +183,7 @@ export const postToCommentIcon = require('./images/homePostIcons/postToCommentIc
 export const postLikedIcon = require('./images/homePostIcons/postLikedIcon.png');
 export const postToLikeIcon = require('./images/homePostIcons/postToLikeIcon.png');
 export const postToTipIcon = require('./images/homePostIcons/postToTipIcon.png');
+
+// Checkbox
+export const uncheck_circle = require('./images/checkbox/uncheck_circle.png');
+export const check_circle = require('./images/checkbox/check_circle.png');

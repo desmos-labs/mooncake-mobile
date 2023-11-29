@@ -42,7 +42,6 @@ import MnemonicInput from 'screens/MnemonicInput';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
-import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
 import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
 import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
@@ -69,6 +68,7 @@ import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/Pr
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
+import ServiceAndPolicy, { ServiceAndPolicyParams } from 'screens/ServiceAndPolicy';
 import Settings from 'screens/Settings';
 import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
@@ -92,7 +92,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SIGNUP]: SignupParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
-  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
+  [ROUTES.SERVICE_AND_POLICY]: ServiceAndPolicyParams;
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
@@ -300,6 +300,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ROUTES.WELCOME} component={WelcomeBack} />
+      <Stack.Screen name={ROUTES.SERVICE_AND_POLICY} component={ServiceAndPolicy} />
 
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
@@ -453,7 +454,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
-        <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
         <Stack.Screen
           name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}

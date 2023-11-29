@@ -45,7 +45,7 @@ const lightTheme = extendTheme({
   roundness: 12,
   colors: {
     primary: '#FEB027',
-    background: '#F7F8FA',
+    background: '#FFF',
     surface: '#EFEFEF',
     accent: '#16CEEF',
     error: '#FD565F',

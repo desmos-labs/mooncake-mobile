@@ -1,47 +1,41 @@
-import React from 'react';
-import GetAccountAuthzGrants from 'services/graphql/queries/GetAccountAuthzGrants';
-import { useLazyQuery } from '@apollo/client';
-import { convertGraphQLAuthzGrant, convertGraphQLFeeGrant } from 'lib/GraphQLUtils/authorizations';
-import { useAppStateValue } from '@recoil/appState';
-import { GetAccountFeeGrantAllowance } from 'services/graphql/queries/GetAccountFeeGrantAllowance';
+import { useMemo } from 'react';
+import { useQuery } from '@apollo/client';
+import { convertGraphQLFeeGrant } from 'lib/GraphQLUtils';
+import GRANTER_ADDRESS from 'lib/grantsUtils';
+import GetAccountFeeGrantAllowance from 'services/graphql/queries/desmos/GetAccountFeeGrantAllowance';
 
 /**
  * Hook to get the fee grants and authz grants of a user's account.
  * must be fetched using the refetch function.
  */
-const useGetAuthorizationInformation = () => {
-  const butterConfig = useAppStateValue('butterConfig');
-  const apisAddress = butterConfig?.desmosAddress;
+const useGetAuthorizationInformation = (accountAddress: string) => {
+  // TODO replace with address from future configs
 
   // Get the queries to get the proper data
-  const [fetchFeeGrants] = useLazyQuery(GetAccountFeeGrantAllowance, { fetchPolicy: 'no-cache' });
-  const [fetchAuthzGrants] = useLazyQuery(GetAccountAuthzGrants, { fetchPolicy: 'no-cache' });
-
-  return React.useCallback(
-    async (accountAddress: string) => {
-      // Build the query options
-      const options = {
-        variables: {
-          granteeAddress: apisAddress,
-          granterAddress: accountAddress,
-        },
-      };
-
-      // Get the fee grant data
-      const { data: feeGrantData } = await fetchFeeGrants(options);
-      const feeGrants = ((feeGrantData?.fee_grants as any[]) ?? []).map(convertGraphQLFeeGrant);
-
-      // Get the authz data
-      const { data: authzGrantsData } = await fetchAuthzGrants(options);
-      const authzGrants = ((authzGrantsData?.grants as any[]) ?? []).map(convertGraphQLAuthzGrant);
-
-      return {
-        feeGrants,
-        authzGrants,
-      };
+  const {
+    data,
+    loading,
+    startPolling: startCheckingFeeGrants,
+    stopPolling: stopCheckingFeeGrants,
+  } = useQuery(GetAccountFeeGrantAllowance, {
+    variables: {
+      granteeAddress: accountAddress,
+      granterAddress: GRANTER_ADDRESS,
     },
-    [apisAddress, fetchAuthzGrants, fetchFeeGrants],
-  );
+    fetchPolicy: 'network-only',
+  });
+
+  const feeGrants = useMemo(() => {
+    if (!data) return [];
+    return ((data.fee_grants as any[]) ?? []).map(convertGraphQLFeeGrant);
+  }, [data]);
+
+  return {
+    startCheckingFeeGrants,
+    stopCheckingFeeGrants,
+    feeGrants,
+    loading,
+  };
 };
 
 export default useGetAuthorizationInformation;

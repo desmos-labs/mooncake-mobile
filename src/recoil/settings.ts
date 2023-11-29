@@ -1,11 +1,11 @@
-import React from 'react';
+import { GasPrice } from '@cosmjs/stargate';
 import { DesmosTestnet } from '@desmoslabs/desmjs/build/types/chains';
+import { activeAccountAddressState, useActiveAccountAddress } from '@recoil/accounts';
+import { findChainInfoByName } from 'lib/ChainsUtils';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import React from 'react';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AppSettings } from 'types/settings';
-import { findChainInfoByName } from 'lib/ChainsUtils';
-import { GasPrice } from '@cosmjs/stargate';
-import { activeAccountAddressState, useActiveAccountAddress } from '@recoil/accounts';
 
 /**
  * Default application settings
@@ -73,14 +73,15 @@ export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
   const activeAccountAddress = useActiveAccountAddress();
   const setSettings = useSetRecoilState(settingsAppState);
   return React.useCallback(
-    (setting: AppSettings[K] | ((value: AppSettings[K]) => AppSettings[K])) => {
+    (setting: AppSettings[K] | ((value: AppSettings[K]) => AppSettings[K]), address?: string) => {
       setSettings(currentSettings => {
-        if (!activeAccountAddress) {
+        if (!activeAccountAddress && !address) {
           throw new Error('Cannot set settings without active account');
         }
 
         // Get the settings only for the active address, or the default ones if not valid
-        const userSettings = currentSettings[activeAccountAddress] ?? DefaultAppSettings;
+        const userSettings =
+          currentSettings[activeAccountAddress ?? address!] ?? DefaultAppSettings;
 
         // Get the current and new setting values
         const currentValue = userSettings[settingKey];
@@ -100,7 +101,7 @@ export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
         // Update the application settings
         return {
           ...currentSettings,
-          [activeAccountAddress]: newUserSettings,
+          [activeAccountAddress ?? address!]: newUserSettings,
         };
       });
     },

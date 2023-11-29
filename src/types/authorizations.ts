@@ -1,5 +1,5 @@
 import { Coin } from '@cosmjs/stargate';
-import { AllowedMsgAllowanceTypeUrl, BasicAllowanceTypeUrl } from '@desmoslabs/desmjs';
+import { Feegrant } from '@desmoslabs/desmjs';
 
 export const UnsupportedMsgAllowanceTypeUrl = 'butter.v1.UnsupportedMsgAllowance';
 
@@ -19,7 +19,7 @@ export interface AuthzGrant {
 }
 
 export interface BasicAllowance {
-  typeUrl: typeof BasicAllowanceTypeUrl;
+  typeUrl: typeof Feegrant.v1beta1.BasicAllowanceTypeUrl;
   /**
    * Fee grant allowance expiration, if undefined
    * means without expiration.
@@ -32,7 +32,7 @@ export interface BasicAllowance {
 }
 
 export interface AllowedMsgAllowance {
-  typeUrl: typeof AllowedMsgAllowanceTypeUrl;
+  typeUrl: typeof Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl;
   /**
    * Nested basic allowance.
    */
@@ -67,6 +67,11 @@ export interface FeeGrant {
    * Fee grant allowance.
    */
   allowance: Allowance;
+  /**
+   * Address of the entity that we can use as granter while broadcasting
+   * a transaction.
+   */
+  readonly granterAddress: string;
 }
 
 /**

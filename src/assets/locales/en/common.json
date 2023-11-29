@@ -14,6 +14,7 @@
   "termsAndConditions": "Terms and Conditions",
   "privacyPolicy": "Privacy Policy",
   "retry": "Retry",
+  "accept": "Accept",
   "atLeastChar": "At least {{length}} characters",
   "atLeastLower": "At least 1 lowercase",
   "atLeastUpper": "At least 1 uppercase",

@@ -1,26 +1,21 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useSetSetting } from '@recoil/settings';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import { Formik, FormikHelpers } from 'formik';
+import { SecureStorageErrorType } from 'lib/SecureStorage/errors';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { useSetSetting } from '@recoil/settings';
 import useStyles from 'screens/SettingsEnableBiometrics/useStyles';
-import { useTheme } from 'native-base';
-import { SecureStorageErrorType } from 'lib/SecureStorage/errors';
-import {
-  FormValues,
-  useEnableBiometrics,
-  useInitialFormValues,
-  useValidationSchema,
-} from './hooks';
+import { FormValues, useInitialFormValues, useValidationSchema } from './hooks';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_ENABLE_BIOMETRICS>;
 

@@ -1,7 +1,7 @@
+import { baseSpacing } from 'config/theme/LightTheme';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
-import { useTheme } from 'native-base';
-import { baseSpacing } from 'config/theme/LightTheme';
 
 export type SpacingKey = keyof typeof baseSpacing;
 
@@ -21,7 +21,6 @@ const SpacingKeys: SpacingKey[] = ['xs', 's', 'm', 'l', 'xl'];
 /**
  * HOC that wraps a child component with optional padding to create space
  * between sibling components.
- * @deprecated Consider using the layout props from native-base components.
  */
 const Spacer = ({ children, ...rest }: Props) => {
   const theme = useTheme();

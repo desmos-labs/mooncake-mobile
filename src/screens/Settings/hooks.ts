@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import { useActiveAccount, useActiveAccountAddress } from '@recoil/accounts';
-import { deleteBiometricAuthorization } from 'lib/SecureStorage';
-import { BiometricAuthorizations } from 'types/settings';
-import ROUTES from 'navigation/routes';
-import { useSetSetting, useSetting } from '@recoil/settings';
+import { toHex } from '@cosmjs/encoding';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { getSupportedBiometryType } from 'react-native-keychain';
-import { useDeleteAuthToken } from 'services/axios';
-import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
-import { Linking } from 'react-native';
-import useUnlockWallet from 'hooks/useUnlockWallet';
-import isAccountWithPrivateKey from 'lib/AccountUtils/type';
-import { WalletWithPrivateKey } from 'types/wallet';
-import { toHex } from '@cosmjs/encoding';
+import { useActiveAccount, useActiveAccountAddress } from '@recoil/accounts';
+import { useSetting } from '@recoil/settings';
+import useRemoveAccount from 'hooks/accounts/useRemoveAccount';
 import useEnableOrDisableAuthorizations from 'hooks/authorizations/useEnableOrDisableAuthorizations';
 import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizations';
-import useRemoveAccount from 'hooks/accounts/useRemoveAccount';
+import useDisableBiometrics from 'hooks/biometrics/useDisableBiometrics';
+import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import isAccountWithPrivateKey from 'lib/AccountUtils/type';
 import sleep from 'lib/sleep';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Linking } from 'react-native';
+import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
+import { useDeleteAuthToken } from 'services/axios';
+import { WalletWithPrivateKey } from 'types/wallet';
 
 /**
  * Hook that provides a function to reveal the current active user private key
@@ -115,45 +114,32 @@ export const useChangePassword = () => {
  * biometrics.
  */
 export const useToggleBiometrics = () => {
+  const activeAddress = useActiveAccountAddress();
   const biometricsSetting = useSetting('biometrics');
-  const setBiometricsSetting = useSetSetting('biometrics');
   const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const [biometricsError, setBiometricsError] = React.useState<string>();
-  const [biometricsSupported, setBiometricsSupported] = React.useState(false);
+  const [biometricsSupported, setBiometricsSupported] = React.useState(true);
+  const unlockWalletWithBiometrics = useSetting('biometrics');
+  const enableBiometrics = useEnableBiometrics();
+  const disableBiometrics = useDisableBiometrics();
 
-  React.useEffect(() => {
-    (async () => {
-      try {
-        const supported = await getSupportedBiometryType();
-        if (supported) {
-          setBiometricsSupported(true);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-  }, []);
-
-  const toggleBiometrics = React.useCallback(async () => {
-    setBiometricsError(undefined);
-    if (biometricsSetting) {
-      const result = await deleteBiometricAuthorization(BiometricAuthorizations.UnlockWallet);
-      if (result.isOk()) {
-        setBiometricsSetting(false);
-      } else {
-        console.error('disable biometrics failed', result.error.message);
-        setBiometricsError(result.error.message);
-      }
+  const handleBiometricsToggle = React.useCallback(async () => {
+    /*    if (unlockWalletWithBiometrics) {
+      await disableBiometrics();
     } else {
-      navigator.navigate(ROUTES.SETTINGS_ENABLE_BIOMETRICS);
-    }
-  }, [biometricsSetting, navigator, setBiometricsSetting]);
+      const result = await unlockWallet({
+        forceRequestPassword: true,
+      });
+      if (result.isOk()) {
+        await enableBiometrics(result.value.password!, true, activeAddress!);
+      }
+    }*/
+  }, [activeAddress, disableBiometrics, enableBiometrics, unlockWalletWithBiometrics]);
 
   return {
     biometricsSupported,
     biometricsEnabled: biometricsSetting,
     biometricsError,
-    toggleBiometrics,
   };
 };
 
