@@ -98,12 +98,11 @@ const Onboarding = () => {
     } else {
       if (!loading) {
         setTourGuideStep({ login: LoginOnboardingStep.Completed });
-        /*        navigate(ROUTES.ONBOARDING_INTERESTS, {
-          account,
-          profile,
-          passwordManipulationMode,
-          requestFeeGrant,
-        }); */
+        navigate(ROUTES.PASSWORD_MANIPULATION, {
+          mode: params.passwordManipulationMode,
+          account: params.account,
+          profile: params.profile,
+        });
       }
     }
   }, [
