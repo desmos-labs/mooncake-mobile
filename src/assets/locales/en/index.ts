@@ -47,7 +47,6 @@ import forgotPassword from './forgotPassword.json';
 import activities from './activities.json';
 import selectLedgerApp from './selectLedgerApp.json';
 import broadcastTx from './broadcastTx.json';
-import invites from './invites.json';
 import onboarding from './onboarding.json';
 import operations from './operations.json';
 import ledgerScan from './ledgerScan.json';
@@ -109,7 +108,6 @@ const en = {
   grantsDetails,
   activities,
   broadcastTx,
-  invites,
   onboarding,
   operations,
   ledgerScan,

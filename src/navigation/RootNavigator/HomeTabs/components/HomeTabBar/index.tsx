@@ -1,12 +1,8 @@
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import { useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { butterflyLandingIcon, homeInviteIcon } from 'assets/images';
+import { butterflyLandingIcon } from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
@@ -24,8 +20,6 @@ import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsLi
 import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>;
-
 const ANIMATION_DURATION = 200;
 const SLIDE_ANIMATION_DURATION = 300;
 const ICON_OFFSET = 80;
@@ -37,7 +31,6 @@ const ICON_OFFSET = 80;
 const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
-  const { navigate } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const windowWidth = Dimensions.get('window').width;
 
@@ -48,7 +41,6 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
   const listState = usePostsListState();
   const setListState = useSetPostsListState();
 
-  const [rightIcon, setRightIcon] = useState<'invite' | 'cancel'>('invite');
   const [focused, setFocused] = useState(false);
 
   // -------------------------------------------------------------------------------------
@@ -71,13 +63,6 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
     return {
       width: searchBarWidth.value,
       transform: [{ translateX: xOffset.value }],
-    };
-  });
-
-  const inviteAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: inviteOpacity.value,
-      transform: [{ translateX: invitePosition.value }],
     };
   });
 
@@ -112,7 +97,6 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
       cancelPosition.value = withTiming(ICON_OFFSET, {
         duration: SLIDE_ANIMATION_DURATION,
       });
-      setTimeout(() => setRightIcon('invite'), ANIMATION_DURATION);
       inviteOpacity.value = withDelay(ANIMATION_DURATION, withTiming(1));
       invitePosition.value = withDelay(SLIDE_ANIMATION_DURATION, withTiming(0));
     } else {
@@ -120,7 +104,6 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
       invitePosition.value = withTiming(ICON_OFFSET, {
         duration: SLIDE_ANIMATION_DURATION,
       });
-      setTimeout(() => setRightIcon('cancel'), ANIMATION_DURATION);
       cancelOpacity.value = withDelay(ANIMATION_DURATION, withTiming(1));
       cancelPosition.value = withDelay(SLIDE_ANIMATION_DURATION, withTiming(0));
     }
@@ -175,25 +158,15 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
           />
         </Animated.View>
 
-        {rightIcon === 'invite' ? (
-          <Animated.View style={[styles.inviteIconContainer, inviteAnimatedStyle]}>
-            <ImageButton
-              style={styles.rightButton}
-              image={homeInviteIcon}
-              onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
-            />
-          </Animated.View>
-        ) : (
-          <Animated.View style={[styles.cancelIconContainer, cancelAnimatedStyle]}>
-            <TouchableOpacity
-              onPress={() => {
-                setListState({ ...listState, searchBarFocused: false });
-                setFocused(false);
-              }}>
-              <Typography.Body6>Cancel</Typography.Body6>
-            </TouchableOpacity>
-          </Animated.View>
-        )}
+        <Animated.View style={[styles.cancelIconContainer, cancelAnimatedStyle]}>
+          <TouchableOpacity
+            onPress={() => {
+              setListState({ ...listState, searchBarFocused: false });
+              setFocused(false);
+            }}>
+            <Typography.Body6>Cancel</Typography.Body6>
+          </TouchableOpacity>
+        </Animated.View>
       </Animated.View>
 
       <Animated.View style={[styles.tabContainer, typeTabAnimatedStyle]}>

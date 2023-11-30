@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useAppStateValue } from '@recoil/appState';
 import usePerformLogin from 'hooks/apis/usePerformLogin';
-import useAcceptInvite from 'hooks/invites/useAcceptInvite';
 import { err, ok, Result } from 'neverthrow';
 import { AccountWithWallet } from 'types/account';
 import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
-import useTrackInviteRedeemed from 'hooks/analytics/useTrackInviteRedeemed';
 
 interface FormValues {
   readonly newPassword: string;
@@ -51,10 +49,8 @@ const usePerformSignUp = (account: AccountWithWallet) => {
   const [status, setStatus] = useState<SignUpStatus>(SignUpStatus.UNDEFINED);
   const appInviteCode = useAppStateValue('inviteCode');
   const performLogin = usePerformLogin();
-  const acceptInvite = useAcceptInvite();
   const storeAccount = useStoreAccount();
   const setActiveAccountAddress = useSetActiveAccountAddress();
-  const trackInviteRedeemed = useTrackInviteRedeemed();
 
   const performSignUp = React.useCallback(
     async (values: FormValues): Promise<Result<SignUpSuccess, Error>> => {
@@ -74,14 +70,7 @@ const usePerformSignUp = (account: AccountWithWallet) => {
       }
 
       // Accept the invitation
-      setStatus(SignUpStatus.ACCEPTING_INVITE);
-      const inviteResult = await acceptInvite(account.account.address, inviteCode);
-      if (inviteResult.isErr()) {
-        setStatus(SignUpStatus.DONE);
-        return err(inviteResult.error);
-      } else {
-        await trackInviteRedeemed(inviteCode);
-      }
+      setStatus(SignUpStatus.DONE);
 
       // Save the account locally
       const result = await storeAccount(account, values.newPassword);
@@ -96,15 +85,7 @@ const usePerformSignUp = (account: AccountWithWallet) => {
       setStatus(SignUpStatus.DONE);
       return ok({ account } as SignUpSuccess);
     },
-    [
-      acceptInvite,
-      account,
-      appInviteCode,
-      performLogin,
-      setActiveAccountAddress,
-      storeAccount,
-      trackInviteRedeemed,
-    ],
+    [account, appInviteCode, performLogin, setActiveAccountAddress, storeAccount],
   );
 
   return {

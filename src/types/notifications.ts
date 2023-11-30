@@ -18,8 +18,6 @@ export enum NotificationType {
   ReactionPost = 'reaction_post',
   ReactionComment = 'reaction_comment',
   ReactionReply = 'reaction_reply',
-  InviteClaimed = 'invite_claimed',
-  InviteUnlocked = 'invite_unlocked',
 }
 
 export interface BaseNotificationData {
@@ -107,20 +105,6 @@ export interface FollowNotificationData extends SocialNotificationData {
   readonly userAddress: string;
 }
 
-// --------------------------------------------
-// --- Invites
-// --------------------------------------------
-
-export interface InviteClaimedNotificationData extends SocialNotificationData {
-  readonly type: NotificationType.InviteClaimed;
-  readonly inviterAddress: string;
-  readonly claimerAddress: string;
-}
-
-export interface InviteUnlockedNotificationData extends SocialNotificationData {
-  readonly type: NotificationType.InviteUnlocked;
-}
-
 export type NotificationData =
   | TransactionSuccessNotificationData
   | TransactionFailNotificationData
@@ -129,9 +113,7 @@ export type NotificationData =
   | PostReactionNotificationData
   | CommentReactionNotificationData
   | ReplyReactionNotificationData
-  | FollowNotificationData
-  | InviteClaimedNotificationData
-  | InviteUnlockedNotificationData;
+  | FollowNotificationData;
 
 export function isTransactionNotification(data: unknown): data is TransactionNotificationData {
   const { type } = data as TransactionNotificationData;
@@ -266,35 +248,10 @@ export interface CompleteFollowNotification
   user: DesmosProfile | undefined;
 }
 
-export interface CompleteInviteClaimedNotification
-  extends CompleteNotificationData,
-    InviteClaimedNotificationData {
-  type: NotificationType.InviteClaimed;
-  /**
-   * User that has sent the invite.
-   * This is going to be `undefined` if the user has deleted their profile in the meanwhile.
-   */
-  inviter: DesmosProfile | undefined;
-
-  /**
-   * User that has claimed the invite.
-   * This is going to be `undefined` if the user has deleted their profile in the meanwhile.
-   */
-  claimer: DesmosProfile | undefined;
-}
-
-export interface CompleteInviteUnlockedNotification
-  extends CompleteNotificationData,
-    InviteUnlockedNotificationData {
-  type: NotificationType.InviteUnlocked;
-}
-
 export type CompleteNotification =
   | CompleteCommentNotification
   | CompleteReplyNotification
   | CompletePostReactionNotification
   | CompleteCommentReactionNotification
   | CompleteReplyReactionNotification
-  | CompleteFollowNotification
-  | CompleteInviteClaimedNotification
-  | CompleteInviteUnlockedNotification;
+  | CompleteFollowNotification;

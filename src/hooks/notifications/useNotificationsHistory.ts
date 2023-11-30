@@ -3,8 +3,6 @@ import {
   CompleteCommentNotification,
   CompleteCommentReactionNotification,
   CompleteFollowNotification,
-  CompleteInviteClaimedNotification,
-  CompleteInviteUnlockedNotification,
   CompleteNotification,
   CompletePostReactionNotification,
   CompleteReplyNotification,
@@ -118,21 +116,6 @@ const useGetCompleteData = () => {
             user: await getProfile(data.userAddress),
           } as CompleteFollowNotification;
 
-        case NotificationType.InviteClaimed:
-          return {
-            ...notification,
-            ...data,
-            type: NotificationType.InviteClaimed,
-            inviter: await getProfile(data.inviterAddress),
-            claimer: await getProfile(data.claimerAddress),
-          } as CompleteInviteClaimedNotification;
-
-        case NotificationType.InviteUnlocked:
-          return {
-            ...notification,
-            ...data,
-            type: NotificationType.InviteUnlocked,
-          } as CompleteInviteUnlockedNotification;
         default:
           return undefined;
       }

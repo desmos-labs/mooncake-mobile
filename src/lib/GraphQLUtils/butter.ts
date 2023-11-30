@@ -14,5 +14,4 @@ export const convertGraphQLButterConfig = (config: GqlButterConfig): ButterConfi
     channel: config.ibc.channel,
     port: config.ibc.port,
   },
-  invites: {},
 });

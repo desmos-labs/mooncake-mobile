@@ -10,9 +10,8 @@ import { resetSecureStorage } from 'lib/SecureStorage';
 import { Box, HStack, VStack } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
-import AcceptInvite from 'services/axios/requests/AcceptInvite';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -50,7 +49,6 @@ const routesToRender = [
   // ROUTES.FOLLOWING_AND_FOLLOWERS,
   // ROUTES.ADD_PROFILE,
   ROUTES.SETTINGS,
-  ROUTES.SETTINGS_INVITES,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
@@ -84,23 +82,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
 
     toast.newPost();
   };
-
-  const acceptInvite = useCallback(async (code: string) => {
-    const result = await AcceptInvite(code);
-    if (result.isErr()) {
-      Alert.alert('Accept invite error', result.error.message);
-    } else {
-      Alert.alert('Accept invite tx hash', result.value.txHash);
-    }
-  }, []);
-
-  const redeemAnInvite = useCallback(async () => {
-    Alert.prompt('Insert invite code', '', async invite => {
-      await acceptInvite(invite).catch(e => {
-        Alert.alert('Error', e.response.data);
-      });
-    });
-  }, [acceptInvite]);
 
   const renderItem = ({ item }: any) => {
     return (
@@ -166,9 +147,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               Show toast
             </Button>
             <Spacer paddingVertical={4} />
-            <Button onPress={redeemAnInvite} size={32}>
-              Accept invite
-            </Button>
           </VStack>
           <Spacer paddingHorizontal={4} />
           <VStack flex={0.5}>

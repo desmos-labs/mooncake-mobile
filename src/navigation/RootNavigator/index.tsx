@@ -32,12 +32,10 @@ import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import ImportAccountSelectProfile, {
   SelectAccountParamList,
 } from 'screens/ImportAccountSelectProfile';
-import Invites from 'screens/Invites';
 import Landing, { LandingParams } from 'screens/Landing';
 import Login, { LoginParams } from 'screens/Login';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
-import ManageInvites from 'screens/ManageInvites';
 import MnemonicInput from 'screens/MnemonicInput';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
@@ -149,7 +147,6 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.SETTINGS_SHOW_PRIVATE_KEY]: ShowPrivateKeyScreenParams;
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
-  [ROUTES.SETTINGS_INVITES]: undefined;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
   [ROUTES.BLOCKED_USERS]: undefined;
 
@@ -210,7 +207,6 @@ export type RootNavigatorParamList = {
   // --- INVITE SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.MANAGE_INVITES]: undefined;
   [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
   // -------------------------------------------------------------------------------------
@@ -361,7 +357,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen name={ROUTES.SETTINGS_SHOW_PRIVATE_KEY} component={ShowPrivateKey} />
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
-      <Stack.Screen name={ROUTES.SETTINGS_INVITES} component={Invites} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
 
@@ -464,12 +459,6 @@ const RootNavigator = () => {
           component={BackupPhraseBottomModal}
         />
       </Stack.Group>
-
-      {/* ---------------------- */}
-      {/* --- INVITE SCREENS --- */}
-      {/* ---------------------- */}
-
-      <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
 
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
