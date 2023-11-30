@@ -1,6 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
@@ -15,8 +12,6 @@ import { DesmosProfile } from 'types/desmos';
  * clicks on a notification that is received from the server.
  */
 const useHandleNotificationPressEvent = () => {
-  const { navigate } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
-
   const profile = useActiveProfile();
 
   // Navigation hooks
@@ -62,19 +57,11 @@ const useHandleNotificationPressEvent = () => {
           } as DesmosProfile);
           break;
 
-        case NotificationType.InviteClaimed:
-          navigate(ROUTES.MANAGE_INVITES);
-          break;
-
-        case NotificationType.InviteUnlocked:
-          navigate(ROUTES.SETTINGS_INVITES);
-          break;
-
         default:
           Alert.alert('Unmapped notification handling');
       }
     },
-    [navigate, navigateToFollowage, navigateToPost, profile],
+    [navigateToFollowage, navigateToPost, profile],
   );
 };
 

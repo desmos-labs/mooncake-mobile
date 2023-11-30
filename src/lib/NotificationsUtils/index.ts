@@ -2,8 +2,6 @@ import {
   CommentNotificationData,
   CommentReactionNotificationData,
   FollowNotificationData,
-  InviteClaimedNotificationData,
-  InviteUnlockedNotificationData,
   NotificationData,
   NotificationType,
   PostReactionNotificationData,
@@ -40,10 +38,6 @@ interface ReceivedNotificationData {
 
   // Relationships
   readonly relationship_creator: string | undefined;
-
-  // Invites
-  readonly inviter_address: string | undefined;
-  readonly claimer_address: string | undefined;
 }
 
 /**
@@ -70,9 +64,6 @@ const convertRemoteMessage = (data: any): ReceivedNotificationData => {
     reaction_author: data.reaction_author as string,
 
     relationship_creator: data.relationship_creator as string,
-
-    inviter_address: data.inviter_address as string,
-    claimer_address: data.claimer_address as string,
   };
 };
 /**
@@ -160,22 +151,6 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         userAddress: data?.relationship_creator,
       } as FollowNotificationData;
-
-    case NotificationType.InviteClaimed:
-      return {
-        type: NotificationType.InviteClaimed,
-        title: data.notification_title,
-        body: data.notification_body,
-        inviterAddress: data.inviter_address,
-        claimerAddress: data.claimer_address,
-      } as InviteClaimedNotificationData;
-
-    case NotificationType.InviteUnlocked:
-      return {
-        type: NotificationType.InviteUnlocked,
-        title: data.notification_title,
-        body: data.notification_body,
-      } as InviteUnlockedNotificationData;
 
     default:
       return undefined;

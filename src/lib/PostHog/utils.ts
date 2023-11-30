@@ -39,15 +39,3 @@ export const capturePostHogTransactionEvent = (
     MsgType: transaction.messages.map(msg => msg.typeUrl),
   });
 };
-
-/**
- * Captures the event of a transaction being broadcasted.
- * @param posthog The PostHog instance to use
- * @param inviteCode The invite code that has been used
- */
-export const capturePostHogInviteRedeemEvent = (posthog: PostHog, inviteCode: string) => {
-  posthog.capture('Invite Redeemed', {
-    InviteCode: inviteCode,
-    RedeemTime: new Date().toISOString(),
-  });
-};

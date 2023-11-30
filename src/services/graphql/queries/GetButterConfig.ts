@@ -18,7 +18,6 @@ export interface GqlButterConfig {
     port: string;
     channel: string;
   };
-  invites: {};
 }
 
 export interface GqlButterConfigData {
