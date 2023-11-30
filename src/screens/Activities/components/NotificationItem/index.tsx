@@ -10,7 +10,6 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 
@@ -30,8 +29,6 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
-
-  const activeAccountAddress = useActiveAccountAddress();
 
   const navigateToProfile = useNavigateToProfile();
   const handleNotificationPressEvent = useHandleNotificationPressEvent();
@@ -57,16 +54,10 @@ const NotificationItem = (props: NotificationComponentProps) => {
         return [notification.replyAuthorAddress, notification.reply?.author];
       case NotificationType.Follow:
         return [notification.userAddress, notification.user];
-      case NotificationType.InviteClaimed: {
-        if (notification.claimerAddress === activeAccountAddress) {
-          return [notification.inviterAddress, notification.inviter];
-        }
-        return [notification.claimerAddress, notification.claimer];
-      }
       default:
         return [undefined, undefined];
     }
-  }, [activeAccountAddress, notification]);
+  }, [notification]);
 
   const post = useMemo(() => {
     switch (notification.type) {
@@ -99,18 +90,10 @@ const NotificationItem = (props: NotificationComponentProps) => {
         return t('commented reply');
       case NotificationType.Follow:
         return t('followed you');
-      case NotificationType.InviteClaimed: {
-        if (notification.claimerAddress === activeAccountAddress) {
-          return t('invited you to join Butter');
-        }
-        return t('claimed your invite');
-      }
-      case NotificationType.InviteUnlocked:
-        return t('unlocked a new invite');
       default:
         return 'Unsupported notification type';
     }
-  }, [activeAccountAddress, notification, t]);
+  }, [notification, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Actions

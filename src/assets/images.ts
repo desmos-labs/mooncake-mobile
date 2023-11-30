@@ -102,17 +102,6 @@ export const importPhrase = require('./images/importPhrase.png');
 
 export const connectLedger = require('./images/connectLedger.png');
 
-export const invitesBanner = require('./images/invites/invitesLogo.png');
-export const invitesBanner2 = require('./images/invites/invitesLogo2.png');
-
-export const inviteUserIcon = require('./images/invites/inviteUserIcon.png');
-
-export const invite1 = require('./images/invites/invite1.png');
-export const invite2 = require('./images/invites/invite2.png');
-export const invite3 = require('./images/invites/invite3.png');
-export const invite4 = require('./images/invites/invite4.png');
-export const emptyInvitesImage = require('./images/invites/emptyInvites.png');
-
 export const onboarding1 = require('./images/onboarding/onboarding1.png');
 export const onboarding2 = require('./images/onboarding/onboarding2.png');
 export const onboarding3 = require('./images/onboarding/onboarding3.png');

@@ -15,7 +15,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, TextInput, View } from 'react-native';
 import { Box, useTheme } from 'native-base';
 import Animated, {
   interpolate,
@@ -29,8 +29,6 @@ import { AccountWithWallet } from 'types/account';
 import StyledSpinner from 'components/StyledSpinner';
 import * as Yup from 'yup';
 import DTextInput from 'components/DTextInput';
-import ImageButton from 'components/ImageButton';
-import { infoIcon } from 'assets/images';
 import { SignUpStatus, useInitialFormValues, useSubmitForm } from './hooks';
 import useStyles from './useStyles';
 
@@ -49,7 +47,7 @@ export interface SignupParams {
  */
 const Signup = () => {
   const { t } = useTranslation('passwordManipulation');
-  const { reset, goBack, navigate } = useNavigation<NavProps['navigation']>();
+  const { reset, goBack } = useNavigation<NavProps['navigation']>();
   const {
     params: { account },
   } = useRoute<NavProps['route']>();
@@ -103,18 +101,6 @@ const Signup = () => {
     },
     [toast],
   );
-
-  const openInviteInfoModal = useCallback(() => {
-    navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('signup:invite info title'),
-      subtitle: t('signup:invite info body'),
-      subtitleStyle: styles.inviteInfoBody,
-      primaryButtonLabel: t('signup:join butter discord'),
-      onPressPrimary: () => {
-        Linking.openURL('https://discord.gg/KsdUmerM5U');
-      },
-    });
-  }, [navigate, styles.inviteInfoBody, t]);
 
   // Hook that is used in order to submit the form
   const { handleFormSubmit, signUpStatus } = useSubmitForm(account, onSuccess, onError);
@@ -245,14 +231,6 @@ const Signup = () => {
                     {errors.confirmPassword}
                   </Typography.Caption1>
                 )}
-                <Box flexDir="row" style={styles.bottomLabel}>
-                  <Typography.Subtitle2>{t('signup:invite code')}</Typography.Subtitle2>
-                  <ImageButton
-                    image={infoIcon}
-                    style={styles.infoIcon}
-                    onPress={openInviteInfoModal}
-                  />
-                </Box>
 
                 <DTextInput
                   onFocus={() => {

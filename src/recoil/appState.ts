@@ -29,10 +29,6 @@ export interface AppState {
    */
   readonly subspaceId: number;
   /**
-   * Invitation code that the user has used in order to join the application.
-   */
-  readonly inviteCode: string | undefined;
-  /**
    * User timezone.
    */
   readonly currentTimezone: string;
@@ -63,7 +59,6 @@ const DefaultAppState: AppState = {
   bearerToken: '',
   appActiveState: 'unknown',
   subspaceId: parseFloat(EnvConfig.APP_SUBSPACE_ID),
-  inviteCode: undefined,
   currentTimezone: '',
   subspaceParams: {
     registeredReactions: [],

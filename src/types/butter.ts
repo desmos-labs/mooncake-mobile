@@ -11,9 +11,4 @@ export interface ButterConfig {
     readonly port: string;
     readonly channel: string;
   };
-
-  /**
-   * Invites configuration.
-   */
-  readonly invites: {};
 }
