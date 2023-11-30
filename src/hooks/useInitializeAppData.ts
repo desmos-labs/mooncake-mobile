@@ -1,12 +1,12 @@
+import { useSetAppStateValue } from '@recoil/appState';
+import useInitializeAxios from 'hooks/axios/useInitializeAxios';
+import useButterConfig from 'hooks/config/useButterConfig';
+import useSubspaceParams from 'hooks/config/useSubspaceParams';
+import usePostsParams from 'hooks/posts/usePostsParams';
+import useProfileParams from 'hooks/profiles/useProfileParams';
+import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransactions';
 import { useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
-import { useInitializeAxios } from 'services/axios';
-import useButterConfig from 'hooks/config/useButterConfig';
-import useProfileParams from 'hooks/profiles/useProfileParams';
-import usePostsParams from 'hooks/posts/usePostsParams';
-import useSubspaceParams from 'hooks/config/useSubspaceParams';
-import { useSetAppStateValue } from '@recoil/appState';
-import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransactions';
 
 /**
  * Hook that allows initializing the application data.

@@ -1,33 +1,24 @@
+import { Coin, coin } from '@cosmjs/stargate';
+import { Feegrant } from '@desmoslabs/desmjs';
 import {
   Allowance,
-  AuthzGrant,
   BasicAllowance,
   FeeGrant,
   UnsupportedMsgAllowanceTypeUrl,
 } from 'types/authorizations';
 import { GqlAllowance, GqlFeeGrant } from 'services/graphql/queries/GetAccountFeeGrantAllowance';
-import { coin } from '@cosmjs/stargate';
-import { AllowedMsgAllowanceTypeUrl, BasicAllowanceTypeUrl } from '@desmoslabs/desmjs';
-import { GQLAuthzGrant } from 'services/graphql/queries/GetAccountAuthzGrants';
-
-export const convertGraphQLAuthzGrant = (grant: GQLAuthzGrant): AuthzGrant => {
-  return {
-    msgTypeUrl: grant.msg_type_url,
-    expiration: new Date(`${grant.expiration}Z`),
-  };
-};
 
 export const convertGraphQLAllowance = (data: GqlAllowance): Allowance => {
   switch (data['@type']) {
-    case BasicAllowanceTypeUrl:
+    case Feegrant.v1beta1.BasicAllowanceTypeUrl:
       return {
-        typeUrl: BasicAllowanceTypeUrl,
-        spendingLimit: data.spend_limit.map(c => coin(c.amount, c.denom)),
+        typeUrl: Feegrant.v1beta1.BasicAllowanceTypeUrl,
+        spendingLimit: data.spend_limit.map((c: Coin) => coin(c.amount, c.denom)),
         expiration: data.expiration ? new Date(data.expiration) : undefined,
       };
-    case AllowedMsgAllowanceTypeUrl:
+    case Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl:
       return {
-        typeUrl: AllowedMsgAllowanceTypeUrl,
+        typeUrl: Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl,
         allowedMessages: data.allowed_messages,
         allowance: convertGraphQLAllowance(data.allowance) as BasicAllowance,
       };
@@ -42,7 +33,10 @@ export const convertGraphQLAllowance = (data: GqlAllowance): Allowance => {
 
 export const convertGraphQLFeeGrant = (data: GqlFeeGrant): FeeGrant => {
   return {
-    expirationDate: data.expiration_date ? new Date(`${data.expiration_date}Z`) : undefined,
+    expirationDate: data.allowance.expiration
+      ? new Date(`${data.allowance.expiration}Z`)
+      : undefined,
     allowance: convertGraphQLAllowance(data.allowance),
+    granterAddress: data.granterAddress,
   };
 };

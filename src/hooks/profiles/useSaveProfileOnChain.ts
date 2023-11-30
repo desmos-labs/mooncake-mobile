@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AccountWithWallet } from 'types/account';
 import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
-import { DoNotModify, MsgSaveProfileEncodeObject, MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
+import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
 import { err, Result } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
 import { Wallet } from 'types/wallet';
@@ -59,8 +59,8 @@ const useSaveProfileOnChain = () => {
 
       // Build the message to save the profile on-chain
       const { dTag, nickname, bio } = params;
-      const msgSaveProfile: MsgSaveProfileEncodeObject = {
-        typeUrl: MsgSaveProfileTypeUrl,
+      const msgSaveProfile: Profiles.v3.MsgSaveProfileEncodeObject = {
+        typeUrl: Profiles.v3.MsgSaveProfileTypeUrl,
         value: {
           creator: wallet?.address ?? activeAccountAddress,
           dtag: replaceUndefined(dTag),

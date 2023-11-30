@@ -5,19 +5,7 @@ import useBroadcastTxWithApi from 'hooks/transactions/useBroadcastTxWithApi';
 import { err, ok, Result } from 'neverthrow';
 import { isCanceledOperationError, isCentralizedApiNotGrantedError } from 'types/error';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import {
-  MsgAddReactionTypeUrl,
-  MsgCreatePostTypeUrl,
-  MsgCreateRelationshipTypeUrl,
-  MsgCreateReportTypeUrl,
-  MsgCreateSubspaceTypeUrl,
-  MsgDeletePostTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
-  MsgDeleteSubspaceTypeUrl,
-  MsgRemoveReactionTypeUrl,
-  MsgBlockUserTypeUrl,
-  MsgUnblockUserTypeUrl,
-} from '@desmoslabs/desmjs';
+import { Posts, Relationships, Reactions, Subspaces, Reports } from '@desmoslabs/desmjs';
 import { useStoredProfiles } from '@recoil/profiles';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import usePromptRequestSaveProfile from 'hooks/transactions/usePrompRequestSaveProfile';
@@ -49,22 +37,22 @@ export interface SuccessfulBroadcast {
 // List of messages that requires a profile to be executed.
 const MsgsThatRequiresProfile = [
   // Post
-  MsgCreatePostTypeUrl,
-  MsgDeletePostTypeUrl,
+  Posts.v3.MsgCreatePostTypeUrl,
+  Posts.v3.MsgDeletePostTypeUrl,
   // Reactions
-  MsgAddReactionTypeUrl,
-  MsgRemoveReactionTypeUrl,
+  Reactions.v1.MsgAddReactionTypeUrl,
+  Reactions.v1.MsgRemoveReactionTypeUrl,
   // Subspace management
-  MsgCreateSubspaceTypeUrl,
-  MsgDeleteSubspaceTypeUrl,
+  Subspaces.v3.MsgCreateSubspaceTypeUrl,
+  Subspaces.v3.MsgDeleteSubspaceTypeUrl,
   // Report
-  MsgCreateReportTypeUrl,
+  Reports.v1.MsgCreateReportTypeUrl,
   // Relationships
-  MsgCreateRelationshipTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
+  Relationships.v1.MsgCreateRelationshipTypeUrl,
+  Relationships.v1.MsgDeleteRelationshipTypeUrl,
   // Block/unblock
-  MsgBlockUserTypeUrl,
-  MsgUnblockUserTypeUrl,
+  Relationships.v1.MsgBlockUserTypeUrl,
+  Relationships.v1.MsgUnblockUserTypeUrl,
 ];
 
 /**

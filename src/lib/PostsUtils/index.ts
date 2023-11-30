@@ -4,13 +4,10 @@ import {
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {
-  mediaToAny,
-  MsgCreatePostEncodeObject,
-  MsgCreatePostTypeUrl,
-} from '@desmoslabs/desmjs/build/modules/posts/v3';
+import { Posts } from '@desmoslabs/desmjs';
 import Long from 'long';
 import { Post, PostAttachment, PostAttachmentType, PostReference, PostStatus } from 'types/posts';
+import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v3/msgs';
 
 /**
  * Gets the conversation id to be used when creating a post.
@@ -34,7 +31,7 @@ export const getConversationId = (parent?: Post): number => {
 const convertPostAttachment = (attachment: PostAttachment): Any => {
   switch (attachment.content.type) {
     case PostAttachmentType.MEDIA:
-      return mediaToAny({
+      return Posts.v3.mediaToAny({
         uri: attachment.content.uri,
         mimeType: attachment.content.mimeType,
       } as Media);
@@ -56,10 +53,10 @@ const convertPostReference = (reference: PostReference): DesmJSPostReference => 
  * Converts the given {@param post} into a {@link MsgCreatePostEncodeObject} object
  * that can be used to create a transaction.
  */
-export const convertPostToMsgCreatePost = (post: Post): MsgCreatePostEncodeObject => {
+export const convertPostToMsgCreatePost = (post: Post): Posts.v3.MsgCreatePostEncodeObject => {
   return {
-    typeUrl: MsgCreatePostTypeUrl,
-    value: {
+    typeUrl: Posts.v3.MsgCreatePostTypeUrl,
+    value: MsgCreatePost.fromPartial({
       subspaceId: Long.fromNumber(post.subspaceId),
       sectionId: post.sectionId,
       externalId: post.externalId,
@@ -71,8 +68,8 @@ export const convertPostToMsgCreatePost = (post: Post): MsgCreatePostEncodeObjec
       conversationId: Long.fromNumber(post.conversationId),
       replySettings: post.replySettings,
       referencedPosts: post.references.map(convertPostReference),
-    },
-  } as MsgCreatePostEncodeObject;
+    }),
+  } as Posts.v3.MsgCreatePostEncodeObject;
 };
 
 /**

@@ -5,7 +5,7 @@ export enum MMKVKEYS {
   // Application data
   APP_STATE = 'APP_STATE',
   APP_SETTINGS = 'APP_SETTINGS',
-  BUTTER_CONFIG = 'BUTTER_CONFIG',
+  LOGIN_FLOW_STATE = 'LOGIN_FLOW_STATE',
   DESMOS_CONFIG = 'DESMOS_CONFIG',
 
   // User data
@@ -28,6 +28,9 @@ export enum MMKVKEYS {
 
   // Key used to store the permissions request count.
   PERMISSIONS_REQUEST_COUNT = 'PERMISSIONS_REQUEST_COUNT',
+
+  // Tour guide
+  TOUR_GUIDE = 'TOUR_GUIDE',
 }
 
 const MMKVStorage = new MMKV({

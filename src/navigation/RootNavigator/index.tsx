@@ -26,6 +26,7 @@ import BroadcastTxOnChain, { BroadcastTxParams } from 'screens/BroadcastTxOnChai
 import Community from 'screens/Community';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
+import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
 import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
 import ImportAccountSelectLedgerApp from 'screens/ImportAccountSelectLedgerApp';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
@@ -40,7 +41,6 @@ import MnemonicInput from 'screens/MnemonicInput';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
-import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
 import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
 import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
@@ -67,12 +67,13 @@ import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/Pr
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
+import ServiceAndPolicy, { ServiceAndPolicyParams } from 'screens/ServiceAndPolicy';
 import Settings from 'screens/Settings';
 import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
 import Signup, { SignupParams } from 'screens/Signup';
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
-import WelcomeBack from 'screens/WelcomeBack';
+import WelcomePage, { WelcomePageParams } from 'screens/WelcomeScreen';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -90,7 +91,9 @@ export type RootNavigatorParamList = {
   [ROUTES.SIGNUP]: SignupParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
-  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
+  [ROUTES.SERVICE_AND_POLICY]: ServiceAndPolicyParams;
+  [ROUTES.WELCOME_PAGE]: WelcomePageParams;
+  [ROUTES.FEE_GRANT_WAITING_SCREEN]: FeeGrantWaitingScreenParams;
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
@@ -295,10 +298,12 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
-      <Stack.Screen name={ROUTES.WELCOME} component={WelcomeBack} />
+      <Stack.Screen name={ROUTES.SERVICE_AND_POLICY} component={ServiceAndPolicy} />
 
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
+      <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
+      <Stack.Screen name={ROUTES.FEE_GRANT_WAITING_SCREEN} component={FeeGrantWaitingScreen} />
 
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}
@@ -448,7 +453,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
-        <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
         <Stack.Screen
           name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}

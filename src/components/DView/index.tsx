@@ -1,4 +1,5 @@
 import LoadingOverlay from 'components/LoadingOverlay';
+import CommonStyles from 'config/theme/CommonStyles';
 import React, { ReactElement, useCallback } from 'react';
 import {
   ColorValue,
@@ -10,9 +11,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { Edge, SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context';
-import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type Props = SafeAreaViewProps & {
@@ -94,7 +94,7 @@ const DView: React.FC<Props> = props => {
             <ImageBackground style={styles.background} source={backgroundImage} />
           )}
           {topBar}
-          <Animated.View entering={FadeIn.duration(250)} style={[styles.content, style]}>
+          <Animated.View style={[styles.content, style]}>
             {scrollable ? (
               <ScrollView
                 refreshControl={

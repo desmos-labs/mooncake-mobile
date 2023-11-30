@@ -1,6 +1,6 @@
 import React from 'react';
 import { TwitterTweet, TwitterUser } from 'types/twitter';
-import { MsgLinkApplicationEncodeObject, MsgLinkApplicationTypeUrl } from '@desmoslabs/desmjs';
+import { Profiles } from '@desmoslabs/desmjs';
 import Long from 'long';
 import useButterConfig from 'hooks/config/useButterConfig';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -32,8 +32,8 @@ const useConnectTwitter = () => {
       const verificationDataHex = Buffer.from(JSON.stringify(verificationData)).toString('hex');
 
       // Build the message to link Twitter
-      const msg: MsgLinkApplicationEncodeObject = {
-        typeUrl: MsgLinkApplicationTypeUrl,
+      const msg: Profiles.v3.MsgLinkApplicationEncodeObject = {
+        typeUrl: Profiles.v3.MsgLinkApplicationTypeUrl,
         value: {
           sender: activeAccountAddress,
           linkData: {

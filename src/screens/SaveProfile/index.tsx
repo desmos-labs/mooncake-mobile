@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import { backButton, defaultBanner, defaultProfilePic, editProfilePic } from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -6,23 +8,21 @@ import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
 import { Formik } from 'formik';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
+import useProfileParams from 'hooks/profiles/useProfileParams';
+import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
+import useImageFromDevice from 'hooks/useImageFromDevice';
+import { asPictureAsset } from 'lib/ProfileUtils';
+import { useTheme } from 'native-base';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
-import { useTheme } from 'native-base';
-import { DesmosProfile } from 'types/desmos';
-import { AccountWithWallet } from 'types/account';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import { useNavigation } from '@react-navigation/native';
-import useImageFromDevice from 'hooks/useImageFromDevice';
 import { Asset } from 'react-native-image-picker';
-import useProfileParams from 'hooks/profiles/useProfileParams';
-import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useStyles from 'screens/SaveProfile/useStyles';
-import useOnBackAction from 'hooks/navigation/useOnBackAction';
-import { asPictureAsset } from 'lib/ProfileUtils';
+import { AccountWithWallet } from 'types/account';
+import { DesmosProfile } from 'types/desmos';
 import CreateAvatar from './components/CreateAvatar';
 import {
   SaveProfileFormState,
@@ -39,12 +39,6 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SAVE_PROF
  */
 export interface SaveProfileParams {
   /**
-   * Whether the profile should be immediately stored on chain when
-   * the user saves it.
-   * Default: <code>true</code>
-   */
-  readonly storeOnChain?: boolean;
-  /**
    * Optional profile that should be edited.
    * If this is not provided, a new profile will be created instead.
    */
@@ -53,19 +47,27 @@ export interface SaveProfileParams {
    * Optional account that can be used to sign the transaction while saving the profile.
    * If this is not provided, the current account will be used instead.
    */
-  readonly account?: AccountWithWallet;
+  readonly accountWithWallet?: AccountWithWallet;
   /**
-   * Optional callback that is used when the profile is saved properly.
+   * Callback that will be called when the profile has been saved.
    */
-  readonly onSuccess?: () => void;
+  readonly onProfileSaved: () => void;
   /**
-   * Optional callback that is used when the user cancel the save operation.
+   * Optional fee granter that can be used to pay the transaction fees.
    */
-  readonly onCancel?: () => void;
+  readonly optionalFeeGranter?: string;
   /**
-   * Optional callback used when the profile saving returns any error.
+   * Optional custom transaction header that will be used to sign the transaction.
    */
-  readonly onError?: (error: Error) => void;
+  readonly customTransactionHeader?: string;
+  /**
+   * Optional custom transaction body that will be used to sign the transaction.
+   */
+  readonly customTransactionBody?: string;
+  /**
+   * If true the user wil not be able to go back from this screen.
+   */
+  readonly blockBackAction?: boolean;
 }
 
 /**

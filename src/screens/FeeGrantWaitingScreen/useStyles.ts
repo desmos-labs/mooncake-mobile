@@ -1,0 +1,25 @@
+import { makeStyle } from 'config/theme';
+
+/**
+ * Style hook for the Settings screen
+ */
+const useStyles = makeStyle(theme => ({
+  root: {
+    flex: 1,
+    paddingHorizontal: theme.spacing.m,
+  },
+  icon: {
+    height: 180,
+    width: 180,
+  },
+  innerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: 90,
+  },
+  subtitle: {
+    textAlign: 'center',
+  },
+}));
+
+export default useStyles;

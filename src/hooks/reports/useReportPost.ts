@@ -1,8 +1,5 @@
 import { MsgCreateReport } from '@desmoslabs/desmjs-types/desmos/reports/v1/msgs';
-import {
-  MsgCreateReportEncodeObject,
-  postTargetToAny,
-} from '@desmoslabs/desmjs/build/modules/reports/v1';
+import { Reports } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import useHasReportedPost from 'hooks/reports/useHasReportedPost';
@@ -36,11 +33,11 @@ const useReportPost = (post: Post) => {
       }
 
       // Create the message
-      const msg: MsgCreateReportEncodeObject = {
+      const msg: Reports.v1.MsgCreateReportEncodeObject = {
         typeUrl: GrantEnums.MsgCreateReport,
         value: MsgCreateReport.fromPartial({
           subspaceId: Long.fromNumber(subspaceId),
-          target: postTargetToAny({
+          target: Reports.v1.postTargetToAny({
             postId: Long.fromNumber(post.id),
           }),
           reasonsIds,

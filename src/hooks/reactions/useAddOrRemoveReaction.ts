@@ -1,10 +1,4 @@
-import {
-  MsgAddReactionEncodeObject,
-  MsgAddReactionTypeUrl,
-  MsgRemoveReactionEncodeObject,
-  MsgRemoveReactionTypeUrl,
-  registeredReactionValueToAny,
-} from '@desmoslabs/desmjs/build/modules/reactions/v1';
+import { Reactions } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import {
@@ -39,12 +33,12 @@ const useAddReaction = (activeAddress: string) => {
       addPostReaction(post);
 
       // If the reaction does not exist on the server, add it there
-      const messageAddReaction: MsgAddReactionEncodeObject = {
-        typeUrl: MsgAddReactionTypeUrl,
+      const messageAddReaction: Reactions.v1.MsgAddReactionEncodeObject = {
+        typeUrl: Reactions.v1.MsgAddReactionTypeUrl,
         value: {
           subspaceId: Long.fromNumber(subspaceId),
           postId: Long.fromNumber(post.id),
-          value: registeredReactionValueToAny({
+          value: Reactions.v1.registeredReactionValueToAny({
             registeredReactionId: getLikeReactionId(subspaceParams),
           }),
           user: activeAddress,
@@ -90,8 +84,8 @@ const useRemoveReaction = (activeAddress: string) => {
       const remoteReactionId = remoteReactions?.length > 0 ? remoteReactions[0].id : undefined;
 
       // If the reaction id is defined, delete it remotely
-      const messageRemoveReaction: MsgRemoveReactionEncodeObject = {
-        typeUrl: MsgRemoveReactionTypeUrl,
+      const messageRemoveReaction: Reactions.v1.MsgRemoveReactionEncodeObject = {
+        typeUrl: Reactions.v1.MsgRemoveReactionTypeUrl,
         value: {
           subspaceId: Long.fromNumber(subspaceId),
           postId: Long.fromNumber(post.id),

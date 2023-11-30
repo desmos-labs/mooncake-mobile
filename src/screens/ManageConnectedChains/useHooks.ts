@@ -6,6 +6,7 @@ import {
   getSignedBytes,
   SigningMode,
   StdFee,
+  Profiles,
 } from '@desmoslabs/desmjs';
 import {
   Bech32Address,
@@ -14,11 +15,6 @@ import {
   SingleSignature,
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {
-  MsgLinkChainAccountEncodeObject,
-  MsgLinkChainAccountTypeUrl,
-  singleSignatureToAny,
-} from '@desmoslabs/desmjs/build/modules/profiles/v3';
 import { useActiveAccount } from '@recoil/accounts';
 import { useStoreUserChainLinks } from '@recoil/chainLinks';
 import LinkableChains from 'config/LinkableChains';
@@ -69,7 +65,7 @@ const useGenerateProof = () => {
       const signedBytes = getSignedBytes(signatureResult);
 
       const proofPlainText = toHex(signedBytes);
-      const proofSignature = singleSignatureToAny(
+      const proofSignature = Profiles.v3.singleSignatureToAny(
         SingleSignature.fromPartial({
           valueType:
             externalAccount.wallet.signer.signingMode === SigningMode.DIRECT
@@ -115,14 +111,14 @@ const useGenerateMsgLinkChainAccount = () => {
       const address = getAddress(chain, externalAccount);
       return (await generateProof(activeAccount, externalAccount, chain)).map(proof => {
         return {
-          typeUrl: MsgLinkChainAccountTypeUrl,
+          typeUrl: Profiles.v3.MsgLinkChainAccountTypeUrl,
           value: {
             proof,
             chainConfig: chain.chainConfig,
             signer: activeAccount.address,
             chainAddress: address,
           },
-        } as MsgLinkChainAccountEncodeObject;
+        } as Profiles.v3.MsgLinkChainAccountEncodeObject;
       });
     },
     [generateProof, activeAccount],
@@ -132,7 +128,7 @@ const useGenerateMsgLinkChainAccount = () => {
 const useSaveChainLinkAccount = () => {
   const storeChainLinks = useStoreUserChainLinks();
   return React.useCallback(
-    (message: MsgLinkChainAccountEncodeObject) => {
+    (message: Profiles.v3.MsgLinkChainAccountEncodeObject) => {
       const address = Bech32Address.decode(message.value.chainAddress!.value);
       const signature = SingleSignature.decode(message.value.proof!.signature!.value);
 

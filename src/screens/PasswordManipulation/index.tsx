@@ -7,45 +7,48 @@ import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import PasswordReqGroup from 'components/PasswordReqGroup';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
 import { MIN_PW_LENGTH } from 'lib/ValidationUtils';
 import _ from 'lodash';
+import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
-import { Box, useTheme } from 'native-base';
-import * as Yup from 'yup';
-import { AccountWithWallet } from 'types/account';
-import CommonStyles from 'config/theme/CommonStyles';
-import StyledSpinner from 'components/StyledSpinner';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import useHooks from './useHooks';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AccountWithWallet } from 'types/account';
+import { DesmosProfile } from 'types/desmos';
+import * as Yup from 'yup';
+import useHooks, { PASSWORD_MANIPULATION_MODE } from './useHooks';
 import useStyles from './useStyles';
 
-export enum PASSWORD_MANIPULATION_MODE {
-  CHANGE_PASSWORD,
-  RESET_PASSWORD,
-  SETUP_PASSWORD,
-}
-
 export type PasswordManipulationParams = {
+  /**
+   * Mode of the password manipulation.
+   */
   mode: PASSWORD_MANIPULATION_MODE;
 
   /**
    * Account that need to be saved.
    */
   account?: AccountWithWallet;
+
+  /**
+   * Profile that need to be saved.
+   */
+  profile?: DesmosProfile;
 
   /**
    * Old password passed from origin screen.
@@ -72,15 +75,14 @@ const PasswordManipulation = () => {
 
   const validationSchema = React.useMemo(() => {
     switch (mode) {
-      case PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD:
+      case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
+      case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
+      case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
+      case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
         return Yup.object().shape({
           confirmPassword: Yup.string()
             .required(t('error:required'))
             .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
-        });
-      case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
-        return Yup.object().shape({
-          confirmPassword: Yup.string().required(t('error:required')),
         });
       case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
         // TODO: Provide validation schema for reset password.

@@ -1,12 +1,4 @@
-import {
-  MsgAddReactionTypeUrl,
-  MsgCreatePostTypeUrl,
-  MsgCreateRelationshipTypeUrl,
-  MsgCreateReportTypeUrl,
-  MsgDeleteRelationshipTypeUrl,
-  MsgRemoveReactionTypeUrl,
-  MsgSaveProfileTypeUrl,
-} from '@desmoslabs/desmjs';
+import { Profiles, Relationships, Reactions, Reports, Posts } from '@desmoslabs/desmjs';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -99,19 +91,19 @@ const ProfileOperations = () => {
   const getImage = useCallback((messageType: string) => {
     const formattedMessage = `/${messageType}`;
     switch (formattedMessage) {
-      case MsgCreatePostTypeUrl:
+      case Posts.v3.MsgCreatePostTypeUrl:
         return createPostTxIcon;
-      case MsgCreateRelationshipTypeUrl:
+      case Relationships.v1.MsgCreateRelationshipTypeUrl:
         return editProfileTxIcon;
-      case MsgDeleteRelationshipTypeUrl:
+      case Relationships.v1.MsgDeleteRelationshipTypeUrl:
         return editProfileTxIcon;
-      case MsgAddReactionTypeUrl:
+      case Reactions.v1.MsgAddReactionTypeUrl:
         return addReactionTxIcon;
-      case MsgRemoveReactionTypeUrl:
+      case Reactions.v1.MsgRemoveReactionTypeUrl:
         return addReactionTxIcon;
-      case MsgSaveProfileTypeUrl:
+      case Profiles.v3.MsgSaveProfileTypeUrl:
         return editProfileTxIcon;
-      case MsgCreateReportTypeUrl:
+      case Reports.v1.MsgCreateReportTypeUrl:
         return sendReportTxIcon;
       default:
         return undefined;
@@ -122,19 +114,19 @@ const ProfileOperations = () => {
     (messageType: string) => {
       const formattedMessage = `/${messageType}`;
       switch (formattedMessage) {
-        case MsgCreatePostTypeUrl:
+        case Posts.v3.MsgCreatePostTypeUrl:
           return t('create comment post');
-        case MsgCreateRelationshipTypeUrl:
+        case Relationships.v1.MsgCreateRelationshipTypeUrl:
           return t('follow user');
-        case MsgDeleteRelationshipTypeUrl:
+        case Relationships.v1.MsgDeleteRelationshipTypeUrl:
           return t('unfollow user');
-        case MsgAddReactionTypeUrl:
+        case Reactions.v1.MsgAddReactionTypeUrl:
           return t('add reaction');
-        case MsgRemoveReactionTypeUrl:
+        case Reactions.v1.MsgRemoveReactionTypeUrl:
           return t('remove reaction');
-        case MsgSaveProfileTypeUrl:
+        case Profiles.v3.MsgSaveProfileTypeUrl:
           return t('edit profile');
-        case MsgCreateReportTypeUrl:
+        case Reports.v1.MsgCreateReportTypeUrl:
           return t('create report');
         default:
           return '';

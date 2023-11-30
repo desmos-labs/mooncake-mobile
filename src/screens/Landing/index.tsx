@@ -1,22 +1,18 @@
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import { appleLoginIcon, butterflyLandingIcon, googleLoginIcon, landingBG } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
-import Spacer from 'components/Spacer';
-import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Image, Platform, View } from 'react-native';
-import { Box, Text, useTheme } from 'native-base';
-import { usePerformImportAccount } from 'screens/Landing/hooks';
-import Typography from 'components/Typography';
 import ImageButton from 'components/ImageButton';
-import useLoginWithWeb3Auth from 'hooks/useLoginWithWeb3Auth';
-import { DesmosChain } from 'config/LinkableChains';
-import { Web3AuthLoginProvider } from 'types/web3auth';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
+import Spacer from 'components/Spacer';
+import Typography from 'components/Typography';
+import { Box, Text, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import { useAppStateValue } from '@recoil/appState';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Image, Platform, View } from 'react-native';
+import { Web3AuthLoginProvider } from 'types/web3auth';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -37,50 +33,19 @@ const Landing = () => {
   const { params } = useRoute<NavProps['route']>();
   const { t } = useTranslation('landing');
   const styles = useStyles();
-  const consentGiven = useAppStateValue('consentGiven');
-
-  // -------------------------------------------------------------------------------------
-  // --- Hooks
-  // -------------------------------------------------------------------------------------
-
-  const performImportAccount = usePerformImportAccount();
-  const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
-  const importFromSocial = useCallback(
-    (social: Web3AuthLoginProvider) => {
-      loginWithWeb3Auth(social);
-    },
-    [loginWithWeb3Auth],
-  );
-
-  const onSignUpWithWallet = React.useCallback(() => {
-    performImportAccount();
-  }, [performImportAccount]);
-
   const onSignUp = React.useCallback(
-    (option: 'normal' | Web3AuthLoginProvider) => {
+    (login: 'mnemonic' | Web3AuthLoginProvider) => {
       // Handle the post consent behavior with a reusable callback.
-      const handlePostConsent = () => {
-        if (option === 'normal') {
-          onSignUpWithWallet();
-        } else {
-          importFromSocial(option);
-        }
-      };
-
-      if (!consentGiven) {
-        navigate(ROUTES.CONSENT_AGREEMENT, {
-          onConsentAgree: handlePostConsent,
-        });
-      } else {
-        handlePostConsent();
-      }
+      navigate(ROUTES.SERVICE_AND_POLICY, {
+        loginProvider: login,
+      });
     },
-    [consentGiven, importFromSocial, navigate, onSignUpWithWallet],
+    [navigate],
   );
 
   // -------------------------------------------------------------------------------------
@@ -88,11 +53,7 @@ const Landing = () => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView
-      backgroundImage={landingBG}
-      backgroundFillScreen
-      style={styles.container}
-      showLoadingOverlay={loginLoading}>
+    <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>
       <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
       <Text style={styles.title} allowFontScaling>
         {t('butter')}
@@ -107,7 +68,7 @@ const Landing = () => {
         </Typography.Body6>
       )}
       <Box alignSelf="stretch">
-        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('normal')}>
+        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('mnemonic')}>
           {t('signUp with wallet')}
         </Button>
       </Box>

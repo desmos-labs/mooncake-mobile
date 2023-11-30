@@ -1,16 +1,16 @@
-import React from 'react';
+import { toHex } from '@cosmjs/encoding';
 import {
   DesmosClient,
   getPubKeyBytes,
   getSignatureBytes,
   getSignedBytes,
 } from '@desmoslabs/desmjs';
-import { toHex } from '@cosmjs/encoding';
-import Login, { LoginParams } from 'services/axios/requests/Login';
-import { useUpdateAuthToken } from 'services/axios';
-import { Wallet } from 'types/wallet';
+import useUpdateAuthToken from 'hooks/axios/useUpdateAuthToken';
 import { ResultAsync } from 'neverthrow';
+import React from 'react';
 import GetNonce from 'services/axios/requests/GetNonce';
+import Login, { LoginParams } from 'services/axios/requests/Login';
+import { Wallet } from 'types/wallet';
 
 /**
  * Generate the params to be used when performing the login on the APIs.

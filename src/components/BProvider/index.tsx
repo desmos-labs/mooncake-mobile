@@ -46,15 +46,15 @@ const BProvider = () => {
 
   return (
     <ApolloProvider client={client}>
-      <NativeBaseProvider theme={lightTheme}>
-        <GestureHandlerRootView style={styles.root}>
+      <GestureHandlerRootView style={styles.root}>
+        <NativeBaseProvider theme={lightTheme}>
           <NavigationContainer>
             <BottomSheetModalProvider>
               <RootNavigator />
             </BottomSheetModalProvider>
           </NavigationContainer>
-        </GestureHandlerRootView>
-      </NativeBaseProvider>
+        </NativeBaseProvider>
+      </GestureHandlerRootView>
     </ApolloProvider>
   );
 };

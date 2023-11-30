@@ -1,184 +1,223 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import {
-  bgonboarding,
-  onboarding1,
-  onboarding2,
-  onboarding3,
-  onboarding4,
-  onboardingLogo,
-} from 'assets/images';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
+import PaginationDots from 'components/PaginationDots';
 import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import { makeStyle } from 'config/theme';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import { Box, useTheme } from 'native-base';
+import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
+import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
+import { getSaveProfileAllowance } from 'lib/grantsUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { Animated as ClassicAnimated, Dimensions, Linking, View } from 'react-native';
-import { ScalingDot } from 'react-native-animated-pagination-dots';
-import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
-import useStyles from './useStyles';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Animated, Dimensions, FlatList, ListRenderItemInfo, View } from 'react-native';
+import { verticalScale } from 'react-native-size-matters';
+import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
+import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
+import { AccountWithWallet } from 'types/account';
+import { DesmosProfile } from 'types/desmos';
+import { LoginOnboardingStep } from 'types/tourguide';
 
-const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);
+const fixedWidth = Dimensions.get('window').width;
 
 export interface OnboardingParams {
-  invited?: boolean;
+  /**
+   * Mode of the password manipulation.
+   */
+  passwordManipulationMode: PASSWORD_MANIPULATION_MODE;
+
+  /**
+   * Account that need to be saved.
+   */
+  account?: AccountWithWallet;
+
+  /**
+   * Profile that need to be saved.
+   */
+  profile?: DesmosProfile;
+  /**
+   * If the user needs to request the fee grant
+   */
+  requestFeeGrant?: boolean;
 }
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
-
-interface OnboardingData {
-  imageSrc: Source;
-  title: string;
-  subtitle: string;
-}
+type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
 
 const Onboarding = () => {
-  const { t } = useTranslation('onboarding');
+  const [loading, setLoading] = useState(false);
   const { navigate } = useNavigation<NavProps['navigation']>();
-
-  // Unwrap the params
   const { params } = useRoute<NavProps['route']>();
-  const isInvited = params?.invited ?? false;
-
+  const { account, profile, passwordManipulationMode, requestFeeGrant } = params;
+  const [currentIndex, setCurrentIndex] = useState(0);
   const styles = useStyles();
-  const theme = useTheme();
+  const slidesRef = useRef<FlatList>(null);
+  const { t } = useTranslation('onboarding');
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const getAuthorizationInformation = useGetLazyAuthorizationInformation();
+  const setTourGuideStep = useSetTourGuideStep();
 
-  const data: OnboardingData[] = [
+  const slides: any[] = [
     {
-      imageSrc: onboarding1,
-      title: t('page1'),
-      subtitle: t('page1Sub'),
+      title: t('onboarding title 1'),
+      body: t('onboarding body 1'),
+      image: onboarding1,
     },
     {
-      imageSrc: onboarding2,
-      title: t('page2'),
-      subtitle: t('page2Sub'),
+      title: t('onboarding title 2'),
+      body: t('onboarding body 2'),
+      image: onboarding2,
     },
     {
-      imageSrc: onboarding3,
-      title: t('page3'),
-      subtitle: t('page3Sub'),
+      title: t('onboarding title 3'),
+      body: t('onboarding body 3'),
+      image: onboarding3,
     },
     {
-      imageSrc: onboarding4,
-      title: t('page4'),
-      subtitle: t('page4Sub'),
+      title: t('onboarding title 4'),
+      body: t('onboarding body 4'),
+      image: onboarding4,
     },
   ];
 
-  const { width } = Dimensions.get('window');
-  const ref = React.useRef<PagerView>(null);
-  const scrollOffsetAnimatedValue = React.useRef(new ClassicAnimated.Value(0)).current;
-  const positionAnimatedValue = React.useRef(new ClassicAnimated.Value(0)).current;
-  const inputRange = [0, data.length];
-  const scrollX = ClassicAnimated.add(scrollOffsetAnimatedValue, positionAnimatedValue).interpolate(
-    {
-      inputRange,
-      outputRange: [0, data.length * width],
-    },
-  );
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
-  const onPageScroll = React.useMemo(
-    () =>
-      ClassicAnimated.event<PagerViewOnPageScrollEventData>(
-        [
-          {
-            nativeEvent: {
-              offset: scrollOffsetAnimatedValue,
-              position: positionAnimatedValue,
-            },
-          },
-        ],
-        {
-          useNativeDriver: false,
-        },
-      ),
-    [positionAnimatedValue, scrollOffsetAnimatedValue],
-  );
+  const viewableItemsChanged = useRef(({ viewableItems }: { viewableItems: any }) => {
+    setCurrentIndex(viewableItems[0].index);
+  }).current;
 
-  const navigateToCorrectScreen = useCallback(() => {
-    navigate(ROUTES.LANDING, { invited: isInvited });
-  }, [isInvited, navigate]);
+  const onPressButton = useCallback(() => {
+    if (currentIndex < 2) {
+      slidesRef?.current?.scrollToIndex({ index: currentIndex + 1 });
+    } else {
+      if (!loading) {
+        setTourGuideStep({ login: LoginOnboardingStep.Completed });
+        navigate(ROUTES.PASSWORD_MANIPULATION, {
+          mode: params.passwordManipulationMode,
+          account: params.account,
+          profile: params.profile,
+        });
+      }
+    }
+  }, [
+    account,
+    currentIndex,
+    loading,
+    navigate,
+    passwordManipulationMode,
+    profile,
+    requestFeeGrant,
+    setTourGuideStep,
+  ]);
+
+  /**
+   * Sign up the user and request the fee grant
+   */
+  const signUp = useCallback(async () => {
+    if (account) {
+      const { feeGrants } = await getAuthorizationInformation(account.wallet.address);
+      const saveProfileAllowance = getSaveProfileAllowance(feeGrants);
+      // If has the save profile allowance
+      if (saveProfileAllowance === undefined) {
+        await GetFeeGrant();
+      }
+    }
+  }, [account, getAuthorizationInformation]);
+
+  useEffect(() => {
+    if (requestFeeGrant) {
+      setLoading(true);
+      signUp().then(() => {
+        __DEV__ && console.log('[SignUp] Logged in and requested fee grant');
+        setLoading(false);
+      });
+    }
+  }, [account, params.requestFeeGrant, requestFeeGrant, signUp]);
 
   const renderItem = useCallback(
-    (item: OnboardingData) => {
+    ({ item }: ListRenderItemInfo<any>) => {
       return (
-        <View key={item.title} style={styles.itemView}>
-          <Image source={item.imageSrc} style={styles.image} contentFit="cover" />
-          <Typography.H3 style={{ marginTop: theme.spacing.xl }}>{item.title}</Typography.H3>
-          <Spacer paddingVertical={theme.spacing.s} />
-          <Typography.Body6 style={CommonStyles.textAlign.center}>{item.subtitle}</Typography.Body6>
+        <View onStartShouldSetResponder={() => true} style={styles.slide}>
+          <Image source={item.image} style={styles.imageStyle} contentFit="cover" />
+          <View style={styles.textView}>
+            <Spacer paddingBottom="m" />
+            <Typography.H6 style={CommonStyles.textAlign.center}>{item.title}</Typography.H6>
+            <Spacer paddingBottom="s" />
+            <Typography.Body5 style={CommonStyles.textAlign.center}>{item.body}</Typography.Body5>
+          </View>
         </View>
       );
     },
-    [styles.image, styles.itemView, theme.spacing.s, theme.spacing.xl],
+    [styles.imageStyle, styles.slide, styles.textView],
   );
 
   return (
-    <DView
-      disableHideKeyboardTouchable={true}
-      style={styles.root}
-      backgroundFillScreen={true}
-      backgroundImage={bgonboarding}
-      backgroundColor={theme.colors.background}>
-      <Image source={onboardingLogo} style={styles.onboardingLogo} contentFit="contain" />
-      <AnimatedPagerView
-        testID="onboardingPagerView"
-        ref={ref}
-        style={styles.pager}
-        initialPage={0}
-        onPageScroll={onPageScroll}>
-        {data.map(item => {
-          return renderItem(item);
-        })}
-      </AnimatedPagerView>
-      <View style={styles.bottomItems}>
-        <View style={styles.dotView}>
-          <ScalingDot
-            activeDotColor={theme.colors.butterOrange01}
-            inActiveDotColor={theme.colors.lightGrey01}
-            activeDotScale={1.1}
-            inActiveDotOpacity={1}
-            dotStyle={styles.dotStyle}
-            data={data}
-            // @ts-ignore
-            scrollX={scrollX}
-          />
-        </View>
-        <Button
-          backgroundColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          size={44}
-          style={styles.button}
-          onPress={() => navigateToCorrectScreen()}>
-          {t('get started')}
+    <DView topBar={<TopBar />} disableHideKeyboardTouchable={true} style={styles.root}>
+      <View style={styles.contentView} onStartShouldSetResponder={() => true}>
+        <FlatList
+          onStartShouldSetResponder={() => true}
+          data={slides}
+          renderItem={renderItem}
+          pagingEnabled={true}
+          horizontal={true}
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
+            useNativeDriver: false,
+          })}
+          viewabilityConfig={viewConfig}
+          onViewableItemsChanged={viewableItemsChanged}
+          scrollEventThrottle={32}
+          ref={slidesRef}
+        />
+        <Spacer paddingBottom="xxl" />
+        <Button onPress={onPressButton} style={styles.button}>
+          {currentIndex === 2 ? t('lets get started') : t('next', { ns: 'common' })}
         </Button>
-        <Box flex={1} margin="m">
-          <Typography.Body6>
-            <Trans
-              i18nKey="mnemonicInput:userConsent"
-              components={[
-                <Typography.Body6
-                  onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}
-                  style={{ color: theme.colors.accentBlue01 }}
-                />,
-                <Typography.Body6
-                  onPress={() => Linking.openURL('https://butter.social/privacy-policy')}
-                  style={{ color: theme.colors.accentBlue01 }}
-                />,
-              ]}
-            />
-          </Typography.Body6>
-        </Box>
+        <Spacer paddingBottom="xxl" />
+        <View style={{ alignSelf: 'center' }}>
+          <PaginationDots pages={slides} scrollX={scrollX} width={fixedWidth} />
+        </View>
       </View>
     </DView>
   );
 };
+
+const useStyles = makeStyle(theme => ({
+  root: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.m,
+  },
+  contentView: {
+    flex: 1,
+    backgroundColor: theme.colors.white,
+    justifyContent: 'center',
+    width: fixedWidth,
+  },
+  imageStyle: {
+    width: verticalScale(300),
+    height: verticalScale(300),
+  },
+  textView: {
+    marginTop: 80,
+    paddingHorizontal: theme.spacing.xl,
+    alignItems: 'center',
+  },
+  slide: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: fixedWidth,
+  },
+  button: {
+    marginHorizontal: theme.spacing.m,
+  },
+}));
 
 export default Onboarding;

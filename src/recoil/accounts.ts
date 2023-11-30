@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
-import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { Account } from 'types/account';
 import { deserializeAccounts } from 'lib/AccountUtils/deserialize';
+import { deleteMMKV, getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { serializeAccounts } from 'lib/AccountUtils/serialize';
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ export const useStoredAccounts = () => useRecoilValue(accountsAppState);
 /**
  * Hook that allows to easily delete the account of a user having a given address.
  */
-export const useDeleteAccount = () => {
+export const useDeleteCachedAccount = () => {
   const setAccounts = useSetRecoilState(accountsAppState);
   return useCallback(
     (address: string) => {
@@ -65,6 +65,16 @@ export const useDeleteAccount = () => {
     },
     [setAccounts],
   );
+};
+
+/**
+ * Hook that allows to easily delete every account.
+ */
+export const useDeleteCachedAccounts = () => {
+  const setAccounts = useSetRecoilState(accountsAppState);
+  return useCallback(() => {
+    setAccounts({});
+  }, [setAccounts]);
 };
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -142,7 +152,11 @@ export const activeAccountAddressState = atom<string | undefined>({
   effects: [
     ({ onSet }) => {
       onSet(newValue => {
-        setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS, newValue);
+        if (newValue) {
+          setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS, newValue);
+        } else {
+          deleteMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
+        }
       });
     },
   ],
