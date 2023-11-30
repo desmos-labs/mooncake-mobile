@@ -54,9 +54,9 @@ export enum SignInStatus {
  */
 const useHooks = () => {
   const styles = useStyles();
-  const [signinStatus, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
+  const [setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
   const [loading, setLoading] = React.useState(false);
-  const { navigate, goBack } = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { mode, account, profile } = params;
 
