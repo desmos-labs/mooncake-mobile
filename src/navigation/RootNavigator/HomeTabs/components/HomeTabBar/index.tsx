@@ -1,11 +1,8 @@
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import { StackScreenProps } from '@react-navigation/stack';
 import { butterflyLandingIcon } from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
@@ -22,8 +19,6 @@ import PostTypeTab from 'screens/Home/components/PostTypeTab';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
-
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>;
 
 const ANIMATION_DURATION = 200;
 const SLIDE_ANIMATION_DURATION = 300;
