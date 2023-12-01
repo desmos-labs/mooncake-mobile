@@ -105,9 +105,6 @@ enum ROUTES {
   // Disconnect app modal
   DISCONNECT_APP_MODAL = 'DISCONNECT_APP_MODAL',
 
-  // Twitter connection
-  SELECT_TWEET = 'SELECT_TWEET',
-
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
   // -------------------------------------------------------------------------------------
@@ -147,7 +144,6 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   IMPACT_POINTS_MODAL = 'IMPACT_POINTS_MODAL',
-  MANAGE_CONNECTIONS_MODAL = 'MANAGE_CONNECTIONS_MODAL',
 
   // -------------------------------------------------------------------------------------
   // --- MODALS

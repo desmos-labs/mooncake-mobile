@@ -59,7 +59,7 @@ const ManageConnectedApps: React.FC<NavProps> = () => {
         </View>
       </Spacer>
     );
-  }, [createAppLink]);
+  }, [createAppLink, styles.buttonContainer, t, theme.colors.surfaceBlack, theme.colors.white]);
 
   const ItemSeparatorComponent = React.useCallback(
     () => <Spacer paddingVertical={theme.spacing.s} />,

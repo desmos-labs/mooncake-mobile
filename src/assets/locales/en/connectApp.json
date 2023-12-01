@@ -1,22 +1,7 @@
 {
-  "twitter username": "Your Twitter username",
   "proof": "Proof of Ownership",
   "connect app": "Connect App",
   "confirm": "Confirm",
   "username": "Username",
-  "connected": " Your Twitter account is successfully connected",
-  "not connected": "Out of gas, your Twitter account is not connected",
-  "connect twitter account": "Connect Twitter Account",
-  "link proof": "I'm linking my Twitter account with #Butter:",
-  "tweet content": "Please tweet the text below on your twitter account",
-  "tweet made": "Tweet made",
-  "select tweet": "Select Tweet",
-  "select one tweet": "Select one of the tweets you made",
-  "tweet it now": "Tweet it now",
   "connectedApps": "Connected Apps",
-  "proof description": "In order to connect to your Twitter account you need to confirm your ownership over this profile",
-  "valid": "Valid Twitter username",
-  "invalid": "Invalid Twitter username",
-  "noTweets": "You don’t have any tweets yet",
-  "tweet made go next": "Tweet Made, Next"
 }
