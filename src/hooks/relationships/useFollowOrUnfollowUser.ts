@@ -39,7 +39,7 @@ const useFollowUser = () => {
       };
 
       // Broadcast the transaction
-      const result = await broadcastTx([messageCreateRelationship], { optimistic: true });
+      const result = await broadcastTx([messageCreateRelationship]);
       if (result.isErr()) {
         // If the transaction is canceled or errors, remove the added relationship
         removeFollowedUser(user, counterparty.address);
@@ -74,7 +74,7 @@ const useUnfollowUser = () => {
       };
 
       // Broadcasts the transaction
-      const result = await broadcastTx([messageDeleteRelationship], { optimistic: true });
+      const result = await broadcastTx([messageDeleteRelationship]);
       if (result.isErr()) {
         // If the transaction is canceled or errors, re-add the removed relationship
         setFollowedUserStatus(user, counterparty.address, DataStatus.SYNCED);

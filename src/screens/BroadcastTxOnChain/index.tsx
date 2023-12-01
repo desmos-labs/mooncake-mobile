@@ -233,6 +233,7 @@ const BroadcastTxOnChain: React.FC = () => {
       setBroadcastingTx(false);
 
       if (result.isErr() && !isCanceledOperationError(result.error)) {
+        console.error(result.error);
         toast.errorNoRetry(result.error.message);
       } else if (result.isOk() && onSuccess) {
         onSuccess(result.value);

@@ -132,18 +132,21 @@ const useHooks = () => {
     }
   }, [mode]);
 
-  const mapPwStyle = React.useCallback((password: string) => {
-    const { value } = passwordStrength(password);
+  const mapPwStyle = React.useCallback(
+    (password: string) => {
+      const { value } = passwordStrength(password);
 
-    switch (value) {
-      case 'Medium':
-        return styles.mediumPw;
-      case 'Strong':
-        return styles.strongPw;
-      default:
-        return styles.weakPw;
-    }
-  }, []);
+      switch (value) {
+        case 'Medium':
+          return styles.mediumPw;
+        case 'Strong':
+          return styles.strongPw;
+        default:
+          return styles.weakPw;
+      }
+    },
+    [styles.mediumPw, styles.strongPw, styles.weakPw],
+  );
 
   /**
    * Handle form submit for the password manipulation form
