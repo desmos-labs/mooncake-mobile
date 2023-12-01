@@ -3,18 +3,18 @@ import { makeStyle } from 'config/theme';
 /**
  * Style hook for the Settings screen
  */
-const useStyles = makeStyle(() => ({
+const useStyles = makeStyle(theme => ({
   root: {
     flex: 1,
+    padding: theme.spacing.m,
   },
-  icon: {
-    height: 180,
-    width: 180,
-  },
-  innerContainer: {
+  container: {
     flex: 1,
-    alignItems: 'center',
-    paddingTop: 90,
+    marginTop: 100,
+  },
+  image: { width: 120, height: 120, alignSelf: 'center' },
+  button: {
+    alignSelf: 'center',
   },
 }));
 

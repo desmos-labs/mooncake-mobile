@@ -1,17 +1,19 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
 import useTrackUser from 'hooks/analytics/useTrackUser';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 import useStyles from './useStyles';
 
 export interface WelcomePageParams {
@@ -29,7 +31,7 @@ const WelcomePage = () => {
   const {
     params: { action },
   } = useRoute<NavProps['route']>();
-  const { t } = useTranslation('welcomePage');
+  const { t } = useTranslation('common');
   const styles = useStyles();
   const theme = useTheme();
   const trackUser = useTrackUser();
@@ -62,27 +64,30 @@ const WelcomePage = () => {
     });
   }, [activeAddress, navigation, trackUser]);
 
-  const subtitle = React.useMemo(() => {
-    switch (action) {
-      case 'create':
-        return t('profile created');
-      case 'import':
-        return t('profile imported');
-    }
-  }, [action, t]);
-
   return (
-    <DView style={styles.root}>
-      <View style={styles.innerContainer}>
-        <Spacer paddingBottom={theme.spacing.m} />
-        <Typography.H6>{t('congratulations')}</Typography.H6>
-        <Spacer paddingBottom={theme.spacing.s} />
-        <Typography.Body5>{subtitle}</Typography.Body5>
-        <Spacer paddingBottom={theme.spacing.xl} />
-        <Button height={44} type="solid" onPress={resetToHome}>
-          {t('enter bondscape')}
+    <DView style={styles.root} backgroundImage={accountCreatedBg} backgroundFillScreen={true}>
+      <Box flex={1} style={styles.container}>
+        <Image contentFit="cover" source={accountCreatedIcon} style={styles.image} />
+        <Spacer paddingTop={100} />
+        <Box alignItems="center">
+          <Typography.H4>{t('welcomeTitle')}</Typography.H4>
+          <Spacer paddingTop={theme.spacing.s} />
+          <Typography.Body6 style={CommonStyles.textAlign.center}>
+            {t('welcomeSubtitle')}
+          </Typography.Body6>
+        </Box>
+        <Spacer paddingTop={60} />
+        <Button
+          size={44}
+          width={220}
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
+          style={styles.button}
+          onPress={resetToHome}>
+          {t('enter butter')}
         </Button>
-      </View>
+        <Spacer paddingTop={theme.spacing.m} />
+      </Box>
     </DView>
   );
 };

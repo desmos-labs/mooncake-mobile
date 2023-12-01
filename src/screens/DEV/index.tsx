@@ -14,23 +14,7 @@ import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'r
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 
 // Add the ROUTE enum of the screens that should be rendered here
-const routesToRender = [
-  ROUTES.BLOCKED_USERS,
-  ROUTES.BROADCAST_TX_ON_CHAIN,
-  ROUTES.SETTINGS_ENABLE_BIOMETRICS,
-  ROUTES.SAVE_PROFILE,
-  ROUTES.IMPACT_POINTS_MODAL,
-  ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT,
-  ROUTES.ACTIVITIES,
-  ROUTES.ONBOARDING,
-  ROUTES.LOGIN,
-  ROUTES.PROFILE,
-  ROUTES.SIGNUP,
-  ROUTES.LANDING,
-  ROUTES.WELCOME,
-  ROUTES.POST_REPORT,
-  ROUTES.SETTINGS,
-];
+const routesToRender = [ROUTES.ONBOARDING, ROUTES.PROFILE, ROUTES.SETTINGS, ROUTES.WELCOME_PAGE];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
   button: { padding: 18, borderWidth: 1, borderColor: 'grey', borderRadius: 12 },
@@ -68,19 +52,15 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           switch (item) {
-            case ROUTES.PROFILE_CONNECTIONS:
-              navigate(item, {
-                headerTitle: '@Raffaello',
-                initialTabRouteName: ROUTES.PROFILE_FOLLOWING,
-                subspaceID: 5,
-                userAddress: '',
-                username: '@Raffaello',
-              });
-              break;
             case ROUTES.ONBOARDING:
               navigate(item, {
                 passwordManipulationMode:
                   PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE,
+              });
+              break;
+            case ROUTES.WELCOME_PAGE:
+              navigate(item, {
+                action: 'create',
               });
               break;
             default:
