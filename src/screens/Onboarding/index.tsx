@@ -170,7 +170,7 @@ const Onboarding = () => {
     <DView topBar={<TopBar />} disableHideKeyboardTouchable={true} style={styles.root}>
       <ImageBackground
         source={bgonboarding}
-        resizeMode={'cover'}
+        resizeMode="cover"
         style={{
           position: 'absolute',
           height: 750,

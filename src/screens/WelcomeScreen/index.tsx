@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
@@ -28,9 +28,6 @@ export type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.WEL
  */
 const WelcomePage = () => {
   const navigation = useNavigation<NavProps['navigation']>();
-  const {
-    params: { action },
-  } = useRoute<NavProps['route']>();
   const { t } = useTranslation('common');
   const styles = useStyles();
   const theme = useTheme();

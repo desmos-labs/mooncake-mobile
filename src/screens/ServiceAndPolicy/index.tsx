@@ -71,7 +71,7 @@ const ServiceAndPolicy = () => {
         </TouchableOpacity>
       </View>
       {loginLoading && (
-        <Spacer paddingVertical={'l'}>
+        <Spacer paddingVertical="l">
           <StyledSpinner />
         </Spacer>
       )}
