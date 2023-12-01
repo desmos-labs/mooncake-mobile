@@ -54,7 +54,7 @@ export enum SignInStatus {
  */
 const useHooks = () => {
   const styles = useStyles();
-  const [setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
+  const [, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
   const [loading, setLoading] = React.useState(false);
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
@@ -128,18 +128,21 @@ const useHooks = () => {
     }
   }, [mode]);
 
-  const mapPwStyle = React.useCallback((password: string) => {
-    const { value } = passwordStrength(password);
+  const mapPwStyle = React.useCallback(
+    (password: string) => {
+      const { value } = passwordStrength(password);
 
-    switch (value) {
-      case 'Medium':
-        return styles.mediumPw;
-      case 'Strong':
-        return styles.strongPw;
-      default:
-        return styles.weakPw;
-    }
-  }, []);
+      switch (value) {
+        case 'Medium':
+          return styles.mediumPw;
+        case 'Strong':
+          return styles.strongPw;
+        default:
+          return styles.weakPw;
+      }
+    },
+    [styles.mediumPw, styles.strongPw, styles.weakPw],
+  );
 
   /**
    * Handle form submit for the password manipulation form

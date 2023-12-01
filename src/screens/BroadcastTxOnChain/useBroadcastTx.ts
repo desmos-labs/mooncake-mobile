@@ -108,10 +108,10 @@ const useBroadcastTx = () => {
       }
 
       // Get the transaction to be broadcast
-      const txBytes = signResult.value.signatureResult.txRaw;
+      const { txRaw } = signResult.value.signatureResult;
 
       // Perform the broadcast
-      return ResultAsync.fromPromise(client.broadcastTxSync(txBytes), e =>
+      return ResultAsync.fromPromise(client.broadcastTxRawSync(txRaw), e =>
         Error(e?.toString() ?? 'Error while signing the transaction'),
       ).map((broadcastResult: SyncBroadcastResponse) => {
         return {

@@ -46,7 +46,7 @@ const useAddReaction = (activeAddress: string) => {
       };
 
       // Broadcast the transaction
-      const result = await broadcastTx([messageAddReaction], { optimistic: true });
+      const result = await broadcastTx([messageAddReaction]);
       if (result.isErr()) {
         // If the transaction is canceled or errors, revert the addition of the reaction.
         removePostReaction(post);
@@ -95,7 +95,7 @@ const useRemoveReaction = (activeAddress: string) => {
       };
 
       // Broadcast the transaction
-      const result = await broadcastTx([messageRemoveReaction], { optimistic: true });
+      const result = await broadcastTx([messageRemoveReaction]);
       if (result.isErr()) {
         // If the transaction is canceled or errors, revert the removal of the reaction.
         setPostReactionStatus(post, DataStatus.CREATED_LOCALLY);

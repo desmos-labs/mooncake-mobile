@@ -49,7 +49,7 @@ const useBlockUser = () => {
       };
 
       // Broadcast the transaction
-      const result = await broadcastTx([messageBlockUser], { optimistic: true });
+      const result = await broadcastTx([messageBlockUser]);
 
       if (result.isErr()) {
         // If the transaction is canceled or errors, remove the added blocked relationship
@@ -97,7 +97,7 @@ const useUnblockUser = () => {
       };
 
       // Broadcasts the transaction
-      const result = await broadcastTx([messageUnblock], { optimistic: true });
+      const result = await broadcastTx([messageUnblock]);
       if (result.isErr()) {
         // If the transaction is canceled or errors, re-add the removed blocked status
         setBlockedUserStatus(user, counterparty.address, DataStatus.SYNCED);
