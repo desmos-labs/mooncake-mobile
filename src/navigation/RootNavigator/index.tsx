@@ -55,9 +55,6 @@ import Onboarding, { OnboardingParams } from 'screens/Onboarding';
 import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
 import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
 import Profile, { ProfileParams } from 'screens/Profile';
-import ManageConnectionsModal, {
-  ManageConnectionsModalParams,
-} from 'screens/Profile/components/ManageConnectionsModal';
 import ProfileConnections, {
   ProfileConnectionsParams,
   ProfileConnectionsTabParams,
@@ -66,7 +63,6 @@ import ProfileOperations, { ProfileOperationsParams } from 'screens/ProfileOpera
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
-import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
 import ServiceAndPolicy, { ServiceAndPolicyParams } from 'screens/ServiceAndPolicy';
 import Settings from 'screens/Settings';
 import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
@@ -178,9 +174,6 @@ export type RootNavigatorParamList = {
   // Disconnect app modal
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 
-  // Twitter connection
-  [ROUTES.SELECT_TWEET]: SelectTweetParams;
-
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
   // -------------------------------------------------------------------------------------
@@ -219,7 +212,6 @@ export type RootNavigatorParamList = {
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
-  [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.UPLOAD_PROFILE_PICTURES_MODALS]: SaveProfileModalParams;
   [ROUTES.AUTHORIZATION_MODAL]: AuthorizationModalParams;
@@ -367,7 +359,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
       {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
       <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
-      <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
       {/* ----------------------- */}
       {/* --- PROFILE SCREENS --- */}
       {/* ----------------------- */}
@@ -422,7 +413,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
         <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
         <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
-        <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
         <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
