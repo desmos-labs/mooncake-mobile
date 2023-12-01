@@ -54,7 +54,7 @@ export enum SignInStatus {
  */
 const useHooks = () => {
   const styles = useStyles();
-  const [setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
+  const [signInStatus, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
   const [loading, setLoading] = React.useState(false);
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
@@ -232,10 +232,10 @@ const useHooks = () => {
           console.error(result.error);
         } else {
           /*          navigate(ROUTES.SUCCESS_MODAL, {
-            title: t('success', { ns: 'common' }),
-            body: t('pwChangedText'),
-            onClose: () => navigate(ROUTES.SETTINGS),
-          }); */
+           title: t('success', { ns: 'common' }),
+           body: t('pwChangedText'),
+           onClose: () => navigate(ROUTES.SETTINGS),
+           }); */
         }
       }
     },
