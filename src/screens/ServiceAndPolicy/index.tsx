@@ -27,7 +27,7 @@ export interface ServiceAndPolicyParams {
 export type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.SERVICE_AND_POLICY>;
 
 const ServiceAndPolicy = () => {
-  const { t } = useTranslation('landing');
+  const { t } = useTranslation('legal');
   const { params } = useRoute<NavProps['route']>();
   const theme = useTheme();
   const styles = useStyles();
@@ -78,6 +78,8 @@ const ServiceAndPolicy = () => {
         />
         <Spacer paddingBottom="xl" />
         <Button
+          bgColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
           size={44}
           disabled={!conditionAndPolicyAccepted || loginLoading}
           onPress={() => loginWithSelectedMethod()}>

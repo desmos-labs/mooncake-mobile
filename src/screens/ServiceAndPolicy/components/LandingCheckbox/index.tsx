@@ -1,8 +1,8 @@
-import { useTheme } from '@react-navigation/native';
 import BCheckbox from 'components/BCheckbox';
 import Typography from 'components/Typography';
 import { CheckboxProps } from 'expo-checkbox/src/Checkbox.types';
 import * as Haptics from 'expo-haptics';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { Linking, View } from 'react-native';
@@ -33,7 +33,7 @@ const LandingCheckbox = ({ onValueChange, ...rest }: CheckboxProps) => {
       <Typography.Body5 style={styles.mainTextColor}>
         <Trans
           i18nKey="tos and privacy"
-          ns="landing"
+          ns="legal"
           components={[
             <Typography.Body5
               onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}

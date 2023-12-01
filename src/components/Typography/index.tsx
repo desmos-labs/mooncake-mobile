@@ -62,7 +62,7 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     fontSize: 24,
     fontStyle: 'normal',
     fontWeight: '600',
-    letterSpacing: 0.0015,
+    letterSpacing: 0.036,
     textAlign: 'left',
   },
   H4: {
@@ -164,8 +164,9 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',
-    letterSpacing: 0.025,
+    letterSpacing: 0.035,
     textAlign: 'left',
+    lineHeight: 21,
   },
   Body7: {
     fontFamily: 'Poppins_400Regular',
