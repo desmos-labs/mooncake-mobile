@@ -1,30 +1,52 @@
 import { Post } from 'types/posts';
-import useHasReacted from 'hooks/reactions/useHasReacted';
 import React, { useCallback, useMemo } from 'react';
-import useAddOrRemoveReaction from 'hooks/reactions/useAddOrRemoveReaction';
 import { debounce } from 'lodash';
+import LikePost from 'services/axios/requests/LikePost';
 
 /**
  * Hook that allows to properly implement the addition and removal of a post like.
  */
 const useAddOrRemoveLike = (post: Post) => {
-  const hasReacted = useHasReacted(post);
+  // TODO: Properly resolve the like status once we have the new Post definition.
+  const postLiked = post.id.toString().length % 2 === 0;
 
   // Local state used to avoid the need to wait for the server response
   // and have a more responsive UI as soon as the user presses the like button
-  const [liked, setLiked] = React.useState(hasReacted);
+  const [liked, setLiked] = React.useState(postLiked);
 
   // Update the local state when the server response changes
   React.useEffect(() => {
-    setLiked(hasReacted);
-  }, [hasReacted]);
+    setLiked(postLiked);
+  }, [postLiked]);
 
   // Debounce the add or remove reaction function to avoid spamming the server
-  const addOrRemoveReaction = useAddOrRemoveReaction();
-  const addOrRemovePostReactionDebounced = useMemo(
-    () => debounce(addOrRemoveReaction, 500),
-    [addOrRemoveReaction],
-  );
+  const likeUnlikePost = React.useCallback(async (p: Post) => {
+    // TODO: Properly resolve the like status once we have the new Post definition.
+    const isPostLiked = false;
+    let error: Error | undefined;
+
+    if (isPostLiked) {
+      // Post already liked, unlike it.
+      const likeResult = await UnlikePost(p.id);
+      if (likeResult.isErr()) {
+        error = likeResult.error;
+      }
+    } else {
+      // Post not liked, like it.
+      const unlikeResult = await LikePost(p.id);
+      if (unlikeResult.isErr()) {
+        error = unlikeResult.error;
+      }
+    }
+
+    if (error) {
+      // Restore the like status on error.
+      setLiked(isPostLiked);
+    } else {
+      // TODO: Update the cache with the new like state once we have it.
+    }
+  }, []);
+  const likeUnlikePostDebounced = useMemo(() => debounce(likeUnlikePost, 500), [likeUnlikePost]);
 
   // Function that is called when the user presses the like button
   // This immediately updates the local state to have a more responsive UI,
@@ -32,9 +54,9 @@ const useAddOrRemoveLike = (post: Post) => {
   const addOrRemoveLike = useCallback(
     (p: Post) => {
       setLiked(value => !value);
-      addOrRemovePostReactionDebounced(p);
+      likeUnlikePostDebounced(p);
     },
-    [addOrRemovePostReactionDebounced],
+    [likeUnlikePostDebounced],
   );
 
   return {
