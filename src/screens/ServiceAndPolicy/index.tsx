@@ -70,7 +70,11 @@ const ServiceAndPolicy = () => {
           />
         </TouchableOpacity>
       </View>
-      {loginLoading && <StyledSpinner />}
+      {loginLoading && (
+        <Spacer paddingVertical={'l'}>
+          <StyledSpinner />
+        </Spacer>
+      )}
       <View style={styles.bottomView}>
         <LandingCheckbox
           value={conditionAndPolicyAccepted}
