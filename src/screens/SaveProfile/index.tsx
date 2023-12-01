@@ -68,6 +68,18 @@ export interface SaveProfileParams {
    * If true the user wil not be able to go back from this screen.
    */
   readonly blockBackAction?: boolean;
+  /**
+   * Callback called if the profile have been saved sucessfully.
+   */
+  readonly onSuccess?: () => void;
+  /**
+   * Callback called if an error occurs while saving the profile.
+   */
+  readonly onError?: (error: Error) => void;
+  /**
+   * Callback called if the user cancels the operation.
+   */
+  readonly onCancel?: () => void;
 }
 
 /**
@@ -81,11 +93,7 @@ const SaveProfile = (props: NavProps) => {
   const { goBack } = useNavigation<NavProps['navigation']>();
   const { route } = props;
   const { params } = route;
-  const profile = params?.profile;
-  const account = params?.account;
-  const onSuccess = params?.onSuccess;
-  const onError = params?.onError;
-  const saveOnChain = params?.storeOnChain ?? true;
+  const { accountWithWallet: account, profile, onSuccess, onError, onCancel } = params ?? {};
 
   // -------------------------------------------------------------------------------------
   // --- Styles
@@ -100,6 +108,10 @@ const SaveProfile = (props: NavProps) => {
   // -------------------------------------------------------------------------------------
   // --- Screen state
   // -------------------------------------------------------------------------------------
+
+  // Ref that tells if the screen should call the onCancel
+  // callback or not when the screen is dismissed.
+  const handleCancel = useRef(true);
 
   // State of the edit form
   const [profilePic, setProfilePic] = useState<Asset | undefined>(
@@ -142,10 +154,14 @@ const SaveProfile = (props: NavProps) => {
   });
 
   // Hook to handle the cancel action
-  useOnBackAction(params?.onCancel ?? (() => {}), []);
+  useOnBackAction(() => {
+    if (handleCancel.current) {
+      onCancel?.();
+    }
+  }, []);
 
   // Hook to submit the form and check the status of the profile saving.
-  const { status, submitForm } = useSubmitForm(profile, account, saveOnChain);
+  const { status, submitForm } = useSubmitForm(profile, account);
 
   // Callback used when the user presses the Save button.
   const onEditProfile = useCallback(
@@ -154,6 +170,8 @@ const SaveProfile = (props: NavProps) => {
       if (result.isErr() && onError) {
         onError(result.error);
       } else if (result.isOk() && onSuccess) {
+        // Block the handling of the cancel action since we have a sucessful transaction.
+        handleCancel.current = false;
         onSuccess();
       }
     },

@@ -13,6 +13,8 @@ import { err, ok, Result } from 'neverthrow';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useTrackUser from 'hooks/analytics/useTrackUser';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import { useActiveAccount } from '@recoil/accounts';
 import { NavProps } from './index';
 
 /**
@@ -157,6 +159,8 @@ export const useSubmitForm = (
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
   const trackUser = useTrackUser();
+  const unlockWallet = useUnlockWallet();
+  const activeAccount = useActiveAccount();
   const { status, saveProfile } = useSaveProfileOnChain();
 
   // Callback used when the user pressed the button to save the profile
@@ -166,14 +170,26 @@ export const useSubmitForm = (
       profilePic: Asset | undefined,
       coverPic: Asset | undefined,
     ): Promise<Result<void, Error>> => {
-      // Get the address of the profile based on the given params
-      const profileAddress = account?.account?.address ?? profile?.address;
-      if (!profileAddress) {
+      let accountWithWallet = account;
+      if (!accountWithWallet && activeAccount) {
+        const unlockWalletResult = await unlockWallet();
+        if (unlockWalletResult.isErr()) {
+          return err(unlockWalletResult.error);
+        }
+
+        accountWithWallet = {
+          account: activeAccount,
+          wallet: unlockWalletResult.value,
+        };
+      }
+
+      const accountAddress = accountWithWallet?.account?.address;
+      if (!accountAddress) {
         return err(new Error('Cannot save a profile without a known address'));
       }
 
       // Get the on-chain profile
-      const onChainProfile = await getOnChainProfile(profileAddress);
+      const onChainProfile = await getOnChainProfile(accountAddress);
 
       // Get the profile to save
       const profileToSaveOnChain: DesmosProfile = {
@@ -182,7 +198,7 @@ export const useSubmitForm = (
         bio: getValueToSave(values.bio ?? profile?.bio, onChainProfile?.bio),
         profilePicture: profilePic,
         coverPicture: coverPic,
-        address: profileAddress,
+        address: accountAddress,
         creationTime: profile?.creationTime ?? new Date(Date.now()).toISOString(),
       };
 
@@ -195,11 +211,11 @@ export const useSubmitForm = (
         profilePicture: profileToSaveOnChain.profilePicture ?? profile?.profilePicture,
         coverPicture: profileToSaveOnChain.coverPicture ?? profile?.coverPicture,
       };
-      storeProfile(profileAddress, profileToSaveLocally);
+      storeProfile(accountAddress, profileToSaveLocally);
 
       // Save the profile on-chain, if required
       if (saveOnChain) {
-        const result = await saveProfile(profileToSaveOnChain, account);
+        const result = await saveProfile(profileToSaveOnChain, accountWithWallet);
         if (result.isErr()) {
           return err(result.error);
         } else {
@@ -209,7 +225,22 @@ export const useSubmitForm = (
 
       return ok(undefined);
     },
-    [account, profile, getOnChainProfile, storeProfile, saveOnChain, saveProfile, trackUser],
+    [
+      account,
+      activeAccount,
+      getOnChainProfile,
+      profile?.dTag,
+      profile?.nickname,
+      profile?.bio,
+      profile?.creationTime,
+      profile?.profilePicture,
+      profile?.coverPicture,
+      storeProfile,
+      saveOnChain,
+      unlockWallet,
+      saveProfile,
+      trackUser,
+    ],
   );
 
   return {
