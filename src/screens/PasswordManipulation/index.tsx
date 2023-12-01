@@ -81,8 +81,8 @@ const PasswordManipulation = () => {
       case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
         return Yup.object().shape({
           confirmPassword: Yup.string()
-            .required(t('error:required'))
-            .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
+            .required(t('required', { ns: 'error' }))
+            .oneOf([Yup.ref('newPassword')], t('pwMustMatch', { ns: 'error' })),
         });
       case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
         // TODO: Provide validation schema for reset password.
@@ -127,16 +127,15 @@ const PasswordManipulation = () => {
 
   return (
     <DView style={styles.container} topBar={<TopBar />} backgroundColor={theme.colors.white}>
-      <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
-
+      <Typography.H3 style={styles.headerText}>{t(headerText as any)}</Typography.H3>
       {descriptionText && (
         <Spacer paddingBottom={32}>
-          <Typography.Body6>{t(descriptionText)}</Typography.Body6>
+          <Typography.Body6>{t(descriptionText as any)}</Typography.Body6>
         </Spacer>
       )}
       {/* nested ternary to fix next button behavior on small screen devices
-      values greater than 75 will cause the button to shift upwards after a TextInput is focused
-      */}
+       values greater than 75 will cause the button to shift upwards after a TextInput is focused
+       */}
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? (bottomSafeInset ? 125 : 75) : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -153,15 +152,13 @@ const PasswordManipulation = () => {
                   ref={scrollViewRef}
                   keyboardDismissMode="on-drag">
                   <View style={styles.labelGroup}>
-                    <Typography.Subtitle2>{t(pwInputLabel)}</Typography.Subtitle2>
-
+                    <Typography.Subtitle2>{t(pwInputLabel as any)}</Typography.Subtitle2>
                     {values.newPassword.length >= MIN_PW_LENGTH && (
                       <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
-                        {t(passwordStrength(values.newPassword).value)}
+                        {t(passwordStrength(values.newPassword).value as any)}
                       </Typography.Subtitle4>
                     )}
                   </View>
-
                   <DSecureTextInput
                     testID="newPasswordField"
                     onOuterFocus={() => {
@@ -178,15 +175,12 @@ const PasswordManipulation = () => {
                     placeholder={t('newPw')}
                     // error={!!errors.newPassword}
                   />
-
                   {errors.newPassword && (
                     <Typography.Caption1 style={styles.errorText}>
                       {errors.newPassword}
                     </Typography.Caption1>
                   )}
-
                   {animatedPasswordChecks(values)}
-
                   <Typography.Subtitle2 style={styles.bottomLabel}>
                     {t('confirmPw')}
                   </Typography.Subtitle2>
@@ -230,7 +224,7 @@ const PasswordManipulation = () => {
                       values.newPassword.length === 0 ||
                       _.flatten(Object.values(errors)).length > 0
                     }>
-                    {t(buttonLabel)}
+                    {t(buttonLabel as any)}
                   </Button>
                 )}
               </>

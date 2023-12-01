@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
+import { bgonboarding, onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import PaginationDots from 'components/PaginationDots';
@@ -13,11 +13,19 @@ import { Image } from 'expo-image';
 import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
 import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
 import { getSaveProfileAllowance } from 'lib/grantsUtils';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Animated, Dimensions, FlatList, ListRenderItemInfo, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  ListRenderItemInfo,
+  View,
+} from 'react-native';
 import { verticalScale } from 'react-native-size-matters';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
@@ -51,6 +59,7 @@ export interface OnboardingParams {
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
 
 const Onboarding = () => {
+  const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
@@ -65,23 +74,23 @@ const Onboarding = () => {
 
   const slides: any[] = [
     {
-      title: t('onboarding title 1'),
-      body: t('onboarding body 1'),
+      title: t('page1'),
+      body: t('page1Sub'),
       image: onboarding1,
     },
     {
-      title: t('onboarding title 2'),
-      body: t('onboarding body 2'),
+      title: t('page2'),
+      body: t('page2Sub'),
       image: onboarding2,
     },
     {
-      title: t('onboarding title 3'),
-      body: t('onboarding body 3'),
+      title: t('page3'),
+      body: t('page3Sub'),
       image: onboarding3,
     },
     {
-      title: t('onboarding title 4'),
-      body: t('onboarding body 4'),
+      title: t('page4'),
+      body: t('page4Sub'),
       image: onboarding4,
     },
   ];
@@ -93,7 +102,7 @@ const Onboarding = () => {
   }).current;
 
   const onPressButton = useCallback(() => {
-    if (currentIndex < 2) {
+    if (currentIndex < 3) {
       slidesRef?.current?.scrollToIndex({ index: currentIndex + 1 });
     } else {
       if (!loading) {
@@ -147,9 +156,9 @@ const Onboarding = () => {
           <Image source={item.image} style={styles.imageStyle} contentFit="cover" />
           <View style={styles.textView}>
             <Spacer paddingBottom="m" />
-            <Typography.H6 style={CommonStyles.textAlign.center}>{item.title}</Typography.H6>
+            <Typography.H3 style={CommonStyles.textAlign.center}>{item.title}</Typography.H3>
             <Spacer paddingBottom="s" />
-            <Typography.Body5 style={CommonStyles.textAlign.center}>{item.body}</Typography.Body5>
+            <Typography.Body6 style={CommonStyles.textAlign.center}>{item.body}</Typography.Body6>
           </View>
         </View>
       );
@@ -159,6 +168,16 @@ const Onboarding = () => {
 
   return (
     <DView topBar={<TopBar />} disableHideKeyboardTouchable={true} style={styles.root}>
+      <ImageBackground
+        source={bgonboarding}
+        resizeMode="cover"
+        style={{
+          position: 'absolute',
+          height: 750,
+          width: Dimensions.get('window').width,
+          top: -100,
+        }}
+      />
       <View style={styles.contentView} onStartShouldSetResponder={() => true}>
         <FlatList
           onStartShouldSetResponder={() => true}
@@ -176,14 +195,19 @@ const Onboarding = () => {
           scrollEventThrottle={32}
           ref={slidesRef}
         />
-        <Spacer paddingBottom="xxl" />
-        <Button onPress={onPressButton} style={styles.button}>
-          {currentIndex === 2 ? t('lets get started') : t('next', { ns: 'common' })}
-        </Button>
-        <Spacer paddingBottom="xxl" />
         <View style={{ alignSelf: 'center' }}>
           <PaginationDots pages={slides} scrollX={scrollX} width={fixedWidth} />
         </View>
+        <Spacer paddingBottom="xl" />
+        <Button
+          size={44}
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
+          onPress={onPressButton}
+          style={styles.button}>
+          {t('next', { ns: 'common' })}
+        </Button>
+        <Spacer paddingBottom="xl" />
       </View>
     </DView>
   );
@@ -197,13 +221,12 @@ const useStyles = makeStyle(theme => ({
   },
   contentView: {
     flex: 1,
-    backgroundColor: theme.colors.white,
     justifyContent: 'center',
     width: fixedWidth,
   },
   imageStyle: {
-    width: verticalScale(300),
-    height: verticalScale(300),
+    width: verticalScale(150),
+    height: verticalScale(150),
   },
   textView: {
     marginTop: 80,

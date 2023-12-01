@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { appleLoginIcon, butterflyLandingIcon, googleLoginIcon, landingBG } from 'assets/images';
 import Button from 'components/Button';
@@ -23,14 +23,9 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
  * @constructor
  */
 
-export interface LandingParams {
-  invited?: boolean;
-}
-
 const Landing = () => {
   const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
-  const { params } = useRoute<NavProps['route']>();
   const { t } = useTranslation('landing');
   const styles = useStyles();
 
@@ -62,11 +57,6 @@ const Landing = () => {
         {t('header')}
       </Text>
       <Spacer paddingTop={theme.spacing.m} />
-      {params?.invited && (
-        <Typography.Body6 style={styles.invitedLabel}>
-          {t('you have been invited')}
-        </Typography.Body6>
-      )}
       <Box alignSelf="stretch">
         <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('mnemonic')}>
           {t('signUp with wallet')}

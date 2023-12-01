@@ -2,9 +2,11 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
+import { broadcastAnim } from 'assets/animations';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
@@ -109,12 +111,13 @@ const FeeGrantWaitingScreen = () => {
   return (
     <DView style={styles.root}>
       <View style={styles.innerContainer}>
-        <Spacer paddingBottom={theme.spacing.m} />
+        <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+        <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>
         <Spacer paddingBottom={theme.spacing.l} />
         <Typography.Body5 style={styles.subtitle}>{subtitle}</Typography.Body5>
         <Spacer paddingBottom={theme.spacing.xl} />
-        <Button height={44} type="solid" onPress={createDesmosProfile} disabled={!feeGrantReady}>
+        <Button onPress={createDesmosProfile} disabled={!feeGrantReady}>
           Create a Desmos Profile
         </Button>
       </View>

@@ -6,49 +6,20 @@ import CommonStyles from 'config/theme/CommonStyles';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import { clearMMKV } from 'lib/MMKVStorage';
-import { resetSecureStorage } from 'lib/SecureStorage';
 import { Box, HStack, VStack } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { FC } from 'react';
 import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
-  ROUTES.BLOCKED_USERS,
-  ROUTES.BROADCAST_TX_ON_CHAIN,
-  ROUTES.SETTINGS_ENABLE_BIOMETRICS,
-  ROUTES.SAVE_PROFILE,
-  ROUTES.IMPACT_POINTS_MODAL,
-  ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT,
-  ROUTES.ACTIVITIES,
   ROUTES.ONBOARDING,
-  ROUTES.LOGIN,
   ROUTES.PROFILE,
-  // ROUTES.SIGNUP_RESULT,
-  // ROUTES.CONFIRM_MODAL,
-  ROUTES.SIGNUP,
-  // ROUTES.ACTION_AUTHORIZATION,
-  // ROUTES.SELECT_POST_TYPE,
-  // ROUTES.ENTER_COMMENT,
-  // ROUTES.ACTION_AUTHORIZATION,
-  // ROUTES.HOME_TABS,
-  // ROUTES.SELECT_CHAIN,
-  // ROUTES.CONSENT_AGREEMENT,
-  // ROUTES.SEND_TIPS,
-  // ROUTES.CONNECT_TO_LEDGER,
-  // ROUTES.SAVE_PROFILE,
-  ROUTES.LANDING,
-  ROUTES.WELCOME,
-  // ROUTES.CONNECT_ADDRESS_GENERAL,
-  // ROUTES.CONNECT_ADDRESS_ADVANCED,
-  // ROUTES.CONFIRM_ADDRESS,
-  // ROUTES.DISCONNECT_CHAIN_MODAL,
-  // ROUTES.POST_DETAILS,
-  ROUTES.POST_REPORT,
-  // ROUTES.FOLLOWING_AND_FOLLOWERS,
-  // ROUTES.ADD_PROFILE,
   ROUTES.SETTINGS,
+  ROUTES.WELCOME_PAGE,
+  ROUTES.FEE_GRANT_WAITING_SCREEN,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
@@ -61,7 +32,6 @@ type DevScreenProps = StackScreenProps<RootNavigatorParamList, ROUTES.DEV_SCREEN
 
 const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const { navigate } = navigation;
-
   const toast = useCustomToast();
 
   // -------------------------------------------------------------------------------------
@@ -88,17 +58,16 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           switch (item) {
-            case ROUTES.PROFILE_CONNECTIONS:
+            case ROUTES.ONBOARDING:
               navigate(item, {
-                headerTitle: '@Raffaello',
-                initialTabRouteName: ROUTES.PROFILE_FOLLOWING,
-                subspaceID: 5,
-                userAddress: '',
-                username: '@Raffaello',
+                passwordManipulationMode:
+                  PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE,
               });
               break;
-            case ROUTES.ADD_PROFILE:
-              navigate(item);
+            case ROUTES.WELCOME_PAGE:
+              navigate(item, {
+                action: 'create',
+              });
               break;
             default:
               navigate(item);
@@ -162,7 +131,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
                       text: 'Yes',
                       onPress: async () => {
                         clearMMKV();
-                        await resetSecureStorage();
                       },
                     },
                     {

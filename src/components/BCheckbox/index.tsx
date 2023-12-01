@@ -21,7 +21,7 @@ const BCheckbox = ({ style, value, onValueChange }: Props) => {
       style={style}
       onPress={() => onValueChange(!value || false)}>
       <Image
-        tintColor={value ? undefined : theme.colors.surfaceBlack}
+        tintColor={theme.colors.surfaceBlack}
         source={value ? check_circle : uncheck_circle}
         style={styles.icon}
       />

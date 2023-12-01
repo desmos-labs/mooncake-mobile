@@ -33,7 +33,7 @@ import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import ImportAccountSelectProfile, {
   SelectAccountParamList,
 } from 'screens/ImportAccountSelectProfile';
-import Landing, { LandingParams } from 'screens/Landing';
+import Landing from 'screens/Landing';
 import Login, { LoginParams } from 'screens/Login';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
@@ -82,7 +82,7 @@ export type RootNavigatorParamList = {
   // --- INITIAL SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.LANDING]: LandingParams;
+  [ROUTES.LANDING]: undefined;
   [ROUTES.ONBOARDING]: OnboardingParams;
   [ROUTES.SIGNUP]: SignupParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
@@ -259,7 +259,9 @@ const RootNavigator = () => {
   const gestureResponseDistance = Math.max(height, width);
 
   const initialRouteName = React.useMemo(() => {
-    if (__DEV__) return ROUTES.DEV_SCREEN;
+    if (__DEV__) {
+      return ROUTES.DEV_SCREEN;
+    }
     const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
 
     if (activeAddr) {
@@ -283,24 +285,19 @@ const RootNavigator = () => {
       {/* --- DEV SCREENS --- */}
       {/* ------------------- */}
       {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
-
       {/* ----------------------- */}
       {/* --- INITIAL SCREENS --- */}
       {/* ----------------------- */}
-
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ROUTES.SERVICE_AND_POLICY} component={ServiceAndPolicy} />
-
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.FEE_GRANT_WAITING_SCREEN} component={FeeGrantWaitingScreen} />
-
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}
       {/* ------------------------ */}
-
       <Stack.Screen
         name={ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN}
         component={ImportAccountSelectChain}
@@ -316,27 +313,20 @@ const RootNavigator = () => {
         component={ImportAccountSelectProfile}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
-
       <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
-
       {/* ------------------------------------ */}
       {/* --- BROADCAST TRANSACTION SCREEN --- */}
       {/* ------------------------------------ */}
-
       <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
-
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}
       {/* -------------------- */}
-
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
-
       {/* -------------------- */}
       {/* --- POST SCREENS --- */}
       {/* -------------------- */}
-
       <Stack.Screen
         name={ROUTES.POST_CREATE}
         component={CreatePost}
@@ -345,46 +335,35 @@ const RootNavigator = () => {
         })}
       />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
-
       {/* ------------------------ */}
       {/* --- SETTINGS SCREENS --- */}
       {/* ------------------------ */}
-
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen name={ROUTES.SETTINGS_SHOW_PRIVATE_KEY} component={ShowPrivateKey} />
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
-
       {/* --------------------------------- */}
       {/* --- CONNECT TO LEDGER SCREENS --- */}
       {/* --------------------------------- */}
-
       <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
-
       {/* --------------------------- */}
       {/* --- CHAIN LINKS SCREENS --- */}
       {/* --------------------------- */}
-
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
       <Stack.Screen name={ROUTES.DISCONNECT_CHAIN_MODAL} component={DisconnectChainModal} />
-
       {/* ------------------------- */}
       {/* --- APP LINKS SCREENS --- */}
       {/* ------------------------- */}
-
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
       {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
       <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
-
       {/* ----------------------- */}
       {/* --- PROFILE SCREENS --- */}
       {/* ----------------------- */}
-
       {/* <Stack.Screen  name={ROUTES.ADD_PROFILE_MODAL} component={AddProfileModal} /> */}
       <Stack.Screen name={ROUTES.SAVE_PROFILE} component={SaveProfile} />
-
       {/* Profile visualization */}
       <Stack.Screen
         name={ROUTES.PROFILE}
@@ -407,10 +386,8 @@ const RootNavigator = () => {
           gestureResponseDistance,
         }}
       />
-
       <Stack.Screen name={ROUTES.PROFILE_CONNECTIONS} component={ProfileConnections} />
       <Stack.Screen name={ROUTES.PROFILE_OPERATIONS} component={ProfileOperations} />
-
       {/* <Stack.Screen */}
       {/*  name={ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS} */}
       {/*  component={FollowingAndFollowers} */}
@@ -419,13 +396,10 @@ const RootNavigator = () => {
       {/*    cardStyle: styles.followingAndFollowers, */}
       {/*  }} */}
       {/* /> */}
-
       {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
-
       {/* --------------------- */}
       {/* --- BOTTOM MODALS --- */}
       {/* --------------------- */}
-
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -443,7 +417,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
-
         <Stack.Screen
           name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}
           component={UploadProfilePicturesModal}
@@ -453,16 +426,12 @@ const RootNavigator = () => {
           component={BackupPhraseBottomModal}
         />
       </Stack.Group>
-
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
       {/* ------------------------------ */}
-
       {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
       {/* <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} /> */}
-
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
-
       {/* <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} /> */}
     </Stack.Navigator>
   );

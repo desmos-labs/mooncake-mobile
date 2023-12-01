@@ -1,13 +1,11 @@
 {
-  "get started": "Get Started",
-  "userConsent": "By continuing, you’re agreeing with Butter <0>Terms of Service</0> and <1>Privacy Policy</1>",
   "skip": "Skip",
-  "page1": "Welcome to Butter",
-  "page1Sub": "A decentralised social network that empower users to be the real owners of their social experience.",
-  "page2": "Privacy First",
-  "page2Sub": "There are no intermediaries between you and other users like you, you are in control of your data and contents.",
-  "page3": "Free Speech",
-  "page3Sub": "You can speak freely here, without fears. Your content will never be deleted. The community of Butter moderates itself.",
-  "page4": "Earn Rewards",
-  "page4Sub": "You can earn rewards by receiving tips from other users."
+  "page1": "Own Your \nSocial Journey",
+  "page1Sub": "Butter is a decentralised social network where you are in control",
+  "page2": "Direct Connections, \nTotal Control",
+  "page2Sub": "Your data, your content, no intermediaries",
+  "page3": "Speak Freely, \nStay Confident",
+  "page3Sub": "On Butter, your voice stays yours - no one deletes your content",
+  "page4": "Earn \nAs You Engage",
+  "page4Sub": "Receive tips from fellow users and watch your rewards grow!"
 }
