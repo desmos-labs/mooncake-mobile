@@ -15,7 +15,7 @@ const useStyles = makeStyle(theme => ({
   innerContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 90,
+    paddingTop: 150,
   },
   subtitle: {
     textAlign: 'center',

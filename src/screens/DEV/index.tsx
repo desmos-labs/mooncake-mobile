@@ -14,7 +14,13 @@ import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'r
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 
 // Add the ROUTE enum of the screens that should be rendered here
-const routesToRender = [ROUTES.ONBOARDING, ROUTES.PROFILE, ROUTES.SETTINGS, ROUTES.WELCOME_PAGE];
+const routesToRender = [
+  ROUTES.ONBOARDING,
+  ROUTES.PROFILE,
+  ROUTES.SETTINGS,
+  ROUTES.WELCOME_PAGE,
+  ROUTES.FEE_GRANT_WAITING_SCREEN,
+];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
   button: { padding: 18, borderWidth: 1, borderColor: 'grey', borderRadius: 12 },
