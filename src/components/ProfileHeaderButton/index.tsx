@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 
@@ -35,10 +35,9 @@ type Props = {
 const ProfileHeaderButton = (props: Props) => {
   const { profile, image, onPress, style, containerStyle, tintColor } = props;
 
-  const source = profile ? getProfilePicture(profile) : image;
-  if (!source) {
-    throw new Error('Cannot show ProfileHeaderButton without image source');
-  }
+  const source = useMemo(() => {
+    return profile ? getProfilePicture(profile) : image;
+  }, [profile, image]);
 
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
