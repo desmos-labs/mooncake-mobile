@@ -13,7 +13,7 @@ export const generateWeb3AuthWallet = async (
   loginProvider: string,
   privateKey: Uint8Array,
 ): Promise<AccountWithWallet> => {
-  const signer = await PrivateKeySigner.fromSecp256k1(privateKey, SigningMode.DIRECT, {
+  const signer = PrivateKeySigner.fromSecp256k1(privateKey, SigningMode.DIRECT, {
     prefix,
   });
 

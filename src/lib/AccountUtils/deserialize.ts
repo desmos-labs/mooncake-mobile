@@ -1,14 +1,9 @@
-import { stringToPath } from '@cosmjs/crypto/build/slip10';
 import { fromHex } from '@cosmjs/encoding';
 import {
   Account,
   AccountSerializationVersion,
-  LedgerAccount,
-  MnemonicAccount,
   PrivateKeyAccount,
   SerializableAccount,
-  SerializableLedgerAccount,
-  SerializableMnemonicAccount,
   SerializablePrivateKeyAccount,
   SerializableWeb3AuthAccount,
   Web3AuthAccount,
@@ -16,88 +11,6 @@ import {
 import { WalletType } from 'types/wallet';
 
 export const ACCOUNT_ALGOS = ['secp256k1', 'ed25519', 'sr25519'];
-
-export const deserializeMnemonicAccount = (
-  account: Partial<SerializableMnemonicAccount>,
-): MnemonicAccount => {
-  if (
-    account.version === undefined ||
-    account.address === undefined ||
-    account.hdPath === undefined ||
-    account.walletType === undefined ||
-    account.algo === undefined ||
-    account.pubKey === undefined ||
-    account.creationDate === undefined
-  ) {
-    throw new Error('invalid mnemonic account');
-  }
-
-  if (account.version !== AccountSerializationVersion.Mnemonic) {
-    throw new Error(`unsupported mnemonic account version ${account.version}`);
-  }
-
-  if (account.walletType !== WalletType.Mnemonic) {
-    throw new Error(`invalid mnemonic account type ${account.walletType}`);
-  }
-
-  if (ACCOUNT_ALGOS.indexOf(account.algo) === -1) {
-    throw new Error(`invalid account algo ${account.algo}`);
-  }
-
-  const hdPath = stringToPath(account.hdPath);
-  const pubKey = fromHex(account.pubKey);
-
-  return {
-    walletType: WalletType.Mnemonic,
-    address: account.address,
-    algo: account.algo,
-    hdPath,
-    pubKey,
-    creationDate: account.creationDate,
-  };
-};
-
-export const deserializeLedgerAccount = (
-  account: Partial<SerializableLedgerAccount>,
-): LedgerAccount => {
-  if (
-    account.version === undefined ||
-    account.address === undefined ||
-    account.hdPath === undefined ||
-    account.walletType === undefined ||
-    account.algo === undefined ||
-    account.pubKey === undefined ||
-    account.ledgerAppName === undefined ||
-    account.creationDate === undefined
-  ) {
-    throw new Error('invalid ledger account');
-  }
-
-  if (account.version !== AccountSerializationVersion.Ledger) {
-    throw new Error(`unsupported ledger account version ${account.version}`);
-  }
-
-  if (account.walletType !== WalletType.Ledger) {
-    throw new Error(`invalid ledger account type ${account.walletType}`);
-  }
-
-  if (ACCOUNT_ALGOS.indexOf(account.algo) === -1) {
-    throw new Error(`invalid account algo ${account.algo}`);
-  }
-
-  const hdPath = stringToPath(account.hdPath);
-  const pubKey = fromHex(account.pubKey);
-
-  return {
-    walletType: WalletType.Ledger,
-    address: account.address,
-    algo: account.algo,
-    hdPath,
-    pubKey,
-    ledgerAppName: account.ledgerAppName,
-    creationDate: account.creationDate,
-  };
-};
 
 export const deserializeWeb3AuthAccount = (
   account: Partial<SerializableWeb3AuthAccount>,
@@ -184,10 +97,6 @@ export const deserializeAccount = (account: Partial<SerializableAccount>): Accou
   }
 
   switch (account.walletType) {
-    case WalletType.Mnemonic:
-      return deserializeMnemonicAccount(account);
-    case WalletType.Ledger:
-      return deserializeLedgerAccount(account);
     case WalletType.Web3Auth:
       return deserializeWeb3AuthAccount(account);
     case WalletType.PrivateKey:
