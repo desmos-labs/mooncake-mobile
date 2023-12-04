@@ -60,6 +60,10 @@ const useHooks = () => {
   const { params } = useRoute<NavProps['route']>();
   const { mode, account, profile } = params;
 
+  console.log(mode);
+  console.log(account);
+  console.log(profile);
+
   const storeAccount = useStoreAccount();
   const updateAccount = useUpdateAccount();
   const storeProfile = useStoreProfile();
@@ -95,6 +99,7 @@ const useHooks = () => {
       case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
         return 'resetPw';
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
+      case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
         return 'setupPw';
       default:
@@ -105,6 +110,7 @@ const useHooks = () => {
   const descriptionText = React.useMemo(() => {
     switch (mode) {
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
+      case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
         return 'setupPwDescription';
       default:
@@ -115,6 +121,7 @@ const useHooks = () => {
   const pwInputLabel = React.useMemo(() => {
     switch (mode) {
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
+      case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
         return 'pw';
       default:
@@ -125,6 +132,7 @@ const useHooks = () => {
   const buttonLabel = React.useMemo(() => {
     switch (mode) {
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
+      case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
         return 'common:next';
       default:
@@ -218,17 +226,21 @@ const useHooks = () => {
        * 3. Store account
        */
       if (mode === PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE && account) {
-        await storeAccount(account, formValues.newPassword);
-        if (biometricsAvailable) {
-          setSigninStatus(SignInStatus.ENABLING_BIOMETRICS);
-          await enableBiometrics(formValues.newPassword, false, account.wallet.address);
+        const storeAccountResult = await storeAccount(account, formValues.newPassword);
+        if (storeAccountResult.isOk()) {
+          if (biometricsAvailable) {
+            setSigninStatus(SignInStatus.ENABLING_BIOMETRICS);
+            await enableBiometrics(formValues.newPassword, false, account.wallet.address);
+          }
+          setLoginFlowState({
+            step: LoginFlowStep.WaitingFeeGrant,
+          });
+          navigate(ROUTES.FEE_GRANT_WAITING_SCREEN, {
+            granted: false,
+          });
+        } else {
+          console.warn(storeAccountResult.error);
         }
-        setLoginFlowState({
-          step: LoginFlowStep.WaitingFeeGrant,
-        });
-        navigate(ROUTES.FEE_GRANT_WAITING_SCREEN, {
-          granted: false,
-        });
         setLoading(false);
       }
       if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {

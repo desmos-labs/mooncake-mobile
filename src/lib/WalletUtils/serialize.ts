@@ -1,8 +1,12 @@
+import { pathToString } from '@cosmjs/crypto';
+import { toHex } from '@cosmjs/encoding';
 import {
   LedgerWallet,
   MnemonicWallet,
+  PrivateKeyWallet,
   SerializableLedgerWallet,
   SerializableMnemonicWallet,
+  SerializablePrivateKeyWallet,
   SerializableWallet,
   SerializableWeb3AuthWallet,
   Wallet,
@@ -10,8 +14,6 @@ import {
   WalletType,
   Web3AuthWallet,
 } from 'types/wallet';
-import { toHex } from '@cosmjs/encoding';
-import { pathToString } from '@cosmjs/crypto';
 
 /**
  * Convert a [MnemonicWallet] into a [SerializableMnemonicWallet]
@@ -53,6 +55,20 @@ export const serializeWeb3AuthWallet = (wallet: Web3AuthWallet): SerializableWeb
 });
 
 /**
+ * Convert a [Web3AuthWallet] into a [SerializableWeb3AuthWallet]
+ * @param wallet - The [Web3AuthWallet] to convert.
+ */
+export const serializePrivateKeyWallet = (
+  wallet: PrivateKeyWallet,
+): SerializablePrivateKeyWallet => ({
+  version: WalletSerializationVersion.PrivateKey,
+  type: WalletType.PrivateKey,
+  addressPrefix: wallet.addressPrefix,
+  address: wallet.address,
+  privateKey: toHex(wallet.privateKey),
+});
+
+/**
  * Convert a [Wallet] into a [SerializableWallet]
  * @param wallet - The [Wallet] to convert.
  */
@@ -68,6 +84,9 @@ export const serializeWallet = (wallet: Wallet): SerializableWallet => {
       break;
     case WalletType.Web3Auth:
       serializableWallet = serializeWeb3AuthWallet(wallet);
+      break;
+    case WalletType.PrivateKey:
+      serializableWallet = serializePrivateKeyWallet(wallet);
       break;
     default:
       // @ts-ignore

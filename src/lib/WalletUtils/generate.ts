@@ -1,12 +1,12 @@
-import { WalletGenerationData, WalletType } from 'types/wallet';
-import { OfflineSignerAdapter, PrivateKeySigner, SigningMode } from '@desmoslabs/desmjs';
 import { HdPath } from '@cosmjs/crypto';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import { LedgerSigner } from '@cosmjs/ledger-amino';
-import { CryptoUtils } from 'native/CryptoUtils';
-import { LedgerApp } from 'types/ledger';
+import { OfflineSignerAdapter, PrivateKeySigner, SigningMode } from '@desmoslabs/desmjs';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import { slip10IndexToBaseNumber } from 'lib/FormatUtils';
+import { CryptoUtils } from 'native/CryptoUtils';
 import { AccountWithWallet } from 'types/account';
+import { LedgerApp } from 'types/ledger';
+import { WalletGenerationData, WalletType } from 'types/wallet';
 
 /**
  * Function allowing to generate a list of [LedgerWallet].
@@ -193,4 +193,38 @@ export const generateAccountWithWallets = async (
       // @ts-ignore
       throw new Error(`Cannot generate wallet from HD path for import type ${data.type}`);
   }
+};
+
+/**
+ * Function allowing to generate a PrivateKeyWallet.
+ * @param prefix - Account prefix that should be used to generate the Bech32 address of the wallet.
+ * @param privateKey - The wallet private key.
+ */
+export const generatePrivateKeyWallet = async (
+  prefix: string,
+  privateKey: Uint8Array,
+): Promise<AccountWithWallet> => {
+  const signer = PrivateKeySigner.fromSecp256k1(privateKey, SigningMode.DIRECT, {
+    prefix,
+  });
+
+  await signer.connect();
+  const [accountData] = await signer.getAccounts();
+
+  return {
+    wallet: {
+      type: WalletType.PrivateKey,
+      address: accountData.address,
+      signer,
+      privateKey,
+      addressPrefix: prefix,
+    },
+    account: {
+      walletType: WalletType.PrivateKey,
+      address: accountData.address,
+      pubKey: accountData.pubkey,
+      algo: accountData.algo,
+      creationDate: new Date(),
+    },
+  };
 };

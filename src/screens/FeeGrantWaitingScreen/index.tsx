@@ -3,12 +3,14 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
 import { broadcastAnim } from 'assets/animations';
+import { butterflyLandingIcon } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import GRANTER_ADDRESS, { hasSaveProfileAllowance } from 'lib/grantsUtils';
@@ -36,7 +38,6 @@ const FeeGrantWaitingScreen = () => {
   const styles = useStyles();
   const theme = useTheme();
   const setLoginFlowState = useSetLoginFlowState();
-
   // Fee grant hooks
   const [feeGrantReady, setFeeGrantReady] = useState(params?.granted ?? false);
   const { feeGrants, startCheckingFeeGrants, stopCheckingFeeGrants } =
@@ -44,6 +45,10 @@ const FeeGrantWaitingScreen = () => {
 
   // Profile hooks
   const saveProfile = useSaveProfile();
+
+  useEffect(() => {
+    console.log('Checking fee grant for', activeAccount);
+  }, [activeAccount]);
 
   // Hook to prevent the user to go back, just allow it in debug if we need
   // to go back.
@@ -78,6 +83,7 @@ const FeeGrantWaitingScreen = () => {
     // Get the authorization information
     // Check if the user already has the fee grants
     // If has the save profile allowance
+    console.log(feeGrants);
     if (hasSaveProfileAllowance(feeGrants)) {
       stopCheckingFeeGrants();
       setFeeGrantReady(true);
@@ -111,7 +117,15 @@ const FeeGrantWaitingScreen = () => {
   return (
     <DView style={styles.root}>
       <View style={styles.innerContainer}>
-        <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+        {feeGrantReady ? (
+          <Image
+            source={butterflyLandingIcon}
+            tintColor={theme.colors.primary}
+            style={{ width: 180, height: 180 }}
+          />
+        ) : (
+          <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+        )}
         <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>
         <Spacer paddingBottom={theme.spacing.l} />

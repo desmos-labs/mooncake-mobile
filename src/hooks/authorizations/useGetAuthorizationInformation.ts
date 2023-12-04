@@ -1,7 +1,6 @@
-import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import { convertGraphQLFeeGrant } from 'lib/GraphQLUtils';
-import GRANTER_ADDRESS from 'lib/grantsUtils';
+import { useMemo } from 'react';
 import GetAccountFeeGrantAllowance from 'services/graphql/queries/desmos/GetAccountFeeGrantAllowance';
 
 /**
@@ -20,13 +19,15 @@ const useGetAuthorizationInformation = (accountAddress: string) => {
   } = useQuery(GetAccountFeeGrantAllowance, {
     variables: {
       granteeAddress: accountAddress,
-      granterAddress: GRANTER_ADDRESS,
     },
     fetchPolicy: 'network-only',
   });
 
   const feeGrants = useMemo(() => {
-    if (!data) return [];
+    console.log('[useGetAuthorizationInformation] data', data);
+    if (!data) {
+      return [];
+    }
     return ((data.fee_grants as any[]) ?? []).map(convertGraphQLFeeGrant);
   }, [data]);
 

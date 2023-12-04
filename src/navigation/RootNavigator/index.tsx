@@ -4,10 +4,11 @@ import {
   BottomSheetAndroid,
   ModalPresentationIOS,
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
+import { useLoginFlowState } from '@recoil/login';
 import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
+import useInitTourGuidesState from 'hooks/tourguide/useInitTourGuidesState';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
-import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ConnectToLedgerStack, {
   ConnectToLedgerStackParams,
@@ -33,6 +34,7 @@ import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import ImportAccountSelectProfile, {
   SelectAccountParamList,
 } from 'screens/ImportAccountSelectProfile';
+import ImportPrivateKey from 'screens/ImportPrivateKey';
 import Landing from 'screens/Landing';
 import Login, { LoginParams } from 'screens/Login';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
@@ -70,6 +72,7 @@ import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateK
 import Signup, { SignupParams } from 'screens/Signup';
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomePage, { WelcomePageParams } from 'screens/WelcomeScreen';
+import { LoginFlowStep } from 'types/login';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -101,6 +104,7 @@ export type RootNavigatorParamList = {
   [ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE]: SelectAccountParamList;
   [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
+  [ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY_INPUT]: undefined;
 
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
 
@@ -249,26 +253,31 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
-  // Initialization. Move to Landing page once ready.
+  const loginFlowState = useLoginFlowState();
+
   useInitializeAppData();
   useInitializeNotifications();
   usePosthogIdentification();
-
+  // Init the tour guides state.
+  useInitTourGuidesState();
   //  To allow going back to previous screen via swipe left.
   const { height, width } = Dimensions.get('window');
   const gestureResponseDistance = Math.max(height, width);
 
-  const initialRouteName = React.useMemo(() => {
+  // If active account -> go to Homescreen
+  const initialRoute = React.useMemo(() => {
     if (__DEV__) {
       return ROUTES.DEV_SCREEN;
     }
-    const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
 
-    if (activeAddr) {
-      return ROUTES.BOTTOM_TABS;
+    switch (loginFlowState.step) {
+      case LoginFlowStep.Completed:
+        return ROUTES.BOTTOM_TABS;
+      default:
+        // The other cases will be handled in the landing page.
+        return ROUTES.LANDING;
     }
-    return ROUTES.ONBOARDING;
-  }, []);
+  }, [loginFlowState]);
 
   const NativeTransition = Platform.select({
     ios: ModalPresentationIOS,
@@ -277,7 +286,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={initialRouteName}
+      initialRouteName={initialRoute}
       screenOptions={{
         headerShown: false,
       }}>
@@ -313,6 +322,7 @@ const RootNavigator = () => {
         component={ImportAccountSelectProfile}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY_INPUT} component={ImportPrivateKey} />
       <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
       {/* ------------------------------------ */}
       {/* --- BROADCAST TRANSACTION SCREEN --- */}

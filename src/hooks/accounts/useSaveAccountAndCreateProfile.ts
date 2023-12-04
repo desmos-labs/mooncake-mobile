@@ -43,7 +43,6 @@ const useSaveAccountAndCreateProfileFlow = () => {
       if (loginResult.isErr()) {
         return err(loginResult.error);
       }
-
       // Get the user's profile.
       const fetchProfileResult = await promiseToResult(
         fetchProfile(account.wallet.address),
