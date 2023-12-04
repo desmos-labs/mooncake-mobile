@@ -7,7 +7,7 @@ import React from 'react';
 
 export type NavProps = NativeStackScreenProps<
   RootNavigatorParamList,
-  ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY_INPUT
+  ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY
 >;
 
 const useHooks = () => {

@@ -12,7 +12,12 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, View } from 'react-native';
-import { Web3AuthLoginProvider } from 'types/web3auth';
+import {
+  LoginMethod,
+  LoginMethodPrivateKey,
+  LoginMethodWeb3AuthApple,
+  LoginMethodWeb3AuthGoogle,
+} from 'types/login';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -34,10 +39,10 @@ const Landing = () => {
   // -------------------------------------------------------------------------------------
 
   const onSignUp = React.useCallback(
-    (login: 'wallet' | Web3AuthLoginProvider) => {
+    (loginMethod: LoginMethod) => {
       // Handle the post consent behavior with a reusable callback.
       navigate(ROUTES.SERVICE_AND_POLICY, {
-        loginProvider: login,
+        loginMethod,
       });
     },
     [navigate],
@@ -58,8 +63,10 @@ const Landing = () => {
       </Text>
       <Spacer paddingTop={theme.spacing.m} />
       <Box alignSelf="stretch">
-        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('wallet')}>
-          {t('signUp with wallet')}
+        <Button
+          backgroundColor="rgba(255, 255, 255, 0.7)"
+          onPress={() => onSignUp(LoginMethodPrivateKey)}>
+          {t('login with private key')}
         </Button>
       </Box>
       <Spacer paddingTop={theme.spacing.xl} />
@@ -75,13 +82,13 @@ const Landing = () => {
           <ImageButton
             image={appleLoginIcon}
             style={styles.loginLogo}
-            onPress={() => onSignUp(Web3AuthLoginProvider.Apple)}
+            onPress={() => onSignUp(LoginMethodWeb3AuthApple)}
           />
         )}
         <ImageButton
           image={googleLoginIcon}
           style={styles.loginLogo}
-          onPress={() => onSignUp(Web3AuthLoginProvider.Google)}
+          onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}
         />
       </View>
     </DView>
