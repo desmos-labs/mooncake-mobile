@@ -31,7 +31,7 @@ const useSaveAccount = () => {
        wallet: account.wallet,
        password,
        });
-       }*/
+       } */
     },
     [navigation],
   );

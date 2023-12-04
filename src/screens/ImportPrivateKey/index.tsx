@@ -39,9 +39,9 @@ const ImportPrivateKey = () => {
                     Please enter your private key here to restore your account
                   </Typography.Body6>
                 </View>
-                <Spacer paddingTop={'m'} />
+                <Spacer paddingTop="m" />
                 <Typography.Subtitle2>Private Key</Typography.Subtitle2>
-                <Spacer paddingBottom={'s'} />
+                <Spacer paddingBottom="s" />
                 <DTextInput
                   autoCapitalize="none"
                   textAlignVertical="top"
