@@ -60,10 +60,6 @@ const useHooks = () => {
   const { params } = useRoute<NavProps['route']>();
   const { mode, account, profile } = params;
 
-  console.log(mode);
-  console.log(account);
-  console.log(profile);
-
   const storeAccount = useStoreAccount();
   const updateAccount = useUpdateAccount();
   const storeProfile = useStoreProfile();

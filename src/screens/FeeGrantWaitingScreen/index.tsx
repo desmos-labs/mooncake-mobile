@@ -45,11 +45,6 @@ const FeeGrantWaitingScreen = () => {
 
   // Profile hooks
   const saveProfile = useSaveProfile();
-
-  useEffect(() => {
-    console.log('Checking fee grant for', activeAccount);
-  }, [activeAccount]);
-
   // Hook to prevent the user to go back, just allow it in debug if we need
   // to go back.
   React.useEffect(
@@ -83,7 +78,6 @@ const FeeGrantWaitingScreen = () => {
     // Get the authorization information
     // Check if the user already has the fee grants
     // If has the save profile allowance
-    console.log(feeGrants);
     if (hasSaveProfileAllowance(feeGrants)) {
       stopCheckingFeeGrants();
       setFeeGrantReady(true);

@@ -29,7 +29,6 @@ const useLoginWithPrivateKey = (chain: SupportedChain) => {
       if (result.isErr()) {
         showToast.errorNoRetry(result.error.message);
       }
-      console.log(account.wallet.address);
       setLoginLoading(false);
     },
     [chain.prefix, showToast, startSaveAccountAndCreateProfileFlow],

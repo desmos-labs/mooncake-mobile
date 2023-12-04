@@ -24,7 +24,6 @@ const useGetAuthorizationInformation = (accountAddress: string) => {
   });
 
   const feeGrants = useMemo(() => {
-    console.log('[useGetAuthorizationInformation] data', data);
     if (!data) {
       return [];
     }
