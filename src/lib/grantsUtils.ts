@@ -1,11 +1,11 @@
 import { ApolloClient } from '@apollo/client';
 import { Feegrant } from '@desmoslabs/desmjs';
-import { Result, err, ok } from 'neverthrow';
-import { FeeGrant } from 'types/authorizations';
+import { err, ok, Result } from 'neverthrow';
 import GetAccountFeeGrantAllowance from 'services/graphql/queries/desmos/GetAccountFeeGrantAllowance';
+import { FeeGrant } from 'types/authorizations';
 import { convertGraphQLFeeGrant } from './GraphQLUtils';
 
-const GRANTER_ADDRESS = 'desmos1xnmz6tm3ggvlmtqt2sx5kvcy3kfy2a0ydcvs2d';
+const GRANTER_ADDRESS = 'desmos12l00q6xyjgd7ph88etyl85ykzec30cnvxz6g2m';
 
 /**
  * Function to check if the provided {@link FeeGrant} can be used for the provided
@@ -74,7 +74,7 @@ export const getOnChainGrants = async (
  * {@link FeeGrant} that can be used to broadcast a transaction that contains
  * the messages that have the provided messages types.
  * @param feeGrants - The list of {@link FeeGrant} to check.
- * @param messageTypes - The messages types to check.
+ * @param messagesTypes - The messages types to check.
  */
 export const getFeeGrantAllowanceForMessages = (
   feeGrants: FeeGrant[],

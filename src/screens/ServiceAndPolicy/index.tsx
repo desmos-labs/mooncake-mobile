@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
@@ -16,12 +16,11 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, Platform, TouchableOpacity, View } from 'react-native';
-import { usePerformImportAccount } from 'screens/Landing/hooks';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
 export interface ServiceAndPolicyParams {
-  loginProvider: 'mnemonic' | Web3AuthLoginProvider;
+  loginProvider: 'wallet' | Web3AuthLoginProvider;
 }
 
 export type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.SERVICE_AND_POLICY>;
@@ -29,15 +28,15 @@ export type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.SER
 const ServiceAndPolicy = () => {
   const { t } = useTranslation('legal');
   const { params } = useRoute<NavProps['route']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
   const [conditionAndPolicyAccepted, setConditionAndPolicyAccepted] = useState(false);
   const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
-  const performImportAccount = usePerformImportAccount();
 
   const loginWithSelectedMethod = useCallback(async () => {
-    if (params?.loginProvider === 'mnemonic') {
-      performImportAccount();
+    if (params?.loginProvider === 'wallet') {
+      navigate(ROUTES.IMPORT_ACCOUNT_SELECT_MODE);
     } else {
       await loginWithWeb3Auth(params?.loginProvider);
     }

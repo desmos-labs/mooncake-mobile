@@ -60,7 +60,6 @@ const usePerformLogin = () => {
         .map(result => {
           // Update the Axios auth token for future requests
           updateAuthToken(result);
-
           // Return the token for other usages
           return result;
         });

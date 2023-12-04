@@ -1,4 +1,5 @@
 import { useSetAppStateValue } from '@recoil/appState';
+import useRefreshSession from 'hooks/apis/useRefreshSession';
 import useInitializeAxios from 'hooks/axios/useInitializeAxios';
 import useButterConfig from 'hooks/config/useButterConfig';
 import useSubspaceParams from 'hooks/config/useSubspaceParams';
@@ -18,6 +19,7 @@ const useInitializeAppData = () => {
   const { refetch: refreshProfileParams } = useProfileParams();
   const { refetch: refreshPostsParams } = usePostsParams();
   const syncPendingTransactions = useSyncPendingTransactions();
+  const refreshSession = useRefreshSession();
 
   // App state setters
   const setDataInitialized = useSetAppStateValue('dataInitialized');
@@ -28,6 +30,7 @@ const useInitializeAppData = () => {
 
   // Not the most elegant way, but it will do for now
   useEffect(() => {
+    refreshSession();
     // Refresh the various params
     refreshButterConfig();
     refreshSubspaceParams();

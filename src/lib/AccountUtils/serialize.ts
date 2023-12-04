@@ -1,17 +1,19 @@
+import { pathToString } from '@cosmjs/crypto';
+import { toHex } from '@cosmjs/encoding';
 import {
   Account,
   AccountSerializationVersion,
   LedgerAccount,
   MnemonicAccount,
+  PrivateKeyAccount,
   SerializableAccount,
   SerializableLedgerAccount,
   SerializableMnemonicAccount,
+  SerializablePrivateKeyAccount,
   SerializableWeb3AuthAccount,
   Web3AuthAccount,
 } from 'types/account';
 import { WalletType } from 'types/wallet';
-import { pathToString } from '@cosmjs/crypto';
-import { toHex } from '@cosmjs/encoding';
 
 export const serializeMnemonicAccount = (
   account: MnemonicAccount,
@@ -48,6 +50,21 @@ export const serializeWeb3AuthAccount = (
   creationDate: account.creationDate,
 });
 
+/**
+ * Function to convert a [PrivateKeyAccount] into a [SerializablePrivateKeyAccount].
+ * @param account - The account to convert.
+ */
+export const serializePrivateKeyAuthAccount = (
+  account: PrivateKeyAccount,
+): SerializablePrivateKeyAccount => ({
+  version: AccountSerializationVersion.PrivateKey,
+  walletType: WalletType.PrivateKey,
+  address: account.address,
+  algo: account.algo,
+  pubKey: account.pubKey,
+  creationDate: account.creationDate,
+});
+
 export const serializeAccount = (account: Account): SerializableAccount => {
   switch (account.walletType) {
     case WalletType.Mnemonic:
@@ -56,6 +73,8 @@ export const serializeAccount = (account: Account): SerializableAccount => {
       return serializeLedgerAccount(account);
     case WalletType.Web3Auth:
       return serializeWeb3AuthAccount(account);
+    case WalletType.PrivateKey:
+      return serializePrivateKeyAuthAccount(account);
     default:
       // @ts-ignore
       throw new Error(`invalid account type ${account.walletType}`);

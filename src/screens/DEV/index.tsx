@@ -45,11 +45,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   // -------------------------------------------------------------------------------------
 
   const showToast = () => {
-    // toast.error('hello world', {
-    //   handlePressToast: () => console.log('hello world'),
-    //   handlePressRetry: () => console.log('retry'),
-    // });
-
     toast.newPost();
   };
 

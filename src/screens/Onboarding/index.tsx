@@ -134,7 +134,10 @@ const Onboarding = () => {
       const saveProfileAllowance = getSaveProfileAllowance(feeGrants);
       // If has the save profile allowance
       if (saveProfileAllowance === undefined) {
+        __DEV__ && console.log('[SignUp] Logged in and requested fee grant');
         await GetFeeGrant();
+      } else {
+        __DEV__ && console.log('[SignUp] Logged in, fee grant already requested and granted');
       }
     }
   }, [account, getAuthorizationInformation]);
@@ -143,7 +146,6 @@ const Onboarding = () => {
     if (requestFeeGrant) {
       setLoading(true);
       signUp().then(() => {
-        __DEV__ && console.log('[SignUp] Logged in and requested fee grant');
         setLoading(false);
       });
     }

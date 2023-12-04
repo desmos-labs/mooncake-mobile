@@ -1,9 +1,5 @@
-import { err, ok, Result, ResultAsync } from 'neverthrow';
 import * as SecureStore from 'expo-secure-store';
 import { decryptData, encryptData, EncryptedData } from 'lib/EncryptionUtils';
-import { SerializableWallet, Wallet } from 'types/wallet';
-import { serializeWallet } from 'lib/WalletUtils/serialize';
-import { deserializeWallet } from 'lib/WalletUtils/deserialize';
 import {
   CorruptedDataError,
   InvalidPasswordError,
@@ -12,8 +8,12 @@ import {
   WalletNotFoundError,
   WrongPasswordError,
 } from 'lib/SecureStorage/errors';
+import { deserializeWallet } from 'lib/WalletUtils/deserialize';
+import { serializeWallet } from 'lib/WalletUtils/serialize';
+import { err, ok, Result, ResultAsync } from 'neverthrow';
+import { SerializableWallet, Wallet } from 'types/wallet';
 
-const passwordChallenge = 'bondscape-password-challenge';
+const passwordChallenge = 'butter-password-challenge';
 
 export enum SecureStoreKeys {
   /**

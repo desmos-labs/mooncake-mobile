@@ -1,20 +1,20 @@
-import React, { useCallback, useMemo } from 'react';
-import { Asset } from 'react-native-image-picker';
-import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
-import { DesmosProfile, ProfileParams } from 'types/desmos';
-import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { useNavigation } from '@react-navigation/native';
-import ROUTES from 'navigation/routes';
-import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
-import { AccountWithWallet } from 'types/account';
-import { useStoreProfile } from '@recoil/profiles';
-import { err, ok, Result } from 'neverthrow';
-import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
-import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
-import useTrackUser from 'hooks/analytics/useTrackUser';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import { useActiveAccount } from '@recoil/accounts';
+import { useStoreProfile } from '@recoil/profiles';
+import useTrackUser from 'hooks/analytics/useTrackUser';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
+import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import ROUTES from 'navigation/routes';
+import { err, ok, Result } from 'neverthrow';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Asset } from 'react-native-image-picker';
+import SearchProfiles from 'services/graphql/queries/SearchProfiles';
+import { AccountWithWallet } from 'types/account';
+import { DesmosProfile, ProfileParams } from 'types/desmos';
+import * as Yup from 'yup';
 import { NavProps } from './index';
 
 /**
@@ -229,12 +229,7 @@ export const useSubmitForm = (
       account,
       activeAccount,
       getOnChainProfile,
-      profile?.dTag,
-      profile?.nickname,
-      profile?.bio,
-      profile?.creationTime,
-      profile?.profilePicture,
-      profile?.coverPicture,
+      profile,
       storeProfile,
       saveOnChain,
       unlockWallet,

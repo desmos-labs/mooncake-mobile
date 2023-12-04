@@ -1,11 +1,12 @@
+import { stringToPath } from '@cosmjs/crypto/build/slip10';
 import {
   SerializableLedgerWallet,
   SerializableMnemonicWallet,
+  SerializablePrivateKeyWallet,
   SerializableWallet,
   SerializableWeb3AuthWallet,
   WalletType,
 } from 'types/wallet';
-import { stringToPath } from '@cosmjs/crypto/build/slip10';
 
 /**
  * Deserialize a [SerializableMnemonicWallet] from a JSON parsed object.
@@ -119,6 +120,37 @@ export const deserializeWeb3AuthWallet = (
 };
 
 /**
+ * Deserialize a [SerializablePrivateKeyWallet] from a JSON parsed object.
+ * @param value - The JSON parsed value that should be a [SerializablePrivateKeyWallet].
+ */
+export const deserializePrivateKeyWallet = (
+  value: Partial<SerializablePrivateKeyWallet>,
+): SerializablePrivateKeyWallet => {
+  if (
+    value.version === undefined ||
+    value.type === undefined ||
+    value.address === undefined ||
+    value.privateKey === undefined ||
+    value.addressPrefix === undefined
+  ) {
+    throw new Error('invalid serialized privateKey wallet');
+  }
+
+  if (value.type !== WalletType.PrivateKey) {
+    throw new Error(`invalid privateKey wallet wallet type: ${value.type}`);
+  }
+
+  // Skip version check, at the moment we just have one version.
+  return {
+    version: value.version,
+    type: value.type,
+    address: value.address,
+    privateKey: value.privateKey,
+    addressPrefix: value.addressPrefix,
+  };
+};
+
+/**
  * Deserialize a [SerializableWallet] from a JSON parsed object.
  * @param value - The JSON parsed value that should be a [SerializableWallet].
  */
@@ -130,6 +162,8 @@ export const deserializeWallet = (value: Partial<SerializableWallet>): Serializa
       return deserializeMnemonicWallet(value);
     case WalletType.Web3Auth:
       return deserializeWeb3AuthWallet(value);
+    case WalletType.PrivateKey:
+      return deserializePrivateKeyWallet(value);
     default:
       // @ts-ignore
       throw new Error(`can't deserialize wallet with type ${value.type}`);
