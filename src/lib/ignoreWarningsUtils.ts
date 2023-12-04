@@ -1,7 +1,10 @@
 import { LogBox } from 'react-native';
 
 if (__DEV__) {
-  const ignoreWarns = ['Non-serializable values were found in the navigation state.'];
+  const ignoreWarns = [
+    'Non-serializable values were found in the navigation state.',
+    '`useBottomSheetDynamicSnapPoints` will be deprecated in the next major release!',
+  ];
 
   const { warn } = console;
   console.warn = (...arg) => {
