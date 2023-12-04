@@ -38,11 +38,6 @@ export type NavProps = CompositeScreenProps<
 
 export interface PostDetailsParams {
   /**
-   * Subspace ID the post that should be visualized.
-   */
-  readonly subspaceId: number;
-
-  /**
    * ID of the post that should be visualized.
    */
   readonly postId: number;

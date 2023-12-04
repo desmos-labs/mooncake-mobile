@@ -65,8 +65,8 @@ const useGetCompleteData = () => {
             ...notification,
             ...data,
             type: NotificationType.Comment,
-            comment: await getPost(data.subspaceId, data.commentId),
-            post: await getPost(data.subspaceId, data.postId),
+            comment: await getPost(data.commentId),
+            post: await getPost(data.postId),
           } as CompleteCommentNotification;
 
         case NotificationType.Reply:
@@ -74,8 +74,8 @@ const useGetCompleteData = () => {
             ...notification,
             ...data,
             type: NotificationType.Reply,
-            comment: await getPost(data.subspaceId, data.commentId),
-            reply: await getPost(data.subspaceId, data.replyId),
+            comment: await getPost(data.commentId),
+            reply: await getPost(data.replyId),
           } as CompleteReplyNotification;
 
         case NotificationType.ReactionPost:
@@ -83,7 +83,7 @@ const useGetCompleteData = () => {
             ...notification,
             ...data,
             type: NotificationType.ReactionPost,
-            post: await getPost(data.subspaceId, data.postId),
+            post: await getPost(data.postId),
             reaction: await getReaction(data.subspaceId, data.postId, data.reactionId),
           } as CompletePostReactionNotification;
 
@@ -92,8 +92,8 @@ const useGetCompleteData = () => {
             ...notification,
             ...data,
             type: NotificationType.ReactionComment,
-            conversation: await getPost(data.subspaceId, data.postId),
-            comment: await getPost(data.subspaceId, data.commentId),
+            conversation: await getPost(data.postId),
+            comment: await getPost(data.commentId),
             reaction: await getReaction(data.subspaceId, data.commentId, data.reactionId),
           } as CompleteCommentReactionNotification;
 
@@ -102,9 +102,9 @@ const useGetCompleteData = () => {
             ...notification,
             ...data,
             type: NotificationType.ReactionReply,
-            conversation: await getPost(data.subspaceId, data.postId),
-            comment: await getPost(data.subspaceId, data.commentId),
-            reply: await getPost(data.subspaceId, data.replyId),
+            conversation: await getPost(data.postId),
+            comment: await getPost(data.commentId),
+            reply: await getPost(data.replyId),
             reaction: await getReaction(data.subspaceId, data.replyId, data.reactionId),
           } as CompleteReplyReactionNotification;
 

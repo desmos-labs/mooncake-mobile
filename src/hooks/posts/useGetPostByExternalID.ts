@@ -3,7 +3,6 @@ import React from 'react';
 import { Post } from 'types/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import GetPostByExternalID from 'services/graphql/queries/GetPostByExternalID';
-import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 
 /**
@@ -12,21 +11,17 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
 
-  const getQueryReactionValue = useGetQueryReactionValue();
   const [getLazyData] = useCustomLazyQuery(GetPostByExternalID);
 
   return React.useCallback(
-    async (subspaceId: number, externalId: string): Promise<Post | undefined> => {
+    async (externalId: string): Promise<Post | undefined> => {
       if (!activeAddress) {
         throw new Error('Trying to get post data without active user');
       }
 
       const data = await getLazyData({
         variables: {
-          subspaceId,
           externalId,
-          user: activeAddress,
-          reaction: getQueryReactionValue(),
         },
       });
       if (!data) {
@@ -35,7 +30,7 @@ const useGetPostByExternalID = () => {
 
       return data.posts.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
-    [activeAddress, getLazyData, getQueryReactionValue],
+    [activeAddress, getLazyData],
   );
 };
 

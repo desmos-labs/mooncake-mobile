@@ -83,7 +83,7 @@ export const useHandlePressComments = () => {
         // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
         return;
       }
-      navigateToPost(post.subspaceId, post.id, { focusCommentBox: true, initialPostData: post });
+      navigateToPost(post.id, { focusCommentBox: true, initialPostData: post });
     },
     [navigateToPost],
   );

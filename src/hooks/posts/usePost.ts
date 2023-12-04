@@ -6,12 +6,11 @@ import { usePostByID, useRemovePost, useStorePost } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
-import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 
 /**
  * Hook that allows to get the details of a post, or refetch them if needed.
  */
-const usePost = (subspaceId: number, postId: number) => {
+const usePost = (postId: number) => {
   const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error('Trying to get the details of a post without an active address');
@@ -23,17 +22,13 @@ const usePost = (subspaceId: number, postId: number) => {
   const updatePostReactionCache = useUpdatePostReactionCache(activeAddress);
 
   // Use the cached post value as the single source of truth
-  const post = usePostByID(activeAddress, subspaceId, postId);
+  const post = usePostByID(activeAddress, postId);
 
   // Query the post from the GraphQL server
-  const getQueryReactionValue = useGetQueryReactionValue();
   const { data, refetch, loading } = useQuery(GetPostByID, {
     refetchWritePolicy: 'overwrite',
     variables: {
-      subspaceId,
       postId,
-      user: activeAddress,
-      reaction: getQueryReactionValue(),
     },
   });
 

@@ -3,7 +3,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import HidePost from 'services/axios/requests/HidePost';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import { useTranslation } from 'react-i18next';
-import { useRemovePostByID, useStorePosts } from '@recoil/posts';
+import { useRemovePostByID } from '@recoil/posts';
 import { err, ok, Result } from 'neverthrow';
 import { useAddPostToHiddenPosts } from '@recoil/hiddenPosts';
 
@@ -20,7 +20,6 @@ const useHidePost = () => {
 
   const toast = useCustomToast();
   const { t } = useTranslation('toast');
-  const storePosts = useStorePosts(activeAccountAddress);
   const removePostByID = useRemovePostByID(activeAccountAddress);
   const addPostToHidden = useAddPostToHiddenPosts();
 
@@ -44,7 +43,7 @@ const useHidePost = () => {
         postID,
       });
     },
-    [addPostToHidden, storePosts, t, toast],
+    [addPostToHidden, removePostByID, t, toast],
   );
 };
 

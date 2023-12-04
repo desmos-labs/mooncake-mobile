@@ -99,6 +99,11 @@ export interface Post {
    * This is a list because they could be either MsgCreatePost or MsgEditPost transactions.
    */
   readonly transactions: PostTransaction[];
+
+  /**
+   * Tells whether the user has liked this post or not.
+   */
+  readonly hasUserLiked: boolean;
 }
 
 export enum PostReferenceType {

@@ -28,27 +28,23 @@ const useHandleNotificationPressEvent = () => {
       }
       switch (data?.type) {
         case NotificationType.Comment:
-          navigateToPost(data.subspaceId, data.postId);
+          navigateToPost(data.postId);
           break;
 
         case NotificationType.Reply:
-          navigateToPost(data.subspaceId, data.commentId, {
-            focusPostId: data.replyId,
-          });
+          navigateToPost(data.commentId, { focusPostId: data.replyId });
           break;
 
         case NotificationType.ReactionPost:
-          navigateToPost(data.subspaceId, data.postId);
+          navigateToPost(data.postId);
           break;
 
         case NotificationType.ReactionComment:
-          navigateToPost(data.subspaceId, data.commentId);
+          navigateToPost(data.commentId);
           break;
 
         case NotificationType.ReactionReply:
-          navigateToPost(data.subspaceId, data.commentId, {
-            focusPostId: data.replyId,
-          });
+          navigateToPost(data.commentId, { focusPostId: data.replyId });
           break;
 
         case NotificationType.Follow:
