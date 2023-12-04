@@ -5,6 +5,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 import * as Sentry from 'sentry-expo';
+import { DefaultPosthogFeatureFlags } from 'types/appFeatureFlags';
 
 Sentry.init({
   dsn: EnvConfig.SENTRY_DSN,
@@ -20,6 +21,9 @@ export default function App() {
           apiKey={EnvConfig.POSTHOG_API_KEY}
           autocapture={false}
           options={{
+            bootstrap: {
+              featureFlags: DefaultPosthogFeatureFlags,
+            },
             host: 'https://eu.posthog.com',
           }}>
           <BProvider />

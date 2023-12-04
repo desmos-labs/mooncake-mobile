@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Button as NBButton, useTheme, useToken } from 'native-base';
 import { ColorType } from 'native-base/lib/typescript/components/types';
 import _ from 'lodash';
@@ -130,4 +130,4 @@ const Button = ({
   );
 };
 
-export default memo(Button);
+export default Button;
