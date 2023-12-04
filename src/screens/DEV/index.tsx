@@ -15,11 +15,13 @@ import { PASSWORD_MANIPULATION_MODE } from "screens/PasswordManipulation/useHook
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.LANDING,
   ROUTES.ONBOARDING,
   ROUTES.PROFILE,
   ROUTES.SETTINGS,
   ROUTES.WELCOME_PAGE,
   ROUTES.FEE_GRANT_WAITING_SCREEN,
+  ROUTES.BOTTOM_TABS,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
