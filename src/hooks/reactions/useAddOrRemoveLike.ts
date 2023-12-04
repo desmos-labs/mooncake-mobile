@@ -11,11 +11,8 @@ import { useActiveAccountAddress } from '@recoil/accounts';
  */
 const useAddOrRemoveLike = (post: Post) => {
   const activeAddress = useActiveAccountAddress();
-  if (!activeAddress) {
-    throw Error('Trying to adding or removing a post without an active address');
-  }
 
-  const storePost = useStorePost(activeAddress);
+  const storePost = useStorePost();
 
   // Local state used to avoid the need to wait for the server response
   // and have a more responsive UI as soon as the user presses the like button
@@ -29,6 +26,10 @@ const useAddOrRemoveLike = (post: Post) => {
   // Debounce the add or remove reaction function to avoid spamming the server
   const likeUnlikePost = React.useCallback(
     async (p: Post) => {
+      if (!activeAddress) {
+        throw Error('Trying to adding or removing a post without an active address');
+      }
+
       let error: Error | undefined;
 
       if (p.hasUserLiked) {
@@ -52,12 +53,12 @@ const useAddOrRemoveLike = (post: Post) => {
       }
 
       // Update the cached post by setting the new hasUserLiked value
-      storePost({
+      storePost(activeAddress, {
         ...p,
         hasUserLiked: !p.hasUserLiked,
       });
     },
-    [storePost],
+    [activeAddress, storePost],
   );
   const likeUnlikePostDebounced = useMemo(() => debounce(likeUnlikePost, 500), [likeUnlikePost]);
 

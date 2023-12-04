@@ -14,7 +14,7 @@ const useAccountBalance = (address?: string) => {
   const activeAddress = useActiveAccountAddress();
   const userAddress = address || activeAddress;
   if (!userAddress) {
-    throw new Error('Cannot get account balance without active address');
+    throw new Error('Cannot get account balance of undefined address');
   }
 
   const [balance, setBalance] = useState<Coin[]>([]);

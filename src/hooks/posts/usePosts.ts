@@ -17,12 +17,10 @@ export enum PostsQueryType {
 
 interface DiscoveryQueryParam {
   readonly type: PostsQueryType.DISCOVERY;
-  readonly user: string;
 }
 
 interface TimelineQueryParams {
   readonly type: PostsQueryType.TIMELINE;
-  readonly user: string;
   readonly followedUsers: string[];
 }
 
@@ -31,26 +29,20 @@ type PostsQueryParams = TimelineQueryParams | DiscoveryQueryParam;
 /**
  * Returns the query params based on the given query type.
  */
-const useQueryParams = (
-  type: PostsQueryType,
-  activeUser: string,
-  followingAddresses: string[],
-): PostsQueryParams => {
+const useQueryParams = (type: PostsQueryType, followingAddresses: string[]): PostsQueryParams => {
   return React.useMemo(() => {
     switch (type) {
       case PostsQueryType.TIMELINE:
         return {
           type: PostsQueryType.TIMELINE,
-          user: activeUser,
           followedUsers: followingAddresses,
         } as TimelineQueryParams;
       case PostsQueryType.DISCOVERY:
         return {
           type: PostsQueryType.DISCOVERY,
-          user: activeUser,
         } as DiscoveryQueryParam;
     }
-  }, [type, activeUser, followingAddresses]);
+  }, [type, followingAddresses]);
 };
 
 /**
@@ -118,7 +110,10 @@ const usePosts = (queryType: PostsQueryType) => {
   const onCompletedCallback = useCallback(
     async (data: any) => {
       // If there is no data, just return
-      if (!data) return;
+      if (!data) {
+        setLoading(false);
+        return;
+      }
 
       // Filter all the posts that were created by someone who later deleted their profile
       const filteredPosts = (data.posts as any[]).filter(post => post.author);
@@ -149,9 +144,10 @@ const usePosts = (queryType: PostsQueryType) => {
   );
 
   // Get the proper query to be executed
-  const queryParams = useQueryParams(queryType, activeAddress, followingAddresses);
+  const queryParams = useQueryParams(queryType, followingAddresses);
   const queryData = useQueryData(queryParams);
   const { refetch, fetchMore } = useQuery(queryData.query, {
+    fetchPolicy: 'network-only',
     variables: queryData.variables,
     onCompleted: onCompletedCallback,
     refetchWritePolicy: 'overwrite',
