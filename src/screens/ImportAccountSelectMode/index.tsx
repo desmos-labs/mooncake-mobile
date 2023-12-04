@@ -1,21 +1,15 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import {
-  useImportAccountState,
-  useSetImportAccountState,
-} from '@recoil/screens/importAccountState';
 import { connectLedger, importPhrase } from 'assets/images';
 import DView from 'components/DView';
 import ShadowButton from 'components/ShadowButton';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { WalletType } from 'types/wallet';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_SELECT_MODE>;
@@ -29,34 +23,17 @@ const ImportAccountSelectMode = (props: NavProps) => {
   const { t } = useTranslation('importAccountSelectMode');
   const { navigation } = props;
 
-  const setImportAccountState = useSetImportAccountState();
-  const importAccountState = useImportAccountState()!;
-
-  useOnBackAction(importAccountState.onCancel, []);
-
   const onImportWithMnemonic = React.useCallback(() => {
-    setImportAccountState(currVal => ({
-      ...currVal!,
-      importMode: WalletType.Mnemonic,
-    }));
     navigation.navigate(ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT);
-  }, [navigation, setImportAccountState]);
+  }, [navigation]);
 
   const onImportWithLedger = React.useCallback(() => {
-    setImportAccountState(currVal => ({
-      ...currVal!,
-      importMode: WalletType.Ledger,
-    }));
     navigation.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP);
-  }, [navigation, setImportAccountState]);
+  }, [navigation]);
 
   const onImportWithPrivateKey = React.useCallback(() => {
-    setImportAccountState(currVal => ({
-      ...currVal!,
-      importMode: WalletType.Ledger,
-    }));
     navigation.navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY_INPUT);
-  }, [navigation, setImportAccountState]);
+  }, [navigation]);
 
   return (
     <DView style={styles.container} topBar={<TopBar />}>
