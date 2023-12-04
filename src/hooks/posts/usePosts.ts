@@ -136,6 +136,7 @@ const usePosts = (queryType: PostsQueryType) => {
       graphQLPosts.forEach(post => {
         updatePostReactionCache(post);
       });
+
       // This sleep is added on purpose in order to make the user wait,
       // to trigger the release of serotonin inside their brain
       // (just like slot machines)
@@ -165,10 +166,12 @@ const usePosts = (queryType: PostsQueryType) => {
         variables: { offset: posts.length },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
+
           // If there are no more posts, stop fetching more
           if (fetchMoreResult.posts.length === 0) {
             setFetchingMore(false);
           }
+
           return {
             posts: [...prev.posts, ...fetchMoreResult.posts],
           };
@@ -185,6 +188,7 @@ const usePosts = (queryType: PostsQueryType) => {
     try {
       setError(undefined);
       setRefreshing(true);
+
       // Get the new data by resetting the fetch offset to restart post fetching
       const { data } = await refetch({ ...queryData.variables, offset: 0 });
       await onCompletedCallback(data);
