@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { AccountWithWallet } from 'types/account';
-import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
 import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
-import { err, Result } from 'neverthrow';
+import { err, ok } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
-import { Wallet } from 'types/wallet';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useUploadProfilePictures from 'hooks/profiles/useUploadProfilePictures';
-import { PendingTransaction } from 'types/transactions';
+import useNavigateToSignAndBroadcastTx from 'hooks/broadcast/useNavigateToSignAndBroadcastTx';
+import { Alert } from 'react-native';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -31,38 +30,40 @@ export enum SaveProfileStatus {
  */
 const useSaveProfileOnChain = () => {
   const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
-  const broadcastTxOnChain = useBroadcastTxOnChain();
   const activeAccountAddress = useActiveAccountAddress()!;
-  const uploadProfilePictures = useUploadProfilePictures();
+  const navigateToSignAndBroadcastTx = useNavigateToSignAndBroadcastTx();
+  const { uploadPictures } = useUploadProfilePictures();
 
   const saveProfile = React.useCallback(
     async (
       params: DesmosProfile,
       providedAccount: AccountWithWallet | undefined,
-    ): Promise<Result<PendingTransaction, Error>> => {
-      let wallet: Wallet | undefined;
-
-      if (providedAccount !== undefined) {
-        wallet = providedAccount.wallet;
+      onProfileSaved: () => void,
+      feeGranter?: string,
+      customHeader?: string,
+      customBody?: string,
+    ) => {
+      const addressToUse = providedAccount ? providedAccount.account.address : activeAccountAddress;
+      if (addressToUse === undefined) {
+        return err(new Error('Cannot save a profile without an active account or address'));
       }
 
       // Upload the profile and cover pictures
       setStatus(SaveProfileStatus.UPLOADING_PICTURES);
-      const uploadPictureResult = await uploadProfilePictures(params);
+      const uploadPictureResult = await uploadPictures(params.profilePicture, params.coverPicture);
 
-      if (uploadPictureResult.isErr()) {
+      if (!uploadPictureResult) {
         setStatus(SaveProfileStatus.UNDEFINED);
-        return err(uploadPictureResult.error);
+        Alert.alert('Error', 'An error occurred while uploading the pictures');
+        return;
       }
-
-      const { profilePictureUrl, coverPictureUrl } = uploadPictureResult.value;
-
+      const { profilePictureUrl, coverPictureUrl } = uploadPictureResult;
       // Build the message to save the profile on-chain
       const { dTag, nickname, bio } = params;
       const msgSaveProfile: Profiles.v3.MsgSaveProfileEncodeObject = {
         typeUrl: Profiles.v3.MsgSaveProfileTypeUrl,
         value: {
-          creator: wallet?.address ?? activeAccountAddress,
+          creator: addressToUse,
           dtag: replaceUndefined(dTag),
           nickname: replaceUndefined(nickname),
           bio: replaceUndefined(bio),
@@ -73,20 +74,31 @@ const useSaveProfileOnChain = () => {
 
       // Sign and broadcast the transaction
       setStatus(SaveProfileStatus.BROADCASTING_TX);
-      const result = await broadcastTxOnChain([msgSaveProfile], {
-        accountAddressOrWallet: wallet,
+      const signAndBroadcastTxResult = await navigateToSignAndBroadcastTx({
+        accountOrAddress: providedAccount ?? activeAccountAddress,
+        messages: [msgSaveProfile],
+        feeGranter,
+        customHeader,
+        customBody,
+        onSuccess: () => {
+          setStatus(SaveProfileStatus.DONE);
+        },
+        onError: () => {
+          setStatus(SaveProfileStatus.UNDEFINED);
+        },
       });
 
-      if (result.isErr()) {
-        setStatus(SaveProfileStatus.UNDEFINED);
-        return err(result.error);
+      if (signAndBroadcastTxResult.isOk()) {
+        onProfileSaved();
+        return ok(undefined);
+      } else {
+        return err(
+          signAndBroadcastTxResult.error ??
+            new Error('An error occurred while broadcasting the transaction'),
+        );
       }
-
-      // Return the result
-      setStatus(SaveProfileStatus.DONE);
-      return result;
     },
-    [activeAccountAddress, broadcastTxOnChain, uploadProfilePictures],
+    [activeAccountAddress, navigateToSignAndBroadcastTx, uploadPictures],
   );
 
   return {

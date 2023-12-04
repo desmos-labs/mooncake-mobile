@@ -63,7 +63,15 @@ const useRenderMediaAttachment = (
         />
       );
     }
-  }, [attachments, resizeMode, useAutoSize, imageWidth, imageStyle, horizontalPaddingWithAutoSize]);
+  }, [
+    attachments,
+    resizeMode,
+    useAutoSize,
+    imageWidth,
+    imageStyle,
+    screenDimensions.width,
+    horizontalPaddingWithAutoSize,
+  ]);
 
   return {
     MediaAttachment,

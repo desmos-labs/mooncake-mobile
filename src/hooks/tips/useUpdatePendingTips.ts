@@ -2,7 +2,7 @@ import React from 'react';
 import { CachedDataUpdate, CachedDataUpdateType } from 'lib/CacheUtils';
 import { useRemovePendingPostTip, useUpdatePendingPostTip } from '@recoil/tips';
 import { Tip } from 'types/tips';
-import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransactions';
+import useSyncPendingTransactions from 'hooks/tx/useSyncPendingTransactions';
 
 /**
  * Hook that allows to update the pending post tips based on the data retrieved from the server.
@@ -36,7 +36,7 @@ const useUpdatePendingTips = (user: string) => {
         }
       });
 
-      // Update the pending transactions to remove the ones that are now on-chain or are expired
+      // Update the pending tx to remove the ones that are now on-chain or are expired
       syncPendingTransactions();
     },
     [removeStoredPendingTip, syncPendingTransactions, updateStoredPendingTip],

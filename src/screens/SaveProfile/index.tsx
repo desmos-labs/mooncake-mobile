@@ -68,18 +68,6 @@ export interface SaveProfileParams {
    * If true the user wil not be able to go back from this screen.
    */
   readonly blockBackAction?: boolean;
-  /**
-   * Callback called if the profile have been saved sucessfully.
-   */
-  readonly onSuccess?: () => void;
-  /**
-   * Callback called if an error occurs while saving the profile.
-   */
-  readonly onError?: (error: Error) => void;
-  /**
-   * Callback called if the user cancels the operation.
-   */
-  readonly onCancel?: () => void;
 }
 
 /**
@@ -93,7 +81,13 @@ const SaveProfile = (props: NavProps) => {
   const { goBack } = useNavigation<NavProps['navigation']>();
   const { route } = props;
   const { params } = route;
-  const { accountWithWallet: account, profile, onSuccess, onError, onCancel } = params ?? {};
+
+  const profile = params?.profile;
+  const accountWithWallet = params?.accountWithWallet;
+  const optionalFeeGranter = params?.optionalFeeGranter;
+  const customTransactionHeader = params?.customTransactionHeader ?? t('create profile');
+  const customTransactionBody = params?.customTransactionBody ?? t('create profile body');
+  const onProfileSaved = params?.onProfileSaved;
 
   // -------------------------------------------------------------------------------------
   // --- Styles
@@ -161,7 +155,15 @@ const SaveProfile = (props: NavProps) => {
   }, []);
 
   // Hook to submit the form and check the status of the profile saving.
-  const { status, submitForm } = useSubmitForm(profile, account);
+  // Hook to submit the form and check the status of the profile saving.
+  const { status, submitForm } = useSubmitForm(
+    profile,
+    accountWithWallet,
+    onProfileSaved,
+    optionalFeeGranter,
+    customTransactionHeader,
+    customTransactionBody,
+  );
 
   // Callback used when the user presses the Save button.
   const onEditProfile = useCallback(

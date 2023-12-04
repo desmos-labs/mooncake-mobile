@@ -8,7 +8,7 @@ import {
   useSetBlockedUserStatus,
 } from '@recoil/blockedRelationships';
 import { useRemovePostsByAuthor } from '@recoil/posts';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import useBroadcastTx from 'hooks/tx/useBroadcastTx';
 import usePromptConfirmUnblock from 'hooks/usePromptConfirmUnblock';
 import Long from 'long';
 import React from 'react';

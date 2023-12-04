@@ -3,7 +3,7 @@ import { Reports } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import useHasReportedPost from 'hooks/reports/useHasReportedPost';
-import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/transactions/useBroadcastTx';
+import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/tx/useBroadcastTx';
 import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import Long from 'long';
 import { err, Result } from 'neverthrow';

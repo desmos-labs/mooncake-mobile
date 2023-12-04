@@ -5,7 +5,7 @@ interface Response {
 }
 
 /**
- * Get the address that will be used to sign/grant pre-authorized transactions.
+ * Get the address that will be used to sign/grant pre-authorized tx.
  * For actual implementation and storage in state management, see src/recoil/butterConfigState.ts
  */
 const PostProof = async (proof: any): Promise<Response> => {

@@ -1,58 +1,86 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import React from 'react';
-import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
-import Routes from 'navigation/routes';
-import { DesmosProfile } from 'types/desmos';
-import { isPictureLocalAsset } from 'lib/ProfileUtils';
-import { CanceledOperationError } from 'types/error';
-import { UploadPicturesSuccess } from 'screens/Modals/UploadProfilePicturesModal';
-import { err, ok, Result } from 'neverthrow';
+import React, { useCallback } from 'react';
+import { Result } from 'neverthrow';
+import { PictureType, UploadPictureState, UploadPictureStateType } from 'types/uploadPictures';
+import useUploadPicture, { MediaPostResponse } from 'hooks/useUploadPicture';
 
-/**
- * Hook that provides a function to upload the user's profile pictures to ipfs
- * showing the upload status in a modal.
- */
 const useUploadProfilePictures = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-  const returnToCurrentScreen = useReturnToCurrentScreen();
+  const uploadMedia = useUploadPicture();
+  const [uploadState, setUploadState] = React.useState<UploadPictureState>({
+    type: UploadPictureStateType.Unknown,
+  });
 
-  return React.useCallback(
-    (profile: DesmosProfile): Promise<Result<UploadPicturesSuccess, CanceledOperationError>> => {
-      const toUploadProfilePicture = isPictureLocalAsset(profile.profilePicture)
-        ? profile.profilePicture
-        : undefined;
-      const toUploadCoverPictureAsset = isPictureLocalAsset(profile.coverPicture)
-        ? profile.coverPicture
-        : undefined;
+  const uploadPictures = useCallback(
+    async (profilePicture?: string, coverPicture?: string) => {
+      let uploadProfilePictureResult: Result<MediaPostResponse, Error> | undefined;
+      let uploadCoverPictureResult: Result<MediaPostResponse, Error> | undefined;
 
-      // Return immediately if there is nothing to upload.
-      if (toUploadProfilePicture === undefined && toUploadCoverPictureAsset === undefined) {
-        return Promise.resolve(
-          ok({
-            profilePictureUrl: undefined,
-            coverPictureUrl: undefined,
-          }),
-        );
+      const isProfilePictureToUpload =
+        profilePicture !== undefined && profilePicture.startsWith('file://');
+
+      const isCoverPictureToUpload =
+        coverPicture !== undefined && coverPicture.startsWith('file://');
+
+      if (isProfilePictureToUpload) {
+        setUploadState({
+          type: UploadPictureStateType.Uploading,
+          pictureType: PictureType.Profile,
+        });
+        uploadProfilePictureResult = await uploadMedia(profilePicture);
+        if (uploadProfilePictureResult.isErr()) {
+          setUploadState({
+            type: UploadPictureStateType.Failed,
+            pictureType: PictureType.Profile,
+            error: uploadProfilePictureResult.error,
+          });
+          return;
+        }
       }
 
-      return new Promise(resolve => {
-        navigator.navigate(Routes.UPLOAD_PROFILE_PICTURES_MODALS, {
-          profilePicture: toUploadProfilePicture,
-          coverPicture: toUploadCoverPictureAsset,
-          onUploadSuccess: uploadResult => {
-            returnToCurrentScreen();
-            resolve(ok(uploadResult));
-          },
-          onCancel: () => {
-            resolve(err(new CanceledOperationError()));
-          },
+      if (isCoverPictureToUpload) {
+        setUploadState({
+          type: UploadPictureStateType.Uploading,
+          pictureType: PictureType.Cover,
         });
+        uploadCoverPictureResult = await uploadMedia(coverPicture);
+        if (uploadCoverPictureResult.isErr()) {
+          setUploadState({
+            type: UploadPictureStateType.Failed,
+            pictureType: PictureType.Cover,
+            error: uploadCoverPictureResult.error,
+          });
+          return;
+        }
+      }
+
+      setUploadState({
+        type: UploadPictureStateType.Completed,
+        coverPictureUrl: uploadCoverPictureResult?.isOk()
+          ? uploadCoverPictureResult.value.url
+          : isCoverPictureToUpload
+            ? undefined
+            : coverPicture,
+        profilePictureUrl: uploadProfilePictureResult?.isOk()
+          ? uploadProfilePictureResult.value.url
+          : isProfilePictureToUpload
+            ? undefined
+            : profilePicture,
       });
+      return {
+        coverPictureUrl: uploadCoverPictureResult?.isOk()
+          ? uploadCoverPictureResult.value.url
+          : undefined,
+        profilePictureUrl: uploadProfilePictureResult?.isOk()
+          ? uploadProfilePictureResult.value.url
+          : undefined,
+      };
     },
-    [navigator, returnToCurrentScreen],
+    [uploadMedia],
   );
+
+  return {
+    uploadState,
+    uploadPictures,
+  };
 };
 
 export default useUploadProfilePictures;

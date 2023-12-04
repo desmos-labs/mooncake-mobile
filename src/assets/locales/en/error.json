@@ -5,5 +5,6 @@
   "pwMustMatch": "Passwords do not match, please try again.",
   "incorrectPassword": "Incorrect password, please try again.",
   "imageUploadError": "An issue occurred while uploading your image. Please try again.",
-  "imageTooLarge": "The selected image is too large."
+  "imageTooLarge": "The selected image is too large.",
+  "insufficient funds": "Sorry, you don't have enough tokens to do this. Ask someone to send you some, or get them on Osmosis"
 }

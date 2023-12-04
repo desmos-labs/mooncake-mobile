@@ -31,31 +31,32 @@ export type NavProps = NativeStackScreenProps<
   ROUTES.FEE_GRANT_WAITING_SCREEN
 >;
 
+/**
+ * Screen that is shown to the user when they are still waiting for the
+ * fee grant to be granted.
+ * @constructor
+ */
 const FeeGrantWaitingScreen = () => {
-  const activeAccount = useActiveAccount();
+  const theme = useTheme();
+  const styles = useStyles();
   const navigation = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
-  const styles = useStyles();
-  const theme = useTheme();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const activeAccount = useActiveAccount();
   const setLoginFlowState = useSetLoginFlowState();
-  // Fee grant hooks
   const [feeGrantReady, setFeeGrantReady] = useState(params?.granted ?? false);
   const { feeGrants, startCheckingFeeGrants, stopCheckingFeeGrants } =
     useGetAuthorizationInformation(activeAccount?.address!);
 
-  // Profile hooks
   const saveProfile = useSaveProfile();
-  // Hook to prevent the user to go back, just allow it in debug if we need
-  // to go back.
-  React.useEffect(
-    () =>
-      navigation.addListener('beforeRemove', e => {
-        if (!__DEV__ && e.data.action.type !== 'RESET') {
-          e.preventDefault();
-        }
-      }),
-    [navigation],
-  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
 
   const createDesmosProfile = useCallback(() => {
     // If there are no errors, navigate to the save profile screen
@@ -88,6 +89,22 @@ const FeeGrantWaitingScreen = () => {
     }
   }, [feeGrants, setLoginFlowState, startCheckingFeeGrants, stopCheckingFeeGrants]);
 
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  // Hook to prevent the user to go back, just allow it in debug if we need
+  // to go back.
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        if (!__DEV__ && e.data.action.type !== 'RESET') {
+          e.preventDefault();
+        }
+      }),
+    [navigation],
+  );
+
   useEffect(() => {
     if (!params?.granted) {
       checkFeeGrant();
@@ -107,6 +124,10 @@ const FeeGrantWaitingScreen = () => {
     }
     return 'We are setting up your account...';
   }, [feeGrantReady]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView style={styles.root}>

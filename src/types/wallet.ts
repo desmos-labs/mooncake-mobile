@@ -32,7 +32,7 @@ interface BaseWallet {
    */
   readonly address: string;
   /**
-   * Signer that can be used with the DesmosClient to sign transactions.
+   * Signer that can be used with the DesmosClient to sign tx.
    */
   readonly signer: Signer;
 }

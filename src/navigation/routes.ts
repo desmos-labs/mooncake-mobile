@@ -17,7 +17,7 @@ enum ROUTES {
   // --- BROADCAST TRANSACTION SCREENS
   // -------------------------------------------------------------------------------------
 
-  BROADCAST_TX_ON_CHAIN = 'BROADCAST_TX_ON_CHAIN',
+  TX_LOADING = 'TX_LOADING',
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS

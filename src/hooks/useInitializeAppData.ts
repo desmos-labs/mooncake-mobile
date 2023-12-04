@@ -5,7 +5,6 @@ import useButterConfig from 'hooks/config/useButterConfig';
 import useSubspaceParams from 'hooks/config/useSubspaceParams';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useProfileParams from 'hooks/profiles/useProfileParams';
-import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransactions';
 import { useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
 
@@ -18,7 +17,6 @@ const useInitializeAppData = () => {
   const { refetch: refreshSubspaceParams } = useSubspaceParams();
   const { refetch: refreshProfileParams } = useProfileParams();
   const { refetch: refreshPostsParams } = usePostsParams();
-  const syncPendingTransactions = useSyncPendingTransactions();
   const refreshSession = useRefreshSession();
 
   // App state setters
@@ -40,17 +38,14 @@ const useInitializeAppData = () => {
     // Set the initial app state
     setDataInitialized(true);
     setCurrentTimezone(RNLocalize.getTimeZone());
-
-    // Update the pending transactions
-    syncPendingTransactions();
   }, [
     refreshButterConfig,
     refreshPostsParams,
     refreshProfileParams,
+    refreshSession,
     refreshSubspaceParams,
     setCurrentTimezone,
     setDataInitialized,
-    syncPendingTransactions,
   ]);
 };
 
