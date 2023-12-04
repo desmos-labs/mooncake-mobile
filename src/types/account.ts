@@ -1,12 +1,13 @@
 import { Algo } from '@cosmjs/amino';
-import { Wallet, WalletType } from 'types/wallet';
 import { HdPath } from '@cosmjs/crypto';
 import { DesmosProfile } from 'types/desmos';
+import { Wallet, WalletType } from 'types/wallet';
 
 export enum AccountSerializationVersion {
   Mnemonic = 1,
   Ledger = 1,
   Web3Auth = 1,
+  PrivateKey = 1,
 }
 
 /**
@@ -106,7 +107,22 @@ export type SerializableWeb3AuthAccount = Omit<Web3AuthAccount, 'pubKey' | 'hdPa
   readonly pubKey: string;
 };
 
-export type Account = MnemonicAccount | LedgerAccount | Web3AuthAccount;
+/**
+ * Interface representing an account imported with a private key.
+ */
+export interface PrivateKeyAccount extends BaseAccount {
+  readonly walletType: WalletType.PrivateKey;
+}
+
+/**
+ * Interface representing a [PrivateKeyAccount] that can be serialized into JSON
+ * and stored in the device's storage.
+ */
+export type SerializablePrivateKeyAccount = PrivateKeyAccount & {
+  readonly version: AccountSerializationVersion.PrivateKey;
+};
+
+export type Account = MnemonicAccount | LedgerAccount | Web3AuthAccount | PrivateKeyAccount;
 
 export interface AccountWithWallet {
   readonly account: Account;
@@ -120,4 +136,5 @@ export interface SelectedAccount extends AccountWithWallet {
 export type SerializableAccount =
   | SerializableMnemonicAccount
   | SerializableLedgerAccount
-  | SerializableWeb3AuthAccount;
+  | SerializableWeb3AuthAccount
+  | SerializablePrivateKeyAccount;

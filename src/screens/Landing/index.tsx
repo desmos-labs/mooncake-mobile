@@ -34,7 +34,7 @@ const Landing = () => {
   // -------------------------------------------------------------------------------------
 
   const onSignUp = React.useCallback(
-    (login: 'mnemonic' | Web3AuthLoginProvider) => {
+    (login: 'wallet' | Web3AuthLoginProvider) => {
       // Handle the post consent behavior with a reusable callback.
       navigate(ROUTES.SERVICE_AND_POLICY, {
         loginProvider: login,
@@ -58,7 +58,7 @@ const Landing = () => {
       </Text>
       <Spacer paddingTop={theme.spacing.m} />
       <Box alignSelf="stretch">
-        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('mnemonic')}>
+        <Button backgroundColor="rgba(255, 255, 255, 0.7)" onPress={() => onSignUp('wallet')}>
           {t('signUp with wallet')}
         </Button>
       </Box>

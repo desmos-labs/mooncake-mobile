@@ -1,11 +1,8 @@
-import { useCallback, useMemo } from 'react';
-import { err, ok, Result } from 'neverthrow';
 import {
   useHasAccount,
   useSetActiveAccountAddress,
   useStoreAccount as usePersistAccount,
 } from '@recoil/accounts';
-import { AccountWithWallet } from 'types/account';
 import {
   deleteItem,
   deleteWallet,
@@ -13,6 +10,9 @@ import {
   SecureStoreKeys,
   setUserPassword,
 } from 'lib/SecureStorage';
+import { err, ok, Result } from 'neverthrow';
+import { useCallback, useMemo } from 'react';
+import { AccountWithWallet } from 'types/account';
 
 /**
  * Hook that allows to store an account on the device.
