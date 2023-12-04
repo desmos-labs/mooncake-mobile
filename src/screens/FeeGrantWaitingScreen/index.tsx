@@ -67,6 +67,7 @@ const FeeGrantWaitingScreen = () => {
     saveProfile({
       blockBackAction: true,
       onProfileSaved: async () => {
+        console.log('Profile saved');
         setLoginFlowState({
           step: LoginFlowStep.Completed,
         });

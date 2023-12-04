@@ -1,3 +1,4 @@
+import { SigningMode } from '@desmoslabs/desmjs';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSetting } from '@recoil/settings';
@@ -7,22 +8,21 @@ import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import { Formik } from 'formik';
+import { FormikHelpers } from 'formik/dist/types';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useClearUserData from 'hooks/useClearUserData';
+import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import { ResultAsync } from 'neverthrow';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'native-base';
-import * as Yup from 'yup';
-import { Wallet } from 'types/wallet';
-import { SigningMode } from '@desmoslabs/desmjs';
-import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
-import { BiometricAuthorizations } from 'types/settings';
-import { ResultAsync } from 'neverthrow';
-import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
-import { FormikHelpers } from 'formik/dist/types';
+import { BiometricAuthorizations } from 'types/settings';
+import { Wallet } from 'types/wallet';
+import * as Yup from 'yup';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;
@@ -131,7 +131,8 @@ const UnlockWallet = () => {
 
         if (walletResult.isErr()) {
           setLoading(false);
-          formikHelpers && formikHelpers.setErrors({ password: t('error:incorrectPassword') });
+          formikHelpers &&
+            formikHelpers.setErrors({ password: t('incorrectPassword', { ns: 'error' }) });
           return;
         }
 
@@ -143,7 +144,8 @@ const UnlockWallet = () => {
           if (result.isOk()) {
             onSuccess(walletResult.value);
           } else {
-            formikHelpers && formikHelpers.setErrors({ password: t('error:incorrectPassword') });
+            formikHelpers &&
+              formikHelpers.setErrors({ password: t('error:incorrectPassword', { ns: 'error' }) });
           }
         }
       }
@@ -199,7 +201,6 @@ const UnlockWallet = () => {
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>
       <Typography.H3 style={styles.headerText}>{titleLabelOverride || t('header')}</Typography.H3>
-
       <Formik
         initialValues={initialFormValues}
         onSubmit={onFormSubmit}
@@ -232,7 +233,6 @@ const UnlockWallet = () => {
             {errors.password && (
               <Typography.Caption1 style={styles.errorText}>{errors.password}</Typography.Caption1>
             )}
-
             <KeyboardAvoidingView
               keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -244,9 +244,8 @@ const UnlockWallet = () => {
                 disabled={!values.password || Object.values(errors).length > 0}
                 onPress={handleSubmit as any}
                 size={44}>
-                {t('common:next')}
+                {t('next', { ns: 'common' })}
               </Button>
-
               <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>
                 <Typography.Button2>{t('forgotPassword')}</Typography.Button2>
               </TouchableOpacity>
