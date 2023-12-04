@@ -44,6 +44,12 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
 
       // If not connected return.
       if (keyProvider.status !== PrivateKeyProviderStatus.Connected) {
+        // TODO: Show this error in a toast
+        // showToast({
+        //   toastType: ToastType.error,
+        //   title: 'Error',
+        //   message: 'Unable to connect to the Web3Auth provider, please try again',
+        // });
         setLoginLoading(false);
         return;
       }
@@ -53,6 +59,12 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
         privateKey = await keyProvider.getPrivateKey();
       } catch (e) {
         Sentry.Native.captureException(e);
+        // TODO: Show this error in a toast
+        // showToast({
+        //   toastType: ToastType.error,
+        //   title: 'Error',
+        //   message: 'An error occurred while getting the private key',
+        // });
         setLoginLoading(false);
         return;
       }
@@ -63,6 +75,12 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
       const result = await startSaveAccountAndCreateProfileFlow({ account });
       if (result.isErr()) {
         Sentry.Native.captureException(result.error);
+        // TODO: Show this error in a toast
+        // showToast({
+        //   toastType: ToastType.error,
+        //   title: 'Error',
+        //   message: result.error.message,
+        // });
       }
       setLoginLoading(false);
     },

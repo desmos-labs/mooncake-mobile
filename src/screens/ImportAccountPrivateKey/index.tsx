@@ -12,11 +12,23 @@ import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-const ImportPrivateKey = () => {
-  const styles = useStyles();
+/**
+ * Screen that allows the user to import their wallet by inputting the private key.
+ * @constructor
+ */
+const ImportAccountPrivateKey = () => {
   const theme = useTheme();
+  const styles = useStyles();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
 
   const { handleFormSubmit, initialFormValues, loginLoading } = useHooks();
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView style={styles.container} topBar={<TopBar />}>
@@ -75,4 +87,4 @@ const ImportPrivateKey = () => {
   );
 };
 
-export default ImportPrivateKey;
+export default ImportAccountPrivateKey;
