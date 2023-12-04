@@ -21,10 +21,9 @@ interface SaveAccountAndCreateProfileParams {
  * Hook that starts the process of saving a new account on the device.
  *
  * If no <code>password</code> is provided, then the user will be taken to the screen allowing
- * them to setup their device password before storing the account on the device.
+ * them to set up their device password before storing the account on the device.
  *
  * If a <code>password<code> is provided, then the user will skip the password setup screen.
- *
  */
 const useSaveAccountAndCreateProfileFlow = () => {
   const navigation = useNavigation<NavigationProp<RootNavigatorParamList>>();

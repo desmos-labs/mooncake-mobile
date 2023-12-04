@@ -8,7 +8,7 @@ import { WalletType } from 'types/wallet';
 const isAccountWithPrivateKey = (
   account: Account,
 ): account is MnemonicAccount | Web3AuthAccount => {
-  return account.walletType === WalletType.Mnemonic || account.walletType === WalletType.Web3Auth;
+  return account.walletType === WalletType.PrivateKey || account.walletType === WalletType.Web3Auth;
 };
 
 export default isAccountWithPrivateKey;
