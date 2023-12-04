@@ -133,22 +133,19 @@ const Home = () => {
   }, [fetchingMore, styles]);
 
   const emptyComponent = useMemo(() => {
-    if (!loading && posts.length === 0) {
-      return (
-        <View style={styles.emptyView}>
-          <Image source={emptyListPlaceholder} style={styles.emptyImage} />
-          <Typography.Body6>{t('no posts to display')}</Typography.Body6>
-        </View>
-      );
-    }
-  }, [loading, posts.length]);
+    return (
+      <View style={styles.emptyView}>
+        <Image source={emptyListPlaceholder} style={styles.emptyImage} />
+        <Typography.Body6>{t('no posts to display')}</Typography.Body6>
+      </View>
+    );
+  }, [styles, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Component rendering
   // -------------------------------------------------------------------------------------
 
   // Return the loading view if the posts are still loading
-  // TODO: If the view is NOT loading, and there are no posts, we should return an empty view
   // This might be the case if the user is offline and has no cached posts
   if (loading) {
     return <HomePostListContentLoader />;
