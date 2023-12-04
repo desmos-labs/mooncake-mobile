@@ -98,15 +98,12 @@ export type CreatePostState = CreatePostSimpleState | CreatePostErrorState;
  */
 const useCreatePost = () => {
   const activeProfile = useActiveProfile();
-  if (!activeProfile) {
-    throw new Error('Cannot create a post without an active profile');
-  }
 
   const subspaceId = useAppStateValue('subspaceId');
   const createPostState = useCreatePostState();
   const resetCreatePostState = useResetCreatePostState();
 
-  const storePost = useStorePost(activeProfile.address);
+  const storePost = useStorePost();
   const deletePost = useRemoveStoredPendingPost();
 
   const uploadAssets = useUploadAssets();
@@ -117,6 +114,10 @@ const useCreatePost = () => {
   // Callback that creates a post
   const createPost = React.useCallback(
     async (parent?: Post): Promise<Result<SuccessfulBroadcast, Error>> => {
+      if (!activeProfile) {
+        return err(new Error('Cannot create a post without an active profile'));
+      }
+
       // Upload the attachments
       setState({ type: CreatePostStateType.UPLOADING_ATTACHMENTS });
       const uploadResult = await uploadAssets(createPostState.attachments);
@@ -159,7 +160,7 @@ const useCreatePost = () => {
       }
 
       // Store the post locally
-      storePost(post);
+      storePost(activeProfile.address, post);
 
       // Build the message
       const msgCreatePost = convertPostToMsgCreatePost(post);

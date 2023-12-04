@@ -16,8 +16,8 @@ const usePost = (postId: number) => {
     throw new Error('Trying to get the details of a post without an active address');
   }
 
-  const storePost = useStorePost(activeAddress);
-  const deletePost = useRemovePost(activeAddress);
+  const storePost = useStorePost();
+  const deletePost = useRemovePost();
 
   const updatePostReactionCache = useUpdatePostReactionCache(activeAddress);
 
@@ -34,6 +34,10 @@ const usePost = (postId: number) => {
 
   React.useEffect(() => {
     if (!data) return;
+
+    if (!activeAddress) {
+      throw new Error('Cannot create a post without an active profile');
+    }
 
     const { posts } = data;
     const onChainPost = posts.length > 0 ? convertGraphQLPost(posts[0]) : undefined;
@@ -53,11 +57,11 @@ const usePost = (postId: number) => {
     if (postToStore === undefined && post !== undefined) {
       // The post to store returned is undefined, but the post existed on the cache.
       // This means we need to delete the cached version
-      deletePost(post.subspaceId, post.externalId);
+      deletePost(activeAddress, post.externalId);
     } else if (postToStore !== undefined) {
-      storePost(postToStore);
+      storePost(activeAddress, postToStore);
     }
-  }, [data, deletePost, post, storePost, updatePostReactionCache]);
+  }, [activeAddress, data, deletePost, post, storePost, updatePostReactionCache]);
 
   return {
     loading,
