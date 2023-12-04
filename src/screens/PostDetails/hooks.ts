@@ -64,7 +64,7 @@ export const useHandlePressShowCommentDetails = () => {
           return;
         default:
           // If the post is a comment to a post, navigate to its details
-          navigateToPost(comment.subspaceId, comment.id, {
+          navigateToPost(comment.id, {
             navigationMethod: 'push',
             initialPostData: comment,
           });
@@ -99,7 +99,7 @@ export const useHandlePressShowCommentDetailsWithFocus = () => {
           return;
         default:
           // If the post is a comment to a post, navigate to its details
-          navigateToPost(comment.subspaceId, comment.id, {
+          navigateToPost(comment.id, {
             navigationMethod: 'push',
             focusCommentBox: true,
             initialPostData: comment,
@@ -206,9 +206,9 @@ export const useHandlePressCounters = () => {
 export const usePostData = () => {
   const { params } = useRoute<NavProps['route']>();
 
-  const { initialPostData, subspaceId, postId } = params;
+  const { initialPostData, postId } = params;
 
-  const { post, loading: isPostLoading, refetch: refreshPost } = usePost(subspaceId, postId);
+  const { post, loading: isPostLoading, refetch: refreshPost } = usePost(postId);
 
   return {
     loading: isPostLoading,

@@ -28,11 +28,11 @@ const postsState = atom<Record<string, Post[]>>({
 /**
  * Hook that allows to get the details of a post given its subspace id and id.
  */
-export const usePostByID = (user: string, subspaceId: number, id: number) => {
+export const usePostByID = (user: string, id: number) => {
   const posts = useRecoilValue(postsState);
   return React.useMemo(() => {
-    return posts[user]?.find(p => p.subspaceId === subspaceId && p.id === id);
-  }, [id, posts, subspaceId, user]);
+    return posts[user]?.find(p => p.id === id);
+  }, [id, posts, user]);
 };
 
 /**

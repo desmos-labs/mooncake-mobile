@@ -8,7 +8,7 @@ import useCheckBiometrics from 'hooks/biometrics/useCheckBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import ROUTES from 'navigation/routes';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
@@ -54,7 +54,7 @@ export enum SignInStatus {
  */
 const useHooks = () => {
   const styles = useStyles();
-  const [signInStatus, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
+  const [, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
   const [loading, setLoading] = React.useState(false);
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
@@ -67,10 +67,6 @@ const useHooks = () => {
   const enableBiometrics = useEnableBiometrics();
   const setLoginFlowState = useSetLoginFlowState();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();
-
-  useEffect(() => {
-    console.log('[SignInStatus]: ', signInStatus);
-  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
