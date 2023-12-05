@@ -1,7 +1,7 @@
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { Feegrant, Authz, Subspaces, timestampFromDate } from '@desmoslabs/desmjs';
+import { Authz, Feegrant, Subspaces, timestampFromDate } from '@desmoslabs/desmjs';
 import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
@@ -78,7 +78,7 @@ export const buildRevokeAllowanceEncode = (
  * @param {GrantEnums[]} grants - An array of grants to build allowance grants for
  * @param {string} grantee - The address of the grantee.
  * @param {string} granter - The address of the granter.
- * @returns {MsgGrantAllowanceEncodeObject} An encode object that gives the grantee an allowance to use a granter's funds to conduct transactions
+ * @returns {MsgGrantAllowanceEncodeObject} An encode object that gives the grantee an allowance to use a granter's funds to conduct tx
  */
 export const buildGrantAllowanceEncode = (
   grants: string[],
@@ -211,7 +211,7 @@ export const buildRevokeAllowanceEncodes = (
  * @param grants - An array of grants to build MsgGrantEncodeObjects for.
  * @param grantee - The address of the grantee.
  * @param granter - The address of the granter.
- * @returns {MsgGrantEncodeObject[]} An array of Encode Objects that authorizes a grantee to conduct {grants} type transactions onbehalf of the granter.
+ * @returns {MsgGrantEncodeObject[]} An array of Encode Objects that authorizes a grantee to conduct {grants} type tx onbehalf of the granter.
  */
 export const buildGrantMsgEncodes = (
   subspaceId: number,

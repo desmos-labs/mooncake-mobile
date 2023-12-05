@@ -10,5 +10,7 @@
   "permissions": "Permissions",
   "permissions modal body": "To improve your experience and automatise the securing process of your operations, the app requests you the following permissions:\n• Manage contents\n• Manage profile\n• Follow and Unfollow users\n• Report content\n• Smart contracts execution\n• Block and Unblock users",
   "fee grant": "Fee grant",
-  "sign on your behalf": "Sign on your behalf"
+  "sign on your behalf": "Sign on your behalf",
+  "performing transaction": "Performing transaction",
+  "operation completed": "Operation completed successfully"
 }

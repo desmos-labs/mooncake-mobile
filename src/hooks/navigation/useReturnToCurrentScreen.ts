@@ -1,10 +1,27 @@
 import { useCallback, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import useResetToHome from 'hooks/navigation/useResetToHome';
 
-const useReturnToCurrentScreen = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+export interface ReturnToCurrentScreenParams {
+  /**
+   * If `true` when the current screen is missing
+   * from the navigator instance the navigator will be
+   * reset to the home screen.
+   */
+  onMissingScreenResetToHome?: boolean;
+  /**
+   * If `true` when the current screen is missing
+   * from the navigator instance we just go back to the
+   * previous screen.
+   */
+  onMissingScreenGoBack?: boolean;
+}
+
+const useReturnToCurrentScreen = (params?: ReturnToCurrentScreenParams) => {
+  const navigator = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
+  const resetToHomeScreen = useResetToHome();
 
   const startingScreenNavigateParams = useMemo(() => {
     if (!navigator.getState()) return undefined;
@@ -18,9 +35,21 @@ const useReturnToCurrentScreen = () => {
       .getState()
       ?.routes?.some(r => r.key === startingScreenNavigateParams?.key);
     if (startingScreenNavigateParams && canNavigate) {
-      navigator.navigate(startingScreenNavigateParams);
+      navigator.navigate(startingScreenNavigateParams as any);
+    } else if (!canNavigate) {
+      if (params?.onMissingScreenResetToHome === true) {
+        resetToHomeScreen();
+      } else if (params?.onMissingScreenGoBack === true) {
+        navigator.goBack();
+      }
     }
-  }, [navigator, startingScreenNavigateParams]);
+  }, [
+    navigator,
+    params?.onMissingScreenResetToHome,
+    params?.onMissingScreenGoBack,
+    resetToHomeScreen,
+    startingScreenNavigateParams,
+  ]);
 };
 
 export default useReturnToCurrentScreen;

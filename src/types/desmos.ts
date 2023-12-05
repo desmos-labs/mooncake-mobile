@@ -1,5 +1,4 @@
 import { ApplicationLinkState } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
-import { Asset } from 'react-native-image-picker';
 import { CacheableObject } from 'types/cache';
 import { Post } from 'types/posts';
 
@@ -106,11 +105,11 @@ export interface DesmosProfile {
   /**
    * Url to the user profile picture
    */
-  readonly profilePicture?: Asset | string;
+  readonly profilePicture?: string;
   /**
    * Url to the user cover picture
    */
-  readonly coverPicture?: Asset | string;
+  readonly coverPicture?: string;
   /**
    * Date in which the profile was created.
    */

@@ -15,7 +15,6 @@ import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { useActiveAccount } from '@recoil/accounts';
-import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {
   useChangePassword,
@@ -25,7 +24,6 @@ import {
   useShowPrivateKey,
   useSignOut,
   useToggleBiometrics,
-  useToggleSimplifiedTxBroadcast,
 } from './hooks';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
@@ -55,12 +53,6 @@ const Settings = (props: NavProps) => {
   }, [activeAccount, formatDateToTZ]);
 
   const { canShowPrivateKey, showPrivateKey } = useShowPrivateKey();
-
-  const {
-    loading: loadingSimplifiedTxBroadcast,
-    simplifyTxBroadcastEnabled,
-    toggleSimplifiedTxBroadcast,
-  } = useToggleSimplifiedTxBroadcast(RequiredMessageTypesGrant);
 
   const changePassword = useChangePassword();
   const unlockWallet = useUnlockWallet();
@@ -113,13 +105,6 @@ const Settings = (props: NavProps) => {
 
       {/* Security section */}
       <Section style={styles.spacer} title={t('security')}>
-        <SectionSwitch
-          label={t('permissions')}
-          onValueChange={toggleSimplifiedTxBroadcast}
-          value={simplifyTxBroadcastEnabled}
-          disabled={loadingSimplifiedTxBroadcast}
-        />
-
         {biometricsSupported && (
           <SectionSwitch
             label={t('enable biometrics')}

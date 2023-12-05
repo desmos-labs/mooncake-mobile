@@ -2,7 +2,7 @@ import React from 'react';
 import { NotificationType, TransactionNotificationData } from 'types/notifications';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import { useGetPendingTransaction } from '@recoil/transactions';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import useBroadcastTx from 'hooks/tx/useBroadcastTx';
 import { useTranslation } from 'react-i18next';
 
 /**

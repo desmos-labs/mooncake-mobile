@@ -7,10 +7,8 @@ import PaginationDots from 'components/PaginationDots';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import { makeStyle } from 'config/theme';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
 import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
 import { getSaveProfileAllowance } from 'lib/grantsUtils';
 import { useTheme } from 'native-base';
@@ -18,22 +16,14 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Animated,
-  Dimensions,
-  FlatList,
-  ImageBackground,
-  ListRenderItemInfo,
-  View,
-} from 'react-native';
-import { verticalScale } from 'react-native-size-matters';
+import { Animated, FlatList, ImageBackground, ListRenderItemInfo, View } from 'react-native';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import { LoginOnboardingStep } from 'types/tourguide';
-
-const fixedWidth = Dimensions.get('window').width;
+import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
+import useStyles, { fixedWidth } from './useStyles';
 
 export interface OnboardingParams {
   /**
@@ -58,19 +48,27 @@ export interface OnboardingParams {
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
 
+/**
+ * Screen that is shown to the user in order to onboard.
+ * @constructor
+ */
 const Onboarding = () => {
   const theme = useTheme();
-  const [loading, setLoading] = useState(false);
+  const styles = useStyles();
+  const { t } = useTranslation('onboarding');
+
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
-  const { account, profile, passwordManipulationMode, requestFeeGrant } = params;
+  const { account, requestFeeGrant } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Local state
+  // -------------------------------------------------------------------------------------
+
+  const [loading, setLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const styles = useStyles();
   const slidesRef = useRef<FlatList>(null);
-  const { t } = useTranslation('onboarding');
   const scrollX = useRef(new Animated.Value(0)).current;
-  const getAuthorizationInformation = useGetLazyAuthorizationInformation();
-  const setTourGuideStep = useSetTourGuideStep();
 
   const slides: any[] = [
     {
@@ -101,6 +99,17 @@ const Onboarding = () => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const getAuthorizationInformation = useGetLazyAuthorizationInformation();
+  const setTourGuideStep = useSetTourGuideStep();
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
   const onPressButton = useCallback(() => {
     if (currentIndex < 3) {
       slidesRef?.current?.scrollToIndex({ index: currentIndex + 1 });
@@ -115,13 +124,12 @@ const Onboarding = () => {
       }
     }
   }, [
-    account,
     currentIndex,
     loading,
     navigate,
-    passwordManipulationMode,
-    profile,
-    requestFeeGrant,
+    params.account,
+    params.passwordManipulationMode,
+    params.profile,
     setTourGuideStep,
   ]);
 
@@ -142,6 +150,10 @@ const Onboarding = () => {
     }
   }, [account, getAuthorizationInformation]);
 
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
   useEffect(() => {
     if (requestFeeGrant) {
       setLoading(true);
@@ -150,6 +162,10 @@ const Onboarding = () => {
       });
     }
   }, [account, params.requestFeeGrant, requestFeeGrant, signUp]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<any>) => {
@@ -170,16 +186,7 @@ const Onboarding = () => {
 
   return (
     <DView topBar={<TopBar />} disableHideKeyboardTouchable={true} style={styles.root}>
-      <ImageBackground
-        source={bgonboarding}
-        resizeMode="cover"
-        style={{
-          position: 'absolute',
-          height: 750,
-          width: Dimensions.get('window').width,
-          top: -100,
-        }}
-      />
+      <ImageBackground source={bgonboarding} resizeMode="cover" style={styles.background} />
       <View style={styles.contentView} onStartShouldSetResponder={() => true}>
         <FlatList
           onStartShouldSetResponder={() => true}
@@ -214,35 +221,5 @@ const Onboarding = () => {
     </DView>
   );
 };
-
-const useStyles = makeStyle(theme => ({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.m,
-  },
-  contentView: {
-    flex: 1,
-    justifyContent: 'center',
-    width: fixedWidth,
-  },
-  imageStyle: {
-    width: verticalScale(150),
-    height: verticalScale(150),
-  },
-  textView: {
-    marginTop: 80,
-    paddingHorizontal: theme.spacing.xl,
-    alignItems: 'center',
-  },
-  slide: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: fixedWidth,
-  },
-  button: {
-    marginHorizontal: theme.spacing.m,
-  },
-}));
 
 export default Onboarding;

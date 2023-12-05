@@ -8,7 +8,7 @@ import {
   PostStatus,
 } from 'types/posts';
 import { err, Result } from 'neverthrow';
-import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/transactions/useBroadcastTx';
+import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/tx/useBroadcastTx';
 import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useAppStateValue } from '@recoil/appState';
 import useUploadAssets from 'hooks/useUploadAssets';

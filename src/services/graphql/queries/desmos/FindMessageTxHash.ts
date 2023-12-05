@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 /**
- * Query to find the hashes of the transactions
+ * Query to find the hashes of the tx
  * that contains a message with the provided type and fields.
  *
  * Example

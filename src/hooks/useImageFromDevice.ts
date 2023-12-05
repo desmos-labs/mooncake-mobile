@@ -16,7 +16,7 @@ type Params = {
   /**
    * An optional callback to independently process a selected image.
    */
-  onImageSelected: (image: Asset) => void;
+  onImageSelected: (imageUri: string) => void;
 
   /**
    * If true, will not resize the image after one is selected.
@@ -82,7 +82,7 @@ const useImageFromDevice = ({ onImageSelected, disableResizeImage }: Params): Re
       Alert.alert('Error', 'Unable to load photo. Please select another photo.');
     } else if (result.assets) {
       const processedImages = await resizeImages(result.assets, disableResizeImage);
-      onImageSelected(processedImages[0]);
+      onImageSelected(processedImages[0].uri!);
     }
   }, [disableResizeImage, onImageSelected]);
 
@@ -104,7 +104,7 @@ const useImageFromDevice = ({ onImageSelected, disableResizeImage }: Params): Re
       Alert.alert('Error', 'Unable to load photo. Please select another photo.');
     } else if (result.assets) {
       const processedImages = await resizeImages(result.assets, disableResizeImage);
-      onImageSelected(processedImages[0]);
+      onImageSelected(processedImages[0].uri!);
     }
   }, [checkPermission, disableResizeImage, onImageSelected, requestPermission]);
 

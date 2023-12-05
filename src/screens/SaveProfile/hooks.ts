@@ -1,16 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { useActiveAccount } from '@recoil/accounts';
 import { useStoreProfile } from '@recoil/profiles';
-import useTrackUser from 'hooks/analytics/useTrackUser';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import ROUTES from 'navigation/routes';
 import { err, ok, Result } from 'neverthrow';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Asset } from 'react-native-image-picker';
 import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile, ProfileParams } from 'types/desmos';
@@ -110,8 +107,8 @@ export const omitEmptyValue = (value: string): string | undefined => {
  * @param defaultImage {any} - Default image to be used if the above two are not defined
  */
 export const useGetImageBackground = (
-  inputValue: Asset | undefined,
-  profileValue: Asset | string | undefined,
+  inputValue: string | undefined,
+  profileValue: string | undefined,
   defaultImage: any,
 ) => {
   const profileUri = React.useMemo(() => inputValue || profileValue, [inputValue, profileValue]);
@@ -145,21 +142,22 @@ const getValueToSave = (
  * @param profile {DesmosProfile | undefined} - Optional Desmos profile
  * that should be edited. If no profile is provided, then a new one will
  * be created instead.
- * @param account {AccountWithWallet | undefined} - Account to be used
+ * @param accountWithWallet {AccountWithWallet | undefined} - Account to be used
  * while signing the transaction. If no account is provided, then the
  * current user account will be used instead.
- * @param saveOnChain {boolean} - Whether the profile should
- * immediately be stored on chain.
+ * @param onProfileSaved {() => void} - Callback to be called when the profile
+ * @param customHeader {string | undefined} - Optional custom header to be used inside the transaction screen.
+ * @param customBody {string | undefined} - Optional custom body to be used inside the transaction screen.
  */
 export const useSubmitForm = (
   profile: DesmosProfile | undefined,
-  account: AccountWithWallet | undefined,
-  saveOnChain: boolean = true,
+  accountWithWallet: AccountWithWallet | undefined,
+  onProfileSaved: () => void,
+  customHeader?: string,
+  customBody?: string,
 ) => {
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
-  const trackUser = useTrackUser();
-  const unlockWallet = useUnlockWallet();
   const activeAccount = useActiveAccount();
   const { status, saveProfile } = useSaveProfileOnChain();
 
@@ -167,29 +165,17 @@ export const useSubmitForm = (
   const submitForm = useCallback(
     async (
       values: SaveProfileFormState,
-      profilePic: Asset | undefined,
-      coverPic: Asset | undefined,
+      profilePic: string | undefined,
+      coverPic: string | undefined,
     ): Promise<Result<void, Error>> => {
-      let accountWithWallet = account;
-      if (!accountWithWallet && activeAccount) {
-        const unlockWalletResult = await unlockWallet();
-        if (unlockWalletResult.isErr()) {
-          return err(unlockWalletResult.error);
-        }
-
-        accountWithWallet = {
-          account: activeAccount,
-          wallet: unlockWalletResult.value,
-        };
-      }
-
-      const accountAddress = accountWithWallet?.account?.address;
-      if (!accountAddress) {
+      // Get the address of the profile based on the given params
+      const profileAddress = accountWithWallet?.account.address ?? activeAccount?.address;
+      if (!profileAddress) {
         return err(new Error('Cannot save a profile without a known address'));
       }
 
       // Get the on-chain profile
-      const onChainProfile = await getOnChainProfile(accountAddress);
+      const onChainProfile = await getOnChainProfile(profileAddress);
 
       // Get the profile to save
       const profileToSaveOnChain: DesmosProfile = {
@@ -198,7 +184,7 @@ export const useSubmitForm = (
         bio: getValueToSave(values.bio ?? profile?.bio, onChainProfile?.bio),
         profilePicture: profilePic,
         coverPicture: coverPic,
-        address: accountAddress,
+        address: profileAddress,
         creationTime: profile?.creationTime ?? new Date(Date.now()).toISOString(),
       };
 
@@ -211,30 +197,32 @@ export const useSubmitForm = (
         profilePicture: profileToSaveOnChain.profilePicture ?? profile?.profilePicture,
         coverPicture: profileToSaveOnChain.coverPicture ?? profile?.coverPicture,
       };
-      storeProfile(accountAddress, profileToSaveLocally);
 
-      // Save the profile on-chain, if required
-      if (saveOnChain) {
-        const result = await saveProfile(profileToSaveOnChain, accountWithWallet);
-        if (result.isErr()) {
-          return err(result.error);
-        } else {
-          await trackUser(profileToSaveOnChain.address);
-        }
+      const saveProfileResult = await saveProfile(
+        profileToSaveOnChain,
+        accountWithWallet,
+        onProfileSaved,
+        customHeader,
+        customBody,
+      );
+
+      if (saveProfileResult && saveProfileResult.isErr()) {
+        return err(saveProfileResult.error);
+      } else {
+        storeProfile(profileAddress, profileToSaveLocally);
+        return ok(undefined);
       }
-
-      return ok(undefined);
     },
     [
-      account,
+      accountWithWallet,
       activeAccount,
+      customBody,
+      customHeader,
       getOnChainProfile,
+      onProfileSaved,
       profile,
-      storeProfile,
-      saveOnChain,
-      unlockWallet,
       saveProfile,
-      trackUser,
+      storeProfile,
     ],
   );
 

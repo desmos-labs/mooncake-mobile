@@ -20,7 +20,6 @@ import React from 'react';
 import { Dimensions, Platform } from 'react-native';
 import Activities from 'screens/Activities';
 import BlockedUsers from 'screens/BlockedUsers';
-import BroadcastTxOnChain, { BroadcastTxParams } from 'screens/BroadcastTxOnChain';
 import Community from 'screens/Community';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
@@ -60,6 +59,7 @@ import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateK
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomePage, { WelcomePageParams } from 'screens/WelcomeScreen';
 import { LoginFlowStep } from 'types/login';
+import TxLoading, { TxLoadingParams } from 'screens/TxLoading';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ export type RootNavigatorParamList = {
   // --- BROADCAST TRANSACTION SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
+  [ROUTES.TX_LOADING]: TxLoadingParams;
 
   // -------------------------------------------------------------------------------------
   // --- POST SCREENS
@@ -275,7 +275,7 @@ const RootNavigator = () => {
       {/* ------------------------------------ */}
       {/* --- BROADCAST TRANSACTION SCREEN --- */}
       {/* ------------------------------------ */}
-      <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
+      <Stack.Screen name={ROUTES.TX_LOADING} component={TxLoading} />
 
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}

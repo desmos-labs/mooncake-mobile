@@ -1,4 +1,4 @@
-import { Profiles, Relationships, Reactions, Reports, Posts } from '@desmoslabs/desmjs';
+import { Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -42,7 +42,7 @@ export interface ProfileOperationsParams {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_OPERATIONS>;
 
 /**
- * Screen that allows to display the pat activities (transactions) made from a given user.
+ * Screen that allows to display the pat activities (tx) made from a given user.
  * @constructor
  */
 const ProfileOperations = () => {

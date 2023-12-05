@@ -5,7 +5,6 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { usePostByID, useRemovePost, useStorePost } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
-import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 
 /**
  * Hook that allows to get the details of a post, or refetch them if needed.
@@ -18,8 +17,6 @@ const usePost = (postId: number) => {
 
   const storePost = useStorePost();
   const deletePost = useRemovePost();
-
-  const updatePostReactionCache = useUpdatePostReactionCache(activeAddress);
 
   // Use the cached post value as the single source of truth
   const post = usePostByID(activeAddress, postId);
@@ -41,9 +38,6 @@ const usePost = (postId: number) => {
 
     const { posts } = data;
     const onChainPost = posts.length > 0 ? convertGraphQLPost(posts[0]) : undefined;
-    if (onChainPost) {
-      updatePostReactionCache(onChainPost);
-    }
 
     // Build the variables to merge the posts accordingly
     const existingPosts = post === undefined ? [] : [post];
@@ -61,7 +55,7 @@ const usePost = (postId: number) => {
     } else if (postToStore !== undefined) {
       storePost(activeAddress, postToStore);
     }
-  }, [activeAddress, data, deletePost, post, storePost, updatePostReactionCache]);
+  }, [activeAddress, data, deletePost, post, storePost]);
 
   return {
     loading,

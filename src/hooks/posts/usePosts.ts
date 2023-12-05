@@ -7,7 +7,6 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
-import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 import sleep from 'lib/sleep';
 
 export enum PostsQueryType {
@@ -91,7 +90,6 @@ const usePosts = (queryType: PostsQueryType) => {
   const discoveryPosts = useStoredRootPosts(activeAddress);
   const timelinePosts = useStoredFollowingPosts(activeAddress, followingAddresses);
   const storePosts = useStorePosts(activeAddress);
-  const updatePostReactionCache = useUpdatePostReactionCache(activeAddress);
 
   // The posts we should return are defined based on the query time we have been asked
   const posts = useMemo(
@@ -127,11 +125,6 @@ const usePosts = (queryType: PostsQueryType) => {
         return merged;
       });
 
-      // Update the cache about the reactions
-      graphQLPosts.forEach(post => {
-        updatePostReactionCache(post);
-      });
-
       // This sleep is added on purpose in order to make the user wait,
       // to trigger the release of serotonin inside their brain
       // (just like slot machines)
@@ -140,7 +133,7 @@ const usePosts = (queryType: PostsQueryType) => {
       setFetchingMore(false);
       setRefreshing(false);
     },
-    [storePosts, updatePostReactionCache],
+    [storePosts],
   );
 
   // Get the proper query to be executed
