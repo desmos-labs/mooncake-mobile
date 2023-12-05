@@ -2,7 +2,6 @@ import { DocumentNode, useSubscription } from '@apollo/client';
 import { useCallback, useRef } from 'react';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
-import { useTranslation } from 'react-i18next';
 import { OnDataOptions } from '@apollo/client/react/types/types';
 import { useAppStateValue } from '@recoil/appState';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -12,7 +11,9 @@ import FollowingPostsCount from 'services/graphql/subscriptions/FollowingPostsCo
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { debounce } from 'lodash';
 import ROUTES from 'navigation/routes';
-import useCustomToast from 'hooks/extended/useCustomToast';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Hook that allows to observe a generic posts count subscription,
@@ -22,7 +23,7 @@ import useCustomToast from 'hooks/extended/useCustomToast';
  * @param onNewPosts {Function} - Function called when a new data is retrieved.
  * @param waitTimeSeconds {number} - Minimum amount of time, in seconds, to wait between one notification and the other.
  */
-const usePostsCountSubscription = <TVariables = OperationVariables>(
+const usePostsCountSubscription = <TVariables extends OperationVariables | undefined>(
   subscription: DocumentNode,
   variables: TVariables,
   onNewPosts: () => void,
@@ -65,8 +66,8 @@ const usePostsCountSubscription = <TVariables = OperationVariables>(
  * @param onPressNotification {Function} - Function that is called when the user presses the notification.
  */
 const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
-  const { t } = useTranslation('home');
-  const toast = useCustomToast();
+  const { t } = useTranslation();
+  const showToast = useToast();
   const isFocused = useIsFocused();
   const { name: routeName } = useRoute<NavProps['route']>();
 
@@ -75,10 +76,13 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
 
   const onNewDiscoveryPosts = useCallback(() => {
     if (!isFocused || routeName !== ROUTES.HOME_TAB_DISCOVER) return;
-    toast.newPost({
-      handlePressToast: onPressNotification,
+    showToast({
+      toastType: ToastType.oneButton,
+      message: t('there are new posts'),
+      buttonLabel: t('refresh'),
+      buttonAction: onPressNotification,
     });
-  }, [isFocused, onPressNotification, routeName, t, toast]);
+  }, [isFocused, onPressNotification, routeName, showToast, t]);
 
   usePostsCountSubscription(
     DiscoveryPostsCount,
@@ -96,8 +100,8 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
  * @param onPressNotification {Function} - Function that is called when the user presses the notification.
  */
 const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
-  const { t } = useTranslation('home');
-  const toast = useCustomToast();
+  const { t } = useTranslation();
+  const showToast = useToast();
   const isFocused = useIsFocused();
   const { name: routeName } = useRoute<NavProps['route']>();
 
@@ -106,10 +110,13 @@ const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
 
   const onNewFollowingPosts = useCallback(() => {
     if (!isFocused || routeName !== ROUTES.HOME_TAB_FOLLOWING) return;
-    toast.newPost({
-      handlePressToast: onPressNotification,
+    showToast({
+      toastType: ToastType.oneButton,
+      message: t('there are new posts'),
+      buttonLabel: t('refresh'),
+      buttonAction: onPressNotification,
     });
-  }, [isFocused, onPressNotification, routeName, t, toast]);
+  }, [isFocused, onPressNotification, routeName, showToast, t]);
 
   usePostsCountSubscription(
     FollowingPostsCount,

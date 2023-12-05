@@ -9,11 +9,12 @@ import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser
 import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import { useTranslation } from 'react-i18next';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import usePost from 'hooks/posts/usePost';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 
 /**
  * Hook that allows to report a user.
@@ -131,16 +132,19 @@ export const useHandleExpandCommentView = () => {
 export const useHandleCreateComment = () => {
   const { state, createPost } = useCreatePost();
   const { t } = useTranslation('postDetails');
-  const toast = useCustomToast();
+  const showToast = useToast();
   const handleCreateComment = React.useCallback(
     async (post: Post) => {
       const result = await createPost(post);
       if (result.isErr()) {
-        console.error('Error inside useHandleCreateComment', result.error.message);
-        return toast.errorNoRetry(t('failed to post comment'));
+        showToast({
+          toastType: ToastType.error,
+          title: t('error'),
+          message: t('failed to post comment'),
+        });
       }
     },
-    [createPost, t, toast],
+    [createPost, showToast, t],
   );
 
   return {

@@ -10,7 +10,8 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
-import useCustomToast from 'hooks/extended/useCustomToast';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
 
 export interface NotificationComponentProps {
@@ -24,7 +25,7 @@ export interface NotificationComponentProps {
 const NotificationItem = (props: NotificationComponentProps) => {
   const { t } = useTranslation('activities');
   const styles = useStyles();
-  const toast = useCustomToast();
+  const showToast = useToast();
   const { notification } = props;
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -101,10 +102,15 @@ const NotificationItem = (props: NotificationComponentProps) => {
 
   const handleNavigateToProfile = useCallback(() => {
     if (!profile) {
-      return toast.errorNoRetry(t('profileNotFound'));
+      showToast({
+        toastType: ToastType.error,
+        title: t('error', { ns: 'common' }),
+        message: t('profileNotFound'),
+      });
+      return;
     }
     navigateToProfile(profile.address);
-  }, [navigateToProfile, profile, t, toast]);
+  }, [navigateToProfile, profile, showToast, t]);
 
   const handleNavigateToNotification = useCallback(() => {
     // TODO: Probably we should handle the error somehow

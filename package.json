@@ -142,6 +142,7 @@
     "react-native-size-matters": "^0.4.0",
     "react-native-svg": "13.9.0",
     "react-native-tab-view": "^3.3.4",
+    "react-native-toast-message": "^2.1.8",
     "react-native-vector-icons": "^9.2.0",
     "readable-stream": "^1.0.33",
     "recoil": "^0.7.7",

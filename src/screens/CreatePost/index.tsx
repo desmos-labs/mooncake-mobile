@@ -21,12 +21,13 @@ import {
   useResetCreatePostState,
   useSetCreatePostValue,
 } from '@recoil/screens/createPostState';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import SelectedPostImage from 'components/SelectedPostImage';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import { useSetPostsListState } from '@recoil/screens/postsListState';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -56,7 +57,7 @@ const CreatePost = () => {
   const { t } = useTranslation('postInteraction');
   const styles = useStyles();
   const theme = useTheme();
-  const toast = useCustomToast();
+  const showToast = useToast();
   const navigation = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const parent = params?.parent;
@@ -103,8 +104,12 @@ const CreatePost = () => {
     setLoading(false);
 
     if (result.isErr()) {
-      console.log('Error while creating post', result.error.message);
-      return toast.errorNoRetry(t('errorWhileCreatingPost'));
+      showToast({
+        toastType: ToastType.error,
+        title: t('error', { ns: 'common' }),
+        message: t('errorWhileCreatingPost'),
+      });
+      return;
     }
 
     // If the post is a root post AKA has no parent, we need to scroll to top the home posts list
@@ -113,7 +118,7 @@ const CreatePost = () => {
     }
 
     navigation.goBack();
-  }, [createPost, navigation, parent, setPostsListState, t, toast]);
+  }, [createPost, navigation, parent, setPostsListState, showToast, t]);
 
   const onCreatePostPressWrapper = useCallback(() => {
     requestAnimationFrame(async () => {

@@ -5,11 +5,13 @@ import { useDeleteCachedAccounts, useSetActiveAccountAddress } from '@recoil/acc
 import { useSetLoginFlowState } from '@recoil/login';
 import { useResetTourGuideState } from '@recoil/tourguide';
 import useDeleteAuthToken from 'hooks/axios/useDeleteAuthToken';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { LoginFlowStep } from 'types/login';
+import useToast from 'hooks/toasts/useToast';
+import { useTranslation } from 'react-i18next';
+import { ToastType } from 'config/toast/toastConfig';
 
 /**
  * Hook that provides a function to logout the user from the application.
@@ -18,6 +20,7 @@ import { LoginFlowStep } from 'types/login';
  * 2. navigating to the landing screen.
  */
 const usePerformLogout = () => {
+  const { t } = useTranslation('common');
   const { reset } = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
 
   const client = useApolloClient();
@@ -26,14 +29,18 @@ const usePerformLogout = () => {
   const setActiveAccountAddress = useSetActiveAccountAddress();
   const setLoginFlowState = useSetLoginFlowState();
   const resetTourGuideState = useResetTourGuideState();
-  const toast = useCustomToast();
+  const showToast = useToast();
 
   return React.useCallback(async () => {
     try {
       // Clear the Apollo cache
       await client.clearStore();
     } catch (error: any) {
-      toast.errorNoRetry(error.message);
+      showToast({
+        toastType: ToastType.error,
+        title: t('error'),
+        message: error.message,
+      });
     } finally {
       // We can now navigate to the landing screen while clearing up our recoils
       reset({
@@ -66,6 +73,8 @@ const usePerformLogout = () => {
     resetTourGuideState,
     setActiveAccountAddress,
     setLoginFlowState,
+    showToast,
+    t,
   ]);
 };
 

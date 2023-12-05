@@ -11,7 +11,6 @@ import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import useReportPost from 'hooks/reports/useReportPost';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -21,6 +20,8 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { isPostAlreadyReportedError } from 'types/error';
 import { Post } from 'types/posts';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -40,7 +41,7 @@ const ReportPost = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { post } = params;
-  const toast = useCustomToast();
+  const showToast = useToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -84,11 +85,15 @@ const ReportPost = () => {
         return;
       }
 
-      toast.errorNoRetry(result.error.message);
+      showToast({
+        toastType: ToastType.error,
+        title: t('error', { ns: 'common' }),
+        message: result.error.message,
+      });
     } else {
       setSuccessfulReport(true);
     }
-  }, [reportPost, message, selectedReport.value, toast]);
+  }, [reportPost, message, selectedReport.value, showToast, t]);
 
   const successfulReportComponent = useMemo(() => {
     return (

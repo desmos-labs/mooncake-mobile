@@ -13995,6 +13995,11 @@ react-native-tab-view@^3.3.4:
   dependencies:
     use-latest-callback "^0.1.5"
 
+react-native-toast-message@^2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.1.8.tgz#60570821d9391b90947bea2e3e90276701ce35e3"
+  integrity sha512-vlDQVkvpSq9L3/GRfoKaxVQyenj/A7yHToC9M0nrSCTR9XPXzoc2AOgRQnM6GVvDhetDld9ZfGtFcucyWcGQNA==
+
 react-native-url-polyfill@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-url-polyfill/-/react-native-url-polyfill-2.0.0.tgz#db714520a2985cff1d50ab2e66279b9f91ffd589"
