@@ -7,6 +7,7 @@ import usePostsParams from 'hooks/posts/usePostsParams';
 import useProfileParams from 'hooks/profiles/useProfileParams';
 import { useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
+import useInitTaskContext from 'hooks/tasks/useInitTaskContext';
 
 /**
  * Hook that allows initializing the application data.
@@ -25,6 +26,9 @@ const useInitializeAppData = () => {
 
   // Setup Axios
   useInitializeAxios();
+
+  // Init the background tasks context.
+  useInitTaskContext();
 
   // Not the most elegant way, but it will do for now
   useEffect(() => {

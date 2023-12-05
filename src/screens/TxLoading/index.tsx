@@ -11,7 +11,7 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { errorImage } from 'assets/images';
 import ROUTES from 'navigation/routes';
-import { useEstimateFees, useSignAndBroadcastTx } from 'hooks/broadcast/useSignAndBroadcastTx';
+import { useEstimateFees, useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
 import { loadingYellow } from 'assets/animations';
 import Spacer from 'components/Spacer';
 import { AccountWithWallet } from 'types/account';

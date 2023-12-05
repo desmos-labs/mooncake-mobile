@@ -1,20 +1,20 @@
 import { useCallback, useMemo, useState } from 'react';
 import { StdFee } from '@cosmjs/amino';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { DeliverTxResponse, DesmosClient, SimulateOptions } from '@desmoslabs/desmjs';
-import { err, Result } from 'neverthrow';
+import { DesmosClient, SimulateOptions } from '@desmoslabs/desmjs';
 import { usePostHog } from 'posthog-react-native';
 import * as Sentry from 'sentry-expo';
 import { useActiveAccount } from '@recoil/accounts';
 import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
-import { Wallet } from 'types/wallet';
-import useSignTx, { SignMode } from 'hooks/tx/useSignTx';
-import useBroadcastTx from 'hooks/tx/useBroadcastTx';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import { Account, AccountWithWallet } from 'types/account';
+import { Account } from 'types/account';
 import { buildDesmosClient } from 'lib/TxUtils';
 import { unwrapResult } from 'lib/NeverThrowUtils';
-import { captureFailedFeeEstimationError, captureFailedTxError } from 'lib/PostHogUtils';
+import { captureFailedFeeEstimationError } from 'lib/PostHogUtils';
+import useCustomToast from 'hooks/extended/useCustomToast';
+import { scheduleTask } from 'lib/BackgroundTaskUtils';
+import SignAndBroadcastTxTask from 'services/tasks/SignAndBroadcastTx';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Hook that allows to estimate the fees of a transaction.
@@ -87,65 +87,77 @@ export const useEstimateFees = (providedAccount?: Account) => {
 };
 
 /**
- * Hook that provide a function to sign broadcast a list of messages
- * to the chain of the current active account.
- * The function returns a [DeliverTxResponse] if the tx has been sent or
- * undefined if the user have cancelled the wallet unlock procedure.
+ * Hook that provides a function to sign broadcast a list of messages.
+ * The transaction will be built, signed and broadcast in the background.
+ * TODO: Track operations with PostHog
  */
 export const useSignAndBroadcastTx = () => {
-  const posthog = usePostHog();
-  const signTx = useSignTx();
-  const broadcastTx = useBroadcastTx();
+  const { t } = useTranslation('broadcastTx');
+  const toast = useCustomToast();
+
+  const chainInfo = useCurrentChainInfo();
+  const chainGasPrice = useCurrentChainGasPrice();
+
   const unlockWallet = useUnlockWallet();
 
   return useCallback(
-    async (
-      accountOrAddress: AccountWithWallet | string,
-      messages: EncodeObject[],
-      fees: StdFee,
-      feeGranter?: string,
-      memo?: string,
-    ): Promise<Result<DeliverTxResponse | undefined, Error>> => {
-      // Unlock the wallet
-      let wallet: Wallet;
-      if (typeof accountOrAddress === 'string') {
-        const walletUnlockResult = await unlockWallet({
-          toUnlockAddress: accountOrAddress,
-        });
-        // An error occurred while unlocking the wallet, propagate it.
-        if (walletUnlockResult.isErr()) {
-          return err(walletUnlockResult.error);
-        }
-        wallet = walletUnlockResult.value.wallet;
-      } else {
-        wallet = accountOrAddress.wallet;
+    async (messages: EncodeObject[], memo?: string) => {
+      if (!chainInfo || !chainGasPrice) {
+        toast.errorNoRetry('Chain information not found');
+        return;
       }
 
-      const signResult = await signTx(wallet, {
-        mode: SignMode.Online,
-        messages,
-        fees,
-        feeGranter,
-        memo,
-      });
-
-      if (signResult.isErr()) {
-        return err(signResult.error);
+      // Get the user's wallet by unlocking it or using the in-memory one
+      const walletUnlockResult = await unlockWallet();
+      if (walletUnlockResult.isErr()) {
+        toast.errorNoRetry(walletUnlockResult.error.message);
+        return;
       }
-      const broadcastTxResult = await broadcastTx(wallet, signResult.value);
+      const { wallet } = walletUnlockResult.value;
 
-      if (broadcastTxResult.isErr()) {
-        // Capture broadcast tx errors.
-        Sentry.Native.captureException(broadcastTxResult.error);
-        captureFailedTxError(posthog!, {
-          error: broadcastTxResult.error,
-          fees,
+      // Prepare the desmos client
+      const desmosClientResult = await buildDesmosClient(
+        chainInfo.rpcUrl,
+        wallet.signer,
+        chainGasPrice,
+      );
+      if (desmosClientResult.isErr()) {
+        toast.errorNoRetry(desmosClientResult.error.message);
+        return;
+      }
+      const desmosClient = desmosClientResult.value;
+
+      // Start the task to sign and broadcast the transaction
+      const taskReference = await scheduleTask(
+        'Broadcast Transaction',
+        SignAndBroadcastTxTask,
+        {
+          desmosClient,
           messages,
-          userAddress: wallet.address,
+          signer: wallet.address,
+          memo,
+        },
+        {
+          title: t('performing transaction'),
+          progressBar: {
+            indeterminate: true,
+          },
+        },
+      );
+      taskReference
+        .onStart(() => {
+          // TODO: Add the loading toast - Missing now
+          toast.success(t('performing transaction'));
+        })
+        .onComplete(() => {
+          desmosClient.disconnect();
+          toast.success(t('operation completed'));
+        })
+        .onError(({ error }) => {
+          desmosClient.disconnect();
+          toast.errorNoRetry(error.message);
         });
-      }
-      return broadcastTxResult;
     },
-    [broadcastTx, signTx, unlockWallet, posthog],
+    [chainInfo, chainGasPrice, unlockWallet, t, toast],
   );
 };

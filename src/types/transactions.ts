@@ -2,6 +2,14 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import { Coin } from '@cosmjs/stargate';
 
 /**
+ * Contains the optional data that can be provided when sending a transaction.
+ */
+export interface TransactionOptions {
+  readonly feeGranter?: string;
+  readonly memo?: string;
+}
+
+/**
  * Contains the data of a transaction that has been sent to the APIs to be broadcast,
  * but which state still needs to be confirmed.
  */

@@ -5,7 +5,6 @@ import { useQuery } from '@apollo/client';
 import { useAppStateValue } from '@recoil/appState';
 import { mergeCacheableData } from 'lib/CacheUtils';
 import { removeDuplicates } from 'lib/ProfileUtils';
-import useUpdatePendingBlockedRelationships from 'hooks/relationships/blocked/useUpdatePendingBlockedRelationships';
 import { useGetBlockedToSync } from '@recoil/blockedRelationships';
 import { areBlockedUsersEqual, BlockedUser } from 'types/blockedRelationships';
 import GetAccountBlocked from 'services/graphql/queries/GetAccountBlocked';
@@ -25,7 +24,6 @@ const useBlocked = (address?: string, usersPerPage: number = 50) => {
   }
 
   const subspaceId = useAppStateValue('subspaceId');
-  const updatePendingBlockedRelationships = useUpdatePendingBlockedRelationships();
 
   // Get the relationships to sync
   const getBlockedToSync = useGetBlockedToSync();
@@ -41,31 +39,20 @@ const useBlocked = (address?: string, usersPerPage: number = 50) => {
   const [error, setError] = useState<string | undefined>();
 
   // Callback that is used when some data is returned by the chain
-  const onCompletedCallback = React.useCallback(
-    (data: any) => {
-      if (!data) return;
+  const onCompletedCallback = React.useCallback((data: any) => {
+    if (!data) return;
 
-      const onChainUsers = data.user_block.map(convertGraphQLBlockedUser);
+    const onChainUsers = data.user_block.map(convertGraphQLBlockedUser);
 
-      // Update the users list
-      setUsers(currentUsers => {
-        const [merged, updates] = mergeCacheableData(
-          currentUsers,
-          onChainUsers,
-          areBlockedUsersEqual,
-        );
-
-        // Update the pending relationships by deleting the ones that are now synced
-        updatePendingBlockedRelationships(userAddress, updates);
-
-        return merged;
-      });
-      setLoading(false);
-      setFetchingMore(false);
-      setRefreshing(false);
-    },
-    [updatePendingBlockedRelationships, userAddress],
-  );
+    // Update the users list
+    setUsers(currentUsers => {
+      const [merged] = mergeCacheableData(currentUsers, onChainUsers, areBlockedUsersEqual);
+      return merged;
+    });
+    setLoading(false);
+    setFetchingMore(false);
+    setRefreshing(false);
+  }, []);
 
   // Query used to get the blocked list
   const { fetchMore, refetch } = useQuery(GetAccountBlocked, {

@@ -2,7 +2,6 @@ import React from 'react';
 import { CachedDataUpdate, CachedDataUpdateType } from 'lib/CacheUtils';
 import { FollowedUser } from 'types/relationships';
 import { useRemovePendingFollowedUser, useUpdatePendingFollowedUser } from '@recoil/relationships';
-import useSyncPendingTransactions from 'hooks/tx/useSyncPendingTransactions';
 
 /**
  * Hook that allows to update the pending relationships based on the data retrieved from the server.
@@ -10,8 +9,6 @@ import useSyncPendingTransactions from 'hooks/tx/useSyncPendingTransactions';
 const useUpdatePendingRelationships = () => {
   const updateStoredPendingFollowedUser = useUpdatePendingFollowedUser();
   const removeStoredPendingFollowedUser = useRemovePendingFollowedUser();
-
-  const syncPendingTransactions = useSyncPendingTransactions();
 
   return React.useCallback(
     (user: string, updates: CachedDataUpdate<FollowedUser>[]) => {
@@ -34,11 +31,8 @@ const useUpdatePendingRelationships = () => {
           }
         }
       });
-
-      // Update the pending tx to remove the ones that are now on-chain or are expired
-      syncPendingTransactions();
     },
-    [removeStoredPendingFollowedUser, syncPendingTransactions, updateStoredPendingFollowedUser],
+    [removeStoredPendingFollowedUser, updateStoredPendingFollowedUser],
   );
 };
 

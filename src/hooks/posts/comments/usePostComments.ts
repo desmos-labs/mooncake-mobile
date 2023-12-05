@@ -6,7 +6,6 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { usePostCommentsToSync } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
-import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
 import { useIsPostHiddenLocally } from '@recoil/hiddenPosts';
 
 /**
@@ -49,33 +48,24 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   const [error, setError] = useState<string | undefined>();
 
   // Callback that is used when some data is returned by the chain
-  const updatePendingPosts = useUpdatePendingPosts();
-  const onCompletedCallback = React.useCallback(
-    (data: any) => {
-      if (!data) return;
+  const onCompletedCallback = React.useCallback((data: any) => {
+    if (!data) return;
 
-      // Filter all the comments that were created by someone who later deleted their profile
-      const filteredComments = (data.comments as any[]).filter(comment => comment.author);
+    // Filter all the comments that were created by someone who later deleted their profile
+    const filteredComments = (data.comments as any[]).filter(comment => comment.author);
 
-      // Convert the comments to the in-app format
-      const onChainComments = filteredComments.map(convertGraphQLPost);
+    // Convert the comments to the in-app format
+    const onChainComments = filteredComments.map(convertGraphQLPost);
 
-      // Update the comments
-      setComments(currentComments => {
-        const [merged, updates] = mergePosts(currentComments, onChainComments);
-
-        // Update the pending comments by deleting the ones that are now on-chain or are expired
-        // This is done because comments are not cached inside the local storage of the device, and
-        // they are not handled by the optimistic APIs
-        updatePendingPosts(activeAccountAddress, updates);
-        return merged;
-      });
-      setFetchingMore(false);
-      setRefreshing(false);
-      setLoading(false);
-    },
-    [activeAccountAddress, updatePendingPosts],
-  );
+    // Update the comments
+    setComments(currentComments => {
+      const [merged] = mergePosts(currentComments, onChainComments);
+      return merged;
+    });
+    setFetchingMore(false);
+    setRefreshing(false);
+    setLoading(false);
+  }, []);
 
   // Query used to get the comments
   const { refetch, fetchMore } = useQuery(GetPostComments, {

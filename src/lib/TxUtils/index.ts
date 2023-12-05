@@ -1,30 +1,27 @@
 import { ApolloClient } from '@apollo/client';
 import {
+  assertIsDeliverTxSuccess,
   Coin,
   DesmosClient,
   EncodeObject,
   GasPrice,
   Signer,
   TxRaw,
-  assertIsDeliverTxSuccess,
 } from '@desmoslabs/desmjs';
-import { Result, err, ok } from 'neverthrow';
+import { err, ok, Result } from 'neverthrow';
 import PostHog from 'posthog-react-native';
 import * as Sentry from 'sentry-expo';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
-import FindMessageTxHash from 'services/graphql/queries/desmos/FindMessageTxHash';
-import GetUserRelationship from 'services/graphql/queries/desmos/GetUserRelationship';
-import { GqlGetUserRelationshipResult } from 'types/relationships';
-import { GqlFindMessageTxHasResult } from 'types/transactions';
+import { TransactionOptions } from 'types/transactions';
 import { promiseToResult } from 'lib/NeverThrowUtils';
-import { captureFailedTxError } from 'lib/PostHog/utils';
-import { Constants } from 'config/Constants';
+import { captureFailedTxError } from 'lib/PostHogUtils';
 
 /**
  * Creates a {@link DesmosClient} instance with the optimal configurations
  * for the application.
  * @param rpcUrl - RPC url of the Desmos chain.
  * @param signer - Signer that will be used to sign the transaction.
+ * @param gasPrice - Gas price that should be used to broadcast the transaction.
  */
 export const buildDesmosClient = async (
   rpcUrl: string,
@@ -43,64 +40,6 @@ export const buildDesmosClient = async (
         }),
     'Error connecting to the Desmos chain',
   );
-};
-
-/**
- * Function to check if two users have an on-chain
- * relationship.
- * @param apolloClient - Client used to perform the queries.
- * @param creatorAddress - Address of who created the relationship.
- * @param counterpartyAddress - The counterparty of the relationship.
- * @returns Returns the tx hash that created the relationship or undefined
- * if the relationship don't exist.
- */
-export const userHaveRelationshipWith = async (
-  apolloClient: ApolloClient<object>,
-  creatorAddress: string,
-  counterpartyAddress: string,
-): Promise<string | undefined> => {
-  const { data: relationshipData, error: relationshipError } =
-    await apolloClient.query<GqlGetUserRelationshipResult>({
-      query: GetUserRelationship,
-      fetchPolicy: 'network-only',
-      variables: {
-        creatorAddress,
-        counterpartyAddress,
-        subspaceId: Constants.subspaceId,
-      },
-    });
-  if (relationshipError) {
-    throw relationshipError;
-  }
-
-  if (relationshipData === undefined || relationshipData.relationship.length === 0) {
-    // We don't have a relationship return undefined.
-    return undefined;
-  }
-
-  // We have a relationship with the counterparty lets find the tx hash
-  // that has created the relationship.
-  const { data: txHashResult, error } = await apolloClient.query<GqlFindMessageTxHasResult>({
-    query: FindMessageTxHash,
-    fetchPolicy: 'network-only',
-    variables: {
-      typeLike: '%MsgCreateRelationship',
-      fields: {
-        signer: creatorAddress,
-        counterparty: counterpartyAddress,
-        subspace_id: Constants.subspaceId.toString(),
-      },
-    },
-  });
-  if (error) {
-    throw error;
-  }
-
-  if (txHashResult === undefined || txHashResult.message.length === 0) {
-    return undefined;
-  }
-
-  return txHashResult.message[0].txHash;
 };
 
 /**
@@ -138,7 +77,7 @@ export const userCanUseOurFeeGranter = (userBalance: Coin[], txFeeDenom: string)
     return true;
   }
 
-  // The user sould use the fee granter only when
+  // The user should use the fee granter only when
   // don't have any coins.
   return coin.amount === '0';
 };
@@ -152,21 +91,23 @@ export const userCanUseOurFeeGranter = (userBalance: Coin[], txFeeDenom: string)
  * @param client - Client used to broadcast the transaction.
  * @param signerAddress - Address of who is performing the transaction.
  * @param msgs - List of messages to broadcast.
- * @param feeGranter - Address of the fee granter.
+ * @param options - Options that will be used to broadcast the transaction.
  */
 export const signAndBroadcastWithGranter = async (
   posthog: PostHog,
   client: DesmosClient,
   signerAddress: string,
   msgs: EncodeObject[],
-  feeGranter?: string,
+  options?: TransactionOptions,
 ) => {
   const txFee = await client.estimateTxFee(signerAddress, msgs, {
-    feeGranter,
+    feeGranter: options?.feeGranter,
+    memo: options?.memo,
   });
   const { txRaw } = await client.signTx(signerAddress, msgs, {
     fee: txFee,
-    feeGranter,
+    feeGranter: options?.feeGranter,
+    memo: options?.memo,
   });
 
   const broadcastResult = await promiseToResult(

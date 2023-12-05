@@ -1,17 +1,17 @@
+import { useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { SigningMode } from '@desmoslabs/desmjs';
+import { err, ok, Result } from 'neverthrow';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useReturnToCurrentScreen, {
   ReturnToCurrentScreenParams,
 } from 'hooks/navigation/useReturnToCurrentScreen';
-import { useCallback } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { Wallet } from 'types/wallet';
 import ROUTES from 'navigation/routes';
 import { useActiveAccount } from '@recoil/accounts';
-import { SigningMode } from '@desmoslabs/desmjs';
-import { err, ok, Result } from 'neverthrow';
 import { CanceledOperationError } from 'types/error';
 import { UnlockWalletParams } from 'screens/UnlockWallet';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSetUserWallet, useUserWallet } from '@recoil/userWallet';
 
 export interface UnlockWalletResult {
