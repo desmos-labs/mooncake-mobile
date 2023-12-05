@@ -40,17 +40,15 @@ const useNavigateToPost = () => {
   // Return a callback that allows to navigate to the proper screen
   // given a subspace id and post id
   return useCallback(
-    (subspaceId: number, postId: number, options?: NavigateToPostOptions) => {
+    (postId: number, options?: NavigateToPostOptions) => {
       options?.navigationMethod === 'push'
         ? push(ROUTES.POST_DETAILS, {
-            subspaceId,
             postId,
             focusCommentBox: options?.focusCommentBox,
             focusPostId: options?.focusPostId,
             initialPostData: options?.initialPostData,
           })
         : navigate(ROUTES.POST_DETAILS, {
-            subspaceId,
             postId,
             focusCommentBox: options?.focusCommentBox,
             focusPostId: options?.focusPostId,

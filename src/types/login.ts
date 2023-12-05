@@ -1,3 +1,30 @@
+import { Web3AuthLoginProvider } from 'types/web3auth';
+
+export interface LoginMethodPrivateKey {
+  type: 'PrivateKey';
+}
+
+export interface LoginMethodWeb3Auth {
+  type: 'Web3Auth';
+  provider: Web3AuthLoginProvider;
+}
+
+export type LoginMethod = LoginMethodPrivateKey | LoginMethodWeb3Auth;
+
+export const LoginMethodPrivateKey: LoginMethodPrivateKey = {
+  type: 'PrivateKey',
+};
+
+export const LoginMethodWeb3AuthApple: LoginMethodWeb3Auth = {
+  type: 'Web3Auth',
+  provider: Web3AuthLoginProvider.Apple,
+};
+
+export const LoginMethodWeb3AuthGoogle: LoginMethodWeb3Auth = {
+  type: 'Web3Auth',
+  provider: Web3AuthLoginProvider.Google,
+};
+
 /**
  * Enum that represents the login flow state.
  */

@@ -1,11 +1,6 @@
-import { HdPath } from '@cosmjs/crypto';
 import { Signer } from '@desmoslabs/desmjs';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import { LedgerApp } from 'types/ledger';
 
 export enum WalletSerializationVersion {
-  Mnemonic = 1,
-  Ledger = 1,
   Web3Auth = 1,
   PrivateKey = 1,
 }
@@ -15,22 +10,13 @@ export enum WalletSerializationVersion {
  */
 export enum WalletType {
   /**
-   * Wallet generated from a mnemonic of witch the key pair is stored
-   * encrypted in the device storage.
-   */
-  Mnemonic = 'mnemonic',
-  /**
-   * Wallet imported from a Ledger device.
-   */
-  Ledger = 'ledger',
-  /**
    * Wallet imported using Web3Auth.
    */
   Web3Auth = 'web3auth',
   /**
-   * Wallet imported using a Private Key.
+   * Wallet that has been imported with a private key.
    */
-  PrivateKey = 'privatekey',
+  PrivateKey = 'private_key',
 }
 
 /**
@@ -52,81 +38,24 @@ interface BaseWallet {
 }
 
 /**
- * Interface that represents a wallet created from a mnemonic.
+ * Interface that represents a generic wallet with a private key.
  */
-export interface MnemonicWallet extends BaseWallet {
-  readonly type: WalletType.Mnemonic;
+export interface WalletWithPrivateKey extends BaseWallet {
   /**
-   * HD Derivation path used to generate the user
-   * private key.
-   */
-  readonly hdPath: HdPath;
-  /**
-   * Secp256k1 private key derived from the mnemonic with the hdPath.
+   * Secp256k1 private key obtained from Web3Auth.
    */
   readonly privateKey: Uint8Array;
 }
 
 /**
- * [MnemonicWallet] that can be serialized to JSON.
- */
-export type SerializableMnemonicWallet = Omit<
-  MnemonicWallet,
-  'signer' | 'privateKey' | 'hdPath'
-> & {
-  readonly version: WalletSerializationVersion.Mnemonic;
-  /**
-   * HD Derivation path used to generate the user
-   * private key.
-   */
-  readonly hdPath: string;
-  /**
-   * Hex encoded private key.
-   */
-  readonly privateKey: string;
-};
-
-/**
- * Interface representing a wallet imported through a Ledger device.
- */
-export interface LedgerWallet extends BaseWallet {
-  readonly type: WalletType.Ledger;
-  /**
-   * HD Derivation path used to generate the user
-   * private key.
-   */
-  readonly hdPath: HdPath;
-  /**
-   * Name of the app used to generate this wallet.
-   */
-  readonly ledgerAppName: string;
-}
-
-/**
- * [LedgerWallet] that can be serialized to JSON.
- */
-export type SerializableLedgerWallet = Omit<LedgerWallet, 'signer' | 'hdPath'> & {
-  version: WalletSerializationVersion.Ledger;
-  /**
-   * HD Derivation path used to generate the user
-   * private key.
-   */
-  readonly hdPath: string;
-};
-
-/**
  * Interface representing a wallet imported through Web3Auth.
  */
-export interface Web3AuthWallet extends BaseWallet {
+export interface Web3AuthWallet extends WalletWithPrivateKey {
   readonly type: WalletType.Web3Auth;
   /**
    * Login method used from the user.
    */
   readonly loginProvider: string;
-  /**
-   * Secp256k1 private key obtained from Web3Auth.
-   */
-  readonly privateKey: Uint8Array;
 }
 
 /**
@@ -143,12 +72,8 @@ export type SerializableWeb3AuthWallet = Omit<Web3AuthWallet, 'signer' | 'privat
 /**
  * Interface representing a wallet imported through a private key.
  */
-export interface PrivateKeyWallet extends BaseWallet {
+export interface PrivateKeyWallet extends WalletWithPrivateKey {
   readonly type: WalletType.PrivateKey;
-  /**
-   * Secp256k1 private key obtained from comsjs.
-   */
-  readonly privateKey: Uint8Array;
 }
 
 /**
@@ -165,53 +90,36 @@ export type SerializablePrivateKeyWallet = Omit<PrivateKeyWallet, 'signer' | 'pr
 /**
  * Type representing all the supported wallets.
  */
-export type Wallet = MnemonicWallet | LedgerWallet | Web3AuthWallet | PrivateKeyWallet;
-
-/**
- * Type that represents a wallet that have a private key.
- */
-export type WalletWithPrivateKey = MnemonicWallet | Web3AuthWallet | PrivateKeyWallet;
+export type Wallet = Web3AuthWallet | PrivateKeyWallet;
 
 /**
  * Type representing a wallet that can be serialized to JSON and
  * stored in the device storage.
  */
-export type SerializableWallet =
-  | SerializableMnemonicWallet
-  | SerializableLedgerWallet
-  | SerializableWeb3AuthWallet
-  | SerializablePrivateKeyWallet;
+export type SerializableWallet = SerializableWeb3AuthWallet | SerializablePrivateKeyWallet;
 
 export interface BaseWalletGenerationData {
   readonly accountPrefix: string;
 }
 
-export interface MnemonicGenerationData extends BaseWalletGenerationData {
-  readonly type: WalletType.Mnemonic;
-  readonly mnemonic: string;
-  readonly hdPaths: HdPath[];
-}
-
-export interface LedgerGenerationData extends BaseWalletGenerationData {
-  readonly type: WalletType.Ledger;
-  readonly app: LedgerApp;
-  readonly transport: BluetoothTransport;
-  readonly hdPaths: HdPath[];
-}
-
+/**
+ * Interface that represents the data required to generate a [Web3AuthWallet].
+ */
 export interface Web3AuthGenerationData extends BaseWalletGenerationData {
   readonly type: WalletType.Web3Auth;
   readonly privateKey: Uint8Array;
   readonly loginProvider: string;
 }
 
+/**
+ * Interface that represents the data required to generate a [PrivateKeyWallet].
+ */
 export interface PrivateKeyGenerationData extends BaseWalletGenerationData {
   readonly type: WalletType.PrivateKey;
   readonly privateKey: Uint8Array;
 }
 
-export type WalletGenerationData =
-  | MnemonicGenerationData
-  | LedgerGenerationData
-  | Web3AuthGenerationData
-  | PrivateKeyGenerationData;
+/**
+ * Type union that represents the data required to generate a [Wallet].
+ */
+export type WalletGenerationData = Web3AuthGenerationData | PrivateKeyGenerationData;

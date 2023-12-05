@@ -6,11 +6,9 @@ import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@rec
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
-import { useAppStateValue } from '@recoil/appState';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 import sleep from 'lib/sleep';
-import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -19,12 +17,10 @@ export enum PostsQueryType {
 
 interface DiscoveryQueryParam {
   readonly type: PostsQueryType.DISCOVERY;
-  readonly user: string;
 }
 
 interface TimelineQueryParams {
   readonly type: PostsQueryType.TIMELINE;
-  readonly user: string;
   readonly followedUsers: string[];
 }
 
@@ -33,26 +29,20 @@ type PostsQueryParams = TimelineQueryParams | DiscoveryQueryParam;
 /**
  * Returns the query params based on the given query type.
  */
-const useQueryParams = (
-  type: PostsQueryType,
-  activeUser: string,
-  followingAddresses: string[],
-): PostsQueryParams => {
+const useQueryParams = (type: PostsQueryType, followingAddresses: string[]): PostsQueryParams => {
   return React.useMemo(() => {
     switch (type) {
       case PostsQueryType.TIMELINE:
         return {
           type: PostsQueryType.TIMELINE,
-          user: activeUser,
           followedUsers: followingAddresses,
         } as TimelineQueryParams;
       case PostsQueryType.DISCOVERY:
         return {
           type: PostsQueryType.DISCOVERY,
-          user: activeUser,
         } as DiscoveryQueryParam;
     }
-  }, [type, activeUser, followingAddresses]);
+  }, [type, followingAddresses]);
 };
 
 /**
@@ -61,18 +51,12 @@ const useQueryParams = (
  * @param postsPerPage {number} - Number of posts that should be fetched per each page.
  */
 const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): QueryOptions<any> => {
-  const subspaceId = useAppStateValue('subspaceId');
-
-  const getQueryReactionValue = useGetQueryReactionValue();
   return React.useMemo(() => {
     switch (params.type) {
       case PostsQueryType.DISCOVERY:
         return {
           query: GetPosts,
           variables: {
-            subspaceId,
-            user: params.user,
-            reaction: getQueryReactionValue(),
             offset: 0,
             limit: postsPerPage,
           },
@@ -82,16 +66,13 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
         return {
           query: GetPostsFromFollowing,
           variables: {
-            subspaceId,
             following: Array.from(params.followedUsers),
-            user: params.user,
-            reaction: getQueryReactionValue(),
             offset: 0,
             limit: postsPerPage,
           },
         };
     }
-  }, [getQueryReactionValue, params, postsPerPage, subspaceId]);
+  }, [params, postsPerPage]);
 };
 
 /**
@@ -129,7 +110,10 @@ const usePosts = (queryType: PostsQueryType) => {
   const onCompletedCallback = useCallback(
     async (data: any) => {
       // If there is no data, just return
-      if (!data) return;
+      if (!data) {
+        setLoading(false);
+        return;
+      }
 
       // Filter all the posts that were created by someone who later deleted their profile
       const filteredPosts = (data.posts as any[]).filter(post => post.author);
@@ -147,6 +131,7 @@ const usePosts = (queryType: PostsQueryType) => {
       graphQLPosts.forEach(post => {
         updatePostReactionCache(post);
       });
+
       // This sleep is added on purpose in order to make the user wait,
       // to trigger the release of serotonin inside their brain
       // (just like slot machines)
@@ -159,9 +144,10 @@ const usePosts = (queryType: PostsQueryType) => {
   );
 
   // Get the proper query to be executed
-  const queryParams = useQueryParams(queryType, activeAddress, followingAddresses);
+  const queryParams = useQueryParams(queryType, followingAddresses);
   const queryData = useQueryData(queryParams);
   const { refetch, fetchMore } = useQuery(queryData.query, {
+    fetchPolicy: 'network-only',
     variables: queryData.variables,
     onCompleted: onCompletedCallback,
     refetchWritePolicy: 'overwrite',
@@ -176,10 +162,12 @@ const usePosts = (queryType: PostsQueryType) => {
         variables: { offset: posts.length },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
+
           // If there are no more posts, stop fetching more
           if (fetchMoreResult.posts.length === 0) {
             setFetchingMore(false);
           }
+
           return {
             posts: [...prev.posts, ...fetchMoreResult.posts],
           };
@@ -196,6 +184,7 @@ const usePosts = (queryType: PostsQueryType) => {
     try {
       setError(undefined);
       setRefreshing(true);
+
       // Get the new data by resetting the fetch offset to restart post fetching
       const { data } = await refetch({ ...queryData.variables, offset: 0 });
       await onCompletedCallback(data);

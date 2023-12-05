@@ -8,7 +8,7 @@ import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
 import sleep from 'lib/sleep';
 import { useActiveAccountAddress } from '@recoil/accounts';
 
-type PostData = Pick<Post, 'subspaceId' | 'externalId'>;
+type PostData = Pick<Post, 'externalId'>;
 
 /**
  * Function that retrieves all the external post ids from the messages of the given transaction.
@@ -20,7 +20,6 @@ const getPostsData = (messages: EncodeObject[]) => {
         case Posts.v3.MsgCreatePostTypeUrl: {
           const value = msg.value as Posts.v3.MsgCreatePostEncodeObject['value'];
           return {
-            subspaceId: value.subspaceId.toNumber(),
             externalId: value.externalId,
           } as PostData;
         }
@@ -40,9 +39,9 @@ const useGetPostUpdate = () => {
   const getPostByExternalId = useGetPostByExternalID();
 
   return React.useCallback(
-    async (data: Pick<Post, 'subspaceId' | 'externalId'>) => {
+    async (data: Pick<Post, 'externalId'>) => {
       // Get the on-chain post
-      let onChainPost = await getPostByExternalId(data.subspaceId, data.externalId);
+      let onChainPost = await getPostByExternalId(data.externalId);
       while (!onChainPost) {
         // The post might not have been parsed yet, we can simply wait for some seconds and try again
         // It's fine to disable the rule here because we need to wait
@@ -51,7 +50,7 @@ const useGetPostUpdate = () => {
 
         // It's fine to disable the rule here because we need to wait
         // eslint-disable-next-line no-await-in-loop
-        onChainPost = await getPostByExternalId(data.subspaceId, data.externalId);
+        onChainPost = await getPostByExternalId(data.externalId);
       }
       // Get the post update
       return {

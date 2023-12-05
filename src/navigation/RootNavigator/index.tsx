@@ -10,9 +10,6 @@ import useInitTourGuidesState from 'hooks/tourguide/useInitTourGuidesState';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
-import ConnectToLedgerStack, {
-  ConnectToLedgerStackParams,
-} from 'navigation/RootNavigator/ConnectToLedgerStack';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import PostInteractionTabs, {
   PostInteractionTabParams,
@@ -28,24 +25,15 @@ import Community from 'screens/Community';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
 import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
-import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
-import ImportAccountSelectLedgerApp from 'screens/ImportAccountSelectLedgerApp';
-import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import ImportAccountSelectProfile, {
   SelectAccountParamList,
 } from 'screens/ImportAccountSelectProfile';
-import ImportPrivateKey from 'screens/ImportPrivateKey';
+import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
 import Landing from 'screens/Landing';
-import Login, { LoginParams } from 'screens/Login';
-import ManageConnectedApps from 'screens/ManageConnectedApps';
-import ManageConnectedChains from 'screens/ManageConnectedChains';
-import MnemonicInput from 'screens/MnemonicInput';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
-import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
-import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
 import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
@@ -69,7 +57,6 @@ import ServiceAndPolicy, { ServiceAndPolicyParams } from 'screens/ServiceAndPoli
 import Settings from 'screens/Settings';
 import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
-import Signup, { SignupParams } from 'screens/Signup';
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomePage, { WelcomePageParams } from 'screens/WelcomeScreen';
 import { LoginFlowStep } from 'types/login';
@@ -87,8 +74,6 @@ export type RootNavigatorParamList = {
 
   [ROUTES.LANDING]: undefined;
   [ROUTES.ONBOARDING]: OnboardingParams;
-  [ROUTES.SIGNUP]: SignupParams;
-  [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
   [ROUTES.SERVICE_AND_POLICY]: ServiceAndPolicyParams;
   [ROUTES.WELCOME_PAGE]: WelcomePageParams;
@@ -98,13 +83,9 @@ export type RootNavigatorParamList = {
   // --- ACCOUNTS SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN]: undefined;
-  [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
-  [ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP]: undefined;
-  [ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE]: SelectAccountParamList;
   [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
-  [ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY_INPUT]: undefined;
+  [ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY]: undefined;
 
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
 
@@ -152,31 +133,6 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
   [ROUTES.BLOCKED_USERS]: undefined;
-
-  // -------------------------------------------------------------------------------------
-  // --- CONNECT TO LEDGER SCREENS
-  // -------------------------------------------------------------------------------------
-
-  [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
-
-  // -------------------------------------------------------------------------------------
-  // --- CHAIN LINKS SCREENS
-  // -------------------------------------------------------------------------------------
-
-  [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
-
-  // Disconnect chain
-  [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
-
-  // -------------------------------------------------------------------------------------
-  // --- APP LINKS SCREENS
-  // -------------------------------------------------------------------------------------
-
-  [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
-  // [ROUTES.CONNECT_APP]: ConnectAppParams;
-
-  // Disconnect app modal
-  [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
@@ -294,46 +250,40 @@ const RootNavigator = () => {
       {/* --- DEV SCREENS --- */}
       {/* ------------------- */}
       {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
+
       {/* ----------------------- */}
       {/* --- INITIAL SCREENS --- */}
       {/* ----------------------- */}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ROUTES.SERVICE_AND_POLICY} component={ServiceAndPolicy} />
-      <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      <Stack.Screen name={ROUTES.LOGIN} component={Login} />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.FEE_GRANT_WAITING_SCREEN} component={FeeGrantWaitingScreen} />
+
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}
       {/* ------------------------ */}
-      <Stack.Screen
-        name={ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN}
-        component={ImportAccountSelectChain}
-      />
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_MODE} component={ImportAccountSelectMode} />
-      <Stack.Screen
-        name={ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP}
-        component={ImportAccountSelectLedgerApp}
-      />
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT} component={MnemonicInput} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY} component={ImportAccountPrivateKey} />
       <Stack.Screen
         name={ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE}
         component={ImportAccountSelectProfile}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY_INPUT} component={ImportPrivateKey} />
+
       <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
+
       {/* ------------------------------------ */}
       {/* --- BROADCAST TRANSACTION SCREEN --- */}
       {/* ------------------------------------ */}
       <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
+
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}
       {/* -------------------- */}
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
+
       {/* -------------------- */}
       {/* --- POST SCREENS --- */}
       {/* -------------------- */}
@@ -345,6 +295,7 @@ const RootNavigator = () => {
         })}
       />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
+
       {/* ------------------------ */}
       {/* --- SETTINGS SCREENS --- */}
       {/* ------------------------ */}
@@ -354,27 +305,11 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
-      {/* --------------------------------- */}
-      {/* --- CONNECT TO LEDGER SCREENS --- */}
-      {/* --------------------------------- */}
-      <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
-      {/* --------------------------- */}
-      {/* --- CHAIN LINKS SCREENS --- */}
-      {/* --------------------------- */}
-      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
-      <Stack.Screen name={ROUTES.DISCONNECT_CHAIN_MODAL} component={DisconnectChainModal} />
-      {/* ------------------------- */}
-      {/* --- APP LINKS SCREENS --- */}
-      {/* ------------------------- */}
-      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
-      {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
-      <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
+
       {/* ----------------------- */}
       {/* --- PROFILE SCREENS --- */}
       {/* ----------------------- */}
-      {/* <Stack.Screen  name={ROUTES.ADD_PROFILE_MODAL} component={AddProfileModal} /> */}
       <Stack.Screen name={ROUTES.SAVE_PROFILE} component={SaveProfile} />
-      {/* Profile visualization */}
       <Stack.Screen
         name={ROUTES.PROFILE}
         component={Profile}
@@ -407,6 +342,7 @@ const RootNavigator = () => {
       {/*  }} */}
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
+
       {/* --------------------- */}
       {/* --- BOTTOM MODALS --- */}
       {/* --------------------- */}
@@ -436,6 +372,7 @@ const RootNavigator = () => {
           component={BackupPhraseBottomModal}
         />
       </Stack.Group>
+
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
       {/* ------------------------------ */}

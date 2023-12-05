@@ -4,7 +4,6 @@ import { useQuery } from '@apollo/client';
 import GetPostInteractionsAuthors from 'services/graphql/queries/GetPostInteractionsAuthors';
 import { DesmosProfile } from 'types/desmos';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
-import useHasReacted from 'hooks/reactions/useHasReacted';
 import useHasTipped from 'hooks/tips/useHasTipped';
 import { useActiveAccountAddress } from '@recoil/accounts';
 
@@ -26,7 +25,6 @@ const usePostInteractionsAuthors = (
 
   const [authors, setAuthors] = useState<DesmosProfile[]>([]);
 
-  const hasReacted = useHasReacted(post);
   const hasTipped = useHasTipped(post);
 
   const { data, loading, refetch } = useQuery(GetPostInteractionsAuthors, {
@@ -42,14 +40,7 @@ const usePostInteractionsAuthors = (
       return;
     }
 
-    const { reactions, tips } = data;
-
-    const reactionsAuthors = (reactions as any[])
-      .map(r => r.author)
-      .map(convertGraphQLProfile)
-      .filter(
-        author => author !== undefined && (hasReacted || author?.address !== activeAddress),
-      ) as DesmosProfile[];
+    const { tips } = data;
 
     const tipsAuthors = (tips as any[])
       .map(t => t.author)
@@ -58,7 +49,7 @@ const usePostInteractionsAuthors = (
         author => author !== undefined && (hasTipped || author.address !== activeAddress),
       ) as DesmosProfile[];
 
-    const fetchedAuthors = [...reactionsAuthors, ...tipsAuthors];
+    const fetchedAuthors = [...tipsAuthors];
 
     // Returns the first X unique authors
     const uniqueAuthors = fetchedAuthors
@@ -68,7 +59,7 @@ const usePostInteractionsAuthors = (
       )
       .slice(0, 4);
     setAuthors(uniqueAuthors);
-  }, [activeAddress, data, hasReacted, hasTipped, setAuthors]);
+  }, [activeAddress, data, hasTipped, setAuthors]);
 
   return {
     authors,

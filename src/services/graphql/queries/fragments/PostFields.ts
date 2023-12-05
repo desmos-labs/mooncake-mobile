@@ -37,6 +37,7 @@ const PostFields = gql`
     transactions {
       hash
     }
+    has_user_liked
   }
 `;
 

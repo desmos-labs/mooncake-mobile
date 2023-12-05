@@ -5,8 +5,6 @@ enum ROUTES {
 
   ONBOARDING = 'ONBOARDING',
   LANDING = 'LANDING',
-  LOGIN = 'LOGIN',
-  SIGNUP = 'SIGNUP',
   WELCOME = 'WELCOME',
   SERVICE_AND_POLICY = 'SERVICE_AND_POLICY',
   WELCOME_PAGE = 'WELCOME_PAGE',
@@ -26,13 +24,9 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   // Import account
-  IMPORT_ACCOUNT_SELECT_CHAIN = 'IMPORT_ACCOUNT_SELECT_CHAIN',
-  IMPORT_ACCOUNT_SELECT_MODE = 'IMPORT_ACCOUNT_SELECT_MODE',
-  IMPORT_ACCOUNT_SELECT_LEDGER_APP = 'IMPORT_ACCOUNT_SELECT_LEDGER_APP',
-  IMPORT_ACCOUNT_MNEMONIC_INPUT = 'IMPORT_ACCOUNT_MNEMONIC_INPUT',
   IMPORT_ACCOUNT_SELECT_PROFILE = 'IMPORT_ACCOUNT_SELECT_PROFILE',
   IMPORT_ACCOUNT_SAVE_ACCOUNT = 'IMPORT_ACCOUNT_SAVE_ACCOUNT',
-  IMPORT_ACCOUNT_PRIVATE_KEY_INPUT = 'IMPORT_ACCOUNT_PRIVATE_KEY_INPUT',
+  IMPORT_ACCOUNT_PRIVATE_KEY = 'IMPORT_ACCOUNT_PRIVATE_KEY',
 
   // Account password
   PASSWORD_MANIPULATION = 'PASSWORD_MANIPULATION',
@@ -44,7 +38,6 @@ enum ROUTES {
   // Bottom tabs
   BOTTOM_TABS = 'BOTTOM_TABS',
   CREATE_BUTTON = 'CREATE_BUTTON',
-  COMMUNITIES = 'COMMUNITIES',
   ACTIVITIES = 'ACTIVITIES',
 
   // Home pages
@@ -73,38 +66,9 @@ enum ROUTES {
   SETTINGS = 'SETTINGS',
   SETTINGS_COMMUNITY = 'SETTINGS_COMMUNITY',
   SETTINGS_SHOW_PRIVATE_KEY = 'SETTINGS_SHOW_PRIVATE_KEY',
-  SETTINGS_GRANTS = 'SETTINGS_GRANTS',
-  SETTINGS_GRANTS_DETAILS = 'SETTINGS_GRANTS_DETAILS',
   SETTINGS_ENABLE_BIOMETRICS = 'SETTINGS_ENABLE_BIOMETRICS',
   UNLOCK_WALLET = 'UNLOCK_WALLET',
   BLOCKED_USERS = 'BLOCKED_USERS',
-
-  // -------------------------------------------------------------------------------------
-  // --- CONNECT TO LEDGER SCREENS
-  // -------------------------------------------------------------------------------------
-
-  CONNECT_TO_LEDGER_STACK = 'CONNECT_TO_LEDGER_STACK',
-  PERFORM_LEDGER_SCAN = 'PERFORM_LEDGER_SCAN',
-  CONNECT_TO_LEDGER = 'CONNECT_TO_LEDGER',
-
-  // -------------------------------------------------------------------------------------
-  // --- CHAIN LINKS SCREENS
-  // -------------------------------------------------------------------------------------
-
-  MANAGE_CONNECTED_CHAINS = 'MANAGE_CONNECTED_CHAINS',
-
-  // Disconnect chain
-  DISCONNECT_CHAIN_MODAL = 'DISCONNECT_CHAIN_MODAL',
-
-  // -------------------------------------------------------------------------------------
-  // --- APP LINKS SCREENS
-  // -------------------------------------------------------------------------------------
-
-  MANAGE_CONNECTED_APPS = 'MANAGE_CONNECTED_APPS',
-  CONNECT_APP = 'CONNECT_APP',
-
-  // Disconnect app modal
-  DISCONNECT_APP_MODAL = 'DISCONNECT_APP_MODAL',
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
@@ -115,9 +79,6 @@ enum ROUTES {
   GUEST_PROFILE = 'GUEST_PROFILE',
 
   // Profile addition
-  ADD_PROFILE = 'ADD_PROFILE',
-  ADD_PROFILE_SELECT_ADDRESS_GENERAL = 'ADD_PROFILE_SELECT_ADDRESS_GENERAL',
-  ADD_PROFILE_SELECT_ADDRESS_ADVANCED = 'ADD_PROFILE_SELECT_ADDRESS_ADVANCED',
   ADD_PROFILE_MODAL = 'ADD_PROFILE_MODAL',
 
   // Profile creation/saving

@@ -1,25 +1,27 @@
-import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/Button';
-import DView from 'components/DView';
-import Spacer from 'components/Spacer';
-import CommonStyles from 'config/theme/CommonStyles';
-import useCustomToast from 'hooks/extended/useCustomToast';
-import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
-import { clearMMKV } from 'lib/MMKVStorage';
-import { Box, HStack, VStack } from 'native-base';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import React, { FC } from 'react';
-import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
-import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
+import { StackScreenProps } from "@react-navigation/stack";
+import Button from "components/Button";
+import DView from "components/DView";
+import Spacer from "components/Spacer";
+import CommonStyles from "config/theme/CommonStyles";
+import useCustomToast from "hooks/extended/useCustomToast";
+import useNavigateToHome from "hooks/navigation/useNavigateToHome";
+import { clearMMKV } from "lib/MMKVStorage";
+import { Box, HStack, VStack } from "native-base";
+import { RootNavigatorParamList } from "navigation/RootNavigator";
+import ROUTES from "navigation/routes";
+import React, { FC } from "react";
+import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import { PASSWORD_MANIPULATION_MODE } from "screens/PasswordManipulation/useHooks";
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.LANDING,
   ROUTES.ONBOARDING,
   ROUTES.PROFILE,
   ROUTES.SETTINGS,
   ROUTES.WELCOME_PAGE,
   ROUTES.FEE_GRANT_WAITING_SCREEN,
+  ROUTES.BOTTOM_TABS,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
@@ -104,17 +106,15 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}>
           Continue to Home screen
         </Button>
-        <Spacer paddingVertical={8} />
+        <Spacer paddingVertical={4} />
         <HStack>
           <VStack flex={0.5}>
             <Button onPress={showToast} size={32}>
               Show toast
             </Button>
-            <Spacer paddingVertical={4} />
           </VStack>
           <Spacer paddingHorizontal={4} />
           <VStack flex={0.5}>
-            <Spacer paddingVertical={4} />
             <Button
               size={32}
               onPress={() => {
@@ -138,6 +138,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             </Button>
           </VStack>
         </HStack>
+        <Spacer paddingVertical={4} />
       </Box>
     </DView>
   );

@@ -76,18 +76,11 @@ const convertGraphQLPostTransaction = (transaction: any): PostTransaction => {
   } as PostTransaction;
 };
 
-export interface GraphQLPost extends Post {
-  /**
-   * Identifies whether the current application user has reacted to this post or not.
-   */
-  readonly hasReacted: boolean;
-}
-
 /**
  * Converts a post fetched from the GraphQL API into a format that is easier to parse by the app.
  * @param post The post to convert.
  */
-export const convertGraphQLPost = (post: any): GraphQLPost => {
+export const convertGraphQLPost = (post: any): Post => {
   return {
     status: PostStatus.SYNCED,
     statusUpdateDate: new Date(Date.now()).toISOString(),
@@ -111,7 +104,6 @@ export const convertGraphQLPost = (post: any): GraphQLPost => {
     author: convertGraphQLProfile(post.author),
     transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
 
-    // Extension fields
-    hasReacted: post.reactionPresence?.aggregate?.count > 0,
-  } as GraphQLPost;
+    hasUserLiked: post.has_user_liked,
+  } as Post;
 };

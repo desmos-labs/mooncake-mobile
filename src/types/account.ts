@@ -1,5 +1,4 @@
 import { Algo } from '@cosmjs/amino';
-import { HdPath } from '@cosmjs/crypto';
 import { DesmosProfile } from 'types/desmos';
 import { Wallet, WalletType } from 'types/wallet';
 
@@ -37,58 +36,6 @@ export interface BaseAccount {
 }
 
 /**
- * Interface representing an account created with a mnemonic.
- */
-export interface MnemonicAccount extends BaseAccount {
-  readonly walletType: WalletType.Mnemonic;
-  /**
-   * HdPath used to derive the user's private key.
-   */
-  readonly hdPath: HdPath;
-}
-
-export type SerializableMnemonicAccount = Omit<MnemonicAccount, 'pubKey' | 'hdPath'> & {
-  readonly version: AccountSerializationVersion.Mnemonic;
-  /**
-   * hex encoded public key.
-   */
-  readonly pubKey: string;
-  /**
-   * String representation of the hd derivation path used to derive the user
-   * private key.
-   */
-  readonly hdPath: string;
-};
-
-/**
- * Interface representing an account imported through a Ledger device.
- */
-export interface LedgerAccount extends BaseAccount {
-  readonly walletType: WalletType.Ledger;
-  /**
-   * HdPath used to derive the user's private key.
-   */
-  readonly hdPath: HdPath;
-  /**
-   * Name of the ledger app used to import this account.
-   */
-  readonly ledgerAppName: string;
-}
-
-export type SerializableLedgerAccount = Omit<LedgerAccount, 'pubKey' | 'hdPath'> & {
-  readonly version: AccountSerializationVersion.Ledger;
-  /**
-   * hex encoded public key.
-   */
-  readonly pubKey: string;
-  /**
-   * String representation of the hd derivation path used to derive the user
-   * private key.
-   */
-  readonly hdPath: string;
-};
-
-/**
  * Interface representing an account imported through Web3Auth.
  */
 export interface Web3AuthAccount extends BaseAccount {
@@ -122,7 +69,7 @@ export type SerializablePrivateKeyAccount = PrivateKeyAccount & {
   readonly version: AccountSerializationVersion.PrivateKey;
 };
 
-export type Account = MnemonicAccount | LedgerAccount | Web3AuthAccount | PrivateKeyAccount;
+export type Account = Web3AuthAccount | PrivateKeyAccount;
 
 export interface AccountWithWallet {
   readonly account: Account;
@@ -133,8 +80,4 @@ export interface SelectedAccount extends AccountWithWallet {
   readonly profile?: DesmosProfile;
 }
 
-export type SerializableAccount =
-  | SerializableMnemonicAccount
-  | SerializableLedgerAccount
-  | SerializableWeb3AuthAccount
-  | SerializablePrivateKeyAccount;
+export type SerializableAccount = SerializableWeb3AuthAccount | SerializablePrivateKeyAccount;

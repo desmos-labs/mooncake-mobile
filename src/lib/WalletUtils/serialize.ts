@@ -1,11 +1,6 @@
-import { pathToString } from '@cosmjs/crypto';
 import { toHex } from '@cosmjs/encoding';
 import {
-  LedgerWallet,
-  MnemonicWallet,
   PrivateKeyWallet,
-  SerializableLedgerWallet,
-  SerializableMnemonicWallet,
   SerializablePrivateKeyWallet,
   SerializableWallet,
   SerializableWeb3AuthWallet,
@@ -14,32 +9,6 @@ import {
   WalletType,
   Web3AuthWallet,
 } from 'types/wallet';
-
-/**
- * Convert a [MnemonicWallet] into a [SerializableMnemonicWallet]
- * @param wallet - The [MnemonicWallet] to convert.
- */
-export const serializeMnemonicWallet = (wallet: MnemonicWallet): SerializableMnemonicWallet => ({
-  version: WalletSerializationVersion.Mnemonic,
-  type: WalletType.Mnemonic,
-  address: wallet.address,
-  addressPrefix: wallet.addressPrefix,
-  hdPath: pathToString(wallet.hdPath),
-  privateKey: toHex(wallet.privateKey),
-});
-
-/**
- * Convert a [LedgerWallet] into a [SerializableLedgerWallet]
- * @param wallet - The [LedgerWallet] to convert.
- */
-export const serializeLedgerWallet = (wallet: LedgerWallet): SerializableLedgerWallet => ({
-  version: WalletSerializationVersion.Ledger,
-  type: WalletType.Ledger,
-  addressPrefix: wallet.addressPrefix,
-  address: wallet.address,
-  hdPath: pathToString(wallet.hdPath),
-  ledgerAppName: wallet.ledgerAppName,
-});
 
 /**
  * Convert a [Web3AuthWallet] into a [SerializableWeb3AuthWallet]
@@ -76,12 +45,6 @@ export const serializeWallet = (wallet: Wallet): SerializableWallet => {
   let serializableWallet: SerializableWallet;
 
   switch (wallet.type) {
-    case WalletType.Ledger:
-      serializableWallet = serializeLedgerWallet(wallet);
-      break;
-    case WalletType.Mnemonic:
-      serializableWallet = serializeMnemonicWallet(wallet);
-      break;
     case WalletType.Web3Auth:
       serializableWallet = serializeWeb3AuthWallet(wallet);
       break;

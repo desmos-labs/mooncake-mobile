@@ -28,11 +28,11 @@ const postsState = atom<Record<string, Post[]>>({
 /**
  * Hook that allows to get the details of a post given its subspace id and id.
  */
-export const usePostByID = (user: string, subspaceId: number, id: number) => {
+export const usePostByID = (user: string, id: number) => {
   const posts = useRecoilValue(postsState);
   return React.useMemo(() => {
-    return posts[user]?.find(p => p.subspaceId === subspaceId && p.id === id);
-  }, [id, posts, subspaceId, user]);
+    return posts[user]?.find(p => p.id === id);
+  }, [id, posts, user]);
 };
 
 /**
@@ -127,12 +127,11 @@ export const usePostCommentsToSync = (user: string, subspaceId: number, postId: 
 
 /**
  * Hook that allows to store a given post.
- * @param user {string} - User for which the post should be stored.
  */
-export const useStorePost = (user: string) => {
+export const useStorePost = () => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
-    (post: Post) => {
+    (user: string, post: Post) => {
       setPosts(posts => {
         const userPosts = [...(posts[user] ?? [])];
         const existingPostIndex = findSamePost(userPosts, post);
@@ -155,7 +154,7 @@ export const useStorePost = (user: string) => {
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
 
@@ -293,12 +292,11 @@ export const useRemoveStoredPendingPost = () => {
 
 /**
  * Hook that allows to remove the post having a given subspace ia and external id.
- * @param user {string} - Address of the user for which the post should be deleted.
  */
-export const useRemovePost = (user: string) => {
+export const useRemovePost = () => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
-    (subspaceId: number, externalId: string) => {
+    (user: string, externalId: string) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -306,14 +304,12 @@ export const useRemovePost = (user: string) => {
 
         // Update the user posts by filtering out the post that has the same subspace id and external id
         const userPosts = updatedPosts[user] ?? [];
-        updatedPosts[user] = userPosts.filter(
-          p => p.subspaceId !== subspaceId || p.externalId !== externalId,
-        );
+        updatedPosts[user] = userPosts.filter(p => p.externalId !== externalId);
 
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
 

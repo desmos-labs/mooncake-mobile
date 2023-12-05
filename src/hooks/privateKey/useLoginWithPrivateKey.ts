@@ -6,8 +6,8 @@ import { useCallback, useState } from 'react';
 import { SupportedChain } from 'types/chains';
 
 /**
- * Hook to login with a private key. (unarmed - uncrypted)
- * @param chain the chain to login to.
+ * Hook to log in with an unarmored and unencrypted private key.
+ * @param chain the chain to log in to.
  */
 const useLoginWithPrivateKey = (chain: SupportedChain) => {
   const startSaveAccountAndCreateProfileFlow = useSaveAccountAndCreateProfileFlow();
