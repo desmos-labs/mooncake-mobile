@@ -8,18 +8,15 @@ import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
 import { Formik } from 'formik';
-import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useProfileParams from 'hooks/profiles/useProfileParams';
 import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useImageFromDevice from 'hooks/useImageFromDevice';
-import { asPictureAsset } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
-import { Asset } from 'react-native-image-picker';
 import useStyles from 'screens/SaveProfile/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
@@ -53,10 +50,6 @@ export interface SaveProfileParams {
    */
   readonly onProfileSaved: () => void;
   /**
-   * Optional fee granter that can be used to pay the transaction fees.
-   */
-  readonly optionalFeeGranter?: string;
-  /**
    * Optional custom transaction header that will be used to sign the transaction.
    */
   readonly customTransactionHeader?: string;
@@ -84,10 +77,9 @@ const SaveProfile = (props: NavProps) => {
 
   const profile = params?.profile;
   const accountWithWallet = params?.accountWithWallet;
-  const optionalFeeGranter = params?.optionalFeeGranter;
   const customTransactionHeader = params?.customTransactionHeader ?? t('create profile');
   const customTransactionBody = params?.customTransactionBody ?? t('create profile body');
-  const onProfileSaved = params?.onProfileSaved;
+  const onProfileSaved = params?.onProfileSaved || (() => {});
 
   // -------------------------------------------------------------------------------------
   // --- Styles
@@ -103,22 +95,14 @@ const SaveProfile = (props: NavProps) => {
   // --- Screen state
   // -------------------------------------------------------------------------------------
 
-  // Ref that tells if the screen should call the onCancel
-  // callback or not when the screen is dismissed.
-  const handleCancel = useRef(true);
-
   // State of the edit form
-  const [profilePic, setProfilePic] = useState<Asset | undefined>(
-    asPictureAsset(profile?.profilePicture),
-  );
+  const [profilePic, setProfilePic] = useState<string | undefined>(profile?.profilePicture);
   const profilePicBackground = useGetImageBackground(
     profilePic,
     profile?.profilePicture,
     defaultProfilePic,
   );
-  const [coverPic, setCoverPic] = useState<Asset | undefined>(
-    asPictureAsset(profile?.coverPicture),
-  );
+  const [coverPic, setCoverPic] = useState<string | undefined>(profile?.coverPicture);
   const coverPictureBackground = useGetImageBackground(
     coverPic,
     profile?.coverPicture,
@@ -147,20 +131,12 @@ const SaveProfile = (props: NavProps) => {
     onImageSelected: image => setProfilePic(image),
   });
 
-  // Hook to handle the cancel action
-  useOnBackAction(() => {
-    if (handleCancel.current) {
-      onCancel?.();
-    }
-  }, []);
-
   // Hook to submit the form and check the status of the profile saving.
   // Hook to submit the form and check the status of the profile saving.
   const { status, submitForm } = useSubmitForm(
     profile,
     accountWithWallet,
     onProfileSaved,
-    optionalFeeGranter,
     customTransactionHeader,
     customTransactionBody,
   );
@@ -168,16 +144,9 @@ const SaveProfile = (props: NavProps) => {
   // Callback used when the user presses the Save button.
   const onEditProfile = useCallback(
     async (values: SaveProfileFormState) => {
-      const result = await submitForm(values, profilePic, coverPic);
-      if (result.isErr() && onError) {
-        onError(result.error);
-      } else if (result.isOk() && onSuccess) {
-        // Block the handling of the cancel action since we have a sucessful transaction.
-        handleCancel.current = false;
-        onSuccess();
-      }
+      await submitForm(values, profilePic, coverPic);
     },
-    [coverPic, onError, onSuccess, profilePic, submitForm],
+    [coverPic, profilePic, submitForm],
   );
 
   /**

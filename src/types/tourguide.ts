@@ -18,11 +18,6 @@ export interface TourGuideState {
    * presented during the login process.
    */
   readonly login: LoginOnboardingStep;
-  /**
-   * Indicates whether we should display a hint to the user, informing them
-   * that pressing a ticket will show a QR code.
-   */
-  readonly eventTicketQRCodeHint: boolean;
 }
 
 /**
@@ -30,5 +25,4 @@ export interface TourGuideState {
  */
 export const DefaultTourGuideState: TourGuideState = {
   login: LoginOnboardingStep.NotStarted,
-  eventTicketQRCodeHint: true,
 };

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { AccountWithWallet } from 'types/account';
 import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
-import { err, ok } from 'neverthrow';
+import { err } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useUploadProfilePictures from 'hooks/profiles/useUploadProfilePictures';
-import useNavigateToSignAndBroadcastTx from 'hooks/broadcast/useNavigateToSignAndBroadcastTx';
 import { Alert } from 'react-native';
+import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -31,7 +31,7 @@ export enum SaveProfileStatus {
 const useSaveProfileOnChain = () => {
   const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
   const activeAccountAddress = useActiveAccountAddress()!;
-  const navigateToSignAndBroadcastTx = useNavigateToSignAndBroadcastTx();
+  const signAndBroadcastTx = useSignAndBroadcastTx();
   const { uploadPictures } = useUploadProfilePictures();
 
   const saveProfile = React.useCallback(
@@ -39,7 +39,6 @@ const useSaveProfileOnChain = () => {
       params: DesmosProfile,
       providedAccount: AccountWithWallet | undefined,
       onProfileSaved: () => void,
-      feeGranter?: string,
       customHeader?: string,
       customBody?: string,
     ) => {
@@ -58,6 +57,7 @@ const useSaveProfileOnChain = () => {
         return;
       }
       const { profilePictureUrl, coverPictureUrl } = uploadPictureResult;
+
       // Build the message to save the profile on-chain
       const { dTag, nickname, bio } = params;
       const msgSaveProfile: Profiles.v3.MsgSaveProfileEncodeObject = {
@@ -74,31 +74,17 @@ const useSaveProfileOnChain = () => {
 
       // Sign and broadcast the transaction
       setStatus(SaveProfileStatus.BROADCASTING_TX);
-      const signAndBroadcastTxResult = await navigateToSignAndBroadcastTx({
-        accountOrAddress: providedAccount ?? activeAccountAddress,
-        messages: [msgSaveProfile],
-        feeGranter,
-        customHeader,
-        customBody,
-        onSuccess: () => {
-          setStatus(SaveProfileStatus.DONE);
-        },
-        onError: () => {
-          setStatus(SaveProfileStatus.UNDEFINED);
+
+      await signAndBroadcastTx([msgSaveProfile], {
+        memo: 'Broadcast using Butter',
+        loadingPopup: {
+          title: customHeader,
+          description: customBody,
         },
       });
-
-      if (signAndBroadcastTxResult.isOk()) {
-        onProfileSaved();
-        return ok(undefined);
-      } else {
-        return err(
-          signAndBroadcastTxResult.error ??
-            new Error('An error occurred while broadcasting the transaction'),
-        );
-      }
+      onProfileSaved();
     },
-    [activeAccountAddress, navigateToSignAndBroadcastTx, uploadPictures],
+    [activeAccountAddress, signAndBroadcastTx, uploadPictures],
   );
 
   return {

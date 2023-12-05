@@ -8,7 +8,6 @@ import ROUTES from 'navigation/routes';
 import { err, ok, Result } from 'neverthrow';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Asset } from 'react-native-image-picker';
 import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile, ProfileParams } from 'types/desmos';
@@ -108,8 +107,8 @@ export const omitEmptyValue = (value: string): string | undefined => {
  * @param defaultImage {any} - Default image to be used if the above two are not defined
  */
 export const useGetImageBackground = (
-  inputValue: Asset | undefined,
-  profileValue: Asset | string | undefined,
+  inputValue: string | undefined,
+  profileValue: string | undefined,
   defaultImage: any,
 ) => {
   const profileUri = React.useMemo(() => inputValue || profileValue, [inputValue, profileValue]);
@@ -147,7 +146,6 @@ const getValueToSave = (
  * while signing the transaction. If no account is provided, then the
  * current user account will be used instead.
  * @param onProfileSaved {() => void} - Callback to be called when the profile
- * @param optionalFeeGranter {string | undefined} - Optional fee granter to be used while signing the transaction.
  * @param customHeader {string | undefined} - Optional custom header to be used inside the transaction screen.
  * @param customBody {string | undefined} - Optional custom body to be used inside the transaction screen.
  */
@@ -155,7 +153,6 @@ export const useSubmitForm = (
   profile: DesmosProfile | undefined,
   accountWithWallet: AccountWithWallet | undefined,
   onProfileSaved: () => void,
-  optionalFeeGranter: string | undefined,
   customHeader?: string,
   customBody?: string,
 ) => {
@@ -179,6 +176,7 @@ export const useSubmitForm = (
 
       // Get the on-chain profile
       const onChainProfile = await getOnChainProfile(profileAddress);
+
       // Get the profile to save
       const profileToSaveOnChain: DesmosProfile = {
         dTag: getValueToSave(values.dTag ?? profile?.dTag, onChainProfile?.dTag),
@@ -204,7 +202,6 @@ export const useSubmitForm = (
         profileToSaveOnChain,
         accountWithWallet,
         onProfileSaved,
-        optionalFeeGranter,
         customHeader,
         customBody,
       );
@@ -223,7 +220,6 @@ export const useSubmitForm = (
       customHeader,
       getOnChainProfile,
       onProfileSaved,
-      optionalFeeGranter,
       profile,
       saveProfile,
       storeProfile,

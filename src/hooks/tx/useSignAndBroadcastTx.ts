@@ -16,6 +16,18 @@ import { scheduleTask } from 'lib/BackgroundTaskUtils';
 import SignAndBroadcastTxTask from 'services/tasks/SignAndBroadcastTx';
 import { useTranslation } from 'react-i18next';
 
+export interface PopupOptions {
+  readonly title?: string;
+  readonly description?: string;
+}
+
+export interface SignAndBroadcastOptions {
+  readonly memo?: string;
+  readonly loadingPopup?: PopupOptions;
+  readonly successPopup?: PopupOptions;
+  readonly errorPopup?: PopupOptions;
+}
+
 /**
  * Hook that allows to estimate the fees of a transaction.
  * If the provided account is undefined, the fees will be estimated for the current active account.
@@ -101,7 +113,7 @@ export const useSignAndBroadcastTx = () => {
   const unlockWallet = useUnlockWallet();
 
   return useCallback(
-    async (messages: EncodeObject[], memo?: string) => {
+    async (messages: EncodeObject[], options?: SignAndBroadcastOptions) => {
       if (!chainInfo || !chainGasPrice) {
         toast.errorNoRetry('Chain information not found');
         return;
@@ -135,10 +147,11 @@ export const useSignAndBroadcastTx = () => {
           desmosClient,
           messages,
           signer: wallet.address,
-          memo,
+          memo: options?.memo,
         },
         {
-          title: t('performing transaction'),
+          title: options?.loadingPopup?.title ?? t('performing transaction'),
+          desc: options?.loadingPopup?.description,
           progressBar: {
             indeterminate: true,
           },
@@ -147,15 +160,18 @@ export const useSignAndBroadcastTx = () => {
       taskReference
         .onStart(() => {
           // TODO: Add the loading toast - Missing now
-          toast.success(t('performing transaction'));
+          // TODO: Add the ability to add a description
+          toast.success(options?.loadingPopup?.title ?? t('performing transaction'));
         })
         .onComplete(() => {
           desmosClient.disconnect();
-          toast.success(t('operation completed'));
+          // TODO: Add the ability to add a description
+          toast.success(options?.successPopup?.title ?? t('operation completed'));
         })
         .onError(({ error }) => {
           desmosClient.disconnect();
-          toast.errorNoRetry(error.message);
+          // TODO: Add the ability to add a description
+          toast.errorNoRetry(options?.errorPopup?.title ?? error.message);
         });
     },
     [chainInfo, chainGasPrice, unlockWallet, t, toast],
