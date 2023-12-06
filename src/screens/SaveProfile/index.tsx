@@ -10,7 +10,6 @@ import Typography from 'components/Typography';
 import { CameraType } from 'expo-image-picker';
 import { Formik } from 'formik';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
-import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useProfileParams from 'hooks/profiles/useProfileParams';
 import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useImageFromDevice from 'hooks/useImageFromDevice';
@@ -61,10 +60,6 @@ export interface SaveProfileParams {
    */
   readonly onProfileSaved: () => void;
   /**
-   * Optional fee granter that can be used to pay the transaction fees.
-   */
-  readonly optionalFeeGranter?: string;
-  /**
    * Optional custom transaction header that will be used to sign the transaction.
    */
   readonly customTransactionHeader?: string;
@@ -76,18 +71,6 @@ export interface SaveProfileParams {
    * If true the user wil not be able to go back from this screen.
    */
   readonly blockBackAction?: boolean;
-  /**
-   * Callback called if the profile have been saved sucessfully.
-   */
-  readonly onSuccess?: () => void;
-  /**
-   * Callback called if an error occurs while saving the profile.
-   */
-  readonly onError?: (error: Error) => void;
-  /**
-   * Callback called if the user cancels the operation.
-   */
-  readonly onCancel?: () => void;
 }
 
 /**
@@ -101,7 +84,12 @@ const SaveProfile = (props: NavProps) => {
   const { goBack, navigate } = useNavigation<NavProps['navigation']>();
   const { route } = props;
   const { params } = route;
-  const { accountWithWallet: account, profile, onSuccess, onError, onCancel } = params ?? {};
+
+  const profile = params?.profile;
+  const accountWithWallet = params?.accountWithWallet;
+  const customTransactionHeader = params?.customTransactionHeader ?? t('create profile');
+  const customTransactionBody = params?.customTransactionBody ?? t('create profile body');
+  const onProfileSaved = params?.onProfileSaved || (() => {});
 
   // -------------------------------------------------------------------------------------
   // --- Styles
@@ -194,15 +182,14 @@ const SaveProfile = (props: NavProps) => {
     });
   }, [editCoverPicture, navigate, selectCoverPicture, takePhoto]);
 
-  // Hook to handle the cancel action
-  useOnBackAction(() => {
-    if (handleCancel.current) {
-      onCancel?.();
-    }
-  }, []);
-
   // Hook to submit the form and check the status of the profile saving.
-  const { status, submitForm } = useSubmitForm(profile, account);
+  const { status, submitForm } = useSubmitForm(
+    profile,
+    accountWithWallet,
+    onProfileSaved,
+    customTransactionHeader,
+    customTransactionBody,
+  );
 
   // Callback used when the user presses the Save button.
   const onEditProfile = useCallback(

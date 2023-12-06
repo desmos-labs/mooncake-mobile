@@ -1,4 +1,13 @@
+import { useAppStateValue } from '@recoil/appState';
+import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
+import { useActiveProfile } from '@recoil/profiles';
+import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
+import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/tx/useBroadcastTx';
+import { convertPostToMsgCreatePost, getConversationId } from 'lib/PostsUtils';
+import { uploadPicture } from 'lib/UploadUtils';
+import { err, Result } from 'neverthrow';
 import React from 'react';
+import { isCanceledOperationError } from 'types/error';
 import {
   Post,
   PostAttachment,
@@ -7,16 +16,6 @@ import {
   PostReferenceType,
   PostStatus,
 } from 'types/posts';
-import { err, Result } from 'neverthrow';
-import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/tx/useBroadcastTx';
-import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
-import { useAppStateValue } from '@recoil/appState';
-import useUploadAssets from 'hooks/useUploadAssets';
-import { useActiveProfile } from '@recoil/profiles';
-import { convertPostToMsgCreatePost, getConversationId } from 'lib/PostsUtils';
-import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
-import { UploadAssetResult } from 'hooks/useUploadAsset';
-import { isCanceledOperationError } from 'types/error';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -41,7 +40,7 @@ const getPostReferences = (
   return [...customReferences, replyReference];
 };
 
-const convertAttachment = (result: UploadAssetResult, index: number): PostAttachment => {
+const convertAttachment = (result: any, index: number): PostAttachment => {
   return {
     id: index,
     content: {
@@ -106,7 +105,6 @@ const useCreatePost = () => {
   const storePost = useStorePost();
   const deletePost = useRemoveStoredPendingPost();
 
-  const uploadAssets = useUploadAssets();
   const broadcastTx = useBroadcastTx();
 
   const [state, setState] = React.useState<CreatePostState>({ type: CreatePostStateType.IDLE });
@@ -120,7 +118,7 @@ const useCreatePost = () => {
 
       // Upload the attachments
       setState({ type: CreatePostStateType.UPLOADING_ATTACHMENTS });
-      const uploadResult = await uploadAssets(createPostState.attachments);
+      const uploadResult = await uploadPicture(createPostState.attachments);
       if (uploadResult.isErr()) {
         setState({ type: CreatePostStateType.ERROR, error: uploadResult.error });
         return err(uploadResult.error);
@@ -128,7 +126,6 @@ const useCreatePost = () => {
 
       // Convert the various data to the proper format
       setState({ type: CreatePostStateType.CREATING_MESSAGE });
-      const postAttachments = uploadResult.value.map(convertAttachment);
       const postReferences = getPostReferences(createPostState.references, parent);
 
       // Create the post
@@ -146,7 +143,7 @@ const useCreatePost = () => {
 
         conversationId: getConversationId(parent),
         references: postReferences,
-        attachments: postAttachments,
+        attachments: [],
         creationDate,
         transactions: [],
         author: activeProfile,
@@ -188,7 +185,6 @@ const useCreatePost = () => {
       resetCreatePostState,
       storePost,
       subspaceId,
-      uploadAssets,
     ],
   );
 

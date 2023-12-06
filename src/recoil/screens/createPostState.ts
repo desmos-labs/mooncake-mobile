@@ -1,7 +1,7 @@
+import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
+import React from 'react';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
-import React from 'react';
-import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 import { Post } from 'types/posts';
 
 /**
@@ -59,6 +59,8 @@ const DefaultCreatePostState: CreatePostState = {
   entities: undefined,
   references: [],
   replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
+  lastUpdatedDate: '',
+  hasUserLiked: false,
 };
 
 /**

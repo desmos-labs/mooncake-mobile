@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, ImageProps, TouchableOpacity, View } from 'react-native';
-import { makeStyle } from 'config/theme';
-import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import { deleteButton } from 'assets/images';
+import { makeStyle } from 'config/theme';
+import { Image } from 'expo-image';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, ImageProps, TouchableOpacity, View } from 'react-native';
 import { scale } from 'react-native-size-matters';
+import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {
   source: UploadAssetType | undefined;
@@ -65,7 +66,7 @@ const SelectedPostImage = ({ source, handlePress, dimensions }: Props) => {
                 },
                 styles.image,
               ]}
-              resizeMode="contain"
+              contentFit="contain"
               source={source}
             />
             <TouchableOpacity

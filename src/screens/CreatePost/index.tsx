@@ -1,19 +1,5 @@
-import Typography from 'components/Typography';
-import React, { useCallback, useMemo, useState } from 'react';
-import DView from 'components/DView';
-import { ScrollView, TextInput, View } from 'react-native';
-import TopBar from 'components/TopBar';
-import Button from 'components/Button';
-import { useTranslation } from 'react-i18next';
-import useImageFromDevice from 'hooks/useImageFromDevice';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import MediaBottomPanel from 'components/MediaBottomPanel';
-import { useTheme } from 'native-base';
-import { Post } from 'types/posts';
-import useCreatePost from 'hooks/posts/useCreatePost';
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   useAddCreatePostAttachment,
   useCreatePostValue,
@@ -21,13 +7,30 @@ import {
   useResetCreatePostState,
   useSetCreatePostValue,
 } from '@recoil/screens/createPostState';
-import SelectedPostImage from 'components/SelectedPostImage';
-import CommonStyles from 'config/theme/CommonStyles';
-import StyledSpinner from 'components/StyledSpinner';
-import usePostsParams from 'hooks/posts/usePostsParams';
 import { useSetPostsListState } from '@recoil/screens/postsListState';
-import useToast from 'hooks/toasts/useToast';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import MediaBottomPanel from 'components/MediaBottomPanel';
+import SelectedPostImage from 'components/SelectedPostImage';
+import StyledSpinner from 'components/StyledSpinner';
+import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
 import { ToastType } from 'config/toast/toastConfig';
+import { CameraType } from 'expo-image-picker';
+import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
+import useCreatePost from 'hooks/posts/useCreatePost';
+import usePostsParams from 'hooks/posts/usePostsParams';
+import useToast from 'hooks/toasts/useToast';
+import useImageFromDevice from 'hooks/useImageFromDevice';
+import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
+import { useTheme } from 'native-base';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, TextInput, View } from 'react-native';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -83,10 +86,31 @@ const CreatePost = () => {
   const postAttachments = useCreatePostValue('attachments');
   const addPostAttachment = useAddCreatePostAttachment();
   const removePostAttachment = useRemoveCreatePostAttachment();
+  const { editPostPicture } = useOpenPictureEditor();
+  const takePhoto = useTakePicture();
 
-  const { imageFromCamera, imageFromLibrary } = useImageFromDevice({
-    onImageSelected: addPostAttachment,
+  const { imageFromLibrary: selectPicture } = useImageFromDevice({
+    onImageSelected: imageUri => {
+      editPostPicture(imageUri, editedPicturePath => {
+        addPostAttachment({
+          uri: editedPicturePath,
+        });
+      });
+    },
   });
+
+  const handleTakePicture = useCallback(async () => {
+    takePhoto(CameraType.front).then(result => {
+      if (result?.status === TakePictureActionResults.Taken) {
+        const imageUri = result.uri;
+        editPostPicture(imageUri, editedPicturePath => {
+          addPostAttachment({
+            uri: editedPicturePath,
+          });
+        });
+      }
+    });
+  }, [addPostAttachment, editPostPicture, takePhoto]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canCreatePost = useMemo(() => {
@@ -158,7 +182,9 @@ const CreatePost = () => {
   ]);
 
   const TopBarCenterElement = React.useMemo(() => {
-    if (!parent) return undefined;
+    if (!parent) {
+      return undefined;
+    }
     return (
       <Typography.Body7
         numberOfLines={1}
@@ -243,8 +269,8 @@ const CreatePost = () => {
         style={styles.bottomPanel}
         commentLength={postText.length}
         imageSelected={postAttachments.length > 0}
-        handlePressGallery={imageFromLibrary}
-        handlePressCamera={imageFromCamera}
+        handlePressGallery={selectPicture}
+        handlePressCamera={handleTakePicture}
       />
     </>
   );
