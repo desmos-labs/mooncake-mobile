@@ -6,7 +6,6 @@ import { usePostHog } from 'posthog-react-native';
 import * as Sentry from 'sentry-expo';
 import { useActiveAccount } from '@recoil/accounts';
 import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import { Account } from 'types/account';
 import { buildDesmosClient } from 'lib/TxUtils';
 import { unwrapResult } from 'lib/NeverThrowUtils';
@@ -16,17 +15,28 @@ import SignAndBroadcastTxTask from 'services/tasks/SignAndBroadcastTx';
 import { useTranslation } from 'react-i18next';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
+import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
 
 export interface PopupOptions {
   readonly title?: string;
   readonly description?: string;
 }
 
+export interface ActionOptions {
+  readonly action?: () => void;
+  readonly popup?: PopupOptions;
+}
+
+export interface ErrorActionOptions {
+  readonly action?: (error: Error) => void;
+  readonly popup?: PopupOptions;
+}
+
 export interface SignAndBroadcastOptions {
   readonly memo?: string;
-  readonly loadingPopup?: PopupOptions;
-  readonly successPopup?: PopupOptions;
-  readonly errorPopup?: PopupOptions;
+  readonly onLoading?: ActionOptions;
+  readonly onSuccess?: ActionOptions;
+  readonly onError?: ErrorActionOptions;
 }
 
 /**
@@ -108,49 +118,21 @@ export const useSignAndBroadcastTx = () => {
   const { t } = useTranslation('broadcastTx');
   const showToast = useToast();
 
-  const chainInfo = useCurrentChainInfo();
-  const chainGasPrice = useCurrentChainGasPrice();
-
-  const unlockWallet = useUnlockWallet();
+  const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
   return useCallback(
     async (messages: EncodeObject[], options?: SignAndBroadcastOptions) => {
-      if (!chainInfo || !chainGasPrice) {
+      // Get the Desmos Client and wallet
+      const result = await prepareDesmosClientAndWallet();
+      if (result.isErr()) {
         showToast({
           toastType: ToastType.error,
           title: t('error'),
-          message: 'Missing chain info or gas price',
+          message: result.error.message,
         });
         return;
       }
-
-      // Get the user's wallet by unlocking it or using the in-memory one
-      const walletUnlockResult = await unlockWallet();
-      if (walletUnlockResult.isErr()) {
-        showToast({
-          toastType: ToastType.error,
-          title: t('error'),
-          message: walletUnlockResult.error.message,
-        });
-        return;
-      }
-      const { wallet } = walletUnlockResult.value;
-
-      // Prepare the desmos client
-      const desmosClientResult = await buildDesmosClient(
-        chainInfo.rpcUrl,
-        wallet.signer,
-        chainGasPrice,
-      );
-      if (desmosClientResult.isErr()) {
-        showToast({
-          toastType: ToastType.error,
-          title: t('error'),
-          message: desmosClientResult.error.message,
-        });
-        return;
-      }
-      const desmosClient = desmosClientResult.value;
+      const { wallet, desmosClient } = result.value;
 
       // Start the task to sign and broadcast the transaction
       const taskReference = await scheduleTask(
@@ -163,8 +145,8 @@ export const useSignAndBroadcastTx = () => {
           memo: options?.memo,
         },
         {
-          title: options?.loadingPopup?.title ?? t('performing transaction'),
-          desc: options?.loadingPopup?.description,
+          title: options?.onLoading?.popup?.title ?? t('performing transaction'),
+          desc: options?.onLoading?.popup?.description,
           progressBar: {
             indeterminate: true,
           },
@@ -172,32 +154,38 @@ export const useSignAndBroadcastTx = () => {
       );
       taskReference
         .onStart(() => {
-          // TODO: Add the loading toast - Missing now
-          // TODO: Add the ability to add a description
+          if (options?.onLoading?.action) {
+            options.onLoading.action();
+          }
+
           showToast({
             toastType: ToastType.loading,
-            message: options?.loadingPopup?.description ?? t('performing transaction'),
+            message: options?.onLoading?.popup?.description ?? t('performing transaction'),
           });
         })
         .onComplete(() => {
           desmosClient.disconnect();
-          // TODO: Add the ability to add a description
+          if (options?.onSuccess?.action) {
+            options.onSuccess.action();
+          }
           showToast({
             toastType: ToastType.success,
-            title: options?.successPopup?.title ?? t('success'),
-            message: options?.successPopup?.description ?? t('operation completed'),
+            title: options?.onSuccess?.popup?.title ?? t('success'),
+            message: options?.onSuccess?.popup?.description ?? t('operation completed'),
           });
         })
         .onError(({ error }) => {
           desmosClient.disconnect();
-          // TODO: Add the ability to add a description
+          if (options?.onError?.action) {
+            options.onError.action(error);
+          }
           showToast({
             toastType: ToastType.error,
-            title: options?.errorPopup?.title ?? t('error'),
-            message: options?.errorPopup?.description ?? error.message,
+            title: options?.onError?.popup?.title ?? t('error'),
+            message: options?.onError?.popup?.description ?? error.message,
           });
         });
     },
-    [chainInfo, chainGasPrice, unlockWallet, t, showToast],
+    [prepareDesmosClientAndWallet, t, showToast],
   );
 };

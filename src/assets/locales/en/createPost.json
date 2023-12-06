@@ -4,5 +4,7 @@
   "accessYourPhotos": "Access your photos",
   "noAccess": "Butter doesn't have access to your photos",
   "allowAccess": "Allow Access",
-  "tapToType": "Tap to type.."
+  "tapToType": "Tap to type..",
+  "creating post": "Your post is being created...",
+  "post created": "Your post has been created!"
 }

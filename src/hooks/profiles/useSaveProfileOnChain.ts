@@ -77,9 +77,11 @@ const useSaveProfileOnChain = () => {
 
       await signAndBroadcastTx([msgSaveProfile], {
         memo: 'Broadcast using Butter',
-        loadingPopup: {
-          title: customHeader,
-          description: customBody,
+        onLoading: {
+          popup: {
+            title: customHeader,
+            description: customBody,
+          },
         },
       });
       onProfileSaved();

@@ -2,11 +2,11 @@ import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil'
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
 import { SubspaceParams } from 'types/desmos';
-import EnvConfig from 'config/EnvConfig';
 import { AppStateStatus } from 'react-native';
 import { ButterConfig } from 'types/butter';
 import { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
+import { Constants } from 'config/Constants';
 
 /**
  * Contains the overall state of the application.
@@ -58,7 +58,7 @@ const DefaultAppState: AppState = {
   dataInitialized: false,
   bearerToken: '',
   appActiveState: 'unknown',
-  subspaceId: parseFloat(EnvConfig.APP_SUBSPACE_ID),
+  subspaceId: Constants.subspaceId,
   currentTimezone: '',
   subspaceParams: {
     registeredReactions: [],

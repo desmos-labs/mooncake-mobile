@@ -27,7 +27,6 @@ import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
-import { CreatePostStateType } from 'hooks/posts/useCreatePost';
 import useStyles from './useStyles';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 
@@ -62,8 +61,8 @@ const PostDetails = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
-  const { subspaceId, postId } = params;
-  const postData = { subspaceId, id: postId } as Pick<Post, 'subspaceId' | 'id'>;
+  const { postId } = params;
+  const postData = { id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
   // -------------------------------------------------------------------------------------
   // --- Loading states
@@ -106,13 +105,16 @@ const PostDetails = () => {
   // Interactions data
   const { refetch: refreshInteractionsAuthors } = usePostInteractionsAuthors(postData, 3);
 
+  // Comment creation
+  const onCommentCreated = useCallback(() => {
+    Keyboard.dismiss();
+    setCommentPosting(false);
+  }, []);
+  const handleCreateComment = useHandleCreateComment(onCommentCreated);
+
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
-
-  // TODO: Properly display the state of the comment creation
-
-  const { state, handleCreateComment } = useHandleCreateComment();
 
   const handleExpandCommentView = useHandleExpandCommentView();
 
@@ -160,16 +162,6 @@ const PostDetails = () => {
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  /**
-   * Hide the keyboard once the comment has reached broadcasting status.
-   */
-  useEffect(() => {
-    if (state.type === CreatePostStateType.BROADCASTING_TRANSACTION) {
-      Keyboard.dismiss();
-      setCommentPosting(false);
-    }
-  }, [state, commentPosting]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
