@@ -1,12 +1,14 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Image, ImageStyle } from 'expo-image';
-import Toast from 'react-native-toast-message';
-import { CustomThemeType, lightTheme } from 'config/theme/LightTheme';
-import Typography from 'components/Typography';
 import { loadingYellow } from 'assets/animations';
 import Button from 'components/Button';
-import NamedStyles = StyleSheet.NamedStyles;
+import ThemedLottieView from 'components/ThemedLottieView';
+import Typography from 'components/Typography';
+import { makeStyle } from 'config/theme';
+import CommonStyles from 'config/theme/CommonStyles';
+import { CustomThemeType, lightTheme } from 'config/theme/LightTheme';
+import { ImageStyle } from 'expo-image';
+import React from 'react';
+import { View } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export enum ToastType {
   success = 'success',
@@ -54,44 +56,49 @@ type ThemedToastProps<T> = T & {
 
 const toastConfig = {
   success: ({ props }: { props: ThemedToastProps<SimpleToastProps> }) => {
-    const styles = makeStyles(props.theme ?? lightTheme);
+    const styles = makeStyles();
     return (
       <View style={styles.success}>
-        <Typography.H6 style={{ color: (props.theme ?? lightTheme).colors.black }}>
+        <Typography.Subtitle3 style={{ color: (props.theme ?? lightTheme).colors.black }}>
           {props.title || 'Success'}
-        </Typography.H6>
-        <Typography.Body1 style={{ color: (props.theme ?? lightTheme).colors.black }}>
+        </Typography.Subtitle3>
+        <Typography.Body7 style={{ color: (props.theme ?? lightTheme).colors.black }}>
           {props.message}
-        </Typography.Body1>
+        </Typography.Body7>
       </View>
     );
   },
   error: ({ props }: { props: ThemedToastProps<SimpleToastProps> }) => {
-    const styles = makeStyles(props.theme ?? lightTheme);
+    const styles = makeStyles();
     return (
       <View style={styles.error}>
-        <Typography.H6 style={{ color: (props.theme ?? lightTheme).colors.black }}>
+        <Typography.Subtitle3 style={{ color: (props.theme ?? lightTheme).colors.black }}>
           {props.title || 'Error'}
-        </Typography.H6>
-        <Typography.Body1 style={{ color: (props.theme ?? lightTheme).colors.black }}>
+        </Typography.Subtitle3>
+        <Typography.Body7 style={{ color: (props.theme ?? lightTheme).colors.black }}>
           {props.message}
-        </Typography.Body1>
+        </Typography.Body7>
       </View>
     );
   },
 
   loading: ({ props }: { props: ThemedToastProps<LoadingToastProps> }) => {
-    const styles = makeStyles(props.theme ?? lightTheme);
+    const styles = makeStyles();
     return (
-      <View style={[styles.info, styles.infoInline]}>
-        <Typography.Body1 style={styles.loadingText}>{props.message}</Typography.Body1>
-        <View style={styles.flex} />
-        <Image source={loadingYellow} style={styles.loadingImage as ImageStyle} />
+      <View style={styles.loading}>
+        <Typography.Subtitle3 style={styles.loadingText}>{props.message}</Typography.Subtitle3>
+        <ThemedLottieView
+          autoSize
+          loop
+          autoPlay
+          source={loadingYellow}
+          style={styles.loadingImage as ImageStyle}
+        />
       </View>
     );
   },
   oneButton: ({ props }: { props: ThemedToastProps<OneButtonToastProps> }) => {
-    const styles = makeStyles(props.theme ?? lightTheme);
+    const styles = makeStyles();
     return (
       <View style={[styles.info, styles.infoInline]}>
         <View style={styles.onButtonContent}>
@@ -104,14 +111,13 @@ const toastConfig = {
             {props.message}
           </Typography.Body1>
         </View>
-        <View style={{ flex: 1 }} />
+        <View style={CommonStyles.flex['1']} />
         <Button
           variant="text"
           onPress={() => {
             Toast.hide();
             props.buttonAction();
-          }}
-          style={styles.actionButton}>
+          }}>
           <Typography.Button1 style={{ color: (props.theme ?? lightTheme).colors.black }}>
             {props.buttonLabel}
           </Typography.Button1>
@@ -120,7 +126,7 @@ const toastConfig = {
     );
   },
   [ToastType.info]: ({ props }: { props: ThemedToastProps<InfoToastProps> }) => {
-    const styles = makeStyles(props.theme ?? lightTheme);
+    const styles = makeStyles();
     return (
       <View style={styles.info}>
         {props.title && <Typography.H6 style={styles.infoText}>{props.title}</Typography.H6>}
@@ -130,36 +136,36 @@ const toastConfig = {
   },
 };
 
-const makeStyles: (theme: CustomThemeType) => NamedStyles<any> = theme => ({
+const makeStyles = makeStyle(theme => ({
   success: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: theme.colors.butterOrange02,
-    minHeight: 63,
+    backgroundColor: theme.colors.toast.successBackground,
+    minHeight: 45,
     width: '90%',
-    borderRadius: 8,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: theme.colors.butterOrange01,
+    borderColor: theme.colors.toast.successBorder,
     justifyContent: 'center',
   },
   error: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: theme.colors.accentRed01,
-    minHeight: 63,
+    backgroundColor: theme.colors.toast.errorBackground,
+    minHeight: 45,
     width: '90%',
-    borderRadius: 8,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: theme.colors.accentRed02,
+    borderColor: theme.colors.toast.errorBorder,
     justifyContent: 'center',
   },
   info: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: theme.colors.butterOrange02,
-    minHeight: 63,
+    paddingVertical: 12,
+    backgroundColor: theme.colors.white,
+    minHeight: 45,
     width: '90%',
-    borderRadius: 8,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: theme.colors.butterOrange01,
     justifyContent: 'center',
@@ -167,6 +173,19 @@ const makeStyles: (theme: CustomThemeType) => NamedStyles<any> = theme => ({
   infoInline: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  loading: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: theme.colors.toast.successBackground,
+    minHeight: 45,
+    width: '90%',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: theme.colors.toast.successBorder,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   flex: {
     flex: 1,
@@ -181,11 +200,10 @@ const makeStyles: (theme: CustomThemeType) => NamedStyles<any> = theme => ({
   loadingImage: {
     width: 32,
     height: 32,
-    marginTop: -5,
   },
   onButtonContent: {
     flexShrink: 1,
   },
-});
+}));
 
 export default toastConfig;
