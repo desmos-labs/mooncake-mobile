@@ -1,116 +1,58 @@
-import React from 'react';
-import { CameraOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { Asset, ImageLibraryOptions } from 'react-native-image-picker/src/types';
-import { Alert } from 'react-native';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
+import * as ImagePicker from 'expo-image-picker';
 import usePermissions from 'hooks/permissions/usePermissions';
-import { AppPermissions, AppPermissionStatus } from 'types/permissions';
+import React from 'react';
+import { AppPermissionStatus } from 'types/permissions';
 
-const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
-  mediaType: 'photo',
-  // don't include base64, as having the uri is enough (for now)
-  includeBase64: false,
+const DEFAULT_OPTIONS: ImagePicker.ImagePickerOptions = {
+  mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  allowsEditing: false,
+  allowsMultipleSelection: false,
+  selectionLimit: 1,
+  quality: 1,
 };
 
 type Params = {
   /**
    * An optional callback to independently process a selected image.
    */
-  onImageSelected: (image: Asset) => void;
-
-  /**
-   * If true, will not resize the image after one is selected.
-   */
-  disableResizeImage?: boolean;
+  onImageSelected?: (imageUri: string) => void;
 };
 
 type ReturnValue = {
   /**
    * Select an image from the user's library.
    */
-  imageFromLibrary: () => void;
-
-  /**
-   * Select an image by allowing the user to take a photo.
-   */
-  imageFromCamera: () => void;
-};
-
-const resizeImages = async (selectedImages: Asset[], disableResize?: boolean): Promise<Asset[]> => {
-  if (disableResize) {
-    return selectedImages;
-  }
-
-  const SIZE_LIMIT = 600;
-
-  const resizedImages = selectedImages.map(async x => {
-    // from shotgun debugging, seems like the server limits files to 1mb
-    if (x.fileSize! > 1000000) {
-      const resized = await ImageResizer.createResizedImage(
-        x.uri!,
-        SIZE_LIMIT,
-        SIZE_LIMIT,
-        'PNG',
-        100,
-      );
-
-      return {
-        ...x,
-        ...resized,
-      };
-    }
-    return {
-      ...x,
-    };
-  });
-
-  return Promise.all(resizedImages);
+  imageFromLibrary: () => Promise<string | undefined>;
 };
 
 /**
- * A hook that wraps react-native-image-picker logic and stores the selected
- * image in a useState hook.
+ * Hook that allows to select an image from the user's device.
+ * @param onImageSelected An optional callback to independently process a selected image.
  */
-const useImageFromDevice = ({ onImageSelected, disableResizeImage }: Params): ReturnValue => {
-  const { checkPermission, requestPermission } = usePermissions(AppPermissions.Camera);
+const useImageFromDevice = ({ onImageSelected }: Params): ReturnValue => {
+  const { requestPermission } = usePermissions({
+    getMethod: ImagePicker.getMediaLibraryPermissionsAsync,
+    requestMethod: ImagePicker.requestMediaLibraryPermissionsAsync,
+    get: false,
+    request: false,
+  });
+
   // selecting webp images on ios will return an error code
   const imageFromLibrary = React.useCallback(async () => {
-    const result = await launchImageLibrary(DEFAULT_OPTIONS);
-
-    // Temporary error handling
-    if (result.errorCode) {
-      Alert.alert('Error', 'Unable to load photo. Please select another photo.');
-    } else if (result.assets) {
-      const processedImages = await resizeImages(result.assets, disableResizeImage);
-      onImageSelected(processedImages[0]);
-    }
-  }, [disableResizeImage, onImageSelected]);
-
-  const imageFromCamera = React.useCallback(async () => {
-    let cameraPermissions = await checkPermission();
-
-    // Camera permissions not granted, request it to the user.
-    if (cameraPermissions !== AppPermissionStatus.Granted) {
-      cameraPermissions = await requestPermission();
-      if (cameraPermissions !== AppPermissionStatus.Granted) {
-        // TODO: Here we should inform the user that we need the camera permissions...
-        return;
+    const status = await requestPermission();
+    if (status === AppPermissionStatus.Granted) {
+      const result = await ImagePicker.launchImageLibraryAsync(DEFAULT_OPTIONS);
+      if (result.assets) {
+        if (onImageSelected) {
+          onImageSelected(result.assets[0].uri);
+        }
+        return result.assets[0].uri;
       }
     }
-
-    const result = await launchCamera(DEFAULT_OPTIONS);
-    if (result.errorCode) {
-      // Temporary error handling
-      Alert.alert('Error', 'Unable to load photo. Please select another photo.');
-    } else if (result.assets) {
-      const processedImages = await resizeImages(result.assets, disableResizeImage);
-      onImageSelected(processedImages[0]);
-    }
-  }, [checkPermission, disableResizeImage, onImageSelected, requestPermission]);
+  }, [onImageSelected, requestPermission]);
 
   return {
     imageFromLibrary,
-    imageFromCamera,
   };
 };
 

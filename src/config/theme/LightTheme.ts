@@ -90,7 +90,7 @@ const lightTheme = extendTheme({
     black: '#1D1E22',
     dividerGrey: '#EFEFEF',
     tabIconGrey: '#DEDEDE',
-
+    overlay: 'rgba(0, 0, 0, 0.5)',
     accentRed01: '#FD565F',
     accentRed02: '#D2484F',
     accentOrange01: '#FCBB36',
