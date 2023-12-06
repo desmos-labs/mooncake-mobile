@@ -102,8 +102,8 @@ export const omitEmptyValue = (value: string): string | undefined => {
 
 /**
  * Hook that allows to get the proper value to be displayed as an image background.
- * @param inputValue {Asset | undefined} - Value selected by the user inside the editor
- * @param profileValue {Asset | string | undefined} - Value defined inside the Desmos profile
+ * @param inputValue {string | undefined} - Value selected by the user inside the editor
+ * @param profileValue {string | undefined} - Value defined inside the Desmos profile
  * @param defaultImage {any} - Default image to be used if the above two are not defined
  */
 export const useGetImageBackground = (
@@ -176,7 +176,6 @@ export const useSubmitForm = (
 
       // Get the on-chain profile
       const onChainProfile = await getOnChainProfile(profileAddress);
-
       // Get the profile to save
       const profileToSaveOnChain: DesmosProfile = {
         dTag: getValueToSave(values.dTag ?? profile?.dTag, onChainProfile?.dTag),

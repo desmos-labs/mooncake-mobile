@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { AccountWithWallet } from 'types/account';
 import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
-import { err } from 'neverthrow';
-import { DesmosProfile } from 'types/desmos';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useUploadProfilePictures from 'hooks/profiles/useUploadProfilePictures';
-import { Alert } from 'react-native';
+import useUploadProfilePictures from 'hooks/media/useUploadProfilePictures';
 import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import { err } from 'neverthrow';
+import React, { useState } from 'react';
+import { Alert } from 'react-native';
+import { AccountWithWallet } from 'types/account';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.

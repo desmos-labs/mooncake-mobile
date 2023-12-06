@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { Constants } from 'config/Constants';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://api.mainnet.butter.social',
+  baseURL: Constants.apiEndpoint,
   timeout: 15000,
 });
 

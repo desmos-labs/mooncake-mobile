@@ -1,9 +1,26 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import * as WebBrowser from '@toruslabs/react-native-web-browser';
 import { block, profileBack, profileContextButton, reportIcon, unblock } from 'assets/images';
+import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
+import PopupMenu from 'components/PopupMenu';
 import Spacer from 'components/Spacer';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import useAccountBalance from 'hooks/balance/useAccountBalance';
+import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfileConnections';
+import usePostsByAddress from 'hooks/posts/usePostsByAddress';
+import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
+import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
+import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
+import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useFollowersCount from 'hooks/relationships/useFollowersCount';
+import useFollowingCount from 'hooks/relationships/useFollowingCount';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -17,7 +34,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useTheme } from 'native-base';
 import Animated, {
   Extrapolation,
   FadeIn,
@@ -29,28 +45,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
-import BalanceSection from 'screens/Profile/components/BalanceSection';
-import PostsSection from 'screens/Profile/components/PostsSection';
-import UserBio from 'screens/Profile/components/UserBio';
-import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
-import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfileConnections';
-import useFollowersCount from 'hooks/relationships/useFollowersCount';
-import useFollowingCount from 'hooks/relationships/useFollowingCount';
-import useAccountBalance from 'hooks/balance/useAccountBalance';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import EditProfileSection from 'screens/Profile/components/EditProfileSection';
-import usePostsByAddress from 'hooks/posts/usePostsByAddress';
-import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
-import StyledSpinner from 'components/StyledSpinner';
 import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
-import * as WebBrowser from '@toruslabs/react-native-web-browser';
-import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
-import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
-import PopupMenu from 'components/PopupMenu';
-import Button from 'components/Button';
+import BalanceSection from 'screens/Profile/components/BalanceSection';
+import EditProfileSection from 'screens/Profile/components/EditProfileSection';
+import PostsSection from 'screens/Profile/components/PostsSection';
+import UserBio from 'screens/Profile/components/UserBio';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -339,7 +339,9 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   const PopupContextMenu = React.useMemo(() => {
     // Don't show PopupMenu if active user
-    if (isActiveAccount) return undefined;
+    if (isActiveAccount) {
+      return undefined;
+    }
 
     const menuItems = [
       {
@@ -403,19 +405,7 @@ const Profile = () => {
           onPress={goBack}
         />
       )}
-      {/* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */}
-      {/* /!* Edit and scan buttons *!/ */}
-      {/* {isActiveAccount && ( */}
-      {/*  <ImageButton */}
-      {/*    image={profileSettings} */}
-      {/*    buttonStyle={[styles.buttonStyleRight, styles.r20]} */}
-      {/*    style={styles.topBarImage} */}
-      {/*    onPress={() => navigate(ROUTES.SETTINGS)} */}
-      {/*  /> */}
-      {/* )} */}
-
       <View style={styles.contextButtonPosition}>{PopupContextMenu}</View>
-
       {/* DTag */}
       <Animated.View style={[styles.animatedDtag, animatedDTagStyle]}>
         <View
@@ -460,7 +450,6 @@ const Profile = () => {
                 <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </TouchableOpacity>
-
               {/* Followage count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowingPressed}>
                 {isFollowageCountLoading ? (
@@ -470,7 +459,6 @@ const Profile = () => {
                 )}
                 <Typography.Caption1>{t('following')}</Typography.Caption1>
               </TouchableOpacity>
-
               {/* Followers count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowersPressed}>
                 {isFollowersCountLoading ? (
@@ -482,36 +470,28 @@ const Profile = () => {
               </TouchableOpacity>
             </View>
           </View>
-
           {/* Profile nickname */}
           <Typography.H5 style={styles.nickname} numberOfLines={1}>
             {profile.nickname}
           </Typography.H5>
-
           {/* Profile Dtag */}
           <Typography.Body7 style={styles.profileDtag} numberOfLines={1}>
             @{profile.dTag}
           </Typography.Body7>
-
           {/* Profile address */}
           <AddressCopy address={address} />
-
           {/* Profile biography */}
           {profile?.bio && (
             <Spacer paddingVertical={theme.spacing.m}>
               <UserBio content={profile.bio} />
             </Spacer>
           )}
-
           {/* Section to edit the profile */}
           {isActiveAccount && <EditProfileSection profile={profile} />}
-
           {/* Follow/Unfollow button */}
           {ProfileInteractionButton}
-
           <Spacer paddingVertical={theme.spacing.s} />
           <View style={styles.divider} />
-
           {/* Lower section (balance, posts, NFTs, badges, etc) */}
           <View style={styles.container}>
             {/* Balance */}
@@ -521,9 +501,7 @@ const Profile = () => {
               isLoading={isBalanceLoading}
               handlePressBalanceInfo={handlePressBalanceInfo}
             />
-
             <View style={styles.divider} />
-
             {/* Posts */}
             <PostsSection
               address={address}

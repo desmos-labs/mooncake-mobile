@@ -90,6 +90,7 @@ export const lightTheme = extendTheme({
     black: '#1D1E22',
     dividerGrey: '#EFEFEF',
     tabIconGrey: '#DEDEDE',
+    overlay: 'rgba(0, 0, 0, 0.5)',
     toast: {
       successBackground: '#F1FFE1',
       successBorder: '#1EC490',

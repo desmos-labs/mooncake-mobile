@@ -7,16 +7,26 @@ import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
+import { CameraType } from 'expo-image-picker';
 import { Formik } from 'formik';
+import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import useProfileParams from 'hooks/profiles/useProfileParams';
 import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useImageFromDevice from 'hooks/useImageFromDevice';
+import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
+import {
+  InteractionManager,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  View,
+} from 'react-native';
 import useStyles from 'screens/SaveProfile/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
@@ -71,7 +81,7 @@ const SaveProfile = (props: NavProps) => {
   const theme = useTheme();
   const { t } = useTranslation('createProfile');
 
-  const { goBack } = useNavigation<NavProps['navigation']>();
+  const { goBack, navigate } = useNavigation<NavProps['navigation']>();
   const { route } = props;
   const { params } = route;
 
@@ -95,14 +105,13 @@ const SaveProfile = (props: NavProps) => {
   // --- Screen state
   // -------------------------------------------------------------------------------------
 
-  // State of the edit form
-  const [profilePic, setProfilePic] = useState<string | undefined>(profile?.profilePicture);
+  const [profilePic, setProfilePic] = useState(profile?.profilePicture);
   const profilePicBackground = useGetImageBackground(
     profilePic,
     profile?.profilePicture,
     defaultProfilePic,
   );
-  const [coverPic, setCoverPic] = useState<string | undefined>(profile?.coverPicture);
+  const [coverPic, setCoverPic] = useState(profile?.coverPicture);
   const coverPictureBackground = useGetImageBackground(
     coverPic,
     profile?.coverPicture,
@@ -125,13 +134,50 @@ const SaveProfile = (props: NavProps) => {
 
   // Image selection actions
   const { imageFromLibrary: selectCoverPicture } = useImageFromDevice({
-    onImageSelected: image => setCoverPic(image),
+    onImageSelected: imageUri => setCoverPic(imageUri),
   });
   const { imageFromLibrary: selectProfilePicture } = useImageFromDevice({
-    onImageSelected: image => setProfilePic(image),
+    onImageSelected: imageUri => setProfilePic(imageUri),
   });
+  const { editProfilePicture, editCoverPicture } = useOpenPictureEditor();
+  const takePhoto = useTakePicture();
 
-  // Hook to submit the form and check the status of the profile saving.
+  const handleSelectProfilePicture = useCallback(async () => {
+    navigate(ROUTES.SELECT_IMAGE_MODAL, {
+      onPressSelectImage: () =>
+        selectProfilePicture().then(res => {
+          if (res) {
+            editProfilePicture(res, setProfilePic);
+          }
+        }),
+      onPressTakePhoto: () =>
+        takePhoto(CameraType.front).then(result => {
+          if (result?.status === TakePictureActionResults.Taken) {
+            const imageUri = result.uri;
+            editProfilePicture(imageUri, setProfilePic);
+          }
+        }),
+    });
+  }, [editProfilePicture, navigate, selectProfilePicture, takePhoto]);
+
+  const handleSelectCoverPicture = useCallback(() => {
+    navigate(ROUTES.SELECT_IMAGE_MODAL, {
+      onPressSelectImage: () =>
+        selectCoverPicture().then(res => {
+          if (res) {
+            editCoverPicture(res, setCoverPic);
+          }
+        }),
+      onPressTakePhoto: () =>
+        takePhoto().then(result => {
+          if (result?.status === TakePictureActionResults.Taken) {
+            const imageUri = result.uri;
+            editCoverPicture(imageUri, setCoverPic);
+          }
+        }),
+    });
+  }, [editCoverPicture, navigate, selectCoverPicture, takePhoto]);
+
   // Hook to submit the form and check the status of the profile saving.
   const { status, submitForm } = useSubmitForm(
     profile,
@@ -144,7 +190,9 @@ const SaveProfile = (props: NavProps) => {
   // Callback used when the user presses the Save button.
   const onEditProfile = useCallback(
     async (values: SaveProfileFormState) => {
-      await submitForm(values, profilePic, coverPic);
+      InteractionManager.runAfterInteractions(async () => {
+        await submitForm(values, profilePic, coverPic);
+      });
     },
     [coverPic, profilePic, submitForm],
   );
@@ -172,12 +220,10 @@ const SaveProfile = (props: NavProps) => {
         <ProfileHeaderButton
           image={editProfilePic}
           style={styles.topButton}
-          onPress={selectCoverPicture}
+          onPress={handleSelectCoverPicture}
         />
       </View>
-
-      <CreateAvatar avatar={profilePicBackground} handlePressEdit={selectProfilePicture} />
-
+      <CreateAvatar avatar={profilePicBackground} handlePressEdit={handleSelectProfilePicture} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.kbView}>
@@ -218,7 +264,6 @@ const SaveProfile = (props: NavProps) => {
                       />
                     </View>
                   )}
-
                   <>
                     <Typography.Subtitle2 style={styles.inputLabel}>
                       {t('dTag')}
@@ -248,7 +293,6 @@ const SaveProfile = (props: NavProps) => {
                       />
                     </View>
                   )}
-
                   <Typography.Subtitle2 style={styles.inputLabel}>{t('bio')}</Typography.Subtitle2>
                   <DTextInput
                     inputRef={bioInputRef}

@@ -1,7 +1,7 @@
+import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
+import React from 'react';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
-import React from 'react';
-import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 import { Post } from 'types/posts';
 
 /**
@@ -21,6 +21,8 @@ export interface CreatePostState
     | 'creationDate'
     | 'transactions'
     | 'author'
+    | 'hasUserLiked'
+    | 'lastUpdatedDate'
   > {
   /**
    * ID of the subspace section inside which this post has been created.

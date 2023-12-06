@@ -1,22 +1,14 @@
-import React from 'react';
-import {
-  Post,
-  PostAttachment,
-  PostAttachmentType,
-  PostReference,
-  PostReferenceType,
-  PostStatus,
-} from 'types/posts';
-import { err, Result } from 'neverthrow';
-import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/tx/useBroadcastTx';
-import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useAppStateValue } from '@recoil/appState';
-import useUploadAssets from 'hooks/useUploadAssets';
-import { useActiveProfile } from '@recoil/profiles';
-import { convertPostToMsgCreatePost, getConversationId } from 'lib/PostsUtils';
 import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
-import { UploadAssetResult } from 'hooks/useUploadAsset';
+import { useActiveProfile } from '@recoil/profiles';
+import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
+import useBroadcastTx from 'hooks/tx/useBroadcastTx';
+import { convertPostToMsgCreatePost, getConversationId } from 'lib/PostsUtils';
+import { uploadPicture } from 'lib/UploadUtils';
+import { err, Result } from 'neverthrow';
+import React, { useState } from 'react';
 import { isCanceledOperationError } from 'types/error';
+import { Post, PostReference, PostReferenceType, PostStatus } from 'types/posts';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -39,18 +31,6 @@ const getPostReferences = (
   };
 
   return [...customReferences, replyReference];
-};
-
-const convertAttachment = (result: UploadAssetResult, index: number): PostAttachment => {
-  return {
-    id: index,
-    content: {
-      type: PostAttachmentType.MEDIA,
-      uri: result.uri,
-      mimeType: result.mimeType,
-    },
-    size: result.size,
-  };
 };
 
 /**
@@ -98,37 +78,41 @@ export type CreatePostState = CreatePostSimpleState | CreatePostErrorState;
  */
 const useCreatePost = () => {
   const activeProfile = useActiveProfile();
-
+  const bearerToken = useAppStateValue('bearerToken');
   const subspaceId = useAppStateValue('subspaceId');
   const createPostState = useCreatePostState();
   const resetCreatePostState = useResetCreatePostState();
-
   const storePost = useStorePost();
   const deletePost = useRemoveStoredPendingPost();
-
-  const uploadAssets = useUploadAssets();
   const broadcastTx = useBroadcastTx();
-
+  const [postPicturesUris, setPostPicturesUris] = useState<string[]>([]);
   const [state, setState] = React.useState<CreatePostState>({ type: CreatePostStateType.IDLE });
+
+  console.log(postPicturesUris);
 
   // Callback that creates a post
   const createPost = React.useCallback(
-    async (parent?: Post): Promise<Result<SuccessfulBroadcast, Error>> => {
+    async (parent?: Post): Promise<Result<any, Error>> => {
       if (!activeProfile) {
         return err(new Error('Cannot create a post without an active profile'));
       }
 
       // Upload the attachments
       setState({ type: CreatePostStateType.UPLOADING_ATTACHMENTS });
-      const uploadResult = await uploadAssets(createPostState.attachments);
-      if (uploadResult.isErr()) {
-        setState({ type: CreatePostStateType.ERROR, error: uploadResult.error });
-        return err(uploadResult.error);
+      if (createPostState.attachments[0].uri) {
+        const uploadResult = await uploadPicture(createPostState.attachments[0].uri, bearerToken);
+        if (uploadResult.isErr()) {
+          setState({ type: CreatePostStateType.ERROR, error: uploadResult.error });
+          return err(uploadResult.error);
+        } else {
+          setPostPicturesUris([uploadResult.value.url]);
+        }
       }
+
+      // TODO convert pictures into attachments and enable multi upload/multi display
 
       // Convert the various data to the proper format
       setState({ type: CreatePostStateType.CREATING_MESSAGE });
-      const postAttachments = uploadResult.value.map(convertAttachment);
       const postReferences = getPostReferences(createPostState.references, parent);
 
       // Create the post
@@ -146,10 +130,12 @@ const useCreatePost = () => {
 
         conversationId: getConversationId(parent),
         references: postReferences,
-        attachments: postAttachments,
+        attachments: [],
         creationDate,
         transactions: [],
         author: activeProfile,
+        lastUpdatedDate: creationDate,
+        hasUserLiked: false,
       };
 
       // If the post has parent AKA is a comment/reply we should reset the recoil associated with the comment text box value
@@ -167,6 +153,8 @@ const useCreatePost = () => {
 
       // Broadcast the message
       setState({ type: CreatePostStateType.BROADCASTING_TRANSACTION });
+      // TODO FIX ME
+      // @ts-ignore
       const result = await broadcastTx([msgCreatePost]);
       if (result.isErr()) {
         // If there is an error, delete the post from the local storage
@@ -188,7 +176,6 @@ const useCreatePost = () => {
       resetCreatePostState,
       storePost,
       subspaceId,
-      uploadAssets,
     ],
   );
 

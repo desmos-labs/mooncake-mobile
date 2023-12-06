@@ -1,3 +1,4 @@
+import { Constants } from 'config/Constants';
 import * as FileSystem from 'expo-file-system';
 import { err, ok, Result } from 'neverthrow';
 import { Image } from 'react-native-compressor';
@@ -21,7 +22,7 @@ export const uploadPicture = async (
     compressedImagePath.length,
   );
   const response = await FileSystem.uploadAsync(
-    'https:/api.mainnet.butter.social/media',
+    `${Constants.apiEndpoint}/media`,
     compressedImagePath,
     {
       headers: {

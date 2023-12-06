@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
-import { Result } from 'neverthrow';
-import { PictureType, UploadPictureState, UploadPictureStateType } from 'types/uploadPictures';
 import useUploadPicture, { MediaPostResponse } from 'hooks/useUploadPicture';
+import { Result } from 'neverthrow';
+import React, { useCallback } from 'react';
+import { PictureType, UploadPictureState, UploadPictureStateType } from 'types/uploadPictures';
 
 const useUploadProfilePictures = () => {
   const uploadMedia = useUploadPicture();

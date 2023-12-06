@@ -24,10 +24,10 @@ import Community from 'screens/Community';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
 import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
+import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
 import ImportAccountSelectProfile, {
   SelectAccountParamList,
 } from 'screens/ImportAccountSelectProfile';
-import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
 import Landing from 'screens/Landing';
 import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
@@ -35,6 +35,7 @@ import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
 import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
+import SelectImageModal, { SelectImageModalParams } from 'screens/Modals/SelectImageModal';
 import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
 import UploadProfilePicturesModal, {
@@ -175,6 +176,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.UPLOAD_PROFILE_PICTURES_MODALS]: SaveProfileModalParams;
   [ROUTES.AUTHORIZATION_MODAL]: AuthorizationModalParams;
+  [ROUTES.SELECT_IMAGE_MODAL]: SelectImageModalParams;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -250,7 +252,6 @@ const RootNavigator = () => {
       {/* --- DEV SCREENS --- */}
       {/* ------------------- */}
       {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
-
       {/* ----------------------- */}
       {/* --- INITIAL SCREENS --- */}
       {/* ----------------------- */}
@@ -259,7 +260,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SERVICE_AND_POLICY} component={ServiceAndPolicy} />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.FEE_GRANT_WAITING_SCREEN} component={FeeGrantWaitingScreen} />
-
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}
       {/* ------------------------ */}
@@ -269,21 +269,17 @@ const RootNavigator = () => {
         component={ImportAccountSelectProfile}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
-
       <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
-
       {/* ------------------------------------ */}
       {/* --- BROADCAST TRANSACTION SCREEN --- */}
       {/* ------------------------------------ */}
       <Stack.Screen name={ROUTES.TX_LOADING} component={TxLoading} />
-
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}
       {/* -------------------- */}
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
-
       {/* -------------------- */}
       {/* --- POST SCREENS --- */}
       {/* -------------------- */}
@@ -295,7 +291,6 @@ const RootNavigator = () => {
         })}
       />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
-
       {/* ------------------------ */}
       {/* --- SETTINGS SCREENS --- */}
       {/* ------------------------ */}
@@ -305,7 +300,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
-
       {/* ----------------------- */}
       {/* --- PROFILE SCREENS --- */}
       {/* ----------------------- */}
@@ -342,7 +336,6 @@ const RootNavigator = () => {
       {/*  }} */}
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
-
       {/* --------------------- */}
       {/* --- BOTTOM MODALS --- */}
       {/* --------------------- */}
@@ -363,6 +356,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
+        <Stack.Screen name={ROUTES.SELECT_IMAGE_MODAL} component={SelectImageModal} />
         <Stack.Screen
           name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}
           component={UploadProfilePicturesModal}
@@ -372,7 +366,6 @@ const RootNavigator = () => {
           component={BackupPhraseBottomModal}
         />
       </Stack.Group>
-
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
       {/* ------------------------------ */}
