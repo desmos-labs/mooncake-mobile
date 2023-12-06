@@ -1,18 +1,18 @@
-import { StackScreenProps } from "@react-navigation/stack";
-import Button from "components/Button";
-import DView from "components/DView";
-import Spacer from "components/Spacer";
-import CommonStyles from "config/theme/CommonStyles";
-import useNavigateToHome from "hooks/navigation/useNavigateToHome";
-import { clearMMKV } from "lib/MMKVStorage";
-import { Box, HStack, VStack } from "native-base";
-import { RootNavigatorParamList } from "navigation/RootNavigator";
-import ROUTES from "navigation/routes";
-import React, { FC } from "react";
-import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
-import { PASSWORD_MANIPULATION_MODE } from "screens/PasswordManipulation/useHooks";
-import useToast from "hooks/toasts/useToast";
-import { ToastType } from "config/toast/toastConfig";
+import { StackScreenProps } from '@react-navigation/stack';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import Spacer from 'components/Spacer';
+import CommonStyles from 'config/theme/CommonStyles';
+import { ToastType } from 'config/toast/toastConfig';
+import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
+import useToast from 'hooks/toasts/useToast';
+import { clearMMKV } from 'lib/MMKVStorage';
+import { Box, HStack, VStack } from 'native-base';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, { FC } from 'react';
+import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -47,11 +47,26 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   // --- Actions
   // -------------------------------------------------------------------------------------
 
-  const showToast = () => {
+  const showToastSuccess = () => {
     toast({
-      type: ToastType.success,
+      toastType: ToastType.success,
       title: 'Success',
       message: 'This is a success toast',
+    });
+  };
+
+  const showToastLoading = () => {
+    toast({
+      toastType: ToastType.loading,
+      message: 'Loading',
+    });
+  };
+
+  const showToastError = () => {
+    toast({
+      toastType: ToastType.error,
+      title: 'Error',
+      message: 'Something went wrong',
     });
   };
 
@@ -114,8 +129,14 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         <Spacer paddingVertical={4} />
         <HStack>
           <VStack flex={0.5}>
-            <Button onPress={showToast} size={32}>
-              Show toast
+            <Button onPress={showToastSuccess} size={32}>
+              Show toast success
+            </Button>
+            <Button onPress={showToastLoading} size={32}>
+              Show toast loading
+            </Button>
+            <Button onPress={showToastError} size={32}>
+              Show toast error
             </Button>
           </VStack>
           <Spacer paddingHorizontal={4} />
