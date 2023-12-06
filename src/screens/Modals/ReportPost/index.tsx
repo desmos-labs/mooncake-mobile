@@ -21,7 +21,6 @@ import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { isPostAlreadyReportedError } from 'types/error';
 import { Post } from 'types/posts';
 import useToast from 'hooks/toasts/useToast';
-import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -82,17 +81,11 @@ const ReportPost = () => {
     if (result.isErr()) {
       if (isPostAlreadyReportedError(result.error)) {
         setAlreadyReported(true);
-        return;
       }
-
-      showToast({
-        toastType: ToastType.error,
-        title: t('error', { ns: 'common' }),
-        message: result.error.message,
-      });
-    } else {
-      setSuccessfulReport(true);
+      return;
     }
+
+    setSuccessfulReport(true);
   }, [reportPost, message, selectedReport.value, showToast, t]);
 
   const successfulReportComponent = useMemo(() => {
