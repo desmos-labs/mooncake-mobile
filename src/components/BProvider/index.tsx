@@ -3,12 +3,15 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import butterFonts from 'config/ButterFonts';
 import lightTheme from 'config/theme/LightTheme';
+import toastConfig from 'config/toast/toastConfig';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { NativeBaseProvider } from 'native-base';
 import RootNavigator from 'navigation/RootNavigator';
 import React, { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import useClient from 'services/graphql/useClient';
 
 // Keep the splash screen visible while we fetch resources
@@ -19,6 +22,7 @@ const BProvider = () => {
   const [isUiReady, setIsUiReady] = useState(false);
   const client = useClient();
   const styles = useStyles();
+  const insets = useSafeAreaInsets();
 
   // Effect to initialize the UI.
   useEffect(() => {
@@ -53,6 +57,7 @@ const BProvider = () => {
               <RootNavigator />
             </BottomSheetModalProvider>
           </NavigationContainer>
+          <Toast config={toastConfig} topOffset={insets.top || 60} visibilityTime={50000} />
         </NativeBaseProvider>
       </GestureHandlerRootView>
     </ApolloProvider>
