@@ -129,13 +129,15 @@ export const useHandleExpandCommentView = () => {
 /**
  * Hook that allows to handle the creation of a comment.
  */
-export const useHandleCreateComment = () => {
-  const { state, createPost } = useCreatePost();
+export const useHandleCreateComment = (onCompleted: () => void) => {
   const { t } = useTranslation('postDetails');
   const showToast = useToast();
-  const handleCreateComment = React.useCallback(
+
+  const createPost = useCreatePost();
+
+  return React.useCallback(
     async (post: Post) => {
-      const result = await createPost(post);
+      const result = await createPost({ parent: post, onProcessCompleted: onCompleted });
       if (result.isErr()) {
         showToast({
           toastType: ToastType.error,
@@ -146,11 +148,6 @@ export const useHandleCreateComment = () => {
     },
     [createPost, showToast, t],
   );
-
-  return {
-    state,
-    handleCreateComment,
-  };
 };
 
 /**

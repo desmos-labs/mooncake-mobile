@@ -158,7 +158,6 @@ export const useSignAndBroadcastTx = () => {
             options.onLoading.action();
           }
 
-          // TODO: Add the ability to add a description
           showToast({
             toastType: ToastType.loading,
             message: options?.onLoading?.popup?.description ?? t('performing transaction'),
