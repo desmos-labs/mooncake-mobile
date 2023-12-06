@@ -1,7 +1,6 @@
 import React from 'react';
 import usePostsCreatedByAddress from 'hooks/posts/usePostsCreatedByAddress';
 import usePostsLikedByAddress from 'hooks/posts/usePostsLikedByAddress';
-import usePostsTippedByAddress from 'hooks/tips/usePostsTippedByAddress';
 
 /**
  * Hook that returns the list of all the posts created, liked and tipped by a user.
@@ -21,25 +20,18 @@ const usePostsByAddress = (address: string, postsLimit: number = 10) => {
     refetch: refetchPostsLiked,
   } = usePostsLikedByAddress(address, postsLimit);
 
-  const {
-    posts: postsTipped,
-    loading: arePostsTippedLoading,
-    refetch: refetchPostsTipped,
-  } = usePostsTippedByAddress(address, postsLimit);
-
   const refetch = React.useCallback(async () => {
     refetchPostsCreated();
     refetchPostsLiked();
-    refetchPostsTipped();
-  }, [refetchPostsCreated, refetchPostsLiked, refetchPostsTipped]);
+  }, [refetchPostsCreated, refetchPostsLiked]);
 
   const posts = React.useMemo(() => {
-    return [...postsCreated, ...postsLiked, ...postsTipped].slice(0, postsLimit);
-  }, [postsCreated, postsLiked, postsLimit, postsTipped]);
+    return [...postsCreated, ...postsLiked].slice(0, postsLimit);
+  }, [postsCreated, postsLiked, postsLimit]);
 
   return {
     posts,
-    loading: arePostsCreatedLoading || arePostsLikedLoading || arePostsTippedLoading,
+    loading: arePostsCreatedLoading || arePostsLikedLoading,
     refetch,
   };
 };

@@ -4,7 +4,6 @@ import React from 'react';
 import { NavProps } from 'screens/Home';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import { isPostPending, Post } from 'types/posts';
-import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import useHidePost from 'hooks/posts/useHidePost';
 import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
@@ -86,28 +85,6 @@ export const useHandlePressComments = () => {
       navigateToPost(post.id, { focusCommentBox: true, initialPostData: post });
     },
     [navigateToPost],
-  );
-};
-
-/**
- * Hook that allows to handle the press of the tip button of a post.
- */
-export const useHandlePressTip = () => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
-  return React.useCallback(
-    (post: Post) => {
-      if (isPostPending(post)) {
-        // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
-        return;
-      }
-      navigate(ROUTES.POST_SEND_TIPS, {
-        target: {
-          type: TipTargetType.POST,
-          post,
-        },
-      });
-    },
-    [navigate],
   );
 };
 

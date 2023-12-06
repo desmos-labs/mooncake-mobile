@@ -21,8 +21,6 @@ import { useActiveProfile } from '@recoil/profiles';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import usePostTipsCount from 'hooks/tips/usePostTipsCount';
-import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
@@ -102,9 +100,6 @@ const PostDetails = () => {
   // Tips data
   const { refetch: refreshTipsCount } = usePostTipsCount(postData);
 
-  // Interactions data
-  const { refetch: refreshInteractionsAuthors } = usePostInteractionsAuthors(postData, 3);
-
   // Comment creation
   const onCommentCreated = useCallback(() => {
     Keyboard.dismiss();
@@ -133,16 +128,8 @@ const PostDetails = () => {
     await refreshComments();
     await refreshCommentsCount();
     await refreshTipsCount();
-    await refreshInteractionsAuthors();
     setPageRefreshing(false);
-  }, [
-    refreshComments,
-    refreshCommentsCount,
-    refreshInteractionsAuthors,
-    refreshPost,
-    refreshReactionsCount,
-    refreshTipsCount,
-  ]);
+  }, [refreshComments, refreshCommentsCount, refreshPost, refreshReactionsCount, refreshTipsCount]);
 
   const onPullToRefresh = React.useCallback(() => {
     // set firstLoad to false so the loading indicator will be shown in the event

@@ -1,20 +1,10 @@
 import { useSetting } from '@recoil/settings';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAppStateValue } from '@recoil/appState';
 import { Coin } from '@cosmjs/stargate';
 import { findCoinByDenom } from 'lib/ChainsUtils';
 import { safeParseFloat } from 'lib/FormatUtils';
 import useSendTip from 'hooks/tips/useSendTip';
-import { TipTarget } from 'types/tips';
-
-/**
- * Hook that allows to get the tip fee percentage to be considered when sending tips.
- */
-export const useTipFeePercentage = () => {
-  const subspaceParams = useAppStateValue('subspaceParams');
-  return subspaceParams.tipsContractConfig?.serviceFeePercentage ?? 0;
-};
 
 /**
  * Returns the currency that should be used to tip the post.
@@ -51,12 +41,11 @@ export const useDefaultTipsAmounts = () => [1, 5, 10];
 export const useShouldDisableTipButton = (accountBalance: Coin[]) => {
   const coinBalance = useCoinBalance(accountBalance);
   const coinAmount = safeParseFloat(coinBalance.amount);
-  const tipsFeePercentage = useTipFeePercentage();
   return useCallback(
     (value: number) => {
-      return coinAmount / 1_000_000 < value + tipsFeePercentage / 100;
+      return coinAmount / 1_000_000 < value / 100;
     },
-    [coinAmount, tipsFeePercentage],
+    [coinAmount],
   );
 };
 
@@ -105,15 +94,14 @@ export const useValidateForm = (accountBalance: Coin[]) => {
 };
 
 /**
- * Hook that allows to send a tip to the given post.
- * @param target {TipTarget} - Target to which to send the tip.
+ * Hook that allows to send a tip to a specific user.
  */
-export const useSendTipToTarget = (target: TipTarget) => {
+export const useSendTipToUser = () => {
   const tipCurrency = useTipCurrency();
   const sendTip = useSendTip();
 
   return useCallback(
-    async (values: FormValues) => {
+    async (user: string, values: FormValues) => {
       // Build the tip amount
       const tipAmount: Coin = {
         denom: tipCurrency.coinMinimalDenom,
@@ -121,11 +109,8 @@ export const useSendTipToTarget = (target: TipTarget) => {
       };
 
       // Send the tip
-      return sendTip({
-        target,
-        amount: [tipAmount],
-      });
+      return sendTip(user, [tipAmount]);
     },
-    [sendTip, target, tipCurrency.coinDecimals, tipCurrency.coinMinimalDenom],
+    [sendTip, tipCurrency.coinDecimals, tipCurrency.coinMinimalDenom],
   );
 };

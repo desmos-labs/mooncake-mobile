@@ -21,7 +21,6 @@ import {
 import { useTheme } from 'native-base';
 import UserLikedPostsTab from 'screens/ProfilePosts/UserLikedPostsTab';
 import UserPostsTab from 'screens/ProfilePosts/UserCreatedPostsTab';
-import UserTippedPostsTab from 'screens/ProfilePosts/UserTippedPostsData';
 import useStyles from './useStyles';
 
 // -------------------------------------------------------------------------------------
@@ -123,12 +122,6 @@ const ProfilePosts = () => {
           name={ROUTES.PROFILE_POSTS_LIKED}
           component={UserLikedPostsTab}
           options={{ tabBarLabel: t('liked') }}
-          initialParams={{ userAddress }}
-        />
-        <Tab.Screen
-          name={ROUTES.PROFILE_POSTS_TIPPED}
-          component={UserTippedPostsTab}
-          options={{ tabBarLabel: t('tipped') }}
           initialParams={{ userAddress }}
         />
       </Tab.Navigator>

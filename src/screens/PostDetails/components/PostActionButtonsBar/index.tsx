@@ -1,4 +1,4 @@
-import { commentIcon, commentLiked, commentLikeEmptyIcon, tipIcon } from 'assets/images';
+import { commentIcon, commentLiked, commentLikeEmptyIcon } from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
@@ -11,7 +11,6 @@ type Props = {
   postLiked: boolean;
   handleLikePress: () => void;
   handleCommentPress: () => void;
-  handleTipPress: () => void;
 };
 
 /**
@@ -21,7 +20,7 @@ type Props = {
 const PostActionButtonsBar = (props: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
-  const { postLiked, handleLikePress, handleCommentPress, handleTipPress } = props;
+  const { postLiked, handleLikePress, handleCommentPress } = props;
 
   return (
     <>
@@ -43,12 +42,6 @@ const PostActionButtonsBar = (props: Props) => {
           <Image source={commentIcon} style={styles.icon} />
           <Typography.Subtitle3 numberOfLines={1} style={styles.text}>
             {t('comment')}
-          </Typography.Subtitle3>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleTipPress} style={styles.button}>
-          <Image source={tipIcon} style={styles.icon} />
-          <Typography.Subtitle3 numberOfLines={1} style={styles.text}>
-            {t('tip')}
           </Typography.Subtitle3>
         </TouchableOpacity>
       </View>

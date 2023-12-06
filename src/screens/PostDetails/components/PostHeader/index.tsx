@@ -1,20 +1,14 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import PostComponent from 'components/PostComponent';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import Spacer from 'components/Spacer';
-import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import { Divider } from 'native-base';
 import { isRootPost, Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import usePostTipsCount from 'hooks/tips/usePostTipsCount';
-import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
-import { useHandlePressCounters, useHandlePressSendTips } from 'screens/PostDetails/hooks';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import { useTranslation } from 'react-i18next';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import useToast from 'hooks/toasts/useToast';
-import { ToastType } from 'config/toast/toastConfig';
+import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
+import { useHandlePressCounters } from 'screens/PostDetails/hooks';
 import useStyles from './useStyles';
 
 interface Props {
@@ -31,9 +25,6 @@ interface Props {
  */
 const PostHeader = ({ post, handlePressComment }: Props) => {
   const styles = useStyles();
-  const { t } = useTranslation('postDetails');
-  const activeAddress = useActiveAccountAddress();
-  const showToast = useToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -42,41 +33,12 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
   // Reactions data
   const { count: reactionsCount, loading: isReactionsCountLoading } = usePostReactionsCount(post);
 
-  // Tips data
-  const { count: tipsCount, loading: isTipsCountLoading } = usePostTipsCount(post);
-
-  // Interactions data
-  const { authors: interactionsAuthors, loading: areInteractionsAuthorsLoading } =
-    usePostInteractionsAuthors(post, 3);
-
-  // User data
-  const isCurrentUserAuthor = useMemo(
-    () => post.author.address === activeAddress,
-    [post, activeAddress],
-  );
-
   // -------------------------------------------------------------------------------------
   // --- Handlers
   // -------------------------------------------------------------------------------------
 
   const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
   const handlePressCounters = useHandlePressCounters();
-  const handlePressSendTips = useHandlePressSendTips();
-
-  /**
-   * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
-   */
-  const checkUserAndHandleSendTips = useCallback(() => {
-    if (isCurrentUserAuthor) {
-      showToast({
-        type: ToastType.error,
-        title: t('error', { ns: 'common' }),
-        message: t('common:cannot tip yourself'),
-      });
-    } else {
-      handlePressSendTips(post);
-    }
-  }, [handlePressSendTips, isCurrentUserAuthor, post, showToast, t]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
@@ -92,7 +54,6 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
             postLiked={liked}
             handleLikePress={() => addOrRemoveLike(post!)}
             handleCommentPress={handlePressComment}
-            handleTipPress={checkUserAndHandleSendTips}
           />
         </>
       ) : (
@@ -106,11 +67,10 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
       <Spacer paddingVertical={16}>
         {/* Like, Comment and Tips bar */}
         <InteractionCountersBar
-          loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
+          loading={isReactionsCountLoading}
           likesCounter={reactionsCount}
-          tipsCounter={tipsCount}
           handlePressCounters={() => handlePressCounters(post!)}
-          interactionAuthors={interactionsAuthors}
+          interactionAuthors={[]}
         />
       </Spacer>
 
