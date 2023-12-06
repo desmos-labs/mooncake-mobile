@@ -181,7 +181,7 @@ export const getWallet = async (
 
 /**
  * Sets the given password as the password that the user will use in order to
- * confirm transactions and unlock their wallet.
+ * confirm tx and unlock their wallet.
  * @param password {string} - Value of the password to be set.
  * @throws Error if for some reason the encryption operations fail.
  */

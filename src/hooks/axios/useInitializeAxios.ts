@@ -1,9 +1,10 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { HttpStatusCode } from 'axios';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import usePerformLogout from 'hooks/user/usePerformLogout';
 import { useEffect } from 'react';
 import axiosInstance from 'services/axios';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 
 /**
  * A hook that augments the interceptors of the axiosInstance with react hook functionality.
@@ -11,7 +12,7 @@ import axiosInstance from 'services/axios';
 const useInitializeAxios = () => {
   const performLogout = usePerformLogout();
   const activeAccountAddress = useActiveAccountAddress();
-  const toast = useCustomToast();
+  const showToast = useToast();
 
   useEffect(() => {
     // To prevent duplicate interceptors, clear them in order to avoid issues.
@@ -25,8 +26,13 @@ const useInitializeAxios = () => {
       async error => {
         if (activeAccountAddress && error.response?.status === HttpStatusCode.Unauthorized) {
           console.log('[AXIOS]: Unauthorized response, logging out.');
+
           await performLogout();
-          toast.errorNoRetry('You have been logged out. Please log in again');
+          showToast({
+            toastType: ToastType.error,
+            title: 'Error',
+            message: 'You have been logged out. Please log in again',
+          });
         }
         console.log(error);
         const errorMsg = error.response?.data?.error ?? error.response?.data ?? 'Unknown error';
@@ -34,7 +40,7 @@ const useInitializeAxios = () => {
         return Promise.reject(new Error(errorMsg));
       },
     );
-  }, [activeAccountAddress, performLogout]);
+  }, [activeAccountAddress, performLogout, showToast]);
 };
 
 export default useInitializeAxios;

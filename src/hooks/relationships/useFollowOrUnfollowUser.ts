@@ -1,5 +1,5 @@
 import React from 'react';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import useBroadcastTx from 'hooks/tx/useBroadcastTx';
 import {
   useAddFollowedUser,
   useHasFollowedUser,

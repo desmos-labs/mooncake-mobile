@@ -3,7 +3,6 @@ import { postLikedIcon, postToCommentIcon, postToLikeIcon, postToTipIcon } from 
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
 import { Image } from 'expo-image';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
@@ -28,7 +27,6 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   const { t } = useTranslation('home');
   const styles = useStyles();
   const theme = useTheme();
-  const toast = useCustomToast();
 
   const { post, onPressComment, onPressTip } = props;
 
@@ -66,21 +64,20 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
 
   const onPressLike = useCallback(async () => {
     if (isPostPending(post)) {
-      return toast.success(t('toast:postTxInProgress'));
+      return;
     }
     addOrRemoveLike(post);
-  }, [addOrRemoveLike, post, t, toast]);
+  }, [addOrRemoveLike, post]);
 
   /**
    * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
    */
   const checkUserAndHandleSendTips = useCallback(() => {
     if (isCurrentUserAuthor) {
-      toast.errorNoRetry(t('common:cannot tip yourself'));
-    } else {
-      onPressTip();
+      return;
     }
-  }, [onPressTip, isCurrentUserAuthor, t, toast]);
+    onPressTip();
+  }, [onPressTip, isCurrentUserAuthor, t]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering

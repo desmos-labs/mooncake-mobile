@@ -3,7 +3,7 @@ import { DesmosMainnet } from '@desmoslabs/desmjs';
 import { activeAccountAddressState, useActiveAccountAddress } from '@recoil/accounts';
 import { findChainInfoByName } from 'lib/ChainsUtils';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AppSettings } from 'types/settings';
 
@@ -110,26 +110,23 @@ export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
 };
 
 /**
- * Hook that provide the informations of the current selected chain.
+ * Hook that provides the current chain info.
  */
-export const useGetCurrentChainInfo = () => {
+export const useCurrentChainInfo = () => {
   const currentChain = useSetting('currentChain');
-  return React.useCallback(() => {
-    return findChainInfoByName(currentChain.chainName)!;
-  }, [currentChain.chainName]);
+  return useMemo(() => findChainInfoByName(currentChain.chainName), [currentChain.chainName]);
 };
 
 /**
  * Hook that provides the current chain gas price.
  */
-export const useGetCurrentChainGasPrice = () => {
-  const getCurrentChainInfo = useGetCurrentChainInfo();
-  return React.useCallback(() => {
-    const currentChainInfo = getCurrentChainInfo();
+export const useCurrentChainGasPrice = () => {
+  const currentChainInfo = useCurrentChainInfo();
+  return useMemo(() => {
     if (currentChainInfo === undefined) {
       return undefined;
     }
     // We support only Desmos at the moment so 0.1 is fine.
     return GasPrice.fromString(`0.1${currentChainInfo.stakeCurrency.coinMinimalDenom}`);
-  }, [getCurrentChainInfo]);
+  }, [currentChainInfo]);
 };

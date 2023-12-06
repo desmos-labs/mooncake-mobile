@@ -96,7 +96,7 @@ export interface Post {
 
   /**
    * Transactions that are associated to this post.
-   * This is a list because they could be either MsgCreatePost or MsgEditPost transactions.
+   * This is a list because they could be either MsgCreatePost or MsgEditPost tx.
    */
   readonly transactions: PostTransaction[];
 

@@ -5,7 +5,7 @@ import { safeParseFloat } from 'lib/FormatUtils';
 import { Coin } from '@cosmjs/stargate';
 import { MsgExecuteContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
 import { toUtf8 } from '@cosmjs/encoding';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import useBroadcastTx from 'hooks/tx/useBroadcastTx';
 import { Tip, TipTarget, TipTargetType } from 'types/tips';
 import { useDeleteStoredTip, useStoreTip } from '@recoil/tips';
 import { DataStatus } from 'types/cache';

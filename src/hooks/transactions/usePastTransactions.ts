@@ -4,7 +4,6 @@ import { useQuery } from '@apollo/client';
 import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
 import { useUserPendingTransactions } from '@recoil/transactions';
 import { convertGraphQLTransactionMessage } from 'lib/GraphQLUtils/transactions';
-import useUpdatePendingTransactions from 'hooks/transactions/useUpdatePendingTransactions';
 
 /**
  * Function that converts a {@link PendingTransaction} into a list of {@link PastTransactionMessage}
@@ -46,7 +45,7 @@ const mergeTransactions = (
     );
   });
 
-  // Sort the transactions based on their timestamp in descending order
+  // Sort the tx based on their timestamp in descending order
   return uniqueTransactions.sort((m1, m2) => Date.parse(m2.timestamp) - Date.parse(m1.timestamp));
 };
 
@@ -54,40 +53,35 @@ const mergeTransactions = (
  * Hook that allows to retrieve the past actions of a user querying them from the GraphQL server.
  */
 const usePastTransactions = (address: string, transactionsPerPage: number = 20) => {
-  // Get the pending transactions for the user
+  // Get the pending tx for the user
   const pendingTransactions = useUserPendingTransactions(address);
   const pendingMessages = pendingTransactions.flatMap(convertPendingTransaction);
-  const updatePendingTransactions = useUpdatePendingTransactions();
 
-  // Set the pending transactions as the current value of the transactions
+  // Set the pending tx as the current value of the tx
   const [remoteMessages, setRemoteMessages] = React.useState<PastTransactionMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
-  // Merge the pending transactions with the transactions from the chain
+  // Merge the pending tx with the tx from the chain
   const transactions = React.useMemo(() => {
     return mergeTransactions(remoteMessages, pendingMessages);
   }, [remoteMessages, pendingMessages]);
 
   // Callback to be called when the query is completed
-  const onCompletedCallback = React.useCallback(
-    (data: any) => {
-      if (!data) return;
+  const onCompletedCallback = React.useCallback((data: any) => {
+    if (!data) return;
 
-      const onChainMessages = (data.messages as any[]).map(convertGraphQLTransactionMessage);
-      updatePendingTransactions(onChainMessages);
-      setRemoteMessages(onChainMessages);
+    const onChainMessages = (data.messages as any[]).map(convertGraphQLTransactionMessage);
+    setRemoteMessages(onChainMessages);
 
-      setLoading(false);
-      setFetchingMore(false);
-      setRefreshing(false);
-    },
-    [updatePendingTransactions],
-  );
+    setLoading(false);
+    setFetchingMore(false);
+    setRefreshing(false);
+  }, []);
 
-  // Query the past transactions from the server
+  // Query the past tx from the server
   const { fetchMore, refetch } = useQuery(GetTransactionsByAddress, {
     variables: {
       address: `${address}`,
@@ -98,7 +92,7 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 20) 
     onCompleted: onCompletedCallback,
   });
 
-  // Callback to fetch more transactions
+  // Callback to fetch more tx
   const fetchMoreTransactions = React.useCallback(async () => {
     try {
       setError(undefined);
@@ -118,7 +112,7 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 20) 
     }
   }, [fetchMore, remoteMessages.length]);
 
-  // Callback to be called when the transactions list is refreshed
+  // Callback to be called when the tx list is refreshed
   const refetchTransactions = React.useCallback(async () => {
     try {
       setError(undefined);

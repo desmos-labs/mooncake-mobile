@@ -3,7 +3,6 @@ import Button from "components/Button";
 import DView from "components/DView";
 import Spacer from "components/Spacer";
 import CommonStyles from "config/theme/CommonStyles";
-import useCustomToast from "hooks/extended/useCustomToast";
 import useNavigateToHome from "hooks/navigation/useNavigateToHome";
 import { clearMMKV } from "lib/MMKVStorage";
 import { Box, HStack, VStack } from "native-base";
@@ -12,6 +11,8 @@ import ROUTES from "navigation/routes";
 import React, { FC } from "react";
 import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { PASSWORD_MANIPULATION_MODE } from "screens/PasswordManipulation/useHooks";
+import useToast from "hooks/toasts/useToast";
+import { ToastType } from "config/toast/toastConfig";
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -34,7 +35,7 @@ type DevScreenProps = StackScreenProps<RootNavigatorParamList, ROUTES.DEV_SCREEN
 
 const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const { navigate } = navigation;
-  const toast = useCustomToast();
+  const toast = useToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -47,7 +48,11 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   // -------------------------------------------------------------------------------------
 
   const showToast = () => {
-    toast.newPost();
+    toast({
+      type: ToastType.success,
+      title: 'Success',
+      message: 'This is a success toast',
+    });
   };
 
   const renderItem = ({ item }: any) => {

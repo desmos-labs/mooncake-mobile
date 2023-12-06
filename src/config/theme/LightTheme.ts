@@ -13,7 +13,7 @@ export const baseSpacing = {
  * A custom theme created by extending native-base base theme. Some colors retain their material-ui names as they were
  * imported from the previous material-ui stylesheet.
  */
-const lightTheme = extendTheme({
+export const lightTheme = extendTheme({
   // legacy spacing keys for styles that still use react-native-paper naming
   spacing: baseSpacing,
   // duplicated spacings for native-base compatibility
@@ -135,7 +135,7 @@ const lightTheme = extendTheme({
 });
 
 // Extend native-base ICustomTheme interface for typescript support.
-type CustomThemeType = typeof lightTheme;
+export type CustomThemeType = typeof lightTheme;
 
 declare module 'native-base' {
   interface ICustomTheme extends CustomThemeType {}

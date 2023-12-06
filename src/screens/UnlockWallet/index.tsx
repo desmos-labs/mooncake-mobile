@@ -1,7 +1,5 @@
 import { SigningMode } from '@desmoslabs/desmjs';
 import { useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { useSetting } from '@recoil/settings';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
@@ -11,27 +9,28 @@ import { Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useClearUserData from 'hooks/useClearUserData';
-import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { ResultAsync } from 'neverthrow';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
-import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
-import { BiometricAuthorizations } from 'types/settings';
 import { Wallet } from 'types/wallet';
 import * as Yup from 'yup';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
+import { useSetting } from '@recoil/settings';
+import { getBiometricPassword } from 'lib/SecureStorage';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;
+type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;
 
 export type UnlockWalletParams = {
   /**
    * Function called if the user correctly unlocks the wallet.
    */
-  readonly onSuccess: (wallet: Wallet) => any;
+  readonly onSuccess: (wallet: Wallet, password: string) => any;
   /**
    * Address of the wallet to unlock.
    */
@@ -82,22 +81,21 @@ const UnlockWallet = () => {
     optionalBodyText,
   } = params;
 
+  const clearUserData = useClearUserData();
+
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const biometrics = useSetting('biometrics');
+  const unlockWithBiometrics = useSetting('biometrics');
   const unlockWalletWithPassword = useUnlockWalletWithPassword();
-  const getPasswordFromBiometrics = useGetPasswordFromBiometrics(
-    BiometricAuthorizations.UnlockWallet,
-  );
-
-  const clearUserData = useClearUserData();
+  const blockBackAction = React.useRef(false);
 
   // -------------------------------------------------------------------------------------
   // --- Local state
   // -------------------------------------------------------------------------------------
 
+  const [biometricsPsw, setBiometricPsw] = useState('');
   const [loading, setLoading] = useState(false);
 
   // -------------------------------------------------------------------------------------
@@ -131,8 +129,7 @@ const UnlockWallet = () => {
 
         if (walletResult.isErr()) {
           setLoading(false);
-          formikHelpers &&
-            formikHelpers.setErrors({ password: t('incorrectPassword', { ns: 'error' }) });
+          formikHelpers && formikHelpers.setErrors({ password: t('incorrect password') });
           return;
         }
 
@@ -142,10 +139,11 @@ const UnlockWallet = () => {
             () => new Error('Failed to connect to signer'),
           );
           if (result.isOk()) {
-            onSuccess(walletResult.value);
+            // Block the back action handle.
+            blockBackAction.current = true;
+            onSuccess(walletResult.value, unlockWalletPassword);
           } else {
-            formikHelpers &&
-              formikHelpers.setErrors({ password: t('error:incorrectPassword', { ns: 'error' }) });
+            formikHelpers && formikHelpers.setErrors({ password: t('incorrect password') });
           }
         }
       }
@@ -154,15 +152,20 @@ const UnlockWallet = () => {
     [unlockWalletWithPassword, address, signingMode, t, onSuccess],
   );
 
-  // Callback used when the user wants to unlock the wallet using the biometrics
+  /**
+   * Callback used to unlock the wallet using the biometrics.
+   * This callback is called only if the user has enabled the biometrics unlock option.
+   */
   const unlockWalletWithBiometrics = React.useCallback(async () => {
-    const biometricsPasswordResult = await getPasswordFromBiometrics();
-    if (biometricsPasswordResult.isOk()) {
-      await unlockWallet(biometricsPasswordResult.value);
-    } else {
+    const biometricPassword = await getBiometricPassword();
+    // User cancel the biometric unlock procedure.
+    if (biometricPassword === undefined) {
       setLoading(false);
+      return;
     }
-  }, [getPasswordFromBiometrics, unlockWallet]);
+    setBiometricPsw(biometricPassword);
+    await unlockWallet(biometricPassword);
+  }, [unlockWallet]);
 
   // Callback used when the user submits the form to unlock the wallet using the password
   const onFormSubmit = React.useCallback(
@@ -182,15 +185,19 @@ const UnlockWallet = () => {
   // Cancel if the user close this screen.
   useOnBackAction(() => onCancel !== undefined && onCancel(), [onCancel]);
 
-  React.useEffect(() => {
-    if (biometrics) {
+  /**
+   * Effect used to unlock the wallet using the biometrics if the user has enabled this option.
+   * This effect is called only once when the screen is mounted.
+   */
+  useEffect(() => {
+    if (unlockWithBiometrics) {
       setLoading(true);
       // Use a timeout to allow the application to show the screen
       // before displaying the os biometrics modal.
-      setTimeout(unlockWalletWithBiometrics, 500);
+      setTimeout(unlockWalletWithBiometrics, 100);
     }
 
-    // It's fine to disable the exhaustive deps here because we only want to run this effect once
+    // It's fine to disable the exhaustive deps check here because we only want to run this effect only once
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -222,9 +229,9 @@ const UnlockWallet = () => {
             )}
             <DSecureTextInput
               style={styles.textInput}
-              autoFocus={!biometrics}
+              autoFocus={!unlockWalletWithBiometrics}
               placeholder={t('inputPlaceholder')}
-              value={values.password}
+              value={unlockWithBiometrics ? biometricsPsw : values.password}
               onChangeText={(text: string) => {
                 setValues({ password: text }, true);
               }}

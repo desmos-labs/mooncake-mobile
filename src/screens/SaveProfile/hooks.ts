@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useActiveAccount } from '@recoil/accounts';
 import { useStoreProfile } from '@recoil/profiles';
-import useTrackUser from 'hooks/analytics/useTrackUser';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
@@ -147,7 +146,6 @@ const getValueToSave = (
  * while signing the transaction. If no account is provided, then the
  * current user account will be used instead.
  * @param onProfileSaved {() => void} - Callback to be called when the profile
- * @param optionalFeeGranter {string | undefined} - Optional fee granter to be used while signing the transaction.
  * @param customHeader {string | undefined} - Optional custom header to be used inside the transaction screen.
  * @param customBody {string | undefined} - Optional custom body to be used inside the transaction screen.
  */
@@ -155,13 +153,11 @@ export const useSubmitForm = (
   profile: DesmosProfile | undefined,
   accountWithWallet: AccountWithWallet | undefined,
   onProfileSaved: () => void,
-  optionalFeeGranter: string | undefined,
   customHeader?: string,
   customBody?: string,
 ) => {
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
-  const trackUser = useTrackUser();
   const activeAccount = useActiveAccount();
   const { status, saveProfile } = useSaveProfileOnChain();
 
@@ -205,7 +201,6 @@ export const useSubmitForm = (
         profileToSaveOnChain,
         accountWithWallet,
         onProfileSaved,
-        optionalFeeGranter,
         customHeader,
         customBody,
       );
@@ -224,7 +219,6 @@ export const useSubmitForm = (
       customHeader,
       getOnChainProfile,
       onProfileSaved,
-      optionalFeeGranter,
       profile,
       saveProfile,
       storeProfile,

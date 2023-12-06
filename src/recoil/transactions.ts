@@ -4,7 +4,7 @@ import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { PendingTransaction } from 'types/transactions';
 
 /**
- * Atom that holds all the pending transactions that have been sent to the APIs to be broadcast,
+ * Atom that holds all the pending tx that have been sent to the APIs to be broadcast,
  * but are still waiting for confirmation.
  */
 const pendingTransactionsState = atom<PendingTransaction[]>({
@@ -20,12 +20,12 @@ const pendingTransactionsState = atom<PendingTransaction[]>({
 });
 
 /**
- * Hook that allows to get the list of all pending transactions for all users.
+ * Hook that allows to get the list of all pending tx for all users.
  */
 export const usePendingTransactions = () => useRecoilValue(pendingTransactionsState);
 
 /**
- * Hook that allows to get all the pending transactions for the user having the provided address.
+ * Hook that allows to get all the pending tx for the user having the provided address.
  */
 export const useUserPendingTransactions = (user: string) => {
   const transactions = useRecoilValue(pendingTransactionsState);
@@ -48,14 +48,14 @@ export const useGetPendingTransaction = () => {
 };
 
 /**
- * Hook that allows to store a pending transaction inside the current list of pending transactions for the given user.
+ * Hook that allows to store a pending transaction inside the current list of pending tx for the given user.
  */
 export const useStorePendingTransaction = () => {
   const setTransactions = useSetRecoilState(pendingTransactionsState);
   return React.useCallback(
     (transaction: PendingTransaction) => {
       setTransactions(currentTransactions => {
-        // Get the user transactions
+        // Get the user tx
         const existingTransactionIndex = currentTransactions.findIndex(
           t => t.hash === transaction.hash && t.user === transaction.user,
         );

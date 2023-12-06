@@ -7,7 +7,6 @@ import GetPostReactions from 'services/graphql/queries/GetPostReactions';
 import { convertGraphQLReaction } from 'lib/GraphQLUtils/reactions';
 import { useGetPostReactionsToSync } from '@recoil/reactions';
 import { mergeCacheableData } from 'lib/CacheUtils';
-import useUpdatePendingReactions from 'hooks/reactions/useUpdatePendingReactions';
 
 /**
  * Hook that allows to get the reactions for the given post.
@@ -24,7 +23,6 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
   // Get the reactions to be synced
   const getPostReactionsToSync = useGetPostReactionsToSync(activeAccountAddress);
   const postReactionsToSync = getPostReactionsToSync(post.subspaceId, post.id);
-  const updatePendingReactions = useUpdatePendingReactions();
 
   // Set the initial reactions state to be the reactions to sync.
   // This will later be merged with reactions from the chain at the first fetch.
@@ -36,30 +34,20 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
   const [error, setError] = useState<string | undefined>();
 
   // Callback that is used when some data is returned by the chain
-  const onCompletedCallback = React.useCallback(
-    (data: any) => {
-      if (!data) return;
-      const onChainReactions = data.reactions.map(convertGraphQLReaction);
+  const onCompletedCallback = React.useCallback((data: any) => {
+    if (!data) return;
+    const onChainReactions = data.reactions.map(convertGraphQLReaction);
 
-      // Update the reactions
-      setReactions(currentReactions => {
-        // Merge the existing reactions with the new one
-        const [merged, updates] = mergeCacheableData(
-          currentReactions,
-          onChainReactions,
-          areReactionsEqual,
-        );
-
-        // Update the pending reactions (delete the ones that have been sent or are expired)
-        updatePendingReactions(activeAccountAddress, updates);
-        return merged;
-      });
-      setLoading(false);
-      setRefreshing(false);
-      setFetchingMore(false);
-    },
-    [activeAccountAddress, updatePendingReactions],
-  );
+    // Update the reactions
+    setReactions(currentReactions => {
+      // Merge the existing reactions with the new one
+      const [merged] = mergeCacheableData(currentReactions, onChainReactions, areReactionsEqual);
+      return merged;
+    });
+    setLoading(false);
+    setRefreshing(false);
+    setFetchingMore(false);
+  }, []);
 
   // Query used to get the comments
   const { refetch, fetchMore } = useQuery(GetPostReactions, {

@@ -19,7 +19,8 @@ import { formatCoins } from 'lib/FormatUtils';
 import { TipTarget } from 'types/tips';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
-import useCustomToast from 'hooks/extended/useCustomToast';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
 import {
   FormValues,
@@ -46,7 +47,7 @@ const SendTips = (props: NavProps) => {
   const { t } = useTranslation('sendTips');
   const styles = useStyles();
   const theme = useTheme();
-  const toast = useCustomToast();
+  const showToast = useToast();
   const { route } = props;
   const { params } = route;
   const { target } = params;
@@ -89,14 +90,16 @@ const SendTips = (props: NavProps) => {
       setSendingTip(true);
       const result = await sendTip(values);
       if (result.isErr()) {
-        console.error(result);
-        toast.errorNoRetry(result.error.message);
+        showToast({
+          toastType: ToastType.error,
+          message: result.error.message,
+        });
       }
 
       setSendingTip(false);
       pop();
     },
-    [pop, sendTip, toast],
+    [pop, sendTip, showToast],
   );
 
   // -------------------------------------------------------------------------------------

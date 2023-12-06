@@ -1,7 +1,7 @@
 import { PastTransactionMessage } from 'types/transactions';
 
 /**
- * Converts the received past transactions from the GraphQL server into the format supported by the app.
+ * Converts the received past tx from the GraphQL server into the format supported by the app.
  * @param data - The data received from the GraphQL server.
  */
 // It's fine to disable the rule here, as we might want to export more functions in the future.

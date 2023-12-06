@@ -13,7 +13,8 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { useTranslation } from 'react-i18next';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import useCustomToast from 'hooks/extended/useCustomToast';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
 
 interface Props {
@@ -32,7 +33,7 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
   const activeAddress = useActiveAccountAddress();
-  const toast = useCustomToast();
+  const showToast = useToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -67,11 +68,15 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
    */
   const checkUserAndHandleSendTips = useCallback(() => {
     if (isCurrentUserAuthor) {
-      toast.errorNoRetry(t('common:cannot tip yourself'));
+      showToast({
+        type: ToastType.error,
+        title: t('error', { ns: 'common' }),
+        message: t('common:cannot tip yourself'),
+      });
     } else {
       handlePressSendTips(post);
     }
-  }, [handlePressSendTips, isCurrentUserAuthor, post, t, toast]);
+  }, [handlePressSendTips, isCurrentUserAuthor, post, showToast, t]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering

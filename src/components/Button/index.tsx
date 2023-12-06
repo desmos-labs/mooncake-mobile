@@ -18,7 +18,7 @@ interface Props
   /**
    * The text that will be rendered on the button.
    */
-  children?: string;
+  children?: React.ReactNode;
 
   /**
    * Optionally override the default button text color.

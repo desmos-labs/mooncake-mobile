@@ -12,5 +12,6 @@
   "transactionFailed": "Transaction failed!",
   "newPost": "New Posts",
   "postHidden": "Post hidden!",
-  "errorHidePost": "An error occurred. Please try again."
+  "errorHidePost": "An error occurred. Please try again.",
+  "success": "Success"
 }

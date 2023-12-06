@@ -1,11 +1,12 @@
 import React from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import HidePost from 'services/axios/requests/HidePost';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import { useTranslation } from 'react-i18next';
 import { useRemovePostByID } from '@recoil/posts';
 import { err, ok, Result } from 'neverthrow';
 import { useAddPostToHiddenPosts } from '@recoil/hiddenPosts';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 
 export interface SuccessfulHidePost {
   readonly postID: number;
@@ -18,7 +19,7 @@ const useHidePost = () => {
     throw new Error('Trying to hide a post, without an active account');
   }
 
-  const toast = useCustomToast();
+  const showToast = useToast();
   const { t } = useTranslation('toast');
   const removePostByID = useRemovePostByID(activeAccountAddress);
   const addPostToHidden = useAddPostToHiddenPosts();
@@ -28,7 +29,11 @@ const useHidePost = () => {
       const hidePostResult = await HidePost(postID);
 
       if (hidePostResult.isErr()) {
-        toast.errorNoRetry(t('errorHidePost'));
+        showToast({
+          toastType: ToastType.error,
+          title: t('error'),
+          message: t('errorHidePost'),
+        });
         return err(new Error('Error occurred while hiding post'));
       }
 
@@ -38,12 +43,17 @@ const useHidePost = () => {
       // Add postID to local hidden posts
       addPostToHidden(postID);
 
-      toast.success(t('postHidden'));
+      showToast({
+        toastType: ToastType.success,
+        title: t('success'),
+        message: t('postHidden'),
+      });
+
       return ok({
         postID,
       });
     },
-    [addPostToHidden, removePostByID, t, toast],
+    [addPostToHidden, removePostByID, showToast, t],
   );
 };
 

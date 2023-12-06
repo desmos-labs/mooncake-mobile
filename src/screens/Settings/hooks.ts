@@ -1,11 +1,9 @@
 import { toHex } from '@cosmjs/encoding';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useActiveAccount, useActiveAccountAddress } from '@recoil/accounts';
+import { useActiveAccount } from '@recoil/accounts';
 import { useSetting } from '@recoil/settings';
 import useRemoveAccount from 'hooks/accounts/useRemoveAccount';
-import useEnableOrDisableAuthorizations from 'hooks/authorizations/useEnableOrDisableAuthorizations';
-import useRefreshAuthorizations from 'hooks/authorizations/useRefreshAuthorizations';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import isAccountWithPrivateKey from 'lib/AccountUtils/type';
 import sleep from 'lib/sleep';
@@ -55,41 +53,6 @@ export const useShowPrivateKey = () => {
   return {
     canShowPrivateKey,
     showPrivateKey,
-  };
-};
-
-/**
- * Hook that provides a function to give or remove to the current user the grants
- * necessary to execute operations on behalf of the user.
- * @param requiredPermissions - List of messages types to which the user needs to
- * have access to use the simplified tx broadcasting logic.
- */
-export const useToggleSimplifiedTxBroadcast = (requiredPermissions: string[]) => {
-  const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Cannot toggle simplified tx broadcasting without an active account');
-  }
-
-  const simplifyTxBroadcastEnabled = useSetting('simplifyTxBroadcast');
-  const enableOrDisableAuthorizations = useEnableOrDisableAuthorizations();
-  const { refresh: refreshPermissions, loading } = useRefreshAuthorizations();
-
-  // Callback used to toggle the simplified tx broadcasting
-  const toggleSimplifiedTxBroadcast = React.useCallback(async () => {
-    await enableOrDisableAuthorizations(activeAccountAddress, requiredPermissions);
-  }, [activeAccountAddress, enableOrDisableAuthorizations, requiredPermissions]);
-
-  // Callback used to refetch the permissions
-
-  // As soon as the component is mounted, refetch the permissions
-  React.useEffect(() => {
-    refreshPermissions(activeAccountAddress, requiredPermissions);
-  }, [activeAccountAddress, refreshPermissions, requiredPermissions]);
-
-  return {
-    loading,
-    simplifyTxBroadcastEnabled,
-    toggleSimplifiedTxBroadcast,
   };
 };
 
