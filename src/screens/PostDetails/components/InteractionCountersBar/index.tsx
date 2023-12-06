@@ -11,7 +11,6 @@ import useStyles from './useStyles';
 type Props = {
   loading: boolean;
   interactionAuthors: DesmosProfile[];
-  tipsCounter: number;
   likesCounter: number;
   handlePressCounters: () => void;
 };
@@ -24,7 +23,7 @@ const InteractionCountersBar = (props: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
 
-  const { loading, interactionAuthors, tipsCounter, likesCounter, handlePressCounters } = props;
+  const { loading, interactionAuthors, likesCounter, handlePressCounters } = props;
 
   const calculatedWidth = useMemo(() => {
     switch (interactionAuthors.length) {
@@ -56,7 +55,7 @@ const InteractionCountersBar = (props: Props) => {
           </Box>
         )}
         <Typography.Button2 style={styles.text}>
-          {t('likes and tips', { likesCounter, tipsCounter })}
+          {t('likes and tips', { likesCounter })}
         </Typography.Button2>
       </TouchableOpacity>
     </View>

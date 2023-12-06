@@ -6,7 +6,6 @@ import { isCommentReply, Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
 import { DesmosProfile } from 'types/desmos';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import { useTranslation } from 'react-i18next';
 import usePost from 'hooks/posts/usePost';
@@ -158,24 +157,6 @@ export const useHandlePressReportPost = () => {
   return React.useCallback(
     (post: Post) => {
       navigate(ROUTES.POST_REPORT, { post });
-    },
-    [navigate],
-  );
-};
-
-/**
- * Hook that allows to handle the sending of tips to a post.
- */
-export const useHandlePressSendTips = () => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
-  return React.useCallback(
-    (post: Post) => {
-      navigate(ROUTES.POST_SEND_TIPS, {
-        target: {
-          type: TipTargetType.POST,
-          post,
-        },
-      });
     },
     [navigate],
   );

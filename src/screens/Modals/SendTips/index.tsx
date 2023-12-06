@@ -1,4 +1,3 @@
-import { infoIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -8,15 +7,14 @@ import { Formik } from 'formik';
 import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { HStack, useTheme } from 'native-base';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { useTheme } from 'native-base';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins } from 'lib/FormatUtils';
-import { TipTarget } from 'types/tips';
 import CommonStyles from 'config/theme/CommonStyles';
 import StyledSpinner from 'components/StyledSpinner';
 import useToast from 'hooks/toasts/useToast';
@@ -26,14 +24,13 @@ import {
   FormValues,
   useDefaultTipsAmounts,
   useInitialFormValues,
-  useSendTipToTarget,
+  useSendTipToUser,
   useShouldDisableTipButton,
-  useTipFeePercentage,
   useValidateForm,
 } from './hooks';
 
 export type SendTipsParams = {
-  target: TipTarget;
+  user: string;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_SEND_TIPS>;
@@ -50,14 +47,13 @@ const SendTips = (props: NavProps) => {
   const showToast = useToast();
   const { route } = props;
   const { params } = route;
-  const { target } = params;
+  const { user } = params;
 
   // -------------------------------------------------------------------------------------
   // --- Tip config
   // -------------------------------------------------------------------------------------
 
   const defaultTipsAmounts = useDefaultTipsAmounts();
-  const tipFee = useTipFeePercentage();
 
   // -------------------------------------------------------------------------------------
   // --- User balance
@@ -81,17 +77,18 @@ const SendTips = (props: NavProps) => {
   // --- Form submission
   // -------------------------------------------------------------------------------------
 
-  const sendTip = useSendTipToTarget(target);
+  const sendTip = useSendTipToUser();
 
   const [message, setMessage] = useState<string>('');
   const [sendingTip, setSendingTip] = useState<boolean>(false);
   const handleSubmitForm = useCallback(
     async (values: FormValues) => {
       setSendingTip(true);
-      const result = await sendTip(values);
+      const result = await sendTip(user, values);
       if (result.isErr()) {
         showToast({
           toastType: ToastType.error,
+          title: t('error', { ns: 'common' }),
           message: result.error.message,
         });
       }
@@ -204,16 +201,6 @@ const SendTips = (props: NavProps) => {
                     {formatCoins(balance)}
                   </Typography.Body7>
                 )}
-                <HStack alignItems="center">
-                  <Image source={infoIcon} style={styles.infoIcon} />
-                  <Typography.Body7
-                    style={{
-                      color: theme.colors.surfaceBlack,
-                      marginVertical: theme.spacing.s,
-                    }}>
-                    {t('warning fee', { fee: tipFee })}
-                  </Typography.Body7>
-                </HStack>
 
                 <Spacer paddingVertical={20}>
                   <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>

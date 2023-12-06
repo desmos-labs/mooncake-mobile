@@ -7,7 +7,6 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { View } from 'react-native';
 import PostReactions from 'screens/PostInteraction/PostReactions';
-import PostTips from 'screens/PostInteraction/PostTips';
 import { Post } from 'types/posts';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import useStyles from './useStyles';
@@ -51,14 +50,6 @@ const PostInteractionTabs = () => {
             }}
             initialParams={params.params}
             component={PostReactions}
-          />
-          <Tab.Screen
-            name={ROUTES.POST_TIPS}
-            options={{
-              tabBarLabel: 'Tips',
-            }}
-            component={PostTips}
-            initialParams={params.params}
           />
         </Tab.Navigator>
       </View>

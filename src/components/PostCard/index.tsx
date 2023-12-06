@@ -14,7 +14,6 @@ import {
   useHandlePressDetails,
   useHandlePressHidePost,
   useHandlePressReport,
-  useHandlePressTip,
 } from 'components/PostCard/hooks';
 import useStyles from './useStyles';
 
@@ -46,7 +45,6 @@ const PostCard = (props: PostCardProps) => {
   const handlePressDetails = useHandlePressDetails();
   const handlePressHidePost = useHandlePressHidePost();
   const handlePressComments = useHandlePressComments();
-  const handlePressTip = useHandlePressTip();
   const handlePressReport = useHandlePressReport();
   const handlePressBlock = useHandlePressBlock();
 
@@ -79,10 +77,6 @@ const PostCard = (props: PostCardProps) => {
     if (isPostPending(post)) return;
     handlePressComments(post);
   }, [handlePressComments, post]);
-
-  const onPressTip = React.useCallback(() => {
-    handlePressTip(post);
-  }, [handlePressTip, post]);
 
   const onPressBlock = React.useCallback(() => {
     handlePressBlock(post.author);
@@ -126,9 +120,7 @@ const PostCard = (props: PostCardProps) => {
       {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
 
       {/* Post bottom bar */}
-      {!isPending && (
-        <PostCardBottomBar post={post} onPressComment={onPressComment} onPressTip={onPressTip} />
-      )}
+      {!isPending && <PostCardBottomBar post={post} onPressComment={onPressComment} />}
     </TouchableOpacity>
   );
 };
