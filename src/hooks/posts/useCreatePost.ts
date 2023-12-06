@@ -8,14 +8,7 @@ import { uploadPicture } from 'lib/UploadUtils';
 import { err, Result } from 'neverthrow';
 import React, { useState } from 'react';
 import { isCanceledOperationError } from 'types/error';
-import {
-  Post,
-  PostAttachment,
-  PostAttachmentType,
-  PostReference,
-  PostReferenceType,
-  PostStatus,
-} from 'types/posts';
+import { Post, PostReference, PostReferenceType, PostStatus } from 'types/posts';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -38,18 +31,6 @@ const getPostReferences = (
   };
 
   return [...customReferences, replyReference];
-};
-
-const convertAttachment = (result: any, index: number): PostAttachment => {
-  return {
-    id: index,
-    content: {
-      type: PostAttachmentType.MEDIA,
-      uri: result.uri,
-      mimeType: result.mimeType,
-    },
-    size: result.size,
-  };
 };
 
 /**
@@ -106,6 +87,8 @@ const useCreatePost = () => {
   const broadcastTx = useBroadcastTx();
   const [postPicturesUris, setPostPicturesUris] = useState<string[]>([]);
   const [state, setState] = React.useState<CreatePostState>({ type: CreatePostStateType.IDLE });
+
+  console.log(postPicturesUris);
 
   // Callback that creates a post
   const createPost = React.useCallback(
@@ -171,6 +154,7 @@ const useCreatePost = () => {
       // Broadcast the message
       setState({ type: CreatePostStateType.BROADCASTING_TRANSACTION });
       // TODO FIX ME
+      // @ts-ignore
       const result = await broadcastTx([msgCreatePost]);
       if (result.isErr()) {
         // If there is an error, delete the post from the local storage

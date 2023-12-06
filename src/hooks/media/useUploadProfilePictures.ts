@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
-import { Result } from 'neverthrow';
-import { PictureType, UploadPictureState, UploadPictureStateType } from 'types/uploadPictures';
 import useUploadPicture, { MediaPostResponse } from 'hooks/useUploadPicture';
+import { Result } from 'neverthrow';
+import React, { useCallback } from 'react';
+import { PictureType, UploadPictureState, UploadPictureStateType } from 'types/uploadPictures';
 
 const useUploadProfilePictures = () => {
   const uploadMedia = useUploadPicture();
@@ -57,13 +57,13 @@ const useUploadProfilePictures = () => {
         coverPictureUrl: uploadCoverPictureResult?.isOk()
           ? uploadCoverPictureResult.value.url
           : isCoverPictureToUpload
-          ? undefined
-          : coverPicture,
+            ? undefined
+            : coverPicture,
         profilePictureUrl: uploadProfilePictureResult?.isOk()
           ? uploadProfilePictureResult.value.url
           : isProfilePictureToUpload
-          ? undefined
-          : profilePicture,
+            ? undefined
+            : profilePicture,
       });
       return {
         coverPictureUrl: uploadCoverPictureResult?.isOk()
