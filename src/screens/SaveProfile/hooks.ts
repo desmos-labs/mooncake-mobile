@@ -146,6 +146,9 @@ const getValueToSave = (
  * while signing the transaction. If no account is provided, then the
  * current user account will be used instead.
  * @param onProfileSaved {() => void} - Callback to be called when the profile
+ * has been saved on-chain.
+ * @param onCompleteOrError {() => void} - Callback to be called when the transaction
+ * has been completed or an error occurred.
  * @param customHeader {string | undefined} - Optional custom header to be used inside the transaction screen.
  * @param customBody {string | undefined} - Optional custom body to be used inside the transaction screen.
  */
@@ -153,16 +156,17 @@ export const useSubmitForm = (
   profile: DesmosProfile | undefined,
   accountWithWallet: AccountWithWallet | undefined,
   onProfileSaved: () => void,
+  onCompleteOrError: () => void,
   customHeader?: string,
   customBody?: string,
 ) => {
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
   const activeAccount = useActiveAccount();
-  const { status, saveProfile } = useSaveProfile();
+  const saveProfile = useSaveProfile();
 
   // Callback used when the user pressed the button to save the profile
-  const submitForm = useCallback(
+  return useCallback(
     async (
       values: SaveProfileFormState,
       profilePic: string | undefined,
@@ -176,6 +180,7 @@ export const useSubmitForm = (
 
       // Get the on-chain profile
       const onChainProfile = await getOnChainProfile(profileAddress);
+
       // Get the profile to save
       const profileToSaveOnChain: DesmosProfile = {
         dTag: getValueToSave(values.dTag ?? profile?.dTag, onChainProfile?.dTag),
@@ -197,13 +202,12 @@ export const useSubmitForm = (
         coverPicture: profileToSaveOnChain.coverPicture ?? profile?.coverPicture,
       };
 
-      const saveProfileResult = await saveProfile(
-        profileToSaveOnChain,
-        accountWithWallet,
+      const saveProfileResult = await saveProfile(profileToSaveOnChain, accountWithWallet, {
         onProfileSaved,
         customHeader,
         customBody,
-      );
+        onCompleteOrError,
+      });
 
       if (saveProfileResult && saveProfileResult.isErr()) {
         return err(saveProfileResult.error);
@@ -224,9 +228,4 @@ export const useSubmitForm = (
       storeProfile,
     ],
   );
-
-  return {
-    status,
-    submitForm,
-  };
 };

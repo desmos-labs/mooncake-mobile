@@ -1,26 +1,20 @@
-import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useUploadProfilePictures from 'hooks/media/useUploadProfilePictures';
-import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
 import { err } from 'neverthrow';
-import React, { useState } from 'react';
-import { Alert } from 'react-native';
+import React from 'react';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
+import { scheduleTask } from 'lib/BackgroundTaskUtils';
+import SaveProfileTask from 'services/tasks/SaveProfile';
+import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
+import { useTranslation } from 'react-i18next';
 
-/**
- * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
- * @param value {string | undefined} Value to be replaced, if undefined.
- */
-const replaceUndefined = (value: string | undefined): string => {
-  return value ?? DoNotModify;
-};
-
-export enum SaveProfileStatus {
-  UNDEFINED,
-  UPLOADING_PICTURES,
-  BROADCASTING_TX,
-  DONE,
+export interface SaveProfileOptions {
+  readonly customHeader?: string;
+  readonly customBody?: string;
+  readonly onProfileSaved?: () => void;
+  readonly onCompleteOrError?: () => void;
 }
 
 /**
@@ -29,70 +23,85 @@ export enum SaveProfileStatus {
  * If no account is provided, the current user account will be used instead.
  */
 const useSaveProfile = () => {
-  const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
-  const activeAccountAddress = useActiveAccountAddress()!;
-  const signAndBroadcastTx = useSignAndBroadcastTx();
-  const { uploadPictures } = useUploadProfilePictures();
+  const { t } = useTranslation('createProfile');
+  const showToast = useToast();
 
-  const saveProfile = React.useCallback(
+  const activeAccountAddress = useActiveAccountAddress()!;
+  const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
+
+  return React.useCallback(
     async (
-      params: DesmosProfile,
+      profile: DesmosProfile,
       providedAccount: AccountWithWallet | undefined,
-      onProfileSaved: () => void,
-      customHeader?: string,
-      customBody?: string,
+      options?: SaveProfileOptions,
     ) => {
-      const addressToUse = providedAccount ? providedAccount.account.address : activeAccountAddress;
+      // Get the address to be used in order to save the profile
+      const addressToUse = providedAccount?.account?.address ?? activeAccountAddress;
       if (addressToUse === undefined) {
         return err(new Error('Cannot save a profile without an active account or address'));
       }
 
-      // Upload the profile and cover pictures
-      setStatus(SaveProfileStatus.UPLOADING_PICTURES);
-      const uploadPictureResult = await uploadPictures(params.profilePicture, params.coverPicture);
-
-      if (!uploadPictureResult) {
-        setStatus(SaveProfileStatus.UNDEFINED);
-        Alert.alert('Error', 'An error occurred while uploading the pictures');
-        return;
+      // Get the Desmos client
+      const clientAndWalletResult = await prepareDesmosClientAndWallet();
+      if (clientAndWalletResult.isErr()) {
+        return err(clientAndWalletResult.error);
       }
-      const { profilePictureUrl, coverPictureUrl } = uploadPictureResult;
 
-      // Build the message to save the profile on-chain
-      const { dTag, nickname, bio } = params;
-      const msgSaveProfile: Profiles.v3.MsgSaveProfileEncodeObject = {
-        typeUrl: Profiles.v3.MsgSaveProfileTypeUrl,
-        value: {
-          creator: addressToUse,
-          dtag: replaceUndefined(dTag),
-          nickname: replaceUndefined(nickname),
-          bio: replaceUndefined(bio),
-          profilePicture: replaceUndefined(profilePictureUrl),
-          coverPicture: replaceUndefined(coverPictureUrl),
+      const { desmosClient } = clientAndWalletResult.value;
+
+      const taskReference = await scheduleTask(
+        'Broadcast Save Profile',
+        SaveProfileTask,
+        {
+          desmosClient,
+          profile,
+          signer: addressToUse,
         },
-      };
-
-      // Sign and broadcast the transaction
-      setStatus(SaveProfileStatus.BROADCASTING_TX);
-
-      await signAndBroadcastTx([msgSaveProfile], {
-        memo: 'Broadcast using Butter',
-        onLoading: {
-          popup: {
-            title: customHeader,
-            description: customBody,
+        {
+          title: options?.customHeader ?? t('saving profile'),
+          desc: options?.customBody ?? t('saving profile body'),
+          progressBar: {
+            indeterminate: true,
           },
         },
-      });
-      onProfileSaved();
-    },
-    [activeAccountAddress, signAndBroadcastTx, uploadPictures],
-  );
+      );
 
-  return {
-    status,
-    saveProfile,
-  };
+      taskReference
+        .onStart(() => {
+          showToast({
+            toastType: ToastType.loading,
+            message: options?.customBody ?? t('saving profile body'),
+          });
+        })
+        .onComplete(() => {
+          if (options?.onProfileSaved) {
+            options.onProfileSaved();
+          }
+
+          if (options?.onCompleteOrError) {
+            options.onCompleteOrError();
+          }
+
+          showToast({
+            toastType: ToastType.success,
+            title: t('success', { ns: 'common' }),
+            message: t('profile saved'),
+          });
+        })
+        .onError(({ error }) => {
+          if (options?.onCompleteOrError) {
+            options.onCompleteOrError();
+          }
+
+          showToast({
+            toastType: ToastType.error,
+            title: t('error', { ns: 'common' }),
+            message: error.message,
+          });
+        });
+    },
+    [activeAccountAddress],
+  );
 };
 
 export default useSaveProfile;

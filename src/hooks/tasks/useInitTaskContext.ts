@@ -49,7 +49,7 @@ const useInitTaskContext = () => {
       // Broadcast the messages.
       return signAndBroadcastWithGranter(postHog!, client, signer, msgs, {
         feeGranter,
-        memo,
+        memo: memo ?? 'Broadcast using Butter',
       }).then(unwrapResult);
     },
     [apolloClient, chainInfo, postHog],

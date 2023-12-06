@@ -9,6 +9,7 @@
   "addBio": "Add a bio to your profile (optional)",
   "out of gas": "Out of gas, your Desmos Profile has not been not created",
   "created": "Your Desmos Profile has been created",
-  "create profile": "Creating profile",
-  "create profile body": "We are setting up your amazing profile..."
+  "saving profile": "Saving profile",
+  "saving profile body": "We are saving up your amazing profile...",
+  "profile saved": "Your profile has been saved"
 }

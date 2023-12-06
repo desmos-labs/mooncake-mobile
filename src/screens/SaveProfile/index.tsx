@@ -11,13 +11,12 @@ import { CameraType } from 'expo-image-picker';
 import { Formik } from 'formik';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import useProfileParams from 'hooks/profiles/useProfileParams';
-import { SaveProfileStatus } from 'hooks/profiles/useSaveProfile';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   InteractionManager,
@@ -87,9 +86,10 @@ const SaveProfile = (props: NavProps) => {
 
   const profile = params?.profile;
   const accountWithWallet = params?.accountWithWallet;
-  const customTransactionHeader = params?.customTransactionHeader ?? t('create profile');
-  const customTransactionBody = params?.customTransactionBody ?? t('create profile body');
+  const customTransactionHeader = params?.customTransactionHeader;
+  const customTransactionBody = params?.customTransactionBody;
   const onProfileSaved = params?.onProfileSaved || (() => {});
+  const onCompleteOrError = () => {};
 
   // -------------------------------------------------------------------------------------
   // --- Styles
@@ -179,30 +179,24 @@ const SaveProfile = (props: NavProps) => {
   }, [editCoverPicture, navigate, selectCoverPicture, takePhoto]);
 
   // Hook to submit the form and check the status of the profile saving.
-  const { status, submitForm } = useSubmitForm(
+  const submitForm = useSubmitForm(
     profile,
     accountWithWallet,
     onProfileSaved,
+    onCompleteOrError,
     customTransactionHeader,
     customTransactionBody,
   );
 
   // Callback used when the user presses the Save button.
-  const onEditProfile = useCallback(
+  const onSaveProfile = useCallback(
     async (values: SaveProfileFormState) => {
       InteractionManager.runAfterInteractions(async () => {
         await submitForm(values, profilePic, coverPic);
+        goBack();
       });
     },
     [coverPic, profilePic, submitForm],
-  );
-
-  /**
-   * Value that tells whether the profile is being saved or not.
-   */
-  const isLoading = useMemo(
-    () => status !== SaveProfileStatus.UNDEFINED && status !== SaveProfileStatus.DONE,
-    [status],
   );
 
   // -------------------------------------------------------------------------------------
@@ -211,7 +205,6 @@ const SaveProfile = (props: NavProps) => {
 
   return (
     <DView
-      showLoadingOverlay={isLoading}
       style={styles.container}
       backgroundImage={coverPictureBackground}
       backgroundColor={theme.colors.white}>
@@ -230,7 +223,7 @@ const SaveProfile = (props: NavProps) => {
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
-          onSubmit={onEditProfile}>
+          onSubmit={onSaveProfile}>
           {({ setFieldValue, values, handleSubmit, errors }) => (
             <>
               <ScrollView
