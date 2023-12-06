@@ -105,10 +105,6 @@ const SaveProfile = (props: NavProps) => {
   // --- Screen state
   // -------------------------------------------------------------------------------------
 
-  // Ref that tells if the screen should call the onCancel
-  // callback or not when the screen is dismissed.
-  const handleCancel = useRef(true);
-
   const [profilePic, setProfilePic] = useState(profile?.profilePicture);
   const profilePicBackground = useGetImageBackground(
     profilePic,
