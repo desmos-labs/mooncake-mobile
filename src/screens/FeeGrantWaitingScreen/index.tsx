@@ -12,7 +12,7 @@ import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
-import useSaveProfile from 'hooks/profiles/useSaveProfile';
+import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
 import GRANTER_ADDRESS, { hasSaveProfileAllowance } from 'lib/grantsUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -52,7 +52,7 @@ const FeeGrantWaitingScreen = () => {
   const { feeGrants, startCheckingFeeGrants, stopCheckingFeeGrants } =
     useGetAuthorizationInformation(activeAccount?.address!);
 
-  const saveProfile = useSaveProfile();
+  const saveProfile = useNavigateToProfileEdit();
 
   // -------------------------------------------------------------------------------------
   // --- Actions

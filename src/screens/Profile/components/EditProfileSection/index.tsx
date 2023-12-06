@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import useSaveProfile from 'hooks/profiles/useSaveProfile';
+import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
 import { DesmosProfile } from 'types/desmos';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import Button from 'components/Button';
@@ -28,7 +28,7 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const saveProfile = useSaveProfile();
+  const saveProfile = useNavigateToProfileEdit();
   const returnToCurrentScreen = useReturnToCurrentScreen();
 
   // -------------------------------------------------------------------------------------

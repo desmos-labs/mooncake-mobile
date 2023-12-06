@@ -1,22 +1,106 @@
-import { useNavigation } from '@react-navigation/native';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import { err } from 'neverthrow';
 import React from 'react';
-import ROUTES from 'navigation/routes';
-import { SaveProfileParams } from 'screens/SaveProfile';
+import { AccountWithWallet } from 'types/account';
+import { DesmosProfile } from 'types/desmos';
+import { scheduleTask } from 'lib/BackgroundTaskUtils';
+import SaveProfileTask from 'services/tasks/SaveProfile';
+import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
+import { useTranslation } from 'react-i18next';
+
+export interface SaveProfileOptions {
+  readonly customHeader?: string;
+  readonly customBody?: string;
+  readonly onProfileSaved?: () => void;
+  readonly onCompleteOrError?: () => void;
+}
 
 /**
- * Hooks that provide a function that start a flow that allow the user
- * to create or edit a profile.
+ * Hook that allows to save a Desmos profile on-chain.
+ * The profile will be saved using the given parameters and account.
+ * If no account is provided, the current user account will be used instead.
  */
 const useSaveProfile = () => {
-  const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const { t } = useTranslation('createProfile');
+  const showToast = useToast();
+
+  const activeAccountAddress = useActiveAccountAddress()!;
+  const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
   return React.useCallback(
-    (params?: SaveProfileParams) => {
-      navigate(ROUTES.SAVE_PROFILE, params);
+    async (
+      profile: DesmosProfile,
+      providedAccount: AccountWithWallet | undefined,
+      options?: SaveProfileOptions,
+    ) => {
+      // Get the address to be used in order to save the profile
+      const addressToUse = providedAccount?.account?.address ?? activeAccountAddress;
+      if (addressToUse === undefined) {
+        return err(new Error('Cannot save a profile without an active account or address'));
+      }
+
+      // Get the Desmos client
+      const clientAndWalletResult = await prepareDesmosClientAndWallet();
+      if (clientAndWalletResult.isErr()) {
+        return err(clientAndWalletResult.error);
+      }
+
+      const { desmosClient } = clientAndWalletResult.value;
+
+      const taskReference = await scheduleTask(
+        'Broadcast Save Profile',
+        SaveProfileTask,
+        {
+          desmosClient,
+          profile,
+          signer: addressToUse,
+        },
+        {
+          title: options?.customHeader ?? t('saving profile'),
+          desc: options?.customBody ?? t('saving profile body'),
+          progressBar: {
+            indeterminate: true,
+          },
+        },
+      );
+
+      taskReference
+        .onStart(() => {
+          showToast({
+            toastType: ToastType.loading,
+            message: options?.customBody ?? t('saving profile body'),
+          });
+        })
+        .onComplete(() => {
+          if (options?.onProfileSaved) {
+            options.onProfileSaved();
+          }
+
+          if (options?.onCompleteOrError) {
+            options.onCompleteOrError();
+          }
+
+          showToast({
+            toastType: ToastType.success,
+            title: t('success', { ns: 'common' }),
+            message: t('profile saved'),
+          });
+        })
+        .onError(({ error }) => {
+          if (options?.onCompleteOrError) {
+            options.onCompleteOrError();
+          }
+
+          showToast({
+            toastType: ToastType.error,
+            title: t('error', { ns: 'common' }),
+            message: error.message,
+          });
+        });
     },
-    [navigate],
+    [activeAccountAddress],
   );
 };
 

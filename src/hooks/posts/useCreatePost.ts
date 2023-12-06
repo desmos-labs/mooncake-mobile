@@ -169,6 +169,7 @@ const useCreatePost = () => {
           post,
           signer: wallet.address,
         },
+        // TODO: Use localized messages here
         {
           title: 'Creating post',
           desc: 'We are creating your post',
