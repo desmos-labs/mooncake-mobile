@@ -73,7 +73,10 @@ const useOpenPictureEditor = () => {
   const editPostPicture = useCallback(
     (
       imagePath: string,
-      onEditedPicture: (editedPicturePath: string) => void,
+      onEditedPicture: (
+        editedPicturePath: string,
+        dimensions: { width: number; height: number },
+      ) => void,
       onError?: (err: any) => void,
     ) => {
       ImagePicker.openCropper({
@@ -95,7 +98,7 @@ const useOpenPictureEditor = () => {
         height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
       })
         .then(image => {
-          onEditedPicture(image.path);
+          onEditedPicture(image.path, { width: image.width, height: image.height });
         })
         .catch(err => {
           onError && onError(err);

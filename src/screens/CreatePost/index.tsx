@@ -91,9 +91,11 @@ const CreatePost = () => {
 
   const { imageFromLibrary: selectPicture } = useImageFromDevice({
     onImageSelected: imageUri => {
-      editPostPicture(imageUri, editedPicturePath => {
+      editPostPicture(imageUri, (editedPicturePath, dimensions) => {
         addPostAttachment({
           uri: editedPicturePath,
+          width: dimensions.width,
+          height: dimensions.height,
         });
       });
     },
@@ -103,9 +105,11 @@ const CreatePost = () => {
     takePhoto(CameraType.front).then(result => {
       if (result?.status === TakePictureActionResults.Taken) {
         const imageUri = result.uri;
-        editPostPicture(imageUri, editedPicturePath => {
+        editPostPicture(imageUri, (editedPicturePath, dimensions) => {
           addPostAttachment({
             uri: editedPicturePath,
+            width: dimensions.width,
+            height: dimensions.height,
           });
         });
       }

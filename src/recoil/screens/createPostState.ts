@@ -21,6 +21,8 @@ export interface CreatePostState
     | 'creationDate'
     | 'transactions'
     | 'author'
+    | 'hasUserLiked'
+    | 'lastUpdatedDate'
   > {
   /**
    * ID of the subspace section inside which this post has been created.
@@ -59,8 +61,6 @@ const DefaultCreatePostState: CreatePostState = {
   entities: undefined,
   references: [],
   replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
-  lastUpdatedDate: '',
-  hasUserLiked: false,
 };
 
 /**
