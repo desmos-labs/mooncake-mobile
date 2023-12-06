@@ -1,23 +1,98 @@
-import { useNavigation } from '@react-navigation/native';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
-import React from 'react';
-import ROUTES from 'navigation/routes';
-import { SaveProfileParams } from 'screens/SaveProfile';
+import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import useUploadProfilePictures from 'hooks/media/useUploadProfilePictures';
+import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import { err } from 'neverthrow';
+import React, { useState } from 'react';
+import { Alert } from 'react-native';
+import { AccountWithWallet } from 'types/account';
+import { DesmosProfile } from 'types/desmos';
 
 /**
- * Hooks that provide a function that start a flow that allow the user
- * to create or edit a profile.
+ * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
+ * @param value {string | undefined} Value to be replaced, if undefined.
+ */
+const replaceUndefined = (value: string | undefined): string => {
+  return value ?? DoNotModify;
+};
+
+export enum SaveProfileStatus {
+  UNDEFINED,
+  UPLOADING_PICTURES,
+  BROADCASTING_TX,
+  DONE,
+}
+
+/**
+ * Hook that allows to save a Desmos profile on-chain.
+ * The profile will be saved using the given parameters and account.
+ * If no account is provided, the current user account will be used instead.
  */
 const useSaveProfile = () => {
-  const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
+  const activeAccountAddress = useActiveAccountAddress()!;
+  const signAndBroadcastTx = useSignAndBroadcastTx();
+  const { uploadPictures } = useUploadProfilePictures();
 
-  return React.useCallback(
-    (params?: SaveProfileParams) => {
-      navigate(ROUTES.SAVE_PROFILE, params);
+  const saveProfile = React.useCallback(
+    async (
+      params: DesmosProfile,
+      providedAccount: AccountWithWallet | undefined,
+      onProfileSaved: () => void,
+      customHeader?: string,
+      customBody?: string,
+    ) => {
+      const addressToUse = providedAccount ? providedAccount.account.address : activeAccountAddress;
+      if (addressToUse === undefined) {
+        return err(new Error('Cannot save a profile without an active account or address'));
+      }
+
+      // Upload the profile and cover pictures
+      setStatus(SaveProfileStatus.UPLOADING_PICTURES);
+      const uploadPictureResult = await uploadPictures(params.profilePicture, params.coverPicture);
+
+      if (!uploadPictureResult) {
+        setStatus(SaveProfileStatus.UNDEFINED);
+        Alert.alert('Error', 'An error occurred while uploading the pictures');
+        return;
+      }
+      const { profilePictureUrl, coverPictureUrl } = uploadPictureResult;
+
+      // Build the message to save the profile on-chain
+      const { dTag, nickname, bio } = params;
+      const msgSaveProfile: Profiles.v3.MsgSaveProfileEncodeObject = {
+        typeUrl: Profiles.v3.MsgSaveProfileTypeUrl,
+        value: {
+          creator: addressToUse,
+          dtag: replaceUndefined(dTag),
+          nickname: replaceUndefined(nickname),
+          bio: replaceUndefined(bio),
+          profilePicture: replaceUndefined(profilePictureUrl),
+          coverPicture: replaceUndefined(coverPictureUrl),
+        },
+      };
+
+      // Sign and broadcast the transaction
+      setStatus(SaveProfileStatus.BROADCASTING_TX);
+
+      await signAndBroadcastTx([msgSaveProfile], {
+        memo: 'Broadcast using Butter',
+        onLoading: {
+          popup: {
+            title: customHeader,
+            description: customBody,
+          },
+        },
+      });
+      onProfileSaved();
     },
-    [navigate],
+    [activeAccountAddress, signAndBroadcastTx, uploadPictures],
   );
+
+  return {
+    status,
+    saveProfile,
+  };
 };
 
 export default useSaveProfile;

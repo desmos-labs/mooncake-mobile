@@ -11,7 +11,7 @@ import { CameraType } from 'expo-image-picker';
 import { Formik } from 'formik';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import useProfileParams from 'hooks/profiles/useProfileParams';
-import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
+import { SaveProfileStatus } from 'hooks/profiles/useSaveProfile';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { useTheme } from 'native-base';

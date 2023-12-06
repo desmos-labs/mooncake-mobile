@@ -6,7 +6,7 @@ import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import useUpdateAccount from 'hooks/accounts/useUpdateAccount';
 import useCheckBiometrics from 'hooks/biometrics/useCheckBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
-import useSaveProfile from 'hooks/profiles/useSaveProfile';
+import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
@@ -63,7 +63,7 @@ const useHooks = () => {
   const storeAccount = useStoreAccount();
   const updateAccount = useUpdateAccount();
   const storeProfile = useStoreProfile();
-  const saveProfile = useSaveProfile();
+  const saveProfile = useNavigateToProfileEdit();
   const enableBiometrics = useEnableBiometrics();
   const setLoginFlowState = useSetLoginFlowState();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();

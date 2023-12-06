@@ -3,7 +3,7 @@ import { useActiveAccount } from '@recoil/accounts';
 import { useStoreProfile } from '@recoil/profiles';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
-import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
+import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import ROUTES from 'navigation/routes';
 import { err, ok, Result } from 'neverthrow';
 import React, { useCallback, useMemo } from 'react';
@@ -159,7 +159,7 @@ export const useSubmitForm = (
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
   const activeAccount = useActiveAccount();
-  const { status, saveProfile } = useSaveProfileOnChain();
+  const { status, saveProfile } = useSaveProfile();
 
   // Callback used when the user pressed the button to save the profile
   const submitForm = useCallback(
