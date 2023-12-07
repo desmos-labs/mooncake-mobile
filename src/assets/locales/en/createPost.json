@@ -1,10 +1,10 @@
 {
-  "media": "Media",
   "text": "Text",
-  "accessYourPhotos": "Access your photos",
-  "noAccess": "Butter doesn't have access to your photos",
-  "allowAccess": "Allow Access",
-  "tapToType": "Tap to type..",
   "creating post": "Your post is being created...",
-  "post created": "Your post has been created!"
+  "post created": "Your post has been created!",
+  "post": "Post",
+  "write a comment": "Write a comment...",
+  "reply to": "Reply to {{name}}",
+  "your reply": "Your reply...",
+  "write something": "Write something..."
 }

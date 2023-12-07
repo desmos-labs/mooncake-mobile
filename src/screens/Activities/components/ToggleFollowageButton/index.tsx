@@ -20,7 +20,7 @@ export interface NotificationButtonProps {
 const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const theme = useTheme();
   const styles = useStyles();
-  const { t } = useTranslation('followingAndFollowers');
+  const { t } = useTranslation('relationships');
 
   const { user } = props;
 

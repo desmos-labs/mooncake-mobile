@@ -238,7 +238,7 @@ const SaveProfile = (props: NavProps) => {
                     style={styles.inputStyle}
                     inputRef={nicknameInputRef}
                     value={values.nickname}
-                    placeholder={t('enterNickname')}
+                    placeholder={t('enter nickname')}
                     onChangeText={value => {
                       setFieldValue('nickname', value, true);
                     }}
@@ -259,14 +259,14 @@ const SaveProfile = (props: NavProps) => {
                   )}
                   <>
                     <Typography.Subtitle2 style={styles.inputLabel}>
-                      {t('dTag')}
+                      {t('dtag')}
                     </Typography.Subtitle2>
                     <DTextInput
                       style={styles.inputStyle}
                       value={values.dTag}
-                      placeholder={t('enterDTag')}
+                      placeholder={t('enter dtag')}
                       onChangeText={value => {
-                        setFieldValue('dTag', value, true);
+                        setFieldValue('dtag', value, true);
                       }}
                       error={!!errors.dTag}
                       inputRef={dTagInputRef}
@@ -293,7 +293,7 @@ const SaveProfile = (props: NavProps) => {
                     multiline={true}
                     scrollEnabled={false}
                     inputStyle={styles.bioInput}
-                    placeholder={t('addBio')}
+                    placeholder={t('add bio')}
                     onChangeText={value => {
                       setFieldValue('bio', value, true);
                     }}

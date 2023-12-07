@@ -147,22 +147,26 @@ const CommentItem = (props: CommentItemProps) => {
 
     const menuItems = [
       {
-        label: isFollowing ? t('home:unfollow') : t('home:follow'),
+        label: isFollowing
+          ? t('unfollow', { ns: 'relationships' })
+          : t('follow', { ns: 'relationships' }),
         onPress: () => handlePressFollow(comment.author),
         icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
       },
       {
-        label: t('home:report'),
+        label: t('report', { ns: 'postOperations' }),
         onPress: () => handlePressReport(comment),
         icon: reportIcon,
       },
       {
-        label: t('home:hide'),
+        label: t('hide', { ns: 'postOperations' }),
         onPress: () => handlePressHidePost(),
         icon: hidePost,
       },
       {
-        label: isBlocked ? t('home:unblock') : t('home:block'),
+        label: isBlocked
+          ? t('unblock', { ns: 'relationships' })
+          : t('block', { ns: 'relationships' }),
         onPress: () => handlePressBlock(comment.author),
         icon: isBlocked ? unblock : block,
       },
@@ -215,7 +219,7 @@ const CommentItem = (props: CommentItemProps) => {
         <View style={styles.bottomGroup}>
           <View>
             <Typography.Body7 style={styles.subTextStyle}>
-              {isPostPending(comment) ? t('common:broadcasting') : formattedDate}
+              {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : formattedDate}
             </Typography.Body7>
           </View>
 

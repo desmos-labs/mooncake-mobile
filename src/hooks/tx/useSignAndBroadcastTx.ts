@@ -127,7 +127,7 @@ export const useSignAndBroadcastTx = () => {
       if (result.isErr()) {
         showToast({
           toastType: ToastType.error,
-          title: t('error'),
+          title: t('error', { ns: 'common' }),
           message: result.error.message,
         });
         return;
@@ -170,7 +170,7 @@ export const useSignAndBroadcastTx = () => {
           }
           showToast({
             toastType: ToastType.success,
-            title: options?.onSuccess?.popup?.title ?? t('success'),
+            title: options?.onSuccess?.popup?.title ?? t('success', { ns: 'common' }),
             message: options?.onSuccess?.popup?.description ?? t('operation completed'),
           });
         })
@@ -181,7 +181,7 @@ export const useSignAndBroadcastTx = () => {
           }
           showToast({
             toastType: ToastType.error,
-            title: options?.onError?.popup?.title ?? t('error'),
+            title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),
             message: options?.onError?.popup?.description ?? error.message,
           });
         });

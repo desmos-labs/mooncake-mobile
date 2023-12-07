@@ -17,7 +17,7 @@ import useStyles from './useStyles';
  */
 const BlockedUsers = () => {
   const { blocked, loading, refetch: refreshBlocked, fetchMore: fetchMoreBlocked } = useBlocked();
-  const { t } = useTranslation('blockedUsers');
+  const { t } = useTranslation('relationships');
   const styles = useStyles();
 
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<DesmosProfile>) => {
@@ -29,7 +29,7 @@ const BlockedUsers = () => {
       return (
         <View style={styles.emptyView}>
           <Image source={emptyListPlaceholder} style={styles.emptyImage} />
-          <Typography.Body6>{t('noBlockedUsers')}</Typography.Body6>
+          <Typography.Body6>{t('no blocked users')}</Typography.Body6>
         </View>
       );
     }
@@ -47,7 +47,7 @@ const BlockedUsers = () => {
   return (
     <DView topBar={<TopBar />} backgroundColor="white" disableHideKeyboardTouchable>
       <Box ml="20px" mb="l">
-        <Typography.H3>{t('blockedUsers')}</Typography.H3>
+        <Typography.H3>{t('blocked users')}</Typography.H3>
       </Box>
 
       <FlashList

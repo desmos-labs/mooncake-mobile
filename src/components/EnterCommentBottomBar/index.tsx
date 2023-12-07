@@ -69,7 +69,7 @@ export type Props = {
  * @constructor
  */
 const EnterCommentBottomBar = (props: Props) => {
-  const { t } = useTranslation('comment');
+  const { t } = useTranslation('createPost');
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
   const navigation = useNavigation<NavProps['navigation']>();

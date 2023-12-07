@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 const usePromptConfirmUnblock = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const activeAccountAddress = useActiveAccountAddress();
-  const { t } = useTranslation('unblock');
+  const { t } = useTranslation('relationships');
 
   return React.useCallback(
     async (userToUnblock: string) => {
@@ -27,10 +27,10 @@ const usePromptConfirmUnblock = () => {
           onPressPrimary: () => resolve(ok(true)),
           onPressSecondary: () => resolve(err(new CanceledBlockError())),
           onDismiss: () => resolve(err(new CanceledOperationError())),
-          title: t('unblock'),
+          title: t('unblock popup title'),
           primaryButtonLabel: t('unblock'),
-          secondaryButtonLabel: t('common:no'),
-          subtitle: t('content', { username: userToUnblock }),
+          secondaryButtonLabel: t('no', { ns: 'common' }),
+          subtitle: t('unblock popup body', { username: userToUnblock }),
           removeModalAfterButtonPress: true,
         });
       });

@@ -14,7 +14,7 @@ export const useValidationSchema = () => {
   const { t } = useTranslation('enterPassword');
   return React.useMemo(() => {
     return Yup.object().shape({
-      password: Yup.string().required(t('error:required')),
+      password: Yup.string().required(t('field required', { ns: 'common' })),
     });
   }, [t]);
 };

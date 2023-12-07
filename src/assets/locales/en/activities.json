@@ -11,7 +11,6 @@
   "followed you": "Started following you",
   "no activities": "No Activities",
   "liked your post": "Liked your post",
-  "started following you": "started following you",
-  "tipped you": "tipped {{amount}} DSM to your post",
-  "profileNotFound": "Profile not found"
+  "profileNotFound": "Profile not found",
+  "started following you": "started following you"
 }

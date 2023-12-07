@@ -5,8 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { useSetAppStateValue } from '@recoil/appState';
 import useCreateLocalNotification from 'hooks/notifications/useCreateLocalNotification';
-import { isSocialNotification, isTransactionNotification } from 'types/notifications';
-import useCreateTransactionNotificationSnackbar from 'hooks/useCreateTransactionSnackbar';
+import { isSocialNotification } from 'types/notifications';
 import { parseRemoteNotification } from 'lib/NotificationsUtils';
 
 /**
@@ -15,7 +14,6 @@ import { parseRemoteNotification } from 'lib/NotificationsUtils';
 const useInitializeNotifications = () => {
   // Utility hooks to create the notifications UI
   const createLocalNotification = useCreateLocalNotification();
-  const createTransactionNotificationSnackbar = useCreateTransactionNotificationSnackbar();
 
   // Contains the current application visibility state
   const [appStateVisible, setAppStateVisible] = useState(AppState.currentState);
@@ -69,10 +67,7 @@ const useInitializeNotifications = () => {
     // We will be able to use this onMessage to handle different type of notifications, maybe create a snackbar instead
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       const notification = parseRemoteNotification(remoteMessage.data);
-      if (isTransactionNotification(notification)) {
-        // Create a notification snackbar
-        await createTransactionNotificationSnackbar(notification);
-      } else if (isSocialNotification(notification)) {
+      if (isSocialNotification(notification)) {
         // Checking if the app is active, if so we do not want to send the user social notifications
         if (appStateVisible !== 'active') {
           await createLocalNotification(notification);
@@ -82,7 +77,7 @@ const useInitializeNotifications = () => {
 
     // Unsubscribe the listener when the effect is destroyed
     return () => unsubscribe();
-  }, [appStateVisible, createLocalNotification, createTransactionNotificationSnackbar]);
+  }, [appStateVisible, createLocalNotification]);
 };
 
 export default useInitializeNotifications;

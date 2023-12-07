@@ -20,7 +20,7 @@ const useHidePost = () => {
   }
 
   const showToast = useToast();
-  const { t } = useTranslation('toast');
+  const { t } = useTranslation('postOperations');
   const removePostByID = useRemovePostByID(activeAccountAddress);
   const addPostToHidden = useAddPostToHiddenPosts();
 
@@ -31,8 +31,8 @@ const useHidePost = () => {
       if (hidePostResult.isErr()) {
         showToast({
           toastType: ToastType.error,
-          title: t('error'),
-          message: t('errorHidePost'),
+          title: t('error', { ns: 'common' }),
+          message: hidePostResult.error.message,
         });
         return err(new Error('Error occurred while hiding post'));
       }
@@ -45,7 +45,7 @@ const useHidePost = () => {
 
       showToast({
         toastType: ToastType.success,
-        title: t('success'),
+        title: t('success', { ns: 'common' }),
         message: t('postHidden'),
       });
 

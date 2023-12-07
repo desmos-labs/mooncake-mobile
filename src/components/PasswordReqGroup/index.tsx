@@ -8,11 +8,11 @@ type Props = {
 };
 
 const PasswordReqGroup = ({ passwordToCheck }: Props) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('password');
 
   return (
     <PasswordTooltip
-      label={t('atLeastChar', {
+      label={t('at least char', {
         length: MIN_PW_LENGTH,
       })}
       isSatisfied={validateMinPwLength(passwordToCheck)}

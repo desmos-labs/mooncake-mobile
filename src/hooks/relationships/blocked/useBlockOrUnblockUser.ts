@@ -119,7 +119,7 @@ const useUnblockUser = () => {
         onSuccess: {
           popup: {
             title: t('user unblocked title'),
-            description: t('user unblocked text', { user: getProfileDisplayName(counterparty) }),
+            description: t('user unblocked body', { user: getProfileDisplayName(counterparty) }),
           },
         },
         onError: {

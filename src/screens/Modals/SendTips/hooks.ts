@@ -67,7 +67,7 @@ export const useInitialFormValues = (): FormValues => {
  * @param accountBalance {[]Coin} - Current balance of the account tipping the post.
  */
 export const useValidateForm = (accountBalance: Coin[]) => {
-  const { t } = useTranslation('sendTips');
+  const { t } = useTranslation('tips');
 
   // Account balance
   const coinBalance = useCoinBalance(accountBalance);
@@ -82,9 +82,9 @@ export const useValidateForm = (accountBalance: Coin[]) => {
 
       const insertedAmount = safeParseFloat(values.amount);
       if (insertedAmount < minTipValue) {
-        errors.amount = t('too few');
+        errors.amount = t('amount too low');
       } else if (insertedAmount > maxTipValue) {
-        errors.amount = t('too much');
+        errors.amount = t('amount too high');
       }
 
       return errors;

@@ -39,7 +39,7 @@ const ImportAccountSelectProfile = ({ route: { params }, navigation }: NavProps)
   return (
     <DView topBar={<TopBar />}>
       <Spacer paddingHorizontal={16} paddingTop={16}>
-        <Typography.H4>{t('header')}</Typography.H4>
+        <Typography.H4>{t('select a profile or create a new one')}</Typography.H4>
       </Spacer>
       <AccountPicker onAccountSelected={onSelect} params={accountPickerParams} />
     </DView>

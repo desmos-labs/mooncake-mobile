@@ -113,19 +113,9 @@ enum ROUTES {
 
   TEXTONLY_MODAL = 'TEXTONLY_MODAL',
   CONFIRM_MODAL = 'CONFIRM_MODAL',
-  BOTTOM_MODAL = 'BOTTOM_MODAL',
   BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
   CONVERTIBLE_POINTS_MODAL = 'CONVERTIBLE_POINTS_MODAL',
-  UPLOAD_PROFILE_PICTURES_MODALS = 'UPLOAD_PROFILE_PICTURES_MODALS',
-  AUTHORIZATION_MODAL = 'AUTHORIZATION_MODAL',
   SELECT_IMAGE_MODAL = 'SELECT_IMAGE_MODAL',
-
-  // -------------------------------------------------------------------------------------
-  // --- OTHER SCREENS
-  // --- TODO: Categorize them as well
-  // -------------------------------------------------------------------------------------
-
-  NFT_DETAILS = 'NFT_DETAILS',
 }
 
 export default ROUTES;

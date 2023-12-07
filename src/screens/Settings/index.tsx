@@ -10,12 +10,12 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import VersionString from 'screens/Settings/components/VersionString';
+import { useTranslation } from 'react-i18next';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { useActiveAccount } from '@recoil/accounts';
 import useUnlockWallet from 'hooks/useUnlockWallet';
+import { getVersion } from 'react-native-device-info';
 import {
   useChangePassword,
   useOpenNotificationsSettings,
@@ -72,9 +72,9 @@ const Settings = (props: NavProps) => {
     navigate({
       name: ROUTES.CONFIRM_MODAL,
       params: {
-        title: t('confirmModal:signout'),
-        subtitle: <Typography.Body5>{t('confirmModal:private key warning')}</Typography.Body5>,
-        primaryButtonLabel: t('confirmModal:signout'),
+        title: t('sign out'),
+        subtitle: <Typography.Body5>{t('sign out private key warning')}</Typography.Body5>,
+        primaryButtonLabel: t('sign out'),
         onPressPrimary: signOut,
         removeModalAfterButtonPress: true,
       },
@@ -82,9 +82,7 @@ const Settings = (props: NavProps) => {
   }, [navigate, t, signOut]);
 
   const handlePressChangePassword = useCallback(async () => {
-    const walletUnlockResult = await unlockWallet(undefined, undefined, {
-      titleLabelOverride: t('passwordManipulation:changePw'),
-    });
+    const walletUnlockResult = await unlockWallet();
 
     if (walletUnlockResult.isOk()) {
       changePassword();
@@ -113,7 +111,7 @@ const Settings = (props: NavProps) => {
           />
         )}
         <SectionButton label={t('change password')} onPress={handlePressChangePassword} />
-        <SectionButton label={t('blockedUsers')} onPress={handlePressBlockedUsers} />
+        <SectionButton label={t('blocked users')} onPress={handlePressBlockedUsers} />
         {canShowPrivateKey && (
           <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
         )}
@@ -127,19 +125,14 @@ const Settings = (props: NavProps) => {
       </Section>
       <Spacer paddingVertical={12} />
       <Button size={44} variant="outlined" onPress={openConfirmSignOutModal}>
-        {t('confirmModal:signout')}
+        {t('sign out')}
       </Button>
       <Typography.Body7 style={styles.bottomText}>
-        <Trans
-          i18nKey="settings:joined product"
-          components={[<Typography.Subtitle4 />]}
-          values={{
-            formattedDate: formattedAccountCreationDate,
-          }}
-        />
+        <Typography.Subtitle4>
+          {t('joined butter', { formattedDate: formattedAccountCreationDate })}
+        </Typography.Subtitle4>
       </Typography.Body7>
-      <Spacer paddingVertical={12} />
-      <VersionString />
+      <Typography.Body7 style={styles.bottomText}>Version {getVersion()}</Typography.Body7>
     </DView>
   );
 };

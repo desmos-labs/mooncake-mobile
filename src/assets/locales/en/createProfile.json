@@ -2,14 +2,15 @@
   "header": "Create a profile",
   "description": "Create your decentralized profiles",
   "nickname": "Nickname",
-  "enterNickname": "Enter nickname",
-  "dTag": "DTag*",
-  "enterDTag": "Enter DTag",
+  "dtag": "DTag*",
+  "enter dtag": "Enter your DTag",
+  "enter nickanme": "Enter your nickname",
   "bio": "Bio",
-  "addBio": "Add a bio to your profile (optional)",
-  "out of gas": "Out of gas, your Desmos Profile has not been not created",
+  "add bio": "Add a bio to your profile (optional)",
   "created": "Your Desmos Profile has been created",
   "saving profile": "Saving profile",
   "saving profile body": "We are saving up your amazing profile...",
-  "profile saved": "Your profile has been saved"
+  "profile saved": "Your profile has been saved",
+  "invalid dtag": "Invalid DTag value",
+  "max bio length exceeded": "The bio must be at most {{numChars}} characters long"
 }

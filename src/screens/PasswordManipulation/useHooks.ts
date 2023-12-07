@@ -12,6 +12,7 @@ import React from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
+import { useTranslation } from 'react-i18next';
 import useStyles from './useStyles';
 
 /**
@@ -53,6 +54,7 @@ export enum SignInStatus {
  * Hooks for the PasswordManipulation screen
  */
 const useHooks = () => {
+  const { t } = useTranslation('password');
   const styles = useStyles();
   const [, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
   const [loading, setLoading] = React.useState(false);
@@ -87,15 +89,15 @@ const useHooks = () => {
   const headerText = React.useMemo(() => {
     switch (mode) {
       case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
-        return 'changePw';
+        return t('change password');
       case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
-        return 'resetPw';
+        return t('reset password');
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
       case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
-        return 'setupPw';
+        return t('setup password');
       default:
-        return '';
+        return undefined;
     }
   }, [mode]);
 
@@ -104,9 +106,9 @@ const useHooks = () => {
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
       case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
-        return 'setupPwDescription';
+        return t('setup password description');
       default:
-        return '';
+        return undefined;
     }
   }, [mode]);
 
@@ -115,9 +117,9 @@ const useHooks = () => {
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
       case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
-        return 'pw';
+        return t('password');
       default:
-        return 'enterNewPw';
+        return t('enter new password');
     }
   }, [mode]);
 
@@ -126,9 +128,9 @@ const useHooks = () => {
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT:
       case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE:
-        return 'common:next';
+        return t('next', { ns: 'common' });
       default:
-        return 'common:confirm';
+        return t('confirm', { ns: 'common' });
     }
   }, [mode]);
 

@@ -36,8 +36,6 @@ export interface UsersListProps {
   readonly refreshing: boolean;
   /**
    * The text to show when the list is empty.
-   * // - For followers: t('followersAndFollowing:noFollowers')
-   * // - For following: t('followersAndFollowing:noFollowingDTags')
    */
   readonly emptyText: string | ReactNode;
 }
