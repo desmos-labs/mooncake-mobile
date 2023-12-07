@@ -44,6 +44,7 @@ import passwordManipulation from "./passwordManipulation.json";
 import postDetails from "./postDetails.json";
 import postInteraction from "./postInteraction.json";
 import profile from "./profile.json";
+import relationships from "./relationships.json";
 import reportPost from "./reportPost.json";
 import reportUser from "./reportUser.json";
 import resultModal from "./resultModal.json";
@@ -92,6 +93,7 @@ const en = {
   selectChain,
   sendTips,
   connectChainTxDetail,
+  relationships,
   reportPost,
   reportUser,
   authorization,

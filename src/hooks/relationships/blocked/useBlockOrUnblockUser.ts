@@ -15,7 +15,6 @@ import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
 import { useTranslation } from 'react-i18next';
 import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
-import { ok, Result } from 'neverthrow';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 
 /**
@@ -32,7 +31,7 @@ const useBlockUser = () => {
   const removePostsForUser = useRemovePostsByAuthor();
 
   return React.useCallback(
-    async (user: string, counterparty: DesmosProfile): Promise<Result<void, Error>> => {
+    async (user: string, counterparty: DesmosProfile) => {
       // Add the blocked user locally
       addBlockedUser(user, counterparty);
 
@@ -72,8 +71,6 @@ const useBlockUser = () => {
           },
         },
       });
-
-      return ok(undefined);
     },
     [addBlockedUser, subspaceId, signAndBroadcastTx, t, removePostsForUser, removeBlockedUser],
   );

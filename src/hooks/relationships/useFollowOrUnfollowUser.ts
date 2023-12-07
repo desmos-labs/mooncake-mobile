@@ -1,5 +1,4 @@
 import React from 'react';
-import useBroadcastTx from 'hooks/tx/useBroadcastTx';
 import {
   useAddFollowedUser,
   useHasFollowedUser,
@@ -12,16 +11,21 @@ import { useAppStateValue } from '@recoil/appState';
 import Long from 'long';
 import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
+import { useTranslation } from 'react-i18next';
+import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import { getProfileDisplayName } from 'lib/ProfileUtils';
 
 /**
  * Hook that allows to follow a user both remotely and locally.
  */
 const useFollowUser = () => {
+  const { t } = useTranslation('relationships');
   const subspaceId = useAppStateValue('subspaceId');
-  const broadcastTx = useBroadcastTx();
 
   const addFollowedUser = useAddFollowedUser();
   const removeFollowedUser = useRemoveFollowedUser();
+
+  const signAndBroadcastTx = useSignAndBroadcastTx();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
@@ -38,14 +42,32 @@ const useFollowUser = () => {
         },
       };
 
-      // Broadcast the transaction
-      const result = await broadcastTx([messageCreateRelationship]);
-      if (result.isErr()) {
-        // If the transaction is canceled or errors, remove the added relationship
-        removeFollowedUser(user, counterparty.address);
-      }
+      await signAndBroadcastTx([messageCreateRelationship], {
+        onLoading: {
+          popup: {
+            title: t('creating relationship title'),
+            description: t('creating relationship body', {
+              user: getProfileDisplayName(counterparty),
+            }),
+          },
+        },
+        onSuccess: {
+          popup: {
+            title: t('relationship created title'),
+            description: t('relationship created body', {
+              user: getProfileDisplayName(counterparty),
+            }),
+          },
+        },
+        onError: {
+          action: () => {
+            // If the transaction is canceled or errors, remove the added relationship
+            removeFollowedUser(user, counterparty.address);
+          },
+        },
+      });
     },
-    [addFollowedUser, subspaceId, broadcastTx, removeFollowedUser],
+    [addFollowedUser, subspaceId, removeFollowedUser],
   );
 };
 
@@ -53,10 +75,12 @@ const useFollowUser = () => {
  * Hook that allows to unfollow a user, both locally and remotely.
  */
 const useUnfollowUser = () => {
+  const { t } = useTranslation('relationships');
   const subspaceId = useAppStateValue('subspaceId');
-  const broadcastTx = useBroadcastTx();
 
   const setFollowedUserStatus = useSetFollowedUserStatus();
+
+  const signAndBroadcastTx = useSignAndBroadcastTx();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
@@ -74,11 +98,30 @@ const useUnfollowUser = () => {
       };
 
       // Broadcasts the transaction
-      const result = await broadcastTx([messageDeleteRelationship]);
-      if (result.isErr()) {
-        // If the transaction is canceled or errors, re-add the removed relationship
-        setFollowedUserStatus(user, counterparty.address, DataStatus.SYNCED);
-      }
+      await signAndBroadcastTx([messageDeleteRelationship], {
+        onLoading: {
+          popup: {
+            title: t('deleting relationship title'),
+            description: t('deleting relationship body', {
+              user: getProfileDisplayName(counterparty),
+            }),
+          },
+        },
+        onSuccess: {
+          popup: {
+            title: t('relationship deleted title'),
+            description: t('relationship deleted body', {
+              user: getProfileDisplayName(counterparty),
+            }),
+          },
+        },
+        onError: {
+          action: () => {
+            // If the transaction is canceled or errors, re-add the removed relationship
+            setFollowedUserStatus(user, counterparty.address, DataStatus.SYNCED);
+          },
+        },
+      });
     },
     [setFollowedUserStatus, subspaceId, broadcastTx],
   );
