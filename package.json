@@ -21,7 +21,8 @@
     "prebuild": "source ./.prebuild.env && yarn eas-build-pre-install && npx expo prebuild --clean",
     "android:generateGogleServices": "printf $ANDROID_GOOGLE_SERVICES_BAS64 | base64 --decode > ./google-services.json",
     "ios:generateGogleServices": "printf $IOS_GOOGLE_SERVICES_BASE64 | base64 --decode > ./GoogleService-Info.plist",
-    "eas-build-pre-install": "yarn android:generateGogleServices && yarn ios:generateGogleServices"
+    "eas-build-pre-install": "yarn android:generateGogleServices && yarn ios:generateGogleServices",
+    "check-translations": "i18n-unused display-unused"
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
@@ -202,6 +203,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.0.0",
     "husky": ">=6",
+    "i18n-unused": "^0.16.0",
     "jest": "^29.2.1",
     "lint-staged": ">=10",
     "prettier": "^3.1.0",
