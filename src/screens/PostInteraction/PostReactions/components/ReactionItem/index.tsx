@@ -25,7 +25,9 @@ const ReactionItem = ({ reaction }: Props) => {
       <View style={styles.textGroup}>
         <View>
           <Typography.Subtitle3 style={styles.textStyle}>
-            {reaction.author.nickname ? reaction.author.nickname : t('common:no nickname')}
+            {reaction.author.nickname
+              ? reaction.author.nickname
+              : t('no nickname', { ns: 'common' })}
           </Typography.Subtitle3>
           <Typography.Body7 style={styles.subTextStyle}>@{reaction.author.dTag}</Typography.Body7>
         </View>

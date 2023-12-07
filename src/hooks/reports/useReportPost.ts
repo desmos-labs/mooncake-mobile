@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
  * @param post {Post} - Post to be reported.
  */
 const useReportPost = (post: Post) => {
-  const { t } = useTranslation('reportPost');
+  const { t } = useTranslation('postOperations');
   const activeAddress = useActiveAccountAddress();
 
   const subspaceId = useAppStateValue('subspaceId');

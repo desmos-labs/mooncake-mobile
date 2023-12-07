@@ -1,10 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
 import { useActiveAccount } from '@recoil/accounts';
 import { useStoreProfile } from '@recoil/profiles';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
-import ROUTES from 'navigation/routes';
 import { err, ok, Result } from 'neverthrow';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +10,6 @@ import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile, ProfileParams } from 'types/desmos';
 import * as Yup from 'yup';
-import { NavProps } from './index';
 
 /**
  * State of the form allowing to create or edit an existing profile.
@@ -39,22 +36,22 @@ export const useInitialFormState = (profile: DesmosProfile | undefined): SavePro
  * edit or create a profile.
  */
 export const useValidationSchema = (profileParams: ProfileParams) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('createProfile');
   return useMemo(() => {
     return Yup.object().shape({
       nickname: Yup.string()
         .min(profileParams.nickname.minLength)
         .max(profileParams.nickname.maxLength),
       dTag: Yup.string()
-        .required(t('error:required'))
+        .required(t('field required', { ns: 'common' }))
         .min(profileParams.dTag.minLength)
         .max(profileParams.dTag.maxLength)
-        .test('respect reg_ex', t('Only _ is allowed as special character'), value => {
+        .test('respect reg_ex', t('invalid dtag'), value => {
           return new RegExp(profileParams.dTag.regEx, 'g').test(value as string);
         }),
       bio: Yup.string().max(
         profileParams.bio.maxLength,
-        t('error:maxLength', {
+        t('max bio length exceeded', {
           numChars: profileParams.bio.maxLength,
         }),
       ),
@@ -75,29 +72,6 @@ export const useCheckDTagAvailability = () => {
     },
     [getLazyData],
   );
-};
-
-/**
- * Hook that allows to open the modal to tell the user what is a DTag and how is it used.
- * TODO: This should be used if we are creating a new profile
- */
-export const useOpenInfoModal = () => {
-  const { t } = useTranslation('password');
-  const { navigate } = useNavigation<NavProps['navigation']>();
-  return React.useCallback(() => {
-    navigate(ROUTES.TEXTONLY_MODAL, {
-      title: t('signup:profile dtag'),
-      body: t('signup:dtag info'),
-    });
-  }, [navigate, t]);
-};
-
-/**
- * Given a {@link string} value, returns either the value (if not empty),
- * or <code>undefined</code> if it's empty.
- */
-export const omitEmptyValue = (value: string): string | undefined => {
-  return value.trim().length > 0 ? value : undefined;
 };
 
 /**

@@ -1,3 +1,9 @@
 {
-  "postHidden": "Post hidden!"
+  "postHidden": "Post hidden!",
+  "header": "What’s wrong with this post?",
+  "report": "Report",
+  "creating report title": "Creating report",
+  "creating report body": "Your report is being created",
+  "report created title": "Report created",
+  "report created body": "Your report has been submitted successfully"
 }

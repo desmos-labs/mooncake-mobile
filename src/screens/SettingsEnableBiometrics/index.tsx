@@ -56,7 +56,7 @@ const SettingsEnableBiometrics = () => {
       if (result.isErr()) {
         // Set the errors inside the UI
         if (result.error.type === SecureStorageErrorType.WrongPassword) {
-          setErrors({ password: t('error:incorrectPassword') });
+          setErrors({ password: t('incorrectPassword', { ns: 'errors' }) });
         } else {
           setErrors({ password: result.error.message });
         }
@@ -110,7 +110,7 @@ const SettingsEnableBiometrics = () => {
                 textColor={theme.colors.white}
                 disabled={!values.password || Object.values(errors).length > 0}
                 onPress={handleSubmit as any}>
-                {t('common:next')}
+                {t('next', { ns: 'common' })}
               </Button>
             </KeyboardAvoidingView>
           </View>

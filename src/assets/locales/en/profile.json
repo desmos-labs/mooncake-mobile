@@ -1,13 +1,10 @@
 {
   "liked": "Liked",
-  "follow": "Follow",
-  "following": "Following",
   "followers": "Followers",
   "posts": "Posts",
   "edit profile": "Edit Profile",
   "connectedChains_plural": "{{count}} Chains",
   "connectedApps_plural": "{{count}} Apps connected",
   "connectedWallet_plural": "{{count}} Wallets",
-  "learnMore": "Learn More",
-  "unblock": "Unblock"
+  "learnMore": "Learn More"
 }

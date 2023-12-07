@@ -4,5 +4,13 @@
   "creating relationship title": "Relationship being created",
   "relationship created title": "Relationship created",
   "deleting relationship title": "Relationship being deleted",
-  "relationship deleted title": "Relationship deleted"
+  "relationship deleted title": "Relationship deleted",
+  "noFollowing": "No following accounts",
+  "noFollowers": "No followers",
+  "oops": "Oops!",
+  "follow": "Follow",
+  "unfollow": "Unfollow",
+  "following": "Following",
+  "unblock popup title": "Unblock",
+  "unblock popup body": "{{username}} will able to follow you, tag you and see your posts again."
 }

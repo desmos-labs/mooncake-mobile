@@ -34,7 +34,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_REPORT>;
  * @constructor
  */
 const ReportPost = () => {
-  const { t } = useTranslation('reportPost');
+  const { t } = useTranslation('postOperations');
   const styles = useStyles();
   const theme = useTheme();
   const { goBack } = useNavigation<NavProps['navigation']>();

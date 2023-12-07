@@ -1,4 +1,5 @@
 {
   "performing transaction": "Performing transaction",
-  "operation completed": "Operation completed successfully"
+  "operation completed": "Operation completed successfully",
+  "broadcasting": "Broadcasting..."
 }

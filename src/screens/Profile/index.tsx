@@ -284,16 +284,16 @@ const Profile = () => {
 
   const handlePressBalanceInfo = useCallback(() => {
     navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('common:DSM'),
+      title: t('DSM', { ns: 'common' }),
       // Subtitle needs to be passed as a component, as Trans component in the default implementation will cause
       // unwanted interpolation of the less than (<) character in the string
-      subtitle: <Typography.Body5>{t('profile:balanceInfo')}</Typography.Body5>,
+      subtitle: <Typography.Body5>{t('balanceInfo')}</Typography.Body5>,
       subtitleStyle: { textAlign: 'left' },
-      primaryButtonLabel: t('profile:learnMore'),
+      primaryButtonLabel: t('learnMore'),
       onPressPrimary: () => {
         WebBrowser.openBrowserAsync('https://desmos.network');
       },
-      secondaryButtonLabel: t('common:cancel'),
+      secondaryButtonLabel: t('cancel', { ns: 'common' }),
       // goBack will make the underlying screen goBack, instead of hiding the modal, so pop is used instead.
       onPressSecondary: pop,
     });
@@ -315,7 +315,7 @@ const Profile = () => {
             size={32}
             onPress={handlePressBlock}
             textColor="surfaceBlack">
-            {t('profile:unblock')}
+            {t('unblock', { ns: 'relationships' })}
           </Button>
         );
       }
@@ -327,7 +327,7 @@ const Profile = () => {
           size={32}
           onPress={handlePressFollow}
           textColor="surfaceBlack">
-          {isFollowing ? t('following') : t('follow')}
+          {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
         </Button>
       );
     }
@@ -345,14 +345,16 @@ const Profile = () => {
 
     const menuItems = [
       {
-        label: t('home:report'),
+        label: t('report', { ns: 'postOperations' }),
         onPress: () => {
           // implement
         },
         icon: reportIcon,
       },
       {
-        label: isBlocked ? t('home:unblock') : t('home:block'),
+        label: isBlocked
+          ? t('unblock', { ns: 'relationships' })
+          : t('block', { ns: 'relationships' }),
         onPress: () => handlePressBlock(),
         icon: isBlocked ? unblock : block,
       },

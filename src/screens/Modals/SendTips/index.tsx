@@ -222,7 +222,7 @@ const SendTips = (props: NavProps) => {
                     backgroundColor={theme.colors.surfaceBlack}
                     onPress={handleSubmit}
                     disabled={values.amount === '' || _.flatten(Object.values(errors)).length > 0}>
-                    {t('common:confirm')}
+                    {t('confirm', { ns: 'common' })}
                   </Button>
                 </Spacer>
               </ScrollView>

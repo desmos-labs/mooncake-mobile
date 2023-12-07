@@ -97,17 +97,19 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
 
     const menuItems = [
       {
-        label: isFollowing ? t('home:unfollow') : t('home:follow'),
+        label: isFollowing
+          ? t('unfollow', { ns: 'relationships' })
+          : t('follow', { ns: 'relationships' }),
         onPress: () => handlePressFollowOrUnfollow(post.author),
         icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
       },
       {
-        label: t('home:report'),
+        label: t('report', { ns: 'postOperations' }),
         onPress: () => handlePressReport(post),
         icon: reportIcon,
       },
       {
-        label: t('home:hide'),
+        label: t('hide', { ns: 'postOperations' }),
         onPress: async () => {
           await handlePressHidePost(post.id);
 
@@ -117,7 +119,9 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         icon: hidePost,
       },
       {
-        label: isBlocked ? t('home:unblock') : t('home:block'),
+        label: isBlocked
+          ? t('unblock', { ns: 'relationships' })
+          : t('block', { ns: 'relationships' }),
         onPress: () => handlePressBlockOrUnblock(post.author),
         icon: isBlocked ? unblock : block,
       },

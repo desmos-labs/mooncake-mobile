@@ -7,7 +7,6 @@ import createPost from "./createPost.json";
 import createProfile from "./createProfile.json";
 import enterPassword from "./password.json";
 import error from "./errors.json";
-import followingAndFollowers from "./followingAndFollowers.json";
 import forgotPassword from "./forgotPassword.json";
 import home from "./home.json";
 import landing from "./landing.json";
@@ -18,7 +17,6 @@ import postDetails from "./postDetails.json";
 import postOperations from "./postOperations.json";
 import profile from "./profile.json";
 import relationships from "./relationships.json";
-import reportPost from "./reportPost.json";
 import reportUser from "./reportUser.json";
 import search from "./search.json";
 import selectProfile from "./selectProfile.json";
@@ -41,12 +39,10 @@ const en = {
   legal,
   sendTips,
   relationships,
-  reportPost,
   reportUser,
   createPost,
   postDetails,
   postOperations,
-  followingAndFollowers,
   forgotPassword,
   activities,
   broadcastTx,

@@ -54,7 +54,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_CONNECTI
  * @constructor
  */
 const ProfileConnections = () => {
-  const { t } = useTranslation('followingAndFollowers');
+  const { t } = useTranslation('relationships');
   const theme = useTheme();
   const styles = useStyles(numOfTabs);
 
@@ -69,12 +69,16 @@ const ProfileConnections = () => {
   const { count: followingCount, refetch: refreshFollowingCount } = useFollowingCount(
     profile?.address,
   );
-  const followingTabName = `${formatNumShorthand(followingCount)} ${t('profile:following')}`;
+  const followingTabName = `${formatNumShorthand(followingCount)} ${t('following', {
+    ns: 'relationships',
+  })}`;
 
   const { count: followersCount, refetch: refreshFollowersCount } = useFollowersCount(
     profile?.address,
   );
-  const followersTabName = `${formatNumShorthand(followersCount)} ${t('profile:followers')}`;
+  const followersTabName = `${formatNumShorthand(followersCount)} ${t('followers', {
+    ns: 'relationships',
+  })}`;
 
   // -------------------------------------------------------------------------------------
   // --- Tab bar labels

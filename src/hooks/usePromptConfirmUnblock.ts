@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 const usePromptConfirmUnblock = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const activeAccountAddress = useActiveAccountAddress();
-  const { t } = useTranslation('followingAndFollowers');
+  const { t } = useTranslation('relationships');
 
   return React.useCallback(
     async (userToUnblock: string) => {

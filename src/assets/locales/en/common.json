@@ -8,7 +8,7 @@
   "success": "Success",
   "failed": "Failed",
   "oops": "Oops!",
-  "broadcasting": "Broadcasting...",
   "DSM": "DSM",
-  "error": "Error"
+  "error": "Error",
+  "field required": "This field is required."
 }

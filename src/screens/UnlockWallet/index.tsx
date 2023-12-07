@@ -105,7 +105,7 @@ const UnlockWallet = () => {
   // Validation schema for the form
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
-      password: Yup.string().required(t('error:required')),
+      password: Yup.string().required(t('field required', { ns: 'common' })),
     });
   }, [t]);
 

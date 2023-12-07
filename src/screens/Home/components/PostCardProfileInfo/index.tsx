@@ -122,22 +122,26 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const popupMenuItems = useMemo(
     () => [
       {
-        label: isFollowing ? t('unfollow') : t('follow'),
+        label: isFollowing
+          ? t('unfollow', { ns: 'relationships' })
+          : t('follow', { ns: 'relationships' }),
         onPress: onPressFollow,
         icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
       },
       {
-        label: t('report'),
+        label: t('report', { ns: 'postOperations' }),
         onPress: onPressReport,
         icon: reportIcon,
       },
       {
-        label: t('hide'),
+        label: t('hide', { ns: 'postOperations' }),
         onPress: onPressHide,
         icon: hidePost,
       },
       {
-        label: isBlocked ? t('home:unblock') : t('home:block'),
+        label: isBlocked
+          ? t('unblock', { ns: 'relationships' })
+          : t('block', { ns: 'relationships' }),
         onPress: onPressBlock,
         icon: isBlocked ? unblock : block,
       },
