@@ -87,14 +87,16 @@ export const getCoverPicture = (
  * @param profile {DesmosProfile} which names should be returned.
  * @return A combination of profile nickname and DTag that can be used inside lists of profiles.
  */
-export const getProfileDisplayName = (profile: DesmosProfile): string | undefined => {
+export const getProfileDisplayName = (profile: DesmosProfile): string => {
   switch (true) {
     case profile.nickname !== undefined && profile.nickname !== '':
       return `${profile.nickname} (@${profile.dTag})`;
     case profile.dTag !== undefined:
       return `@${profile.dTag}`;
     default:
-      return undefined;
+      return `${profile.address.substring(0, 8)}...${profile.address.substring(
+        profile.address.length - 5,
+      )}`;
   }
 };
 

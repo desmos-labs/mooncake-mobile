@@ -8,31 +8,31 @@ import {
   useSetBlockedUserStatus,
 } from '@recoil/blockedRelationships';
 import { useRemovePostsByAuthor } from '@recoil/posts';
-import useBroadcastTx from 'hooks/tx/useBroadcastTx';
 import usePromptConfirmUnblock from 'hooks/usePromptConfirmUnblock';
 import Long from 'long';
 import React from 'react';
 import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
+import { useTranslation } from 'react-i18next';
+import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import { ok, Result } from 'neverthrow';
+import { getProfileDisplayName } from 'lib/ProfileUtils';
 
 /**
  * Hook that allows to block a user both remotely and locally.
  */
 const useBlockUser = () => {
-  const activeAccount = useActiveAccountAddress();
-
-  if (!activeAccount) {
-    throw new Error('Trying to block or unblock, without an active account');
-  }
+  const { t } = useTranslation('reportUser');
   const subspaceId = useAppStateValue('subspaceId');
-  const broadcastTx = useBroadcastTx();
+
+  const signAndBroadcastTx = useSignAndBroadcastTx();
 
   const addBlockedUser = useAddBlockedUser();
   const removeBlockedUser = useRemoveBlockedUser();
-  const removePostsForUser = useRemovePostsByAuthor(activeAccount);
+  const removePostsForUser = useRemovePostsByAuthor();
 
   return React.useCallback(
-    async (user: string, counterparty: DesmosProfile) => {
+    async (user: string, counterparty: DesmosProfile): Promise<Result<void, Error>> => {
       // Add the blocked user locally
       addBlockedUser(user, counterparty);
 
@@ -43,23 +43,39 @@ const useBlockUser = () => {
           subspaceId: Long.fromNumber(subspaceId),
           blocker: user,
           blocked: counterparty.address,
-          // empty reason for now, until block reason is implemented on the frontend
+          // Empty reason for now, until block reason is implemented on the frontend
           reason: '',
         },
       };
 
       // Broadcast the transaction
-      const result = await broadcastTx([messageBlockUser]);
+      await signAndBroadcastTx([messageBlockUser], {
+        onLoading: {
+          popup: {
+            title: t('user being blocked title'),
+          },
+        },
+        onSuccess: {
+          popup: {
+            title: t('user blocked title'),
+            description: t('user blocked text', { user: getProfileDisplayName(counterparty) }),
+          },
+          action: () => {
+            // Remove the cached posts for the blocked user.
+            removePostsForUser(user, counterparty);
+          },
+        },
+        onError: {
+          action: () => {
+            // If the transaction is canceled or errors, remove the added blocked relationship
+            removeBlockedUser(user, counterparty.address);
+          },
+        },
+      });
 
-      if (result.isErr()) {
-        // If the transaction is canceled or errors, remove the added blocked relationship
-        removeBlockedUser(user, counterparty.address);
-      } else {
-        // remove cached posts for the blocked user.
-        removePostsForUser(counterparty);
-      }
+      return ok(undefined);
     },
-    [addBlockedUser, subspaceId, broadcastTx, removePostsForUser, removeBlockedUser],
+    [addBlockedUser, subspaceId, signAndBroadcastTx, t, removePostsForUser, removeBlockedUser],
   );
 };
 
@@ -67,18 +83,18 @@ const useBlockUser = () => {
  * Hook that allows to unblock a user, both locally and remotely.
  */
 const useUnblockUser = () => {
+  const { t } = useTranslation('reportUser');
   const subspaceId = useAppStateValue('subspaceId');
-  const broadcastTx = useBroadcastTx();
-  const promptConfirmUnblock = usePromptConfirmUnblock();
 
+  const promptConfirmUnblock = usePromptConfirmUnblock();
   const setBlockedUserStatus = useSetBlockedUserStatus();
+
+  const signAndBroadcastTx = useSignAndBroadcastTx();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
-      // Display counterparty's dTag if they have not set a nickname
-      const confirmationResult = await promptConfirmUnblock(
-        counterparty.nickname || `@${counterparty.dTag}`,
-      );
+      // Display counterparty's DTag if they have not set a nickname
+      const confirmationResult = await promptConfirmUnblock(getProfileDisplayName(counterparty));
 
       // early exit if the user denies the prompt above.
       if (!confirmationResult.isOk()) return;
@@ -97,13 +113,27 @@ const useUnblockUser = () => {
       };
 
       // Broadcasts the transaction
-      const result = await broadcastTx([messageUnblock]);
-      if (result.isErr()) {
-        // If the transaction is canceled or errors, re-add the removed blocked status
-        setBlockedUserStatus(user, counterparty.address, DataStatus.SYNCED);
-      }
+      await signAndBroadcastTx([messageUnblock], {
+        onLoading: {
+          popup: {
+            title: t('user being unblocked title'),
+          },
+        },
+        onSuccess: {
+          popup: {
+            title: t('user unblocked title'),
+            description: t('user unblocked text', { user: getProfileDisplayName(counterparty) }),
+          },
+        },
+        onError: {
+          action: () => {
+            // If the transaction is canceled or errors, re-add the removed blocked status
+            setBlockedUserStatus(user, counterparty.address, DataStatus.SYNCED);
+          },
+        },
+      });
     },
-    [promptConfirmUnblock, setBlockedUserStatus, subspaceId, broadcastTx],
+    [promptConfirmUnblock, setBlockedUserStatus, signAndBroadcastTx, subspaceId, t],
   );
 };
 

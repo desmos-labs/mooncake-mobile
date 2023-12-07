@@ -340,11 +340,11 @@ export const useRemovePostByID = (user: string) => {
 /**
  * A hook that allows removal of cached timeline posts for a given user by the author.
  */
-export const useRemovePostsByAuthor = (user: string) => {
+export const useRemovePostsByAuthor = () => {
   const setPosts = useSetRecoilState(postsState);
 
   return React.useCallback(
-    (authorToRemove: DesmosProfile) => {
+    (user: string, authorToRemove: DesmosProfile) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -359,6 +359,6 @@ export const useRemovePostsByAuthor = (user: string) => {
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
