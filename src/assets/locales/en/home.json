@@ -1,10 +1,7 @@
 {
-  "HOME_TAB_DISCOVER": "Discover",
-  "HOME_TAB_FOLLOWING": "Following",
   "follow": "Follow",
   "unfollow": "Unfollow",
   "report": "Report",
-  "tip": "Tip",
   "seconds ago": "{{count}} second ago",
   "seconds ago_plural": "{{count}} seconds ago",
   "minutes ago": "{{count}} minute ago",
@@ -13,8 +10,6 @@
   "hours ago_plural": "{{count}} hours ago",
   "days ago": "{{count}} day ago",
   "days ago_plural": "{{count}} days ago",
-  "no posts to display": "No posts to display",
-  "search something": "Search something",
   "block": "Block",
   "unblock": "Unblock",
   "hide": "Hide Post"

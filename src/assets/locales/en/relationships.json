@@ -1,14 +1,8 @@
 {
-  "blocked users": "Blocked Users",
-  "noBlocked users": "No blocked users",
   "unblock": "Unblock",
   "block": "Block",
   "creating relationship title": "Relationship being created",
-  "creating relationship message": "Your are starting to follow {{user}}",
   "relationship created title": "Relationship created",
-  "relationship created message": "You are now following {{user}}",
   "deleting relationship title": "Relationship being deleted",
-  "deleting relationship message": "Your are stopping to follow {{user}}",
-  "relationship deleted title": "Relationship deleted",
-  "relationship deleted message": "You are no longer following {{user}}"
+  "relationship deleted title": "Relationship deleted"
 }

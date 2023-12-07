@@ -1,8 +1,3 @@
 {
-  "butter": "Butter",
-  "header": "Connect safely, without compromise",
-  "signUp": "Sign up",
-  "login with private key": "Login with private key",
-  "connectLedger": "Connect Ledger",
-  "or sign in with": "Or sign in with"
+  "header": "Connect safely, without compromise"
 }

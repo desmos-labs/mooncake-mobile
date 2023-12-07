@@ -1,12 +1,9 @@
 {
-  "balance": "Balance",
-  "operations": "Operations",
   "create comment post": "Create, edit, comment a post",
   "follow user": "Follow an user",
   "unfollow user": "Unfollow an user",
   "edit profile": "Edit profile",
   "add reaction": "Add reaction",
   "remove reaction": "Remove reaction",
-  "create report": "Create report",
-  "no operations": "No operations"
+  "create report": "Create report"
 }

@@ -1,13 +1,9 @@
 {
-  "connections": "Connections",
   "noFollowing": "No following accounts",
   "noFollowers": "No followers",
-  "failedToFollow": "Failed to follow <0>{{userName}}</0>",
   "oops": "Oops!",
   "follow": "Follow",
   "unfollow": "Unfollow",
-  "pleaseUnlockYourWallet": "Please unlock your wallet",
-  "dismiss": "Dismiss",
   "unblock popup title": "Unblock",
   "unblock popup body": "{{username}} will able to follow you, tag you and see your posts again.",
   "unblock": "Unblock"
