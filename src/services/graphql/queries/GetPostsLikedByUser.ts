@@ -3,10 +3,9 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostsLikedByUser = gql`
   ${PostFields}
-  query GetPostsLikedByUser($subspaceId: bigint!, $user: String, $offset: Int!, $limit: Int!)
-  @api(name: butter) {
-    reactions: reaction(
-      where: { author_address: { _eq: $user }, post: { subspace_id: { _eq: $subspaceId } } }
+  query GetPostsLikedByUser($user: String, $offset: Int!, $limit: Int!) @api(name: butter) {
+    posts: post_likes(
+      where: { user_address: { _eq: $user } }
       order_by: { post: { id: desc } }
       offset: $offset
       limit: $limit

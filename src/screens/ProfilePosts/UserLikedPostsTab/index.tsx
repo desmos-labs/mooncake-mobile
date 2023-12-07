@@ -26,11 +26,10 @@ export const UserLikedPostsTab = () => {
   // -------------------------------------------------------------------------------------
 
   const {
-    posts,
+    data: posts,
     loading: arePostsLoading,
     fetchMore,
-    fetchingMore,
-    refetch: refreshPosts,
+    refresh: refreshPosts,
     refreshing,
   } = usePostsLikedByAddress(userAddress);
 
@@ -66,7 +65,6 @@ export const UserLikedPostsTab = () => {
       posts={posts}
       isLoading={arePostsLoading}
       fetchMore={fetchMore}
-      fetchingMore={fetchingMore}
       refreshPosts={refreshPosts}
       refreshing={refreshing}
       emptyListText={t('noLikesYet')}

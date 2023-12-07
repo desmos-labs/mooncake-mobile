@@ -24,7 +24,6 @@ export interface UserPostsListProps {
    * Action to be performed when the user scrolls to the end of the list.
    */
   fetchMore: () => void;
-
   /**
    * Action to be performed when the user pulls down the list.
    */

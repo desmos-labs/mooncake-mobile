@@ -1,6 +1,4 @@
 import { ApplicationLinkState } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
-import { CacheableObject } from 'types/cache';
-import { Post } from 'types/posts';
 
 /**
  * Represents a reaction that is registered on the subspace and can be used.
@@ -173,43 +171,9 @@ export interface ApplicationLink {
   readonly creationTime: Date;
 }
 
-export interface PostReaction extends CacheableObject {
-  /**
-   * Post associated with the reaction.
-   */
-  readonly post: Post;
-  /**
-   * ID of the reaction.
-   */
-  readonly id: number | undefined;
+export interface PostReaction {
   /**
    * Author of the reaction.
    */
   readonly author: DesmosProfile;
 }
-
-/**
- * Represents a comparable {@link PostReaction}.
- */
-export interface ComparableReaction {
-  readonly subspaceId: number;
-  readonly postId: number;
-}
-
-/**
- * Allows to determine whether the two given reactions are equals or not.
- */
-export const areReactionsEqual = (first: PostReaction, second: PostReaction) => {
-  return (
-    first.post.subspaceId === second.post.subspaceId &&
-    first.post.id === second.post.id &&
-    first.id === second.id
-  );
-};
-
-/**
- * Allows to determine whether the two given reactions are equals or not.
- */
-export const areReactionsComparable = (first: PostReaction, second: ComparableReaction) => {
-  return first.post.subspaceId === second.subspaceId && first.post.id === second.postId;
-};

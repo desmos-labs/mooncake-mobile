@@ -15,9 +15,9 @@ const usePostsByAddress = (address: string, postsLimit: number = 10) => {
   } = usePostsCreatedByAddress(address, postsLimit);
 
   const {
-    posts: postsLiked,
+    data: postsLiked,
     loading: arePostsLikedLoading,
-    refetch: refetchPostsLiked,
+    refresh: refetchPostsLiked,
   } = usePostsLikedByAddress(address, postsLimit);
 
   const refetch = React.useCallback(async () => {
