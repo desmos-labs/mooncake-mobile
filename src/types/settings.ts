@@ -14,6 +14,7 @@ export type AppTheme = 'light' | 'dark' | 'auto';
 export type AppSettings = {
   theme: AppTheme;
   biometrics: boolean;
+  analytics: boolean;
   notifications: boolean;
   currentChain: ChainInfo;
   simplifyTxBroadcast: boolean;

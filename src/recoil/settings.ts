@@ -13,6 +13,7 @@ import { AppSettings } from 'types/settings';
 export const DefaultAppSettings: AppSettings = {
   theme: 'light',
   biometrics: false,
+  analytics: true,
   notifications: false,
   simplifyTxBroadcast: false,
   currentChain: DesmosMainnet,

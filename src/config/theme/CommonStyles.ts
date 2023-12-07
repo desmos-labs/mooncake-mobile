@@ -1,7 +1,7 @@
 // Safe to ignore as additional common styles will be added here
+import { Platform, ViewStyle } from 'react-native';
 import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import { TextStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
-import { ViewStyle } from 'react-native';
 
 /**
  * A map of commonly used flex values.
@@ -78,6 +78,20 @@ const position: { absolute: StyleProp<ViewStyle> } = {
   },
 };
 
+const shadows = {
+  Shadows: {
+    // Shadows
+    shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+};
+
 const CommonStyles = {
   flex,
   flexGrow,
@@ -86,6 +100,7 @@ const CommonStyles = {
   overflow,
   flexDirection,
   position,
+  shadows,
 };
 
 export default CommonStyles;
