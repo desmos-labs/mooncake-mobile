@@ -15,6 +15,7 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import useStyles from 'screens/SettingsEnableBiometrics/useStyles';
+import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
 import { FormValues, useInitialFormValues, useValidationSchema } from './hooks';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_ENABLE_BIOMETRICS>;
@@ -85,11 +86,11 @@ const SettingsEnableBiometrics = () => {
         validationSchema={validationSchema}>
         {({ handleSubmit, errors, setValues, values }) => (
           <View style={styles.formContainer}>
-            <Typography.Subtitle2 style={styles.inputLabel}>{t('inputLabel')}</Typography.Subtitle2>
+            <Typography.Subtitle2 style={styles.inputLabel}>{t('password')}</Typography.Subtitle2>
             <DSecureTextInput
               style={styles.textInput}
               autoFocus={true}
-              placeholder={t('inputPlaceholder')}
+              placeholder={t('enter password')}
               value={values.password}
               onChangeText={(text: string) => {
                 setValues({ password: text }, true);

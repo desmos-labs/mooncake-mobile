@@ -19,14 +19,8 @@ import ROUTES from 'navigation/routes';
 import { usePostHog } from 'posthog-react-native';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Trans, useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
-import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
-import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
-import { useActiveAccount } from '@recoil/accounts';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import { getVersion } from 'react-native-device-info';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
@@ -89,9 +83,7 @@ const Settings = (props: NavProps) => {
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('sign out'),
-        subtitle: (
-          <Typography.Body5>{t('sign out private key warning')}</Typography.Body5>
-        ),
+        subtitle: <Typography.Body5>{t('sign out private key warning')}</Typography.Body5>,
         primaryButtonLabel: t('sign out'),
         onPressPrimary: signOut,
         removeModalAfterButtonPress: true,
