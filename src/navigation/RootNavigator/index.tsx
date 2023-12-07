@@ -55,7 +55,6 @@ import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateK
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomePage, { WelcomePageParams } from 'screens/WelcomeScreen';
 import { LoginFlowStep } from 'types/login';
-import TxLoading, { TxLoadingParams } from 'screens/TxLoading';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -95,12 +94,6 @@ export type RootNavigatorParamList = {
 
   // Home page
   [ROUTES.HOME_TABS]: HomeTabsParams;
-
-  // -------------------------------------------------------------------------------------
-  // --- BROADCAST TRANSACTION SCREENS
-  // -------------------------------------------------------------------------------------
-
-  [ROUTES.TX_LOADING]: TxLoadingParams;
 
   // -------------------------------------------------------------------------------------
   // --- POST SCREENS
@@ -263,10 +256,6 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
-      {/* ------------------------------------ */}
-      {/* --- BROADCAST TRANSACTION SCREEN --- */}
-      {/* ------------------------------------ */}
-      <Stack.Screen name={ROUTES.TX_LOADING} component={TxLoading} />
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}
       {/* -------------------- */}
@@ -350,13 +339,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.SELECT_IMAGE_MODAL} component={SelectImageModal} />
       </Stack.Group>
-      {/* ------------------------------ */}
-      {/* TODO: Categorize these screens */}
-      {/* ------------------------------ */}
-      {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
-      {/* <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} /> */}
-      {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
-      {/* <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} /> */}
     </Stack.Navigator>
   );
 };
