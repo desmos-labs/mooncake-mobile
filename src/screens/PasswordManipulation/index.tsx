@@ -62,7 +62,7 @@ export type NavProps = CompositeScreenProps<
 >;
 
 const PasswordManipulation = () => {
-  const { t } = useTranslation('passwordManipulation');
+  const { t } = useTranslation('password');
   const styles = useStyles();
   const theme = useTheme();
   const scrollViewRef = useRef<ScrollView>(null);

@@ -11,7 +11,7 @@ export const useInitialFormValues = (): FormValues => ({
 });
 
 export const useValidationSchema = () => {
-  const { t } = useTranslation('enterPassword');
+  const { t } = useTranslation('password');
   return React.useMemo(() => {
     return Yup.object().shape({
       password: Yup.string().required(t('error:required')),

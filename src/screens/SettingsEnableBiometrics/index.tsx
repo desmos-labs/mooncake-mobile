@@ -24,7 +24,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_ENABLE_
  * @constructor
  */
 const SettingsEnableBiometrics = () => {
-  const { t } = useTranslation('enterPassword');
+  const { t } = useTranslation('password');
   const styles = useStyles();
   const theme = useTheme();
 

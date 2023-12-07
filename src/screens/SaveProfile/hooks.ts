@@ -82,7 +82,7 @@ export const useCheckDTagAvailability = () => {
  * TODO: This should be used if we are creating a new profile
  */
 export const useOpenInfoModal = () => {
-  const { t } = useTranslation('passwordManipulation');
+  const { t } = useTranslation('password');
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(() => {
     navigate(ROUTES.TEXTONLY_MODAL, {

@@ -1,4 +1,8 @@
 {
+  "blocked users": "Blocked Users",
+  "noBlocked users": "No blocked users",
+  "unblock": "Unblock",
+  "block": "Block",
   "creating relationship title": "Relationship being created",
   "creating relationship message": "Your are starting to follow {{user}}",
   "relationship created title": "Relationship created",

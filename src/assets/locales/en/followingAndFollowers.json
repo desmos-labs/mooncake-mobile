@@ -7,5 +7,8 @@
   "follow": "Follow",
   "unfollow": "Unfollow",
   "pleaseUnlockYourWallet": "Please unlock your wallet",
-  "dismiss": "Dismiss"
+  "dismiss": "Dismiss",
+  "unblock popup title": "Unblock",
+  "unblock popup body": "{{username}} will able to follow you, tag you and see your posts again.",
+  "unblock": "Unblock"
 }

@@ -6,5 +6,7 @@
   "allowAccess": "Allow Access",
   "tapToType": "Tap to type..",
   "creating post": "Your post is being created...",
-  "post created": "Your post has been created!"
+  "post created": "Your post has been created!",
+  "post": "Post",
+  "write a comment": "Write a comment..."
 }

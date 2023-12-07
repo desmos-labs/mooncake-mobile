@@ -41,7 +41,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_SEND_TIPS>;
  */
 const SendTips = (props: NavProps) => {
   const { goBack, pop } = useNavigation<NavProps['navigation']>();
-  const { t } = useTranslation('sendTips');
+  const { t } = useTranslation('tips');
   const styles = useStyles();
   const theme = useTheme();
   const showToast = useToast();

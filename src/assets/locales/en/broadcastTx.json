@@ -1,16 +1,4 @@
 {
-  "addProfile": "Add Profile",
-  "connectChain": "Connect Chain",
-  "createProfile": "Create Profile",
-  "unlinkApp": "Unlink Application",
-  "linkApp": "Link Application",
-  "signUp": "Sign Up",
-  "save created profile": "Save created profile",
-  "save created profile body": "Your profile has not been saved on chain yet, to perform this transaction you need to save your profile first.",
-  "permissions": "Permissions",
-  "permissions modal body": "To improve your experience and automatise the securing process of your operations, the app requests you the following permissions:\n• Manage contents\n• Manage profile\n• Follow and Unfollow users\n• Report content\n• Smart contracts execution\n• Block and Unblock users",
-  "fee grant": "Fee grant",
-  "sign on your behalf": "Sign on your behalf",
   "performing transaction": "Performing transaction",
   "operation completed": "Operation completed successfully"
 }

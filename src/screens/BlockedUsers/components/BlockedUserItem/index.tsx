@@ -20,7 +20,7 @@ interface Props {
 }
 
 const BlockedUserItem = ({ profile }: Props) => {
-  const { t } = useTranslation('blockedUsers');
+  const { t } = useTranslation('relationships');
   const styles = useStyles();
 
   const handleBlockOrUnblockUser = useBlockOrUnblockUser();

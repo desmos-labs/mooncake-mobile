@@ -66,7 +66,7 @@ const initialFormValues = {
  * @constructor
  */
 const UnlockWallet = () => {
-  const { t } = useTranslation('enterPassword');
+  const { t } = useTranslation('password');
   const theme = useTheme();
   const styles = useStyles();
 

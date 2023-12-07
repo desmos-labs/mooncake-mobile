@@ -29,8 +29,6 @@ import ImportAccountSelectProfile, {
   SelectAccountParamList,
 } from 'screens/ImportAccountSelectProfile';
 import Landing from 'screens/Landing';
-import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
-import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
 import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
@@ -38,9 +36,6 @@ import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SelectImageModal, { SelectImageModalParams } from 'screens/Modals/SelectImageModal';
 import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
-import UploadProfilePicturesModal, {
-  SaveProfileModalParams,
-} from 'screens/Modals/UploadProfilePicturesModal';
 import Onboarding, { OnboardingParams } from 'screens/Onboarding';
 import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
 import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
@@ -174,8 +169,6 @@ export type RootNavigatorParamList = {
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
-  [ROUTES.UPLOAD_PROFILE_PICTURES_MODALS]: SaveProfileModalParams;
-  [ROUTES.AUTHORIZATION_MODAL]: AuthorizationModalParams;
   [ROUTES.SELECT_IMAGE_MODAL]: SelectImageModalParams;
 
   // -------------------------------------------------------------------------------------
@@ -355,16 +348,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
-        <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
         <Stack.Screen name={ROUTES.SELECT_IMAGE_MODAL} component={SelectImageModal} />
-        <Stack.Screen
-          name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}
-          component={UploadProfilePicturesModal}
-        />
-        <Stack.Screen
-          name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
-          component={BackupPhraseBottomModal}
-        />
       </Stack.Group>
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}

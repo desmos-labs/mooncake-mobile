@@ -67,7 +67,7 @@ export const useInitialFormValues = (): FormValues => {
  * @param accountBalance {[]Coin} - Current balance of the account tipping the post.
  */
 export const useValidateForm = (accountBalance: Coin[]) => {
-  const { t } = useTranslation('sendTips');
+  const { t } = useTranslation('tips');
 
   // Account balance
   const coinBalance = useCoinBalance(accountBalance);
