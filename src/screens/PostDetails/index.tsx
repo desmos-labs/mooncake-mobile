@@ -1,32 +1,32 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useActiveProfile } from '@recoil/profiles';
+import { FlashList } from '@shopify/flash-list';
+import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
+import StyledSpinner from 'components/StyledSpinner';
+import Typography from 'components/Typography';
+import usePostComments from 'hooks/posts/comments/usePostComments';
+import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard, SafeAreaView } from 'react-native';
-import { useTheme } from 'native-base';
+import PostHeader from 'screens/PostDetails/components/PostHeader';
+import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import { FlashList } from '@shopify/flash-list';
-import { isCommentReply, Post } from 'types/posts';
-import usePostComments from 'hooks/posts/comments/usePostComments';
-import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
-import { useActiveProfile } from '@recoil/profiles';
-import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
-import PostHeader from 'screens/PostDetails/components/PostHeader';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import PostTopBar from 'screens/PostDetails/components/PostTopBar';
-import StyledSpinner from 'components/StyledSpinner';
-import Typography from 'components/Typography';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
-import useStyles from './useStyles';
+import { isCommentReply, Post } from 'types/posts';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
+import useStyles from './useStyles';
 
 export type NavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList, ROUTES.POST_DETAILS>,
@@ -97,9 +97,6 @@ const PostDetails = () => {
   // Reactions data
   const { refetch: refreshReactionsCount } = usePostReactionsCount(postData);
 
-  // Tips data
-  const { refetch: refreshTipsCount } = usePostTipsCount(postData);
-
   // Comment creation
   const onCommentCreated = useCallback(() => {
     Keyboard.dismiss();
@@ -114,7 +111,9 @@ const PostDetails = () => {
   const handleExpandCommentView = useHandleExpandCommentView();
 
   const handlePressCreateComment = useCallback(async () => {
-    if (!post) return;
+    if (!post) {
+      return;
+    }
     setCommentPosting(true);
     await handleCreateComment(post);
     // we will unlock the comment bottom bar using a useEffect that watches the comment recoil.
@@ -127,9 +126,8 @@ const PostDetails = () => {
     await refreshReactionsCount();
     await refreshComments();
     await refreshCommentsCount();
-    await refreshTipsCount();
     setPageRefreshing(false);
-  }, [refreshComments, refreshCommentsCount, refreshPost, refreshReactionsCount, refreshTipsCount]);
+  }, [refreshComments, refreshCommentsCount, refreshPost, refreshReactionsCount]);
 
   const onPullToRefresh = React.useCallback(() => {
     // set firstLoad to false so the loading indicator will be shown in the event
@@ -219,7 +217,6 @@ const PostDetails = () => {
         keyboardDismissMode="on-drag"
         onEndReached={fetchMoreComments}
       />
-
       {/* Bottom bar allowing to create a new comment */}
       <EnterCommentBottomBar
         author={activeProfile}

@@ -1,6 +1,6 @@
 import { makeStyle } from 'config/theme';
-import { verticalScale } from 'react-native-size-matters';
 import { Dimensions } from 'react-native';
+import { verticalScale } from 'react-native-size-matters';
 
 export const fixedWidth = Dimensions.get('window').width;
 
@@ -22,11 +22,12 @@ const useStyles = makeStyle(theme => ({
     width: fixedWidth,
   },
   imageStyle: {
-    width: verticalScale(150),
-    height: verticalScale(150),
+    marginTop: -80,
+    width: verticalScale(220),
+    height: verticalScale(220),
   },
   textView: {
-    marginTop: 80,
+    marginTop: 40,
     paddingHorizontal: theme.spacing.xl,
     alignItems: 'center',
   },
@@ -38,6 +39,7 @@ const useStyles = makeStyle(theme => ({
   button: {
     marginHorizontal: theme.spacing.m,
   },
+  paginationView: { alignSelf: 'center', marginTop: -80, marginBottom: 40 },
 }));
 
 export default useStyles;

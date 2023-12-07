@@ -9,6 +9,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
+import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
 import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
 import { getSaveProfileAllowance } from 'lib/grantsUtils';
 import { useTheme } from 'native-base';
@@ -22,7 +23,6 @@ import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import { LoginOnboardingStep } from 'types/tourguide';
-import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
 import useStyles, { fixedWidth } from './useStyles';
 
 export interface OnboardingParams {
@@ -204,7 +204,7 @@ const Onboarding = () => {
           scrollEventThrottle={32}
           ref={slidesRef}
         />
-        <View style={{ alignSelf: 'center' }}>
+        <View style={styles.paginationView}>
           <PaginationDots pages={slides} scrollX={scrollX} width={fixedWidth} />
         </View>
         <Spacer paddingBottom="xl" />

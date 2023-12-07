@@ -70,7 +70,6 @@ const FeeGrantWaitingScreen = () => {
           action: 'create',
         });
       },
-      optionalFeeGranter: GRANTER_ADDRESS,
     });
   }, [navigation, saveProfile, setLoginFlowState]);
 
@@ -146,7 +145,11 @@ const FeeGrantWaitingScreen = () => {
         <Spacer paddingBottom={theme.spacing.l} />
         <Typography.Body5 style={styles.subtitle}>{subtitle}</Typography.Body5>
         <Spacer paddingBottom={theme.spacing.xl} />
-        <Button onPress={createDesmosProfile} disabled={!feeGrantReady}>
+        <Button
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
+          onPress={createDesmosProfile}
+          disabled={!feeGrantReady}>
           Create a Desmos Profile
         </Button>
       </View>

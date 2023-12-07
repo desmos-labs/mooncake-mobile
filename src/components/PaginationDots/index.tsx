@@ -1,6 +1,6 @@
+import { makeStyle } from 'config/theme';
 import React from 'react';
 import { Animated, View } from 'react-native';
-import { makeStyle } from 'config/theme';
 
 interface Props {
   pages: any[];
@@ -20,15 +20,15 @@ const PaginationDots = ({ pages, scrollX, width }: Props) => {
           extrapolate: 'clamp',
         });
 
-        const opacity = scrollX.interpolate({
+        const backgroundColor = scrollX.interpolate({
           inputRange,
-          outputRange: [0.3, 1, 0.3],
+          outputRange: ['#DDDDDD', '#FEB027', '#DDDDDD'],
           extrapolate: 'clamp',
         });
 
         return (
           <Animated.View
-            style={[styles.dot, { width: dotWidth, opacity }]}
+            style={[styles.dot, { width: dotWidth, backgroundColor }]}
             key={(i + 10).toString()}
           />
         );
