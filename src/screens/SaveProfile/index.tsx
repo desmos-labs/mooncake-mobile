@@ -320,7 +320,7 @@ const SaveProfile = (props: NavProps) => {
                   backgroundColor={theme.colors.surfaceBlack}
                   size={44}
                   onPress={handleSubmit as any}>
-                  {t('common:confirm')}
+                  {t('confirm', { ns: 'common' })}
                 </Button>
               </View>
             </>

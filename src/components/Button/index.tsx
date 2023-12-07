@@ -1,9 +1,9 @@
-import React from 'react';
+import { TypographyStyles } from 'components/Typography';
+import _ from 'lodash';
 import { Button as NBButton, useTheme, useToken } from 'native-base';
 import { ColorType } from 'native-base/lib/typescript/components/types';
-import _ from 'lodash';
+import React from 'react';
 import { StyleProp, StyleSheet, TextStyle } from 'react-native';
-import { TypographyStyles } from 'components/Typography';
 
 interface Props
   extends Omit<
@@ -117,9 +117,6 @@ const Button = ({
     <NBButton
       py={`${paddingY()}px`}
       isDisabled={rest.disabled || rest.isDisabled}
-      _disabled={{
-        backgroundColor: 'tabIconGrey',
-      }}
       {...buttonTypography}
       // can ignore this error as variant has a default value of solid
       // @ts-ignore
