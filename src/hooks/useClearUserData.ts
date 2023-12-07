@@ -30,7 +30,7 @@ const useClearUserData = () => {
 
   return React.useCallback(() => {
     navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('forgotPw'),
+      title: t('forgot password'),
       subtitle: t('description'),
       primaryButtonLabel: t('confirm', { ns: 'common' }),
       secondaryButtonLabel: t('cancel', { ns: 'common' }),

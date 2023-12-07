@@ -6,5 +6,8 @@
   "connectedChains_plural": "{{count}} Chains",
   "connectedApps_plural": "{{count}} Apps connected",
   "connectedWallet_plural": "{{count}} Wallets",
-  "learnMore": "Learn More"
+  "learnMore": "Learn More",
+  "operations": "Operations",
+  "see more": "See more",
+  "balance": "Balance"
 }

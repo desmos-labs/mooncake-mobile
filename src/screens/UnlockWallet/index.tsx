@@ -207,7 +207,9 @@ const UnlockWallet = () => {
 
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>
-      <Typography.H3 style={styles.headerText}>{titleLabelOverride || t('header')}</Typography.H3>
+      <Typography.H3 style={styles.headerText}>
+        {titleLabelOverride || t('unlock wallet')}
+      </Typography.H3>
       <Formik
         initialValues={initialFormValues}
         onSubmit={onFormSubmit}
@@ -215,14 +217,14 @@ const UnlockWallet = () => {
         {({ handleSubmit, errors, setValues, values }) => (
           <View style={styles.formContainer}>
             <Typography.Subtitle2 style={styles.inputLabel}>
-              {subtitleLabelOverride || t('inputLabel')}
+              {subtitleLabelOverride || t('enter password')}
             </Typography.Subtitle2>
             {optionalBodyText && (
               <>
                 <Typography.Body6 style={styles.optionalBody}>{optionalBodyText}</Typography.Body6>
                 {subtitleLabelOverride && (
                   <Typography.Subtitle2 style={styles.inputLabel}>
-                    {t('inputLabel')}
+                    {t('enter password')}
                   </Typography.Subtitle2>
                 )}
               </>
@@ -230,7 +232,7 @@ const UnlockWallet = () => {
             <DSecureTextInput
               style={styles.textInput}
               autoFocus={!unlockWalletWithBiometrics}
-              placeholder={t('inputPlaceholder')}
+              placeholder={t('password')}
               value={unlockWithBiometrics ? biometricsPsw : values.password}
               onChangeText={(text: string) => {
                 setValues({ password: text }, true);
@@ -254,7 +256,9 @@ const UnlockWallet = () => {
                 {t('next', { ns: 'common' })}
               </Button>
               <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>
-                <Typography.Button2>{t('forgotPassword')}</Typography.Button2>
+                <Typography.Button2>
+                  {t('forgot password', { ns: 'forgotPassword' })}
+                </Typography.Button2>
               </TouchableOpacity>
             </KeyboardAvoidingView>
           </View>

@@ -7,5 +7,7 @@
   "commented reply": "Replied to your comment",
   "followed you": "Started following you",
   "liked your post": "Liked your post",
-  "profileNotFound": "Profile not found"
+  "profileNotFound": "Profile not found",
+  "no activities": "No activities",
+  "activities": "Activities"
 }

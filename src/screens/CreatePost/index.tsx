@@ -57,7 +57,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_CREATE>;
  * @constructor
  */
 const CreatePost = () => {
-  const { t } = useTranslation('postInteraction');
+  const { t } = useTranslation('createPost');
   const styles = useStyles();
   const theme = useTheme();
   const showToast = useToast();
@@ -133,7 +133,7 @@ const CreatePost = () => {
       showToast({
         toastType: ToastType.error,
         title: t('error', { ns: 'common' }),
-        message: t('errorWhileCreatingPost'),
+        message: result.error.message,
       });
       return;
     }
@@ -192,7 +192,7 @@ const CreatePost = () => {
         numberOfLines={1}
         ellipsizeMode="tail"
         style={CommonStyles.textAlign.center}>
-        {t('replyTo', { replyTo: `@${parent?.author.dTag}` })}
+        {t('reply to', { name: `@${parent?.author.dTag}` })}
       </Typography.Body7>
     );
   }, [parent, t]);
@@ -247,7 +247,7 @@ const CreatePost = () => {
             <TextInput
               autoFocus={true}
               maxLength={postsParams.maxTextLength}
-              placeholder={t(parent ? 'yourReply' : 'writeSomething')}
+              placeholder={parent ? t('your reply') : t('write something')}
               placeholderTextColor={theme.colors.grey02}
               value={postText}
               onChangeText={setPostText}

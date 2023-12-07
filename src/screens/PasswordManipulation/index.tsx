@@ -81,8 +81,8 @@ const PasswordManipulation = () => {
       case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
         return Yup.object().shape({
           confirmPassword: Yup.string()
-            .required(t('required', { ns: 'error' }))
-            .oneOf([Yup.ref('newPassword')], t('pwMustMatch', { ns: 'error' })),
+            .required(t('field required', { ns: 'common' }))
+            .oneOf([Yup.ref('newPassword')], t('passwords must match')),
         });
       case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
         // TODO: Provide validation schema for reset password.
@@ -127,10 +127,10 @@ const PasswordManipulation = () => {
 
   return (
     <DView style={styles.container} topBar={<TopBar />} backgroundColor={theme.colors.white}>
-      <Typography.H3 style={styles.headerText}>{t(headerText as any)}</Typography.H3>
+      <Typography.H3 style={styles.headerText}>{headerText}</Typography.H3>
       {descriptionText && (
         <Spacer paddingBottom={32}>
-          <Typography.Body6>{t(descriptionText as any)}</Typography.Body6>
+          <Typography.Body6>{descriptionText}</Typography.Body6>
         </Spacer>
       )}
       {/* nested ternary to fix next button behavior on small screen devices
@@ -172,7 +172,7 @@ const PasswordManipulation = () => {
                     value={values.newPassword}
                     onChangeText={(value: string) => setFieldValue('newPassword', value, true)}
                     style={styles.inputLabel}
-                    placeholder={t('newPw')}
+                    placeholder={t('new password')}
                     // error={!!errors.newPassword}
                   />
                   {errors.newPassword && (
@@ -182,7 +182,7 @@ const PasswordManipulation = () => {
                   )}
                   {animatedPasswordChecks(values)}
                   <Typography.Subtitle2 style={styles.bottomLabel}>
-                    {t('confirmPw')}
+                    {t('confirm password')}
                   </Typography.Subtitle2>
                   <DSecureTextInput
                     error={errors.confirmPassword !== undefined}
@@ -197,7 +197,7 @@ const PasswordManipulation = () => {
                         300,
                       )
                     }
-                    placeholder={t('pw')}
+                    placeholder={t('password')}
                     value={values.confirmPassword}
                     style={styles.inputLabel}
                     onChangeText={(value: string) => setFieldValue('confirmPassword', value, true)}

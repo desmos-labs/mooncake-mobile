@@ -12,5 +12,9 @@
   "days ago_plural": "{{count}} days ago",
   "block": "Block",
   "unblock": "Unblock",
-  "hide": "Hide Post"
+  "hide": "Hide Post",
+  "HOME_TAB_DISCOVER": "Discover",
+  "HOME_TAB_FOLLOWING": "Following",
+  "search something": "Search something",
+  "no posts to display": "No posts to display"
 }

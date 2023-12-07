@@ -3,5 +3,8 @@
   "creating post": "Your post is being created...",
   "post created": "Your post has been created!",
   "post": "Post",
-  "write a comment": "Write a comment..."
+  "write a comment": "Write a comment...",
+  "reply to": "Reply to {{name}}",
+  "your reply": "Your reply...",
+  "write something": "Write something..."
 }

@@ -9,5 +9,14 @@
   "reveal private key body unlock": "Anyone who obtains your private key can take full control of your account.",
   "sign out": "Sign out",
   "sign out private key warning": "Once you sign out you will be required to re-enter your private key if you have logged in with it. Make sure you have it stored somewhere before proceeding further.",
-  "joined butter": "Joined Butter"
+  "joined butter": "Joined Butter on {{formattedDate}}",
+  "security": "Security",
+  "enable biometrics": "Enable Biometrics",
+  "change password": "Change Password",
+  "blocked users": "Blocked users",
+  "others": "Others",
+  "notifications": "Notifications",
+  "feedbacks": "Feedbacks",
+  "about": "About",
+  "settings": "Settings"
 }
