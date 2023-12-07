@@ -14,7 +14,6 @@ import legal from "./legal.json";
 import onboarding from "./onboarding.json";
 import operations from "./operations.json";
 import postDetails from "./postDetails.json";
-import postOperations from "./postOperations.json";
 import profile from "./profile.json";
 import relationships from "./relationships.json";
 import reportUser from "./reportUser.json";
@@ -42,7 +41,6 @@ const en = {
   reportUser,
   createPost,
   postDetails,
-  postOperations,
   forgotPassword,
   activities,
   broadcastTx,

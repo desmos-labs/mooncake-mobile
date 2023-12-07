@@ -77,7 +77,7 @@ const useInitializeNotifications = () => {
 
     // Unsubscribe the listener when the effect is destroyed
     return () => unsubscribe();
-  }, [appStateVisible, createLocalNotification, createTransactionNotificationSnackbar]);
+  }, [appStateVisible, createLocalNotification]);
 };
 
 export default useInitializeNotifications;
