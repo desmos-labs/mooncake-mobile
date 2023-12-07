@@ -59,7 +59,7 @@ const Landing = () => {
         {t('butter')}
       </Text>
       <Text style={styles.subtitle} allowFontScaling>
-        {t('header')}
+        {t('butter slogan')}
       </Text>
       <Spacer paddingTop={theme.spacing.m} />
       <Box alignSelf="stretch">

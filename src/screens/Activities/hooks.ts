@@ -9,7 +9,7 @@ import { getWeek } from 'date-fns';
  * 2. the second one containing all the notifications that have timestamp older than the current week
  */
 export const useSplitNotificationsByWeek = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('activities');
 
   return React.useCallback(
     (notifications: CompleteNotification[]) => {

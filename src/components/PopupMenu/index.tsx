@@ -50,7 +50,7 @@ export interface Props {
 const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen, menuIcon, menuIconStyle }) => {
   const styles = useStyles();
 
-  const { t } = useTranslation('a11y');
+  const { t } = useTranslation('postOperations');
 
   /**
    * Memoize the menu items to prevent re-renders.
@@ -88,7 +88,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen, menuIcon, menuIconS
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={t('showPostActions')}
+        accessibilityLabel={t('show post actions')}
         {...triggerProps}>
         <Image source={menuIcon || moreBlackIcon} style={menuIconStyle || styles.menuButton} />
       </Pressable>

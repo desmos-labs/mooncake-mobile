@@ -82,9 +82,9 @@ export const useValidateForm = (accountBalance: Coin[]) => {
 
       const insertedAmount = safeParseFloat(values.amount);
       if (insertedAmount < minTipValue) {
-        errors.amount = t('too few');
+        errors.amount = t('amount too low');
       } else if (insertedAmount > maxTipValue) {
-        errors.amount = t('too much');
+        errors.amount = t('amount too high');
       }
 
       return errors;

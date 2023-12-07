@@ -1,7 +1,10 @@
 {
-  "header": "Send Tips",
-  "subtitle": "How much do you want to tip?",
-  "oops": "Oops!",
-  "too much": "The amount is too much",
-  "too few": "The amount is too low"
+  "send tips": "Send Tips",
+  "how much do you want to tip": "How much do you want to tip?",
+  "insert amount": "Insert amount",
+  "available": "Available",
+  "message for the user": "Message for the user",
+  "amount too low": "The amount is too low",
+  "amount too high": "The amount is too high"
 }
+

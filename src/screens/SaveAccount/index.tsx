@@ -43,11 +43,11 @@ declare type NavProps = StackScreenProps<
  * @constructor
  */
 const SaveAccount = ({ navigation }: NavProps) => {
+  const { t } = useTranslation('signup');
   const { reset } = useNavigation<NavProps['navigation']>();
   const {
     params: { account, wallet, password },
   } = useRoute<NavProps['route']>();
-  const { t } = useTranslation('signup');
   const styles = useStyles();
   const theme = useTheme();
   const [saving, setSaving] = React.useState(false);

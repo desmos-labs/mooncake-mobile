@@ -1,8 +1,12 @@
 {
+  "comments": "Comments",
+  "no comments yet": "No comments yet",
   "comment": "Comment",
   "like": "Like",
   "follow": "Follow",
   "unfollow": "Unfollow",
   "report": "Report",
-  "failed to post comment": "Failed to post comment"
+  "share": "Share",
+  "failed to post comment": "Failed to post comment",
+  "likes counter": "{{likesCounter}} Likes"
 }

@@ -1,4 +1,6 @@
 {
+  "HOME_TAB_DISCOVER": "Discover",
+  "HOME_TAB_FOLLOWING": "Following",
   "follow": "Follow",
   "unfollow": "Unfollow",
   "report": "Report",
@@ -13,8 +15,6 @@
   "block": "Block",
   "unblock": "Unblock",
   "hide": "Hide Post",
-  "HOME_TAB_DISCOVER": "Discover",
-  "HOME_TAB_FOLLOWING": "Following",
   "search something": "Search something",
   "no posts to display": "No posts to display"
 }

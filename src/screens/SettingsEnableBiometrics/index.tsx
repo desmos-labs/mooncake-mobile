@@ -56,7 +56,7 @@ const SettingsEnableBiometrics = () => {
       if (result.isErr()) {
         // Set the errors inside the UI
         if (result.error.type === SecureStorageErrorType.WrongPassword) {
-          setErrors({ password: t('incorrectPassword', { ns: 'errors' }) });
+          setErrors({ password: t('incorrect password', { ns: 'password' }) });
         } else {
           setErrors({ password: result.error.message });
         }

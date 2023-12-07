@@ -1,5 +1,3 @@
 {
-  "pwMustMatch": "Passwords do not match, please try again.",
-  "incorrectPassword": "Incorrect password, please try again.",
   "insufficient funds": "Sorry, you don't have enough tokens to do this. Ask someone to send you some, or get them on Osmosis"
 }

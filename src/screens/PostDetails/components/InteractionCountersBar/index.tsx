@@ -55,7 +55,7 @@ const InteractionCountersBar = (props: Props) => {
           </Box>
         )}
         <Typography.Button2 style={styles.text}>
-          {t('likes and tips', { likesCounter })}
+          {t('likes counter', { likesCounter })}
         </Typography.Button2>
       </TouchableOpacity>
     </View>

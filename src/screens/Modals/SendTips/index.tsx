@@ -125,9 +125,9 @@ const SendTips = (props: NavProps) => {
           {({ handleSubmit, values, errors, setFieldValue }) => {
             return (
               <ScrollView contentContainerStyle={styles.contentContainer}>
-                <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
+                <Typography.H4 style={styles.headerText}>{t('send tips')}</Typography.H4>
                 <Spacer paddingBottom={16} />
-                <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
+                <Typography.Subtitle3>{t('how much do you want to tip')}</Typography.Subtitle3>
                 <Spacer paddingBottom={14} />
                 <View style={styles.buttonGroup}>
                   {defaultTipsAmounts.map(value => {
@@ -203,7 +203,7 @@ const SendTips = (props: NavProps) => {
                 )}
 
                 <Spacer paddingVertical={20}>
-                  <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
+                  <Typography.Subtitle3>{t('message for the user')}</Typography.Subtitle3>
                 </Spacer>
                 <DTextInput
                   multiline
@@ -212,7 +212,7 @@ const SendTips = (props: NavProps) => {
                   value={message}
                   onChangeText={text => setMessage(text)}
                   style={styles.textInput}
-                  placeholder={t('message')}
+                  placeholder={t('message for the user')}
                 />
                 <Spacer paddingVertical={30}>
                   <Button

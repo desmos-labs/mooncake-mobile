@@ -25,6 +25,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
 import { isCommentReply, Post } from 'types/posts';
+import { useTranslation } from 'react-i18next';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
 
@@ -54,6 +55,7 @@ export interface PostDetailsParams {
 }
 
 const PostDetails = () => {
+  const { t } = useTranslation('postDetails');
   const styles = useStyles();
   const theme = useTheme();
   const { goBack } = useNavigation<NavProps['navigation']>();
@@ -211,7 +213,7 @@ const PostDetails = () => {
           (firstLoad && areCommentsLoading) || areCommentsLoading ? (
             <CommentItemSkeleton />
           ) : (
-            <EmptyListComponent label="No comments yet" />
+            <EmptyListComponent label={t('no comments yet')} />
           )
         }
         keyboardDismissMode="on-drag"
