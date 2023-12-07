@@ -8,5 +8,6 @@
   "reveal private key subtitle unlock": "Never disclose this key.",
   "reveal private key body unlock": "Anyone who obtains your private key can take full control of your account.",
   "sign out": "Sign out",
-  "sign out private key warning": "Once you sign out you will be required to re-enter your private key if you have logged in with it. Make sure you have it stored somewhere before proceeding further."
+  "sign out private key warning": "Once you sign out you will be required to re-enter your private key if you have logged in with it. Make sure you have it stored somewhere before proceeding further.",
+  "joined butter": "Joined Butter"
 }

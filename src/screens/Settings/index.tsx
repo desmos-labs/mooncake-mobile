@@ -129,7 +129,7 @@ const Settings = (props: NavProps) => {
       </Button>
       <Typography.Body7 style={styles.bottomText}>
         <Trans
-          i18nKey="settings:joined product"
+          i18nKey="joined buttter"
           components={[<Typography.Subtitle4 />]}
           values={{
             formattedDate: formattedAccountCreationDate,
