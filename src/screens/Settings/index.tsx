@@ -8,7 +8,6 @@ import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
 import Spacer from 'components/Spacer';
-import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useDisableBiometrics from 'hooks/biometrics/useDisableBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
@@ -21,6 +20,7 @@ import { usePostHog } from 'posthog-react-native';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Trans, useTranslation } from 'react-i18next';
+import { ScrollView } from 'react-native';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
@@ -162,9 +162,7 @@ const Settings = (props: NavProps) => {
 
   return (
     <DView
-      scrollable
       style={styles.root}
-      topBar={<TopBar />}
       showLoadingOverlay={signOutLoading}
       backgroundColor={theme.colors.backgroundGrey}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>

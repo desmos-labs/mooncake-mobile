@@ -15,18 +15,11 @@ const useStyles = makeStyleWithProps((background: Props, theme) => ({
     resizeMode: 'cover',
     position: 'absolute',
     top: 0,
-    zIndex: 1,
+    zIndex: -1,
   },
   backgroundFillOverride: {
     bottom: 0,
     height: undefined,
-  },
-  content: {
-    zIndex: 1,
-    flex: 1,
-    flexDirection: 'column',
-    flexGrow: 1,
-    backgroundColor: background === undefined ? theme.colors.background : 'transparent',
   },
   scrollViewOuter: {
     margin: -20,
@@ -34,6 +27,9 @@ const useStyles = makeStyleWithProps((background: Props, theme) => ({
   scrollViewInner: {
     padding: 20,
     flexGrow: 1,
+  },
+  paddingHorizontal: {
+    paddingHorizontal: theme.spacing.m,
   },
 }));
 

@@ -288,10 +288,13 @@ const SaveProfile = (props: NavProps) => {
                   )}
                   <Typography.Subtitle2 style={styles.inputLabel}>{t('bio')}</Typography.Subtitle2>
                   <DTextInput
+                    onFocus={() => {
+                      setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 500);
+                    }}
                     inputRef={bioInputRef}
                     value={values.bio}
                     multiline={true}
-                    scrollEnabled={false}
+                    scrollEnabled={true}
                     inputStyle={styles.bioInput}
                     placeholder={t('add bio')}
                     onChangeText={value => {

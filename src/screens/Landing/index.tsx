@@ -54,42 +54,44 @@ const Landing = () => {
 
   return (
     <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>
-      <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
-      <Text style={styles.title} allowFontScaling>
-        {t('butter')}
-      </Text>
-      <Text style={styles.subtitle} allowFontScaling>
-        {t('butter slogan')}
-      </Text>
-      <Spacer paddingTop={theme.spacing.m} />
-      <Box alignSelf="stretch">
-        <Button
-          backgroundColor="rgba(255, 255, 255, 0.7)"
-          onPress={() => onSignUp(LoginMethodPrivateKey)}>
-          {t('login with private key')}
-        </Button>
-      </Box>
-      <Spacer paddingTop={theme.spacing.xl} />
-      <View style={styles.loginWithContainer}>
-        <View style={styles.loginDivider} />
-        <Spacer paddingHorizontal={8} />
-        <Typography.Body5 style={styles.loginWithLabel}>{t('or sign in with')}</Typography.Body5>
-        <Spacer paddingHorizontal={8} />
-        <View style={styles.loginDivider} />
-      </View>
-      <View style={styles.bottomIcons}>
-        {Platform.OS === 'ios' && (
+      <View style={styles.innerView}>
+        <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
+        <Text style={styles.title} allowFontScaling>
+          {t('butter')}
+        </Text>
+        <Text style={styles.subtitle} allowFontScaling>
+          {t('butter slogan')}
+        </Text>
+        <Spacer paddingTop={theme.spacing.m} />
+        <Box alignSelf="stretch">
+          <Button
+            backgroundColor="rgba(255, 255, 255, 0.7)"
+            onPress={() => onSignUp(LoginMethodPrivateKey)}>
+            {t('login with private key')}
+          </Button>
+        </Box>
+        <Spacer paddingTop={theme.spacing.xl} />
+        <View style={styles.loginWithContainer}>
+          <View style={styles.loginDivider} />
+          <Spacer paddingHorizontal={8} />
+          <Typography.Body5 style={styles.loginWithLabel}>{t('or sign in with')}</Typography.Body5>
+          <Spacer paddingHorizontal={8} />
+          <View style={styles.loginDivider} />
+        </View>
+        <View style={styles.bottomIcons}>
+          {Platform.OS === 'ios' && (
+            <ImageButton
+              image={appleLoginIcon}
+              style={styles.loginLogo}
+              onPress={() => onSignUp(LoginMethodWeb3AuthApple)}
+            />
+          )}
           <ImageButton
-            image={appleLoginIcon}
+            image={googleLoginIcon}
             style={styles.loginLogo}
-            onPress={() => onSignUp(LoginMethodWeb3AuthApple)}
+            onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}
           />
-        )}
-        <ImageButton
-          image={googleLoginIcon}
-          style={styles.loginLogo}
-          onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}
-        />
+        </View>
       </View>
     </DView>
   );

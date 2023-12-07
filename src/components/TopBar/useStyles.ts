@@ -4,7 +4,6 @@ const useStyles = makeStyle(theme => ({
   root: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.m,
     zIndex: 5,
   },
   container: {
