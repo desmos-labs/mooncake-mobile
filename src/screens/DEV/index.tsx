@@ -23,6 +23,7 @@ const routesToRender = [
   ROUTES.WELCOME_PAGE,
   ROUTES.FEE_GRANT_WAITING_SCREEN,
   ROUTES.BOTTOM_TABS,
+  ROUTES.UNLOCK_WALLET,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
@@ -84,6 +85,11 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             case ROUTES.WELCOME_PAGE:
               navigate(item, {
                 action: 'create',
+              });
+              break;
+            case ROUTES.UNLOCK_WALLET:
+              navigate(item, {
+                onSuccess: () => {},
               });
               break;
             default:

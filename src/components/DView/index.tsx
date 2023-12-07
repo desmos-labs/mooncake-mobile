@@ -11,7 +11,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { Edge, SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
@@ -81,7 +80,7 @@ const DView: React.FC<Props> = props => {
         onPress={handleBackgroundPress}>
         <SafeAreaView
           edges={edges ?? ['bottom', 'left', 'right', 'top']}
-          style={[styles.root, backgroundColor ? { backgroundColor } : {}]}
+          style={[styles.root, backgroundColor ? { backgroundColor } : {}, style]}
           onTouchStart={onTouchStart}
           {...rest}>
           <StatusBar
@@ -94,32 +93,26 @@ const DView: React.FC<Props> = props => {
             <ImageBackground style={styles.background} source={backgroundImage} />
           )}
           {topBar}
-          <Animated.View style={[styles.content, style]}>
-            {scrollable ? (
-              <ScrollView
-                refreshControl={
-                  enableRefreshControl ? (
-                    <RefreshControl
-                      enabled
-                      onRefresh={onRefresh}
-                      refreshing={refreshing || false}
-                    />
-                  ) : undefined
-                }
-                showsVerticalScrollIndicator={false}
-                style={styles.scrollViewOuter}
-                contentContainerStyle={styles.scrollViewInner}>
-                {/*
-              this View will save the world (ScrollView behavior back to work normally as intended on iOS)
-              */}
-                <View onStartShouldSetResponder={() => true} style={CommonStyles.flex[1]}>
-                  {children}
-                </View>
-              </ScrollView>
-            ) : (
-              children
-            )}
-          </Animated.View>
+          {scrollable ? (
+            <ScrollView
+              refreshControl={
+                enableRefreshControl ? (
+                  <RefreshControl enabled onRefresh={onRefresh} refreshing={refreshing || false} />
+                ) : undefined
+              }
+              showsVerticalScrollIndicator={false}
+              style={styles.scrollViewOuter}
+              contentContainerStyle={styles.scrollViewInner}>
+              {/*
+               this View will save the world (ScrollView behavior back to work normally as intended on iOS)
+               */}
+              <View onStartShouldSetResponder={() => true} style={CommonStyles.flex[1]}>
+                {children}
+              </View>
+            </ScrollView>
+          ) : (
+            children
+          )}
         </SafeAreaView>
       </TouchableWithoutFeedback>
       <LoadingOverlay isVisible={showLoadingOverlay ?? false} />

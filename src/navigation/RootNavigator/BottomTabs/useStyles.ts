@@ -1,11 +1,21 @@
 import { makeStyle } from 'config/theme';
+import { Platform } from 'react-native';
 
 const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    paddingVertical: theme.spacing.s,
+    paddingBottom: Platform.OS === 'android' ? theme.spacing.s : 0,
+    paddingTop: theme.spacing.s,
     paddingHorizontal: theme.spacing.m,
+    shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 20,
   },
   middleButtonView: {
     flex: 1,

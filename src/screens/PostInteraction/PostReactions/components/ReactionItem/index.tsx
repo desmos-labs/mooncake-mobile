@@ -17,7 +17,7 @@ type Props = {
  */
 const ReactionItem = ({ reaction }: Props) => {
   const styles = useStyles();
-  const { t } = useTranslation('postInteraction');
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>

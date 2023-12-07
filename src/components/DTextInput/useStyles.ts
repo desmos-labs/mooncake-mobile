@@ -9,8 +9,6 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     borderRadius: 8,
     minHeight: 48,
     alignItems: 'center',
-    // borderColor: props.error ? theme.colors.pink01 : theme.colors.lightGrey01,
-    // borderWidth: 1,
   },
   input: {
     fontFamily: 'Poppins_400Regular',
@@ -23,8 +21,6 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     paddingHorizontal: 11,
     flexGrow: 1,
     flex: 0.95,
-    // textAlignVertical: props.multiline === true ? 'top' : 'center',
-    // height: '100%',
     color: props.error ? theme.colors.pink01 : theme.colors.surfaceBlack,
     minHeight: props.numberOfLines !== undefined ? 25 * props.numberOfLines : undefined,
   },

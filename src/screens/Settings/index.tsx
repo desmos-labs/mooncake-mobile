@@ -1,29 +1,35 @@
 import { StackScreenProps } from '@react-navigation/stack';
+import { useActiveAccount, useActiveAccountAddress, useStoredAccounts } from '@recoil/accounts';
+import { useActiveProfile } from '@recoil/profiles';
+import { useSetSetting, useSetting } from '@recoil/settings';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
 import Spacer from 'components/Spacer';
-import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useDisableBiometrics from 'hooks/biometrics/useDisableBiometrics';
+import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
+import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import { usePostHog } from 'posthog-react-native';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import useStyles from 'screens/Settings/useStyles';
-import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
-import { useActiveAccount } from '@recoil/accounts';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import { getVersion } from 'react-native-device-info';
+import { AccountWithWallet } from 'types/account';
+import { Wallet } from 'types/wallet';
 import {
-  useChangePassword,
   useOpenNotificationsSettings,
   useSendFeedback,
   useShowAboutInfo,
   useShowPrivateKey,
   useSignOut,
-  useToggleBiometrics,
 } from './hooks';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
@@ -37,12 +43,15 @@ const Settings = (props: NavProps) => {
   const styles = useStyles();
   const { navigation } = props;
   const { navigate } = navigation;
-
+  const theme = useTheme();
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
   const activeAccount = useActiveAccount();
+  const activeProfile = useActiveProfile();
+  const activeAddress = useActiveAccountAddress();
+  const accounts = useStoredAccounts();
   const formatDateToTZ = useFormatDateToTZ();
   const formattedAccountCreationDate = React.useMemo(() => {
     if (!activeAccount) {
@@ -53,13 +62,14 @@ const Settings = (props: NavProps) => {
   }, [activeAccount, formatDateToTZ]);
 
   const { canShowPrivateKey, showPrivateKey } = useShowPrivateKey();
-
-  const changePassword = useChangePassword();
+  const postHog = usePostHog();
   const unlockWallet = useUnlockWallet();
-
-  const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
-
   const openNotificationsSettings = useOpenNotificationsSettings();
+  const analytics = useSetting('analytics');
+  const setAnalytics = useSetSetting('analytics');
+  const biometrics = useSetting('biometrics');
+  const enableBiometrics = useEnableBiometrics();
+  const disableBiometrics = useDisableBiometrics();
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
@@ -81,42 +91,91 @@ const Settings = (props: NavProps) => {
     });
   }, [navigate, t, signOut]);
 
-  const handlePressChangePassword = useCallback(async () => {
-    const walletUnlockResult = await unlockWallet();
+  const onUnlockSuccess = useCallback(
+    (wallet: Wallet) => {
+      const activeAcc = accounts[activeAddress!];
+      const activeAccountWithWallet: AccountWithWallet = {
+        account: activeAcc,
+        wallet,
+      };
+      navigate(ROUTES.PASSWORD_MANIPULATION, {
+        mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
+        account: activeAccountWithWallet,
+        profile: activeProfile,
+      });
+    },
+    [accounts, activeAddress, activeProfile, navigate],
+  );
 
-    if (walletUnlockResult.isOk()) {
-      changePassword();
-    }
-  }, [changePassword, t, unlockWallet]);
+  const navigateToChangePassword = useCallback(async () => {
+    await unlockWallet({
+      toUnlockAddress: activeAddress,
+      optionalOnSuccess: onUnlockSuccess,
+      forceRequestPassword: true,
+    });
+  }, [activeAddress, onUnlockSuccess, unlockWallet]);
 
   const handlePressBlockedUsers = useCallback(() => {
     navigate(ROUTES.BLOCKED_USERS);
   }, [navigate]);
+
+  const handleAnalyticsToggle = React.useCallback(
+    (enabled: boolean) => {
+      setAnalytics(() => {
+        if (postHog) {
+          if (enabled) {
+            postHog.optIn();
+          } else {
+            postHog.optOut();
+          }
+        }
+        return enabled;
+      });
+    },
+    [postHog, setAnalytics],
+  );
+
+  const handleBiometricsToggle = React.useCallback(async () => {
+    if (biometrics) {
+      await disableBiometrics();
+    } else {
+      const result = await unlockWallet({
+        forceRequestPassword: true,
+      });
+      if (result.isOk()) {
+        await enableBiometrics(result.value.password!, true, activeAccount?.address!);
+      }
+    }
+  }, [activeAccount?.address, biometrics, disableBiometrics, enableBiometrics, unlockWallet]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView scrollable style={styles.root} topBar={<TopBar />} showLoadingOverlay={signOutLoading}>
+    <DView
+      style={styles.root}
+      showLoadingOverlay={signOutLoading}
+      backgroundColor={theme.colors.backgroundGrey}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
-
       {/* Security section */}
       <Section style={styles.spacer} title={t('security')}>
-        {biometricsSupported && (
-          <SectionSwitch
-            label={t('enable biometrics')}
-            value={biometricsEnabled}
-            onValueChange={toggleBiometrics}
-          />
-        )}
-        <SectionButton label={t('change password')} onPress={handlePressChangePassword} />
+        <SectionSwitch
+          label={t('enable analytics')}
+          value={analytics}
+          onValueChange={() => handleAnalyticsToggle(!analytics)}
+        />
+        <SectionSwitch
+          label={t('enable biometrics')}
+          value={biometrics}
+          onValueChange={handleBiometricsToggle}
+        />
+        <SectionButton label={t('change password')} onPress={navigateToChangePassword} />
         <SectionButton label={t('blocked users')} onPress={handlePressBlockedUsers} />
         {canShowPrivateKey && (
           <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
         )}
       </Section>
-
       {/* Other section */}
       <Section style={styles.spacer} title={t('others')}>
         <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />

@@ -3,10 +3,14 @@ import { verticalScale } from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   container: {
-    alignItems: 'center',
     flex: 1,
-    padding: theme.spacing.m,
+    paddingVertical: theme.spacing.m,
     paddingTop: verticalScale(40),
+  },
+  innerView: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.m,
   },
   dummyAvatar: {
     width: 150,
