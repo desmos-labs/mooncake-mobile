@@ -1,12 +1,45 @@
-import React, { useState } from 'react';
-import { areReactionsEqual, PostReaction } from 'types/desmos';
-import { Post } from 'types/posts';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import { useQuery } from '@apollo/client';
+import React from 'react';
+import { PostReaction } from 'types/desmos';
+import { useLazyQuery } from '@apollo/client';
 import GetPostReactions from 'services/graphql/queries/GetPostReactions';
 import { convertGraphQLReaction } from 'lib/GraphQLUtils/reactions';
-import { useGetPostReactionsToSync } from '@recoil/reactions';
-import { mergeCacheableData } from 'lib/CacheUtils';
+import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
+
+/**
+ * Hook that provides a function that can be used inside the usePaginatedData
+ * hook to fetch the current user's liked events.
+ */
+const useFetchPostReactions = (postId: number) => {
+  const [fetchPostReactions] = useLazyQuery(GetPostReactions);
+
+  return React.useCallback<FetchDataFunction<PostReaction>>(
+    async (offset, limit) => {
+      const { data, error } = await fetchPostReactions({
+        fetchPolicy: 'no-cache',
+        variables: {
+          postId,
+          offset,
+          limit,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      const reactions =
+        data?.reactions?.map(({ reaction }: { reaction: any }) =>
+          convertGraphQLReaction(reaction),
+        ) ?? [];
+
+      return {
+        data: reactions,
+        endReached: reactions.length < limit,
+      };
+    },
+    [fetchPostReactions],
+  );
+};
 
 /**
  * Hook that allows to get the reactions for the given post.
@@ -14,97 +47,19 @@ import { mergeCacheableData } from 'lib/CacheUtils';
  * @param post - Post for which to get the reactions.
  * @param reactionsPerPage {number} - Number of reactions to be fetched per page
  */
-const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPage = 50) => {
-  const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Trying to get post reactions without active user');
-  }
-
-  // Get the reactions to be synced
-  const getPostReactionsToSync = useGetPostReactionsToSync(activeAccountAddress);
-  const postReactionsToSync = getPostReactionsToSync(post.subspaceId, post.id);
-
-  // Set the initial reactions state to be the reactions to sync.
-  // This will later be merged with reactions from the chain at the first fetch.
-  const [reactions, setReactions] = useState<PostReaction[]>(postReactionsToSync);
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [fetchingMore, setFetchingMore] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>();
-
-  // Callback that is used when some data is returned by the chain
-  const onCompletedCallback = React.useCallback((data: any) => {
-    if (!data) return;
-    const onChainReactions = data.reactions.map(convertGraphQLReaction);
-
-    // Update the reactions
-    setReactions(currentReactions => {
-      // Merge the existing reactions with the new one
-      const [merged] = mergeCacheableData(currentReactions, onChainReactions, areReactionsEqual);
-      return merged;
-    });
-    setLoading(false);
-    setRefreshing(false);
-    setFetchingMore(false);
-  }, []);
-
-  // Query used to get the comments
-  const { refetch, fetchMore } = useQuery(GetPostReactions, {
-    variables: {
-      subspaceId: post.subspaceId,
-      postId: post.id,
-      offset: 0,
-      limit: reactionsPerPage,
-    },
-    onCompleted: onCompletedCallback,
-    refetchWritePolicy: 'overwrite',
+/**
+ * Hook that allows the fetch the liked events in a paginated way.
+ * This hook will also take care of caching the liked events that are fetched.
+ */
+const usePostReactions = (postId: number) => {
+  const paginatedDataFields = usePaginatedData(useFetchPostReactions(postId), {
+    itemsPerPage: 20,
+    // Logic to always fetch the first page even if we already have cached data.
+    autoFetchFirstPage: true,
   });
 
-  // Callback that is used to refetch the next page of reactions
-  const fetchMoreReactions = React.useCallback(async () => {
-    try {
-      if (loading) {
-        return;
-      }
-      setError(undefined);
-      setFetchingMore(true);
-
-      await fetchMore({
-        variables: { offset: reactions.length },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          reactions: fetchMoreResult ? [...prev.reactions, ...fetchMoreResult.reactions] : prev,
-        }),
-      });
-    } catch (e: any) {
-      setFetchingMore(false);
-      setError(e.toString());
-    }
-  }, [loading, fetchMore, reactions.length]);
-
-  // Callback that is used in order to re-fetch the entire list of reactions
-  const refreshReactions = React.useCallback(async () => {
-    try {
-      setError(undefined);
-      setRefreshing(true);
-
-      // Get the new data by resetting the fetch offset to restart post fetching
-      const { data } = await refetch({ offset: 0 });
-      onCompletedCallback(data);
-    } catch (e: any) {
-      setRefreshing(false);
-      setError(e.toString());
-    }
-  }, [onCompletedCallback, refetch]);
-
   return {
-    loading,
-    reactions,
-    refetch: refreshReactions,
-    refreshing,
-    fetchMore: fetchMoreReactions,
-    fetchingMore,
-    error,
+    ...paginatedDataFields,
   };
 };
 

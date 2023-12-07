@@ -123,7 +123,7 @@ const useUnfollowUser = () => {
         },
       });
     },
-    [setFollowedUserStatus, subspaceId, broadcastTx],
+    [setFollowedUserStatus, subspaceId, signAndBroadcastTx, t],
   );
 };
 

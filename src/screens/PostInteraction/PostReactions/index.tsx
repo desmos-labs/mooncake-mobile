@@ -13,6 +13,7 @@ import { Center } from 'native-base';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
 import StyledSpinner from 'components/StyledSpinner';
+import { PostReaction } from 'types/desmos';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
@@ -36,12 +37,12 @@ const PostReactions = () => {
 
   const { count, refetch: refetchCount } = usePostReactionsCount(post);
   const {
-    reactions,
+    data: reactions,
     loading,
-    refetch: refetchReactions,
+    refresh: refetchReactions,
     fetchMore,
     refreshing,
-  } = usePostReactions(post);
+  } = usePostReactions(post.id);
 
   const refetch = useCallback(async () => {
     await refetchReactions().then(() => refetchCount());
@@ -60,7 +61,7 @@ const PostReactions = () => {
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
-  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<any>) => {
+  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<PostReaction>) => {
     return <ReactionItem reaction={item} />;
   }, []);
 
@@ -82,7 +83,7 @@ const PostReactions = () => {
       <FlashList
         refreshing={refreshing}
         onRefresh={refetch}
-        keyExtractor={(item, index) => `${item.id?.toString() ?? ''}-${index}`}
+        keyExtractor={(item, index) => `${item.author.address}-${index}`}
         data={reactions}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}

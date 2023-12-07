@@ -1,10 +1,8 @@
 import { gql } from '@apollo/client';
 
 const GetPostReactionsCount = gql`
-  query GetPostReactionsCount($subspaceId: bigint!, $postId: bigint!) @api(name: butter) {
-    reactions: reaction_aggregate(
-      where: { post: { subspace_id: { _eq: $subspaceId }, id: { _eq: $postId } } }
-    ) {
+  query GetPostReactionsCount($postId: bigint!) @api(name: butter) {
+    reactions: post_likes_aggregate(where: { post_id: { _eq: $postId } }) {
       aggregate {
         count
       }
