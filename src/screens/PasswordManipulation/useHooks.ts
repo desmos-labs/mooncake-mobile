@@ -99,7 +99,7 @@ const useHooks = () => {
       default:
         return undefined;
     }
-  }, [mode]);
+  }, [mode, t]);
 
   const descriptionText = React.useMemo(() => {
     switch (mode) {
@@ -110,7 +110,7 @@ const useHooks = () => {
       default:
         return undefined;
     }
-  }, [mode]);
+  }, [mode, t]);
 
   const pwInputLabel = React.useMemo(() => {
     switch (mode) {
@@ -121,7 +121,7 @@ const useHooks = () => {
       default:
         return t('enter new password');
     }
-  }, [mode]);
+  }, [mode, t]);
 
   const buttonLabel = React.useMemo(() => {
     switch (mode) {
@@ -132,7 +132,7 @@ const useHooks = () => {
       default:
         return t('confirm', { ns: 'common' });
     }
-  }, [mode]);
+  }, [mode, t]);
 
   const mapPwStyle = React.useCallback(
     (password: string) => {
