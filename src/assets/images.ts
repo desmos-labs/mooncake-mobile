@@ -1,28 +1,4 @@
-export const akashIcon = require("./images/akash.png");
-
-export const bitcannaIcon = require("./images/bitcannaIcon.png");
-
-export const bandIcon = require("./images/band.png");
-
-export const cosmosIcon = require("./images/cosmos.png");
-
-export const cryptoComIcon = require("./images/crypto_com.png");
-
 export const desmosIcon = require("./images/desmosIcon.png");
-
-export const eMoneyIcon = require("./images/e_money.png");
-
-export const junoIcon = require("./images/juno.png");
-
-export const kavaIcon = require("./images/kava.png");
-
-export const likecoinIcon = require("./images/likecoin.png");
-
-export const osmosisIcon = require("./images/osmosis.png");
-
-export const regenIcon = require("./images/regen.png");
-
-export const terraIcon = require("./images/terra.png");
 
 export const copyIcon = require("./images/copy.png");
 
@@ -62,10 +38,6 @@ export const landingBG = require("./images/landingBG.png");
 
 export const magnifyingGlass = require("./images/magnifyingGlass.png");
 
-export const createPost = require("./images/createPost.png");
-
-export const noMorePosts = require("./images/noMorePosts.png");
-
 export const commentLiked = require("./images/commentLiked.png");
 
 export const reportIcon = require("./images/report.png");
@@ -101,7 +73,6 @@ export const accountCreatedBg = require("./images/accountCreatedBg.png");
 export const accountCreatedIcon = require("./images/accountCreatedIcon.png");
 
 export const reportSuccessIcon = require("./images/reportSuccessIcon.png");
-export const communitiesBackgroundImage = require("./images/communities_background.png");
 export const emptyListPlaceholder = require("./images/emptyListsPlaceholders/emptyListPlaceholder.png");
 
 export const block = require("./images/block.png");

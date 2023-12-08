@@ -97,7 +97,7 @@ export const sortPostsByCreationDate = (posts: Post[]): Post[] => {
   return posts.sort((a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate));
 };
 
-export enum PostUpdateType {
+enum PostUpdateType {
   CREATE,
   REPLACE,
   DELETE,

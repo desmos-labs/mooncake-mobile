@@ -29,11 +29,6 @@ export class CanceledOperationError extends Error {
   }
 }
 
-export const isCanceledOperationError = (e: Error): e is CanceledOperationError => {
-  const { type } = e as CanceledOperationError;
-  return type === 'CanceledOperationError';
-};
-
 export class CanceledBlockError extends Error {
   readonly type: 'CanceledBlockError';
 

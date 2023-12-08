@@ -4,7 +4,7 @@ import { DesmosMainnet, DesmosTestnet } from '@desmoslabs/desmjs';
 import { desmosIcon } from 'assets/images';
 import { Slip10RawIndex } from '@cosmjs/crypto';
 
-const DesmosChain: SupportedChain = {
+export const DesmosChain: SupportedChain = {
   name: 'Desmos',
   prefix: 'desmos',
   masterHDPath: [
@@ -21,4 +21,4 @@ const DesmosChain: SupportedChain = {
   chainInfo: [DesmosTestnet, DesmosMainnet],
 };
 
-export default DesmosChain;
+export const SupportedChains = [DesmosChain];

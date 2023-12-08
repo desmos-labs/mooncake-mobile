@@ -1,9 +1,8 @@
 import { defaultBanner, defaultProfilePic } from 'assets/images';
-import LinkableChains from 'config/LinkableChains';
 import { ImageSource } from 'expo-image';
 import { ImageRequireSource, ImageURISource } from 'react-native';
 import { Asset } from 'react-native-image-picker';
-import { ChainLink, DesmosProfile } from 'types/desmos';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Tells whether the given picture is a valid URI or not.
@@ -16,7 +15,7 @@ const isPictureUri = (picture: Asset | string | undefined): picture is string =>
 /**
  * Tells whether the given picture is a valid {@link Asset} or not.
  */
-export const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
+const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
   if (picture === undefined) {
     return false;
   }
@@ -75,16 +74,6 @@ export const getProfileDisplayName = (profile: DesmosProfile): string => {
         profile.address.length - 5,
       )}`;
   }
-};
-
-/**
- * Returns the source that should be used to display the image of the given chain link.
- * @param chain {ChainLink} - Chain link for which to display the image.
- */
-export const getChainLinkImage = (chain: ChainLink): ImageSource => {
-  return (
-    LinkableChains.find(y => y.chainConfig.name === chain.chainName)?.icon || defaultProfilePic
-  );
 };
 
 /**

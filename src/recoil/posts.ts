@@ -184,31 +184,6 @@ export const useStoredFollowingPosts = (user: string, followingAddresses: string
   );
 };
 
-export const useUpdateStoredPendingPost = () => {
-  const setPosts = useSetRecoilState(postsState);
-  return React.useCallback(
-    (user: string, subspaceId: number, externalId: string, update: Post) => {
-      setPosts(currentTimeline => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...currentTimeline,
-        };
-
-        const userPosts = updatedPosts[user] ?? [];
-        updatedPosts[user] = userPosts.map(post => {
-          return post.subspaceId === subspaceId &&
-            post.externalId === externalId &&
-            post.status !== PostStatus.SYNCED
-            ? update
-            : post;
-        });
-
-        return updatedPosts;
-      });
-    },
-    [setPosts],
-  );
-};
-
 /**
  * Hook that allows to delete the given pending post from the posts state.
  */

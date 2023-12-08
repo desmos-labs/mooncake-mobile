@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import { MsgSendEncodeObject } from '@cosmjs/stargate';
-import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { Coin } from '@desmoslabs/desmjs';
 import { err, ok, Result } from 'neverthrow';
 

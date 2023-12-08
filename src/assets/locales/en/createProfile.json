@@ -12,5 +12,6 @@
   "saving profile body": "We are saving up your amazing profile...",
   "profile saved": "Your profile has been saved",
   "invalid dtag": "Invalid DTag value",
-  "max bio length exceeded": "The bio must be at most {{numChars}} characters long"
+  "max bio length exceeded": "The bio must be at most {{numChars}} characters long",
+  "enter nickname": "Enter your nickname"
 }

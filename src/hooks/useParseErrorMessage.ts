@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import React from 'react';
 
 const useParseErrorMessage = () => {
-  const { t } = useTranslation('errors');
+  const { t } = useTranslation('error');
   return React.useCallback(
     (error: string) => {
       if (error.includes('insufficient funds')) {

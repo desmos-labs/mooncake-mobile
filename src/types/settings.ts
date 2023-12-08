@@ -6,7 +6,7 @@
  */
 import { ChainInfo } from '@desmoslabs/desmjs';
 
-export type AppTheme = 'light' | 'dark' | 'auto';
+type AppTheme = 'light' | 'dark' | 'auto';
 
 /**
  * Type that represents the application settings

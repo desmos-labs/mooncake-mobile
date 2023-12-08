@@ -1,8 +1,7 @@
 import { usePostHog } from 'posthog-react-native';
 import React from 'react';
 import useIsTestnetEvent from 'hooks/analytics/useIsTestnetEvent';
-import { identifyPostHogUser } from 'lib/PostHog/utils';
-import { useCurrentChainInfo } from '@recoil/settings';
+import { identifyPostHogUser } from 'lib/PostHogUtils';
 
 /**
  * Hook that provides a function to track the user on PostHog.
@@ -10,17 +9,16 @@ import { useCurrentChainInfo } from '@recoil/settings';
 const useTrackUser = () => {
   const postHog = usePostHog();
   const isTestnetEvent = useIsTestnetEvent();
-  const chainInfo = useCurrentChainInfo();
 
   return React.useCallback(
     async (address: string) => {
-      if (!postHog || isTestnetEvent || !chainInfo) {
+      if (!postHog || isTestnetEvent) {
         return;
       }
 
-      await identifyPostHogUser(postHog, address, chainInfo);
+      await identifyPostHogUser(postHog, address);
     },
-    [postHog, isTestnetEvent, chainInfo],
+    [postHog, isTestnetEvent],
   );
 };
 

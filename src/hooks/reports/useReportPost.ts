@@ -8,7 +8,7 @@ import { err, ok, Result } from 'neverthrow';
 import React from 'react';
 import { PostAlreadyReportedError } from 'types/error';
 import { Post } from 'types/posts';
-import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { useTranslation } from 'react-i18next';
 import { MsgCreateReportTypeUrl } from '@desmoslabs/desmjs/build/modules/reports/v1';
 

@@ -7,7 +7,7 @@ import {
   UnsupportedMsgAllowanceTypeUrl,
 } from 'types/authorizations';
 
-export const convertGraphQLAllowance = (data: any): Allowance => {
+const convertGraphQLAllowance = (data: any): Allowance => {
   switch (data['@type']) {
     case Feegrant.v1beta1.BasicAllowanceTypeUrl:
       return {
@@ -30,6 +30,8 @@ export const convertGraphQLAllowance = (data: any): Allowance => {
   }
 };
 
+// It's fine to disable the eslint rule here since we might want to add more in the future
+// eslint-disable-next-line import/prefer-default-export
 export const convertGraphQLFeeGrant = (data: any): FeeGrant => {
   return {
     expirationDate: data.allowance.expiration

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
+import useParseErrorMessage from 'hooks/useParseErrorMessage';
 
 interface PopupOptions {
   readonly title?: string;
@@ -37,6 +38,7 @@ interface SignAndBroadcastOptions {
 const useSignAndBroadcastTx = () => {
   const { t } = useTranslation('broadcastTx');
   const showToast = useToast();
+  const parseError = useParseErrorMessage();
 
   const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
@@ -102,7 +104,7 @@ const useSignAndBroadcastTx = () => {
           showToast({
             toastType: ToastType.error,
             title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),
-            message: options?.onError?.popup?.description ?? error.message,
+            message: options?.onError?.popup?.description ?? parseError(error.message),
           });
         });
     },
