@@ -37,7 +37,7 @@ const useFetchPostReactions = (postId: number) => {
         endReached: reactions.length < limit,
       };
     },
-    [fetchPostReactions],
+    [fetchPostReactions, postId],
   );
 };
 

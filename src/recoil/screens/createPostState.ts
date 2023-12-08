@@ -22,6 +22,7 @@ export interface CreatePostState
     | 'transactions'
     | 'author'
     | 'hasUserLiked'
+    | 'likesCount'
     | 'lastUpdatedDate'
   > {
   /**

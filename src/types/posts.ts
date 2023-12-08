@@ -104,6 +104,11 @@ export interface Post {
    * Tells whether the user has liked this post or not.
    */
   readonly hasUserLiked: boolean;
+
+  /**
+   * Number of likes that this post has received.
+   */
+  readonly likesCount: number;
 }
 
 export enum PostReferenceType {
