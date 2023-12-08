@@ -4,7 +4,7 @@ import React, { ReactElement, useMemo } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
 
-export type Props = {
+type Props = {
   /**
    * Element to display on the center of the bar.
    */
@@ -32,7 +32,7 @@ export type Props = {
 /**
  * TODO: use react-navigation's header prop on navigator instead
  */
-export const TopBar: React.FC<Props> = props => {
+const TopBar: React.FC<Props> = props => {
   const {
     centerElement,
     rightElement,

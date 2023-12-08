@@ -3,7 +3,7 @@ import { ColorValue, View } from 'react-native';
 import { Center } from 'native-base';
 import AnimatedRing from './AnimatedRing';
 
-export interface PingAnimationProps {
+interface PingAnimationProps {
   /**
    * The size of the ping.
    */

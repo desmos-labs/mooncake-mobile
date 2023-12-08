@@ -3,7 +3,7 @@ import { DesmosProfile } from 'types/desmos';
 import AvatarImageProps from 'components/AvatarImage/props';
 import AvatarImage from 'components/AvatarImage';
 
-export interface ProfileImageProps extends Omit<AvatarImageProps, 'source'> {
+interface ProfileImageProps extends Omit<AvatarImageProps, 'source'> {
   /**
    * Profile associated with the avatar image to be displayed.
    */

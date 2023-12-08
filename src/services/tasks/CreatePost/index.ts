@@ -5,7 +5,7 @@ import { Post, PostAttachment, PostAttachmentType } from 'types/posts';
 import { err, Ok, ok, Result } from 'neverthrow';
 import { convertPostToMsgCreatePost } from 'lib/PostsUtils';
 
-export interface CreatePostTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'> {
+interface CreatePostTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'> {
   readonly subspaceId: number;
   readonly parent?: Post;
   readonly post: Post;

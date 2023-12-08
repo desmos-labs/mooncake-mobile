@@ -14,15 +14,15 @@ import {
   PostStatus,
 } from 'types/posts';
 import { v4 as uuidv4 } from 'uuid';
-import { ImageMedia } from 'services/axios/requests/UploadMedia';
 import { scheduleTask } from 'lib/BackgroundTaskUtils';
 import CreatePostTask from 'services/tasks/CreatePost';
 import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
 import useToast from 'hooks/toasts/useToast';
 import { useTranslation } from 'react-i18next';
 import { ToastType } from 'config/toast/toastConfig';
+import { ImageMedia } from 'types/media';
 
-export interface CreatePostOptions {
+interface CreatePostOptions {
   readonly parent?: Post;
   readonly onProcessCompleted?: () => void;
 }

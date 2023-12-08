@@ -42,21 +42,6 @@ export interface SubspaceParams {
 }
 
 /**
- * Search inside the given params to find the id of a registered reaction that represents a like.
- * @param params {SubspaceParams} - Params inside which to search.
- * @throws {Error} if no registered reaction represents a like.
- */
-export const getLikeReactionId = (params: SubspaceParams): number => {
-  const reaction = params.registeredReactions.find(r => r.shortHandCode.includes('like'));
-  if (!reaction) {
-    throw new Error(
-      'Subspace does not contain any registered reaction with shorthand code that represents a like',
-    );
-  }
-  return reaction.id;
-};
-
-/**
  * On-chain parameters related to the posts' module.
  * These data should be considered when creating or editing a post.
  */

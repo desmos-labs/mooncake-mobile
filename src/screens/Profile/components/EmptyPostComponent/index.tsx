@@ -5,11 +5,11 @@ import Typography from 'components/Typography';
 import React from 'react';
 import { Image, View } from 'react-native';
 import { useTheme } from 'native-base';
-import { makeStyle } from 'config/theme';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import ROUTES from 'navigation/routes';
+import useStyles from './useStyles';
 
-export interface EmptyPostComponentProps {
+interface EmptyPostComponentProps {
   readonly textLabel: string;
   readonly buttonLabel: string;
 }
@@ -40,24 +40,5 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
     </View>
   );
 };
-
-const useStyles = makeStyle(theme => ({
-  container: {
-    alignSelf: 'center',
-    marginTop: theme.spacing.xl,
-    backgroundColor: theme.colors.white,
-  },
-  emptyImage: {
-    height: 72,
-    resizeMode: 'contain',
-    marginVertical: theme.spacing.m,
-    alignSelf: 'center',
-  },
-  text: { textAlign: 'center' },
-  button: {
-    marginHorizontal: 150,
-    justifyContent: 'center',
-  },
-}));
 
 export default EmptyPostComponent;

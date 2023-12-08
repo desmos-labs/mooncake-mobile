@@ -18,28 +18,28 @@ export enum ToastType {
   info = 'info',
 }
 
-export interface CommonToastProps {
+interface CommonToastProps {
   readonly message: string;
   readonly toastType: ToastType;
 }
 
-export interface SimpleToastProps extends CommonToastProps {
+interface SimpleToastProps extends CommonToastProps {
   readonly title: string;
   readonly toastType: ToastType.success | ToastType.error;
 }
 
-export interface LoadingToastProps extends CommonToastProps {
+interface LoadingToastProps extends CommonToastProps {
   readonly toastType: ToastType.loading;
 }
 
-export interface OneButtonToastProps extends CommonToastProps {
+interface OneButtonToastProps extends CommonToastProps {
   readonly toastType: ToastType.oneButton;
   readonly title?: string;
   readonly buttonLabel: string;
   readonly buttonAction: () => void;
 }
 
-export interface InfoToastProps extends CommonToastProps {
+interface InfoToastProps extends CommonToastProps {
   readonly toastType: ToastType.info;
   readonly title?: string;
 }

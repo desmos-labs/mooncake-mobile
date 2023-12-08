@@ -37,7 +37,7 @@ import { NavProps } from 'screens/Home';
 import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
-export type Props = {
+type Props = {
   /**
    * User that is creating the comment.
    */

@@ -2,7 +2,7 @@ import { ICustomTheme, useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 
-export type TypographyComponentProps = React.ComponentProps<typeof Text>;
+type TypographyComponentProps = React.ComponentProps<typeof Text>;
 
 function createTextComponent(
   styleProvider: (_theme: ICustomTheme) => StyleProp<TextStyle>,

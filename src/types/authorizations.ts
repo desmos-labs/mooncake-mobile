@@ -73,32 +73,3 @@ export interface FeeGrant {
    */
   readonly granterAddress: string;
 }
-
-/**
- * Contains the information about all kind of grants the user has
- * granted to the centralized APIs.
- */
-export interface AuthorizationsInformation {
-  readonly feeGrants: FeeGrant[];
-  readonly authzGrants: AuthzGrant[];
-}
-
-/**
- * Interface that represents the missing authorizations
- * that the user need to have to be able to broadcast a transaction
- * with the centralized API.
- */
-export interface AuthorizationsStatus {
-  /**
-   * List of message types that don't have a fee grant allowance.
-   */
-  readonly missingFeeGrant: string[];
-  /**
-   * List of message types that don't have the authz authorization.
-   */
-  readonly missingAuthz: string[];
-  /**
-   * Tells if all the permissions are granted.
-   */
-  readonly haveAllPermissions: boolean;
-}

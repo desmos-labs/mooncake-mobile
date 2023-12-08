@@ -10,7 +10,7 @@ import { AppSettings } from 'types/settings';
 /**
  * Default application settings
  */
-export const DefaultAppSettings: AppSettings = {
+const DefaultAppSettings: AppSettings = {
   theme: 'light',
   biometrics: false,
   analytics: true,

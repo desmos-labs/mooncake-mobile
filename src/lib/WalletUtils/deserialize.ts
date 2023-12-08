@@ -9,7 +9,7 @@ import {
  * Deserialize a [SerializableWeb3AuthWallet] from a JSON parsed object.
  * @param value - The JSON parsed value that should be a [SerializableWeb3AuthWallet].
  */
-export const deserializeWeb3AuthWallet = (
+const deserializeWeb3AuthWallet = (
   value: Partial<SerializableWeb3AuthWallet>,
 ): SerializableWeb3AuthWallet => {
   if (
@@ -42,7 +42,7 @@ export const deserializeWeb3AuthWallet = (
  * Deserialize a [SerializablePrivateKeyWallet] from a JSON parsed object.
  * @param value - The JSON parsed value that should be a [SerializablePrivateKeyWallet].
  */
-export const deserializePrivateKeyWallet = (
+const deserializePrivateKeyWallet = (
   value: Partial<SerializablePrivateKeyWallet>,
 ): SerializablePrivateKeyWallet => {
   if (
@@ -73,6 +73,8 @@ export const deserializePrivateKeyWallet = (
  * Deserialize a [SerializableWallet] from a JSON parsed object.
  * @param value - The JSON parsed value that should be a [SerializableWallet].
  */
+// It's fine to disable the eslint rule here, since this is a utility function
+// eslint-disable-next-line import/prefer-default-export
 export const deserializeWallet = (value: Partial<SerializableWallet>): SerializableWallet => {
   switch (value.type) {
     case WalletType.Web3Auth:

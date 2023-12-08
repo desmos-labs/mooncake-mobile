@@ -8,7 +8,7 @@ import { useAddPostToHiddenPosts } from '@recoil/hiddenPosts';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 
-export interface SuccessfulHidePost {
+interface SuccessfulHidePost {
   readonly postID: number;
 }
 

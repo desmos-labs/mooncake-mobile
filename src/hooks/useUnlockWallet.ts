@@ -14,7 +14,7 @@ import { CanceledOperationError } from 'types/error';
 import { UnlockWalletParams } from 'screens/UnlockWallet';
 import { useSetUserWallet, useUserWallet } from '@recoil/userWallet';
 
-export interface UnlockWalletResult {
+interface UnlockWalletResult {
   /**
    * The wallet that was unlocked.
    */
@@ -26,7 +26,7 @@ export interface UnlockWalletResult {
   password?: string;
 }
 
-export interface UnlockWalletConfig {
+interface UnlockWalletConfig {
   /**
    * Address of the wallet to unlock.
    * If `undefined`, the active account will be used.

@@ -1,12 +1,10 @@
 import { useActiveAccount } from '@recoil/accounts';
 import { useStoreProfile } from '@recoil/profiles';
-import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import { err, ok, Result } from 'neverthrow';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile, ProfileParams } from 'types/desmos';
 import * as Yup from 'yup';
@@ -57,21 +55,6 @@ export const useValidationSchema = (profileParams: ProfileParams) => {
       ),
     });
   }, [t, profileParams]);
-};
-
-/**
- * Hook that allows to check whether the given DTag is available or not.
- * TODO: This should be used somewhere to make sure the DTag input by the user is free
- */
-export const useCheckDTagAvailability = () => {
-  const [getLazyData] = useCustomLazyQuery(SearchProfiles);
-  return React.useCallback(
-    async (inputDTag: string) => {
-      const data = await getLazyData({ variables: { dTag: inputDTag } });
-      return (data?.profile?.length ?? 0) === 0;
-    },
-    [getLazyData],
-  );
 };
 
 /**

@@ -2,7 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { MediaTypeOptions } from 'expo-image-picker';
 import usePermissions from 'hooks/permissions/usePermissions';
 import React from 'react';
-import { AppPermissionStatus } from 'types/permissions';
+import AppPermissionStatus from 'types/permissions';
 
 /**
  * Enum that represents the possible results
@@ -23,7 +23,7 @@ export enum TakePictureActionResults {
  * Interface that represents a result where the user canceled the
  * take picture action.
  */
-export interface TakePictureCanceled {
+interface TakePictureCanceled {
   readonly status: TakePictureActionResults.Canceled;
 }
 
@@ -31,7 +31,7 @@ export interface TakePictureCanceled {
  * Interface that represents a result where the user
  * took the picture.
  */
-export interface TakePictureTaken {
+interface TakePictureTaken {
   readonly status: TakePictureActionResults.Taken;
   /**
    * Uri where the picture has been saved.
@@ -42,7 +42,7 @@ export interface TakePictureTaken {
 /**
  * Take picture results type union.
  */
-export type TakePictureActionResult = TakePictureCanceled | TakePictureTaken;
+type TakePictureActionResult = TakePictureCanceled | TakePictureTaken;
 
 /**
  * Hook that provide a function to take a picture with the device camera.

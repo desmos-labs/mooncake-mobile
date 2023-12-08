@@ -57,22 +57,3 @@ export const useStoreUserApplicationLinks = () => {
     [setApplicationsLinks],
   );
 };
-
-/**
- * Hook that allows to easily delete the application links for the user having a given address.
- */
-export const useDeleteApplicationLinks = () => {
-  const setApplicationLinks = useSetRecoilState(applicationLinksState);
-  return React.useCallback(
-    (address: string) => {
-      setApplicationLinks(storedLinks => {
-        const newValue: Record<string, ApplicationLink[]> = {
-          ...storedLinks,
-        };
-        delete newValue[address];
-        return newValue;
-      });
-    },
-    [setApplicationLinks],
-  );
-};

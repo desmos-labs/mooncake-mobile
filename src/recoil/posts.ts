@@ -36,16 +36,6 @@ export const usePostByID = (user: string, id: number) => {
 };
 
 /**
- * Hook that allows to get the details of a post given its subspace id and external id.
- */
-export const usePostByExternalID = (user: string, subspaceId: number, externalId: string) => {
-  const posts = useRecoilValue(postsState);
-  return React.useMemo(() => {
-    return posts[user]?.find(p => p.subspaceId === subspaceId && p.externalId === externalId);
-  }, [externalId, posts, subspaceId, user]);
-};
-
-/**
  * Hook that allows to get all the posts that are yet to-be-synced for a given user.
  */
 export const usePostsToSync = (user: string) => {
@@ -53,21 +43,6 @@ export const usePostsToSync = (user: string) => {
   return React.useMemo(() => {
     return posts[user]?.filter(post => post.status !== PostStatus.SYNCED) ?? [];
   }, [posts, user]);
-};
-
-/**
- * Hook that allows to get the posts to sync having a given subspace id and post id.
- * @param user {string} - Address of the user inside which posts' to search for.
- */
-export const useGetPostToSync = (user: string) => {
-  const posts = useRecoilValue(postsState);
-  return React.useCallback(
-    (subspaceId: number, externalId: string) => {
-      const userPosts = posts[user] ?? [];
-      return userPosts.find(p => p.subspaceId === subspaceId && p.externalId === externalId);
-    },
-    [posts, user],
-  );
 };
 
 /**
@@ -189,33 +164,6 @@ export const useStorePosts = (user: string) => {
 };
 
 /**
- * Hook that allows to update the status of a single post.
- * @param user {string} - Address of the user that should be used to search the post.
- */
-export const useUpdatePostStatus = (user: string) => {
-  const setPosts = useSetRecoilState(postsState);
-  return React.useCallback(
-    (post: Post, status: PostStatus) => {
-      setPosts(currentTimeline => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...currentTimeline,
-        };
-
-        // Update the user posts by changing the status of only the post with the same subspace id and external id
-        const userPosts = updatedPosts[user] ?? [];
-        updatedPosts[user] = userPosts.map(userPost =>
-          userPost.subspaceId === post.subspaceId && userPost.externalId === post.externalId
-            ? ({ ...userPost, status } as Post)
-            : userPost,
-        );
-        return updatedPosts;
-      });
-    },
-    [setPosts, user],
-  );
-};
-
-/**
  * Hook that allows to get the stored root posts for the user having the given address.
  * A root post is defined as a post that has <code>conversationId</code> equals to <code>0</code>.
  */
@@ -263,7 +211,6 @@ export const useUpdateStoredPendingPost = () => {
 
 /**
  * Hook that allows to delete the given pending post from the posts state.
- * @param user {string} - Address of the user for which the post should be deleted.
  */
 export const useRemoveStoredPendingPost = () => {
   const setPosts = useSetRecoilState(postsState);

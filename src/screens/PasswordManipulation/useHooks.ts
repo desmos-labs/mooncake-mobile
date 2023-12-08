@@ -41,7 +41,7 @@ export enum PASSWORD_MANIPULATION_MODE {
   SETUP_ACCOUNT_AND_CREATE_PROFILE,
 }
 
-export enum SignInStatus {
+enum SignInStatus {
   UNDEFINED = 'UNDEFINED',
   SAVING_WALLET = 'Saving wallet',
   CREATING_PROFILE = 'Creating profile',

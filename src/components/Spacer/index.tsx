@@ -3,7 +3,7 @@ import { useTheme } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
 
-export type SpacingKey = keyof typeof baseSpacing;
+type SpacingKey = keyof typeof baseSpacing;
 
 type Props = {
   children?: React.ReactNode;

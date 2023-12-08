@@ -26,10 +26,7 @@ export interface FeeGrantWaitingScreenParams {
   granted?: boolean | undefined;
 }
 
-export type NavProps = NativeStackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.FEE_GRANT_WAITING_SCREEN
->;
+type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.FEE_GRANT_WAITING_SCREEN>;
 
 /**
  * Screen that is shown to the user when they are still waiting for the

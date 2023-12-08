@@ -11,7 +11,7 @@ import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparato
 import { useGetPostType } from 'components/PostCard/hooks';
 import useStyles from './useStyles';
 
-export interface UserPostsListProps {
+interface UserPostsListProps {
   /**
    * List of posts to render.
    */

@@ -1,6 +1,3 @@
-import { HdPath } from '@cosmjs/crypto';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import { LedgerApp } from 'types/ledger';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
 export enum WalletPickerMode {
@@ -9,7 +6,7 @@ export enum WalletPickerMode {
   Web3Auth,
 }
 
-export interface BaseWalletPickerParams {
+interface BaseWalletPickerParams {
   readonly mode: WalletPickerMode;
   readonly addressPrefix: string;
   /**
@@ -19,26 +16,10 @@ export interface BaseWalletPickerParams {
   readonly ignoreAddresses?: string[];
 }
 
-export interface WalletPickerMnemonicParams extends BaseWalletPickerParams {
-  readonly mode: WalletPickerMode.Mnemonic;
-  readonly masterHdPath: HdPath;
-  readonly mnemonic: string;
-}
-
-export interface WalletPickerLedgerParams extends BaseWalletPickerParams {
-  readonly mode: WalletPickerMode.Ledger;
-  readonly masterHdPath: HdPath;
-  readonly transport: BluetoothTransport;
-  readonly ledgerApp: LedgerApp;
-}
-
-export interface WalletPickerWeb3AuthParams extends BaseWalletPickerParams {
+interface WalletPickerWeb3AuthParams extends BaseWalletPickerParams {
   readonly mode: WalletPickerMode.Web3Auth;
   readonly loginProvider: Web3AuthLoginProvider;
   readonly privateKey: Uint8Array;
 }
 
-export type AccountPickerParams =
-  | WalletPickerMnemonicParams
-  | WalletPickerLedgerParams
-  | WalletPickerWeb3AuthParams;
+export type AccountPickerParams = WalletPickerWeb3AuthParams;

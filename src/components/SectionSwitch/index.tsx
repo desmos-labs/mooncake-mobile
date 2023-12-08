@@ -4,7 +4,7 @@ import { Switch, useTheme } from 'native-base';
 import Typography from '../Typography';
 import useStyles from './useStyles';
 
-export type Props = {
+type Props = {
   /**
    * The switch label
    */

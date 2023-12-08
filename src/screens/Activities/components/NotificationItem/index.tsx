@@ -14,7 +14,7 @@ import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
 
-export interface NotificationComponentProps {
+interface NotificationComponentProps {
   readonly notification: CompleteNotification;
 }
 

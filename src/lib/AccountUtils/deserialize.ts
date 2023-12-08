@@ -10,9 +10,9 @@ import {
 } from 'types/account';
 import { WalletType } from 'types/wallet';
 
-export const ACCOUNT_ALGOS = ['secp256k1', 'ed25519', 'sr25519'];
+const ACCOUNT_ALGOS = ['secp256k1', 'ed25519', 'sr25519'];
 
-export const deserializeWeb3AuthAccount = (
+const deserializeWeb3AuthAccount = (
   account: Partial<SerializableWeb3AuthAccount>,
 ): Web3AuthAccount => {
   if (
@@ -56,7 +56,7 @@ export const deserializeWeb3AuthAccount = (
  * @param account - The JSON object from which we try to deserialize
  * a [SerializablePrivateKeyAccount] instance.
  */
-export const deserializePrivateKeyAccount = (
+const deserializePrivateKeyAccount = (
   account: Partial<SerializablePrivateKeyAccount>,
 ): PrivateKeyAccount => {
   if (
@@ -91,7 +91,7 @@ export const deserializePrivateKeyAccount = (
   };
 };
 
-export const deserializeAccount = (account: Partial<SerializableAccount>): Account => {
+const deserializeAccount = (account: Partial<SerializableAccount>): Account => {
   if (account.walletType === undefined) {
     throw new Error('invalid account');
   }
@@ -106,6 +106,8 @@ export const deserializeAccount = (account: Partial<SerializableAccount>): Accou
   }
 };
 
+// It's fine to disable the eslint rule here, since this is a utility function
+// eslint-disable-next-line import/prefer-default-export
 export const deserializeAccounts = (
   accounts: Record<string, SerializableAccount> | undefined,
   defaultValue: Record<string, Account>,

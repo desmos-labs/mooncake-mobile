@@ -8,7 +8,7 @@ import React, { memo, ReactNode } from 'react';
 import { View } from 'react-native';
 import useStyles from './useStyles';
 
-export interface MessageListItemProps {
+interface MessageListItemProps {
   /**
    * Image to be displayed associated with this message.
    */

@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Typography from '../Typography';
 import useStyles from './useStyles';
 
-export type Props = {
+type Props = {
   /**
    * The button label
    */

@@ -4,7 +4,7 @@ import { OperationVariables } from '@apollo/client/core';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { LazyQueryHookOptions, QueryResult } from '@apollo/client/react/types/types';
 
-export type CustomLazyQueryResultTuple<TData, TVariables extends OperationVariables> = [
+type CustomLazyQueryResultTuple<TData, TVariables extends OperationVariables> = [
   (opts?: Partial<LazyQueryHookOptions<TData, TVariables>> | undefined) => Promise<any>,
   Pick<QueryResult<TData, TVariables>, 'fetchMore' | 'refetch'>,
 ];

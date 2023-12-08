@@ -20,14 +20,6 @@ const profilesState = atom<Record<string, DesmosProfile>>({
 });
 
 /**
- * Hook that allows to get the profile for the given user.
- */
-export const useGetStoredProfile = () => {
-  const profiles = useRecoilValue(profilesState);
-  return React.useCallback((user: string) => profiles[user], [profiles]);
-};
-
-/**
  * Hook that allows to get the profiles stored on the device.
  */
 export const useStoredProfiles = () => useRecoilValue(profilesState);
@@ -56,25 +48,6 @@ export const useStoreProfile = () => {
         }
 
         return profiles;
-      });
-    },
-    [setProfiles],
-  );
-};
-
-/**
- * Hook that allows to easily delete a cached profile.
- */
-export const useDeleteProfile = () => {
-  const setProfiles = useSetRecoilState(profilesState);
-  return React.useCallback(
-    (address: string) => {
-      setProfiles(storedProfiles => {
-        const newValue = {
-          ...storedProfiles,
-        };
-        delete newValue[address];
-        return newValue;
       });
     },
     [setProfiles],

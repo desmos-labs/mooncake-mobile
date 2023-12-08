@@ -13,7 +13,7 @@ type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE
  * Tab screen that allows the user to view all the posts that have been created by a user.
  * @constructor
  */
-export const UserPostsTab = () => {
+const UserPostsTab = () => {
   const { t } = useTranslation('profile');
 
   const { params } = useRoute<NavProps['route']>();

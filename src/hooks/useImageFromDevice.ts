@@ -1,7 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import usePermissions from 'hooks/permissions/usePermissions';
 import React from 'react';
-import { AppPermissionStatus } from 'types/permissions';
+import AppPermissionStatus from 'types/permissions';
 
 const DEFAULT_OPTIONS: ImagePicker.ImagePickerOptions = {
   mediaTypes: ImagePicker.MediaTypeOptions.Images,

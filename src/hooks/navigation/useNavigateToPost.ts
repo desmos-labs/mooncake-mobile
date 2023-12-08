@@ -8,7 +8,7 @@ import { Post } from 'types/posts';
 /**
  * Options that can be passed to the navigateToPost callback.
  */
-export interface NavigateToPostOptions {
+interface NavigateToPostOptions {
   /**
    * Whether to focus the comment box when navigating to the post details screen.
    */

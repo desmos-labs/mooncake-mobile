@@ -6,12 +6,12 @@ import { AppStateStatus } from 'react-native';
 import { ButterConfig } from 'types/butter';
 import { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import { Constants } from 'config/Constants';
+import Constants from 'config/Constants';
 
 /**
  * Contains the overall state of the application.
  */
-export interface AppState {
+interface AppState {
   /**
    * Whether the application data has been initialized or not.
    */

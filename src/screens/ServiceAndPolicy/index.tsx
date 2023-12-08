@@ -23,7 +23,7 @@ export interface ServiceAndPolicyParams {
   loginMethod: LoginMethod;
 }
 
-export type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.SERVICE_AND_POLICY>;
+type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.SERVICE_AND_POLICY>;
 
 /**
  * Screen that is shown to the user after they select a login method, in order

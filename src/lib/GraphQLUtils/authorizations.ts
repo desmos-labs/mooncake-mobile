@@ -6,9 +6,8 @@ import {
   FeeGrant,
   UnsupportedMsgAllowanceTypeUrl,
 } from 'types/authorizations';
-import { GqlAllowance, GqlFeeGrant } from 'services/graphql/queries/GetAccountFeeGrantAllowance';
 
-export const convertGraphQLAllowance = (data: GqlAllowance): Allowance => {
+export const convertGraphQLAllowance = (data: any): Allowance => {
   switch (data['@type']) {
     case Feegrant.v1beta1.BasicAllowanceTypeUrl:
       return {
@@ -31,7 +30,7 @@ export const convertGraphQLAllowance = (data: GqlAllowance): Allowance => {
   }
 };
 
-export const convertGraphQLFeeGrant = (data: GqlFeeGrant): FeeGrant => {
+export const convertGraphQLFeeGrant = (data: any): FeeGrant => {
   return {
     expirationDate: data.allowance.expiration
       ? new Date(`${data.allowance.expiration}Z`)
