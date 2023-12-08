@@ -137,7 +137,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
             backgroundColor={theme.colors.surfaceBlack}
             textColor={theme.colors.white}
             onPress={resetToHome}>
-            {t('welcome')}
+            {t('welcomeTitle', { ns: 'common' })}
           </Button>
         )}
         <Spacer paddingTop={theme.spacing.m} />

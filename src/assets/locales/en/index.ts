@@ -8,10 +8,12 @@ import forgotPassword from "./forgotPassword.json";
 import home from "./home.json";
 import landing from "./landing.json";
 import legal from "./legal.json";
+import modals from "./modals.json";
 import onboarding from "./onboarding.json";
 import operations from "./operations.json";
 import password from "./password.json";
 import postDetails from "./postDetails.json";
+import postOperations from "./postOperations.json";
 import profile from "./profile.json";
 import relationships from "./relationships.json";
 import reportUser from "./reportUser.json";
@@ -33,10 +35,12 @@ const en = {
   home,
   landing,
   legal,
+  modals,
   onboarding,
   operations,
   password,
   postDetails,
+  postOperations,
   profile,
   relationships,
   reportUser,

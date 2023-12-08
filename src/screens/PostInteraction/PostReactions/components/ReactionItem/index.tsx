@@ -4,32 +4,30 @@ import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
-import { PostReaction } from 'types/desmos';
+import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
 type Props = {
-  reaction: PostReaction;
+  author: DesmosProfile;
 };
 
 /**
  * Component that is used in order to display the given {@param reaction} inside a list.
  * @constructor
  */
-const ReactionItem = ({ reaction }: Props) => {
+const ReactionItem = ({ author }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation();
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <Image source={getProfilePicture(reaction.author)} style={styles.avatarStyle} />
+      <Image source={getProfilePicture(author)} style={styles.avatarStyle} />
       <View style={styles.textGroup}>
         <View>
           <Typography.Subtitle3 style={styles.textStyle}>
-            {reaction.author.nickname
-              ? reaction.author.nickname
-              : t('no nickname', { ns: 'common' })}
+            {author.nickname ? author.nickname : t('no nickname', { ns: 'common' })}
           </Typography.Subtitle3>
-          <Typography.Body7 style={styles.subTextStyle}>@{reaction.author.dTag}</Typography.Body7>
+          <Typography.Body7 style={styles.subTextStyle}>@{author.dTag}</Typography.Body7>
         </View>
       </View>
 

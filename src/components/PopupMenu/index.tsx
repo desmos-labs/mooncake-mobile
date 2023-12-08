@@ -102,6 +102,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen, menuIcon, menuIconS
       backgroundColor="white"
       // This is a custom prop added via patch-package to disable an unintended scrolling
       // behavior that occurs on iOS
+      // @ts-ignore
       disableScroll
       placement="left top"
       trigger={menuTriggerFn}

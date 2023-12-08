@@ -41,8 +41,9 @@ export type CreatePostParams = {
 
   /**
    * Disable swipe to go back. Useful if the UI needs to be blocked for async operations.
+   * Defaults to false.
    */
-  disableBackSwipe: boolean;
+  disableBackSwipe?: boolean;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_CREATE>;
@@ -126,7 +127,7 @@ const CreatePost = () => {
   // Callback used when the user wants to create the post
   const handleCreatePost = React.useCallback(async () => {
     setLoading(true);
-    const result = await createPost(parent);
+    const result = await createPost({ parent });
     setLoading(false);
 
     if (result.isErr()) {

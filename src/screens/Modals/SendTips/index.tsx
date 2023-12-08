@@ -36,7 +36,7 @@ export type SendTipsParams = {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_SEND_TIPS>;
 
 /**
- * Screen that allows the user to tip a given post.
+ * Modal  that allows the user to tip a given post.
  * @constructor
  */
 const SendTips = (props: NavProps) => {

@@ -35,6 +35,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
 import { NavProps } from 'screens/Home';
 import { DesmosProfile } from 'types/desmos';
+import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
+import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
+import { CameraType } from 'expo-image-picker';
 import useStyles from './useStyles';
 
 type Props = {
@@ -76,6 +79,14 @@ const EnterCommentBottomBar = (props: Props) => {
   const { author, onIconPress, handlePostComment, textInputRef, loading } = props;
 
   // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const addAttachment = useAddCreatePostAttachment();
+  const removeAttachment = useRemoveCreatePostAttachment();
+  const resetCreatePostState = useResetCreatePostState();
+
+  // -------------------------------------------------------------------------------------
   // --- State
   // -------------------------------------------------------------------------------------
 
@@ -83,14 +94,38 @@ const EnterCommentBottomBar = (props: Props) => {
   const comment = useCreatePostValue('text');
   const setComment = useSetCreatePostValue('text');
 
-  const attachments = useCreatePostValue('attachments');
-  const attachment = useMemo(
-    () => (attachments !== undefined && attachments.length > 0 ? attachments[0] : undefined),
-    [attachments],
-  );
-  const addAttachment = useAddCreatePostAttachment();
-  const removeAttachment = useRemoveCreatePostAttachment();
-  const resetCreatePostState = useResetCreatePostState();
+  const postAttachments = useCreatePostValue('attachments');
+  const addPostAttachment = useAddCreatePostAttachment();
+  const removePostAttachment = useRemoveCreatePostAttachment();
+  const { editPostPicture } = useOpenPictureEditor();
+  const takePhoto = useTakePicture();
+
+  const { imageFromLibrary: selectPicture } = useImageFromDevice({
+    onImageSelected: imageUri => {
+      editPostPicture(imageUri, (editedPicturePath, dimensions) => {
+        addPostAttachment({
+          uri: editedPicturePath,
+          width: dimensions.width,
+          height: dimensions.height,
+        });
+      });
+    },
+  });
+
+  const handleTakePicture = useCallback(async () => {
+    takePhoto(CameraType.front).then(result => {
+      if (result?.status === TakePictureActionResults.Taken) {
+        const imageUri = result.uri;
+        editPostPicture(imageUri, (editedPicturePath, dimensions) => {
+          addPostAttachment({
+            uri: editedPicturePath,
+            width: dimensions.width,
+            height: dimensions.height,
+          });
+        });
+      }
+    });
+  }, [addPostAttachment, editPostPicture, takePhoto]);
 
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
 
@@ -99,10 +134,6 @@ const EnterCommentBottomBar = (props: Props) => {
     baseTextInputStyle: dTextInputStyles.input,
     keyboardShow,
     bottomInset: bottom,
-  });
-
-  const { imageFromCamera, imageFromLibrary } = useImageFromDevice({
-    onImageSelected: addAttachment,
   });
 
   // -------------------------------------------------------------------------------------
@@ -141,11 +172,9 @@ const EnterCommentBottomBar = (props: Props) => {
     () =>
       navigation.addListener('beforeRemove', () => {
         resetCreatePostState();
-        if (attachment) {
-          removeAttachment(attachment);
-        }
+        removeAttachment(postAttachments[0]);
       }),
-    [attachment, navigation, removeAttachment, resetCreatePostState],
+    [navigation, removeAttachment, resetCreatePostState],
   );
 
   // -------------------------------------------------------------------------------------
@@ -176,7 +205,7 @@ const EnterCommentBottomBar = (props: Props) => {
         ml="12px"
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
-        disabled={attachment ? false : comment.length === 0}
+        disabled={postAttachments.length == 0 && comment.length === 0}
         onPress={onPostCommentPressWrapper}>
         {t('post')}
       </Button>
@@ -185,7 +214,6 @@ const EnterCommentBottomBar = (props: Props) => {
     loading,
     theme.colors.white,
     theme.colors.butterOrange01,
-    attachment,
     comment.length,
     onPostCommentPressWrapper,
     t,
@@ -208,11 +236,11 @@ const EnterCommentBottomBar = (props: Props) => {
           <Image source={getProfilePicture(author)} style={styles.profilePic} />
           <View style={styles.textInputContainer}>
             {/* TODO: Allow to have multiple attachments here */}
-            {attachment && (
+            {postAttachments[0] && (
               <Spacer paddingBottom={12}>
                 <SelectedCommentImage
                   handlePress={image => removeAttachment(image)}
-                  source={{ uri: attachment.uri }}
+                  source={{ uri: postAttachments[0].uri }}
                 />
               </Spacer>
             )}
@@ -251,14 +279,8 @@ const EnterCommentBottomBar = (props: Props) => {
           <MediaBottomPanel
             imageSelected={false}
             loading={loading}
-            handlePressGallery={() => {
-              if (loading) return;
-              imageFromLibrary();
-            }}
-            handlePressCamera={() => {
-              if (loading) return;
-              imageFromCamera();
-            }}
+            handlePressGallery={selectPicture}
+            handlePressCamera={handleTakePicture}
             rightComponent={RightButtonComponent}
             commentLength={comment.length}
           />

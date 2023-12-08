@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Animated, TouchableOpacity, View } from 'react-native';
 import Typography from 'components/Typography';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import Routes from 'navigation/routes';
 import useStyles from './useStyles';
 
 type Props = {
@@ -15,6 +16,18 @@ type Props = {
 const PostTypeTab = ({ state, position, navigation, disableButtons }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
+
+  const getTabName = useCallback(
+    (routeName: string) => {
+      switch (routeName) {
+        case Routes.HOME_TAB_DISCOVER:
+          return t('discover');
+        case Routes.HOME_TAB_FOLLOWING:
+          return t('following');
+      }
+    },
+    [t],
+  );
 
   return (
     <View style={styles.container}>
@@ -47,7 +60,7 @@ const PostTypeTab = ({ state, position, navigation, disableButtons }: Props) => 
             <Typography.Button2
               numberOfLines={1}
               style={[styles.buttonText, isFocused ? styles.selected : styles.unselected]}>
-              {t(route.name)}
+              {getTabName(route.name)}
             </Typography.Button2>
 
             {isFocused && <Animated.View style={[styles.selectedIndicator, { opacity }]} />}

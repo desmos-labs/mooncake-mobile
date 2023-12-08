@@ -8,5 +8,7 @@
   "report": "Report",
   "share": "Share",
   "failed to post comment": "Failed to post comment",
-  "likes counter": "{{likesCounter}} Likes"
+  "likes counter": "{{likesCounter}} Likes",
+  "replies": "Replies",
+  "no likes": "No likes"
 }

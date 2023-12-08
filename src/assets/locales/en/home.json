@@ -1,9 +1,10 @@
 {
-  "HOME_TAB_DISCOVER": "Discover",
-  "HOME_TAB_FOLLOWING": "Following",
+  "discover": "Discover",
+  "following": "Following",
   "follow": "Follow",
   "unfollow": "Unfollow",
   "report": "Report",
+  "now": "Now",
   "seconds ago": "{{count}} second ago",
   "seconds ago_plural": "{{count}} seconds ago",
   "minutes ago": "{{count}} minute ago",

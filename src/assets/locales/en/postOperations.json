@@ -6,5 +6,6 @@
   "creating report body": "Your report is being created",
   "report created title": "Report created",
   "report created body": "Your report has been submitted successfully",
-  "show post actions": "Show additional post actions"
+  "show post actions": "Show additional post actions",
+  "hide": "Hide"
 }

@@ -19,6 +19,10 @@ export interface SelectImageModalParams {
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.SELECT_IMAGE_MODAL>;
 
+/**
+ * Modal that allows the user to select an image from their gallery or take a photo.
+ * @constructor
+ */
 const SelectImageModal = () => {
   const { params } = useRoute<NavProps['route']>();
   const { goBack } = useNavigation<NavProps['navigation']>();

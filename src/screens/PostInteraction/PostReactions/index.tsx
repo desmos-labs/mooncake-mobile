@@ -25,7 +25,7 @@ type NavProps = StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_REACT
  * @constructor
  */
 const PostReactions = () => {
-  const { t } = useTranslation('postInteraction');
+  const { t } = useTranslation('postDetails');
   const styles = useStyles();
 
   const { params } = useRoute<NavProps['route']>();
@@ -62,7 +62,7 @@ const PostReactions = () => {
   // --- Child components
   // -------------------------------------------------------------------------------------
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<PostReaction>) => {
-    return <ReactionItem reaction={item} />;
+    return <ReactionItem author={item.author} />;
   }, []);
 
   if (loading) {
@@ -77,7 +77,7 @@ const PostReactions = () => {
     <>
       {count > 0 && (
         <Typography.Body6 style={styles.countText}>
-          {t('totalReactions', { numReactions: formatNumShorthand(count) })}
+          {t('likes counter', { likesCounter: formatNumShorthand(count) })}
         </Typography.Body6>
       )}
       <FlashList
@@ -87,7 +87,7 @@ const PostReactions = () => {
         data={reactions}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        ListEmptyComponent={<EmptyListComponent label={t('noReactions')} />}
+        ListEmptyComponent={<EmptyListComponent label={t('no likes')} />}
         onEndReached={fetchMore}
         estimatedItemSize={63}
       />

@@ -2,6 +2,8 @@
  * File for all formatting related utils
  */
 import numbro from 'numbro';
+import { SupportedChains } from 'config/LinkableChains';
+import { Coin, convertCoin, Currency } from '@desmoslabs/desmjs';
 
 /**
  * Very naive way to format interactionCount into something like 5000 > 5k
@@ -52,6 +54,31 @@ export const formatNumber = (value: number): string =>
   numbro(value).format({
     thousandSeparated: true,
   });
+
+const getChainCurrencies = (): Currency[] => {
+  return SupportedChains.flatMap(chain => chain.chainInfo || []).flatMap(info => info.currencies);
+};
+
+/**
+ * Formats the given amount into a human-readable value.
+ * @param amount - Coin that should be formatted.
+ */
+const formatCoin = (amount: Coin): string => {
+  const currencies = getChainCurrencies();
+  const convertedAmount = convertCoin(amount, 6, currencies) || amount;
+  const humanReadableAmount = formatNumber(safeParseFloat(convertedAmount.amount));
+  return `${humanReadableAmount} ${convertedAmount.denom.toUpperCase()}`;
+};
+
+/**
+ * Formats the given coins and returns a string representing the overall amount.
+ * @param amount - Amount to be formatted.
+ * @param separator - Optional separator to be used.
+ */
+export const formatCoins = (
+  amount: readonly Coin[] | undefined,
+  separator: string = '\n',
+): string => (amount || []).map(formatCoin).join(separator);
 
 export const mapPostFontSize = (numChars: number) => {
   let fontSize = 14;

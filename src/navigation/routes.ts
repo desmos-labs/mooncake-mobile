@@ -24,8 +24,6 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   // Import account
-  IMPORT_ACCOUNT_SELECT_PROFILE = 'IMPORT_ACCOUNT_SELECT_PROFILE',
-  IMPORT_ACCOUNT_SAVE_ACCOUNT = 'IMPORT_ACCOUNT_SAVE_ACCOUNT',
   IMPORT_ACCOUNT_PRIVATE_KEY = 'IMPORT_ACCOUNT_PRIVATE_KEY',
 
   // Account password
@@ -64,7 +62,6 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   SETTINGS = 'SETTINGS',
-  SETTINGS_COMMUNITY = 'SETTINGS_COMMUNITY',
   SETTINGS_SHOW_PRIVATE_KEY = 'SETTINGS_SHOW_PRIVATE_KEY',
   SETTINGS_ENABLE_BIOMETRICS = 'SETTINGS_ENABLE_BIOMETRICS',
   UNLOCK_WALLET = 'UNLOCK_WALLET',
@@ -98,15 +95,6 @@ enum ROUTES {
   // Profile operations
   PROFILE_OPERATIONS = 'PROFILE_OPERATIONS',
 
-  // Profile NFTs
-  PROFILE_NFTS = 'PROFILE_NFTS',
-
-  // -------------------------------------------------------------------------------------
-  // --- INVITE SCREENS
-  // -------------------------------------------------------------------------------------
-
-  IMPACT_POINTS_MODAL = 'IMPACT_POINTS_MODAL',
-
   // -------------------------------------------------------------------------------------
   // --- MODALS
   // -------------------------------------------------------------------------------------
@@ -114,7 +102,6 @@ enum ROUTES {
   TEXTONLY_MODAL = 'TEXTONLY_MODAL',
   CONFIRM_MODAL = 'CONFIRM_MODAL',
   BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
-  CONVERTIBLE_POINTS_MODAL = 'CONVERTIBLE_POINTS_MODAL',
   SELECT_IMAGE_MODAL = 'SELECT_IMAGE_MODAL',
 }
 

@@ -35,11 +35,7 @@ import useStyles from './useStyles';
 interface Props {
   readonly post: Post;
   readonly onBackButtonPress: () => void;
-  // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
-  // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
   readonly handlePressMore?: () => void;
-  // old implementation, for reference (marked for deletion)
-  // readonly handlePressMore: (event: GestureResponderEvent) => void;
 }
 
 /**
@@ -52,7 +48,7 @@ interface Props {
 const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t } = useTranslation('postDetails');
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
