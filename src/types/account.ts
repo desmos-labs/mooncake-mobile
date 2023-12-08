@@ -1,5 +1,4 @@
 import { Algo } from '@cosmjs/amino';
-import { DesmosProfile } from 'types/desmos';
 import { Wallet, WalletType } from 'types/wallet';
 
 export enum AccountSerializationVersion {
@@ -74,10 +73,6 @@ export type Account = Web3AuthAccount | PrivateKeyAccount;
 export interface AccountWithWallet {
   readonly account: Account;
   readonly wallet: Wallet;
-}
-
-export interface SelectedAccount extends AccountWithWallet {
-  readonly profile?: DesmosProfile;
 }
 
 export type SerializableAccount = SerializableWeb3AuthAccount | SerializablePrivateKeyAccount;

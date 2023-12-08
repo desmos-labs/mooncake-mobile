@@ -82,7 +82,6 @@ const EnterCommentBottomBar = (props: Props) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const addAttachment = useAddCreatePostAttachment();
   const removeAttachment = useRemoveCreatePostAttachment();
   const resetCreatePostState = useResetCreatePostState();
 
@@ -96,7 +95,6 @@ const EnterCommentBottomBar = (props: Props) => {
 
   const postAttachments = useCreatePostValue('attachments');
   const addPostAttachment = useAddCreatePostAttachment();
-  const removePostAttachment = useRemoveCreatePostAttachment();
   const { editPostPicture } = useOpenPictureEditor();
   const takePhoto = useTakePicture();
 

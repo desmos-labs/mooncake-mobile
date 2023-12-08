@@ -97,29 +97,3 @@ export type Wallet = Web3AuthWallet | PrivateKeyWallet;
  * stored in the device storage.
  */
 export type SerializableWallet = SerializableWeb3AuthWallet | SerializablePrivateKeyWallet;
-
-interface BaseWalletGenerationData {
-  readonly accountPrefix: string;
-}
-
-/**
- * Interface that represents the data required to generate a [Web3AuthWallet].
- */
-interface Web3AuthGenerationData extends BaseWalletGenerationData {
-  readonly type: WalletType.Web3Auth;
-  readonly privateKey: Uint8Array;
-  readonly loginProvider: string;
-}
-
-/**
- * Interface that represents the data required to generate a [PrivateKeyWallet].
- */
-interface PrivateKeyGenerationData extends BaseWalletGenerationData {
-  readonly type: WalletType.PrivateKey;
-  readonly privateKey: Uint8Array;
-}
-
-/**
- * Type union that represents the data required to generate a [Wallet].
- */
-export type WalletGenerationData = Web3AuthGenerationData | PrivateKeyGenerationData;

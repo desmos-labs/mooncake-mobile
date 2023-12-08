@@ -43,4 +43,6 @@ const useSendTip = () => {
   );
 };
 
+// This is going to be used in the future, so we are going to disable the ts-prune rule for now
+// ts-prune-ignore-next
 export default useSendTip;

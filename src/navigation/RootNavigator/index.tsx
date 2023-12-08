@@ -20,21 +20,14 @@ import React from 'react';
 import { Dimensions, Platform } from 'react-native';
 import Activities from 'screens/Activities';
 import BlockedUsers from 'screens/BlockedUsers';
-import Community from 'screens/Community';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
 import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
 import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
-import ImportAccountSelectProfile, {
-  SelectAccountParamList,
-} from 'screens/ImportAccountSelectProfile';
 import Landing from 'screens/Landing';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
-import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
-import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SelectImageModal, { SelectImageModalParams } from 'screens/Modals/SelectImageModal';
-import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
 import Onboarding, { OnboardingParams } from 'screens/Onboarding';
 import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
@@ -46,7 +39,6 @@ import ProfileConnections, {
 } from 'screens/ProfileConnections';
 import ProfileOperations, { ProfileOperationsParams } from 'screens/ProfileOperations';
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
-import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import ServiceAndPolicy, { ServiceAndPolicyParams } from 'screens/ServiceAndPolicy';
 import Settings from 'screens/Settings';
@@ -78,8 +70,6 @@ export type RootNavigatorParamList = {
   // --- ACCOUNTS SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE]: SelectAccountParamList;
-  [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
   [ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY]: undefined;
 
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -105,19 +95,16 @@ export type RootNavigatorParamList = {
   // Post actions
   [ROUTES.POST_CREATE]: CreatePostParams | undefined;
   [ROUTES.POST_REPORT]: ReportPostParams;
-  [ROUTES.POST_SEND_TIPS]: SendTipsParams;
 
   // Post interactions
   [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
   [ROUTES.POST_REACTIONS]: PostInteractionTabParams;
-  [ROUTES.POST_TIPS]: PostInteractionTabParams;
 
   // -------------------------------------------------------------------------------------
   // --- SETTINGS SCREENS
   // -------------------------------------------------------------------------------------
 
   [ROUTES.SETTINGS]: undefined;
-  [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.SETTINGS_SHOW_PRIVATE_KEY]: ShowPrivateKeyScreenParams;
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
@@ -138,7 +125,6 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;
   [ROUTES.PROFILE_POSTS_POSTS]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
-  [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
   // Profile followage
   [ROUTES.PROFILE_CONNECTIONS]: ProfileConnectionsParams;
@@ -149,47 +135,12 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_OPERATIONS]: ProfileOperationsParams;
 
   // -------------------------------------------------------------------------------------
-  // --- INVITE SCREENS
-  // -------------------------------------------------------------------------------------
-
-  [ROUTES.IMPACT_POINTS_MODAL]: undefined;
-
-  // -------------------------------------------------------------------------------------
   // --- MODALS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
-  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.SELECT_IMAGE_MODAL]: SelectImageModalParams;
-
-  // -------------------------------------------------------------------------------------
-  // --- OTHER SCREENS
-  // --- TODO: Categorize them as well
-  // -------------------------------------------------------------------------------------
-
-  // [ROUTES.SIGNUP_RESULT]: undefined;
-  // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
-
-  // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
-
-  // Nfts
-  // [ROUTES.PROFILE_NFTS]: undefined;
-  // [ROUTES.NFT_DETAILS]: NftDetailsParams;
-
-  // Apps and Twitter
-  // [ROUTES.APP_DETAILS]: AppDetailsParams;
-
-  // Grants
-  // [ROUTES.GRANTS]: undefined;
-  // [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
-
-  // Onboarding
-
-  // New profile
-
-  // [ROUTES.OPERATIONS]: OperationsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -250,11 +201,6 @@ const RootNavigator = () => {
       {/* --- ACCOUNTS SCREENS --- */}
       {/* ------------------------ */}
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY} component={ImportAccountPrivateKey} />
-      <Stack.Screen
-        name={ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE}
-        component={ImportAccountSelectProfile}
-      />
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}
@@ -277,7 +223,6 @@ const RootNavigator = () => {
       {/* --- SETTINGS SCREENS --- */}
       {/* ------------------------ */}
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen name={ROUTES.SETTINGS_SHOW_PRIVATE_KEY} component={ShowPrivateKey} />
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
@@ -309,15 +254,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.PROFILE_CONNECTIONS} component={ProfileConnections} />
       <Stack.Screen name={ROUTES.PROFILE_OPERATIONS} component={ProfileOperations} />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS} */}
-      {/*  component={FollowingAndFollowers} */}
-      {/*  options={{ */}
-      {/*    gestureResponseDistance, */}
-      {/*    cardStyle: styles.followingAndFollowers, */}
-      {/*  }} */}
-      {/* /> */}
-      {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
+
       {/* --------------------- */}
       {/* --- BOTTOM MODALS --- */}
       {/* --------------------- */}
@@ -333,9 +270,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
         <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
-        <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
-        <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
-        <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.SELECT_IMAGE_MODAL} component={SelectImageModal} />
       </Stack.Group>

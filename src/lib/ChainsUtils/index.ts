@@ -20,13 +20,6 @@ export const findCurrencyByDenom = (denom: string) => {
     .find(value => value.coinDenom === denom);
 };
 
-/**
- * Finds the coin with the given {@param denom} in the given {@param coins} array.
- */
-export const findCoinByDenom = (coins: Coin[], denom: string) => {
-  return coins.find(coin => coin.denom === denom);
-};
-
 const supportedBalanceDenoms = [DesmosMainnet, DesmosTestnet]
   .flatMap(chain => chain.currencies ?? [])
   .map(currency => currency.coinMinimalDenom);

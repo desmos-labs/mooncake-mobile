@@ -14,12 +14,6 @@ enum ROUTES {
   DEV_SCREEN = 'DEV_SCREEN',
 
   // -------------------------------------------------------------------------------------
-  // --- BROADCAST TRANSACTION SCREENS
-  // -------------------------------------------------------------------------------------
-
-  TX_LOADING = 'TX_LOADING',
-
-  // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
   // -------------------------------------------------------------------------------------
 
@@ -50,12 +44,10 @@ enum ROUTES {
   POST_CREATE = 'POST_CREATE',
   POST_DETAILS = 'POST_DETAILS',
   POST_REPORT = 'POST_REPORT',
-  POST_SEND_TIPS = 'POST_SEND_TIPS',
 
   // Post interactions
   POST_INTERACTION = 'POST_INTERACTION',
   POST_REACTIONS = 'POST_REACTIONS',
-  POST_TIPS = 'POST_TIPS',
 
   // -------------------------------------------------------------------------------------
   // --- SETTINGS SCREENS
@@ -75,9 +67,6 @@ enum ROUTES {
   PROFILE = 'PROFILE',
   GUEST_PROFILE = 'GUEST_PROFILE',
 
-  // Profile addition
-  ADD_PROFILE_MODAL = 'ADD_PROFILE_MODAL',
-
   // Profile creation/saving
   SAVE_PROFILE = 'SAVE_PROFILE',
 
@@ -85,7 +74,6 @@ enum ROUTES {
   PROFILE_POSTS = 'PROFILE_POSTS',
   PROFILE_POSTS_POSTS = 'PROFILE_POSTS_POSTS',
   PROFILE_POSTS_LIKED = 'PROFILE_POSTS_LIKED',
-  PROFILE_POSTS_TIPPED = 'PROFILE_POSTS_TIPPED',
 
   // Profile followage
   PROFILE_CONNECTIONS = 'PROFILE_CONNECTIONS',
@@ -101,7 +89,6 @@ enum ROUTES {
 
   TEXTONLY_MODAL = 'TEXTONLY_MODAL',
   CONFIRM_MODAL = 'CONFIRM_MODAL',
-  BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
   SELECT_IMAGE_MODAL = 'SELECT_IMAGE_MODAL',
 }
 
