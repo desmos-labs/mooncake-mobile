@@ -32,7 +32,7 @@ export const useHandlePressDetails = () => {
         // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
         return;
       }
-      navigateToPost(post.subspaceId, post.id, { initialPostData: post });
+      navigateToPost(post.id, { initialPostData: post });
     },
     [navigateToPost],
   );

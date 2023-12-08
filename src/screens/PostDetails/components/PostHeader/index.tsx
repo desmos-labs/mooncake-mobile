@@ -12,7 +12,6 @@ import useStyles from './useStyles';
 
 interface Props {
   post: Post;
-
   handlePressComment: () => void;
 }
 
@@ -64,7 +63,7 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
       <Spacer paddingVertical={16}>
         {/* Like, Comment and Tips bar */}
         <InteractionCountersBar
-          loading={isReactionsCountLoading}
+          loading={false}
           likesCounter={likesCount}
           handlePressCounters={() => handlePressCounters(post!)}
           interactionAuthors={[]}

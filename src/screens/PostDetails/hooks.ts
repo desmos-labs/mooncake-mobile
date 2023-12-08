@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import { NavProps } from 'screens/PostDetails/index';
 import { isCommentReply, Post } from 'types/posts';
@@ -130,7 +130,7 @@ export const useHandleCreateComment = (onCompleted: () => void) => {
       if (result.isErr()) {
         showToast({
           toastType: ToastType.error,
-          title: t('error'),
+          title: t('error', { ns: 'common' }),
           message: t('failed to post comment'),
         });
       }
@@ -162,16 +162,12 @@ export const useHandlePressCounters = () => {
  * This is to speed up the initial load time when transitioning from the home page to the
  * post details page, as that data is already available.
  */
-export const usePostData = () => {
-  const { params } = useRoute<NavProps['route']>();
-
-  const { initialPostData, postId } = params;
-
+export const usePostData = (postId: number) => {
   const { post, loading: isPostLoading, refetch: refreshPost } = usePost(postId);
 
   return {
     loading: isPostLoading,
     refetch: refreshPost,
-    post: post || initialPostData,
+    post,
   };
 };

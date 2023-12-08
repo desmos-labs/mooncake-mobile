@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Constants } from 'config/Constants';
+import Constants from 'config/Constants';
 
 const axiosInstance = axios.create({
   baseURL: Constants.apiEndpoint,

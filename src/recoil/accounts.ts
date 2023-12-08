@@ -104,6 +104,8 @@ export const activeAccountAddressState = atom<string | undefined>({
 
 export const useActiveAccountAddress = () => useRecoilValue(activeAccountAddressState);
 
+export const useSetActiveAccountAddress = () => useSetRecoilState(activeAccountAddressState);
+
 /**
  * Hook that allows to get the currently active account of the user.
  */

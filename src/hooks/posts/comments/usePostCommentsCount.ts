@@ -18,7 +18,6 @@ const usePostCommentsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   // Get the comments count from the server
   const { data, loading, refetch } = useQuery(GetPostCommentsCount, {
     variables: {
-      subspaceId: post.subspaceId,
       postId: post.id,
     },
   });

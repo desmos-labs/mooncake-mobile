@@ -85,7 +85,7 @@ const PostDetails = () => {
   const activeProfile = useActiveProfile();
 
   // Post data
-  const { post, loading: isPostLoading, refetch: refreshPost } = usePostData();
+  const { post, loading: isPostLoading, refetch: refreshPost } = usePostData(postData.id);
 
   // Comments data
   const {
@@ -166,11 +166,12 @@ const PostDetails = () => {
     if (isPostLoading) {
       return (
         <SafeAreaView style={styles.emptyView}>
-          <Typography.H1>hello world</Typography.H1>
+          <Typography.H1>The post is being loaded</Typography.H1>
           <StyledSpinner />
         </SafeAreaView>
       );
     }
+
     return (
       <SafeAreaView style={styles.emptyView}>
         <Typography.H1>Something went wrong when loading the post</Typography.H1>
@@ -197,7 +198,7 @@ const PostDetails = () => {
         // Only show the loading indicator on the flatList if the user manually drags down on it
         refreshing={!firstLoad && pageRefreshing}
         onRefresh={onPullToRefresh}
-        ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post!} />}
+        ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.externalId}
         renderItem={renderItem}

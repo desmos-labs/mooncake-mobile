@@ -1,4 +1,4 @@
-import { Constants } from 'config/Constants';
+import Constants from 'config/Constants';
 import * as FileSystem from 'expo-file-system';
 import { err, ok, Result } from 'neverthrow';
 import { Image } from 'react-native-compressor';

@@ -4,7 +4,6 @@ import GetPostByID from 'services/graphql/queries/GetPostByID';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { usePostByID, useRemovePost, useStorePost } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
-import { mergePosts } from 'lib/PostsUtils';
 
 /**
  * Hook that allows to get the details of a post, or refetch them if needed.
@@ -39,21 +38,12 @@ const usePost = (postId: number) => {
     const { posts } = data;
     const onChainPost = posts.length > 0 ? convertGraphQLPost(posts[0]) : undefined;
 
-    // Build the variables to merge the posts accordingly
-    const existingPosts = post === undefined ? [] : [post];
-    const externalPosts = onChainPost === undefined ? [] : [onChainPost];
-
-    // Merge the posts data
-    const [result] = mergePosts(existingPosts, externalPosts);
-
-    // Get the post to store
-    const postToStore = result.length > 0 ? result[0] : undefined;
-    if (postToStore === undefined && post !== undefined) {
+    if (!onChainPost && post) {
       // The post to store returned is undefined, but the post existed on the cache.
       // This means we need to delete the cached version
       deletePost(activeAddress, post.externalId);
-    } else if (postToStore !== undefined) {
-      storePost(activeAddress, postToStore);
+    } else if (onChainPost) {
+      storePost(activeAddress, onChainPost);
     }
   }, [activeAddress, data, deletePost, post, storePost]);
 
