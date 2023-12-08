@@ -80,6 +80,6 @@ jobs:
         if: env.GIT_DIFF
         run: yarn install --immutable
 
-      - name: Run lint ✅
+      - name: Find dead code 🧟
         if: env.GIT_DIFF
         run: yarn find-deadcode
