@@ -1,5 +1,5 @@
-import { EventEmitter } from "events";
-import BackgroundService from "react-native-background-actions";
+import { EventEmitter } from 'events';
+import BackgroundService from 'react-native-background-actions';
 import {
   AndroidTaskNotificationConfig,
   BackgroundTaskEvent,
@@ -8,7 +8,7 @@ import {
   StartedTaskEvent,
   TaskJob,
   TaskStatus,
-} from "./types";
+} from './types';
 
 /**
  * Type that represents a task.
