@@ -1,13 +1,13 @@
 import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 import React from 'react';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
-import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import { Post } from 'types/posts';
+import { UploadAssetType } from 'types/media';
 
 /**
  * Represents the state of the screen that allows to create a post.
  */
-export interface CreatePostState
+interface CreatePostState
   extends Omit<
     Post,
     | 'status'

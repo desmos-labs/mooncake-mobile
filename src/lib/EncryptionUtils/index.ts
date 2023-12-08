@@ -12,7 +12,7 @@ export interface EncryptedData {
  * Derive a safe password using the pbkdf2 algorithm.
  * @param password The password from which will be derived the safer password.
  */
-export const deriveSecurePassword = async (password: string): Promise<string> => {
+const deriveSecurePassword = async (password: string): Promise<string> => {
   return Aes.pbkdf2(password, password, 100000, 256);
 };
 

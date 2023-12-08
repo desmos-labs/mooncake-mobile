@@ -3,7 +3,7 @@ import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-
 import useStyles from './useStyles';
 import Typography from '../Typography';
 
-export type Props = {
+type Props = {
   /**
    * The word to display.
    */

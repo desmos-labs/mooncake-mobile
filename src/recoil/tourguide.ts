@@ -1,5 +1,4 @@
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { useRecoilStateProperty } from 'lib/RecoilUtils';
 import React from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DefaultTourGuideState, TourGuideState } from 'types/tourguide';
@@ -32,12 +31,6 @@ export const useSetCachedTourGuide = () => useSetRecoilState(tourGuideAtom);
  * Hook that provides the current cached tour guide state.
  */
 export const useCachedTourGuide = () => useRecoilValue(tourGuideAtom);
-
-/**
- * Hook that provides a function to update the state of a tour guide.
- */
-export const useTourGuideState = <K extends keyof TourGuideState>(key: K) =>
-  useRecoilStateProperty(tourGuideAtom, key);
 
 /**
  * Hook that provides a function to reset the tour guide state.

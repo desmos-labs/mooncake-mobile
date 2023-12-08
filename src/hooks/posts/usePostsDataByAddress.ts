@@ -6,11 +6,11 @@ import { mergePosts, sortPostsByCreationDate } from 'lib/PostsUtils';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { DocumentNode, useQuery } from '@apollo/client';
 
-export interface PostQueryResult {
+interface PostQueryResult {
   readonly posts: any[];
 }
 
-export interface PostsDataByAddressOptions {
+interface PostsDataByAddressOptions {
   /**
    * The GraphQL query to use to get the posts. It must accept the following variables:
    * - `subspaceId`: the ID of the subspace to get the posts from

@@ -13,7 +13,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
-export interface PostsSectionProps {
+interface PostsSectionProps {
   /**
    * Address of the profile related to the posts that will be displayed.
    */

@@ -1,6 +1,6 @@
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 
-export type PostsListState = {
+type PostsListState = {
   scrollToTop: boolean;
   searchBarFocused: boolean;
   valueToSearch: string;

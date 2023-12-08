@@ -1,9 +1,5 @@
 import { makeStyle } from 'config/theme';
 
-export type StyleProp = {
-  numTypes: number;
-};
-
 /**
  * Style hook for the PostActionButtonsBar component
  */

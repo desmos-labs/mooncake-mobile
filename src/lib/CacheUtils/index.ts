@@ -14,18 +14,18 @@ export enum CachedDataUpdateType {
   DELETED,
 }
 
-export interface CachedDataUpdateCreated<T extends CacheableObject> {
+interface CachedDataUpdateCreated<T extends CacheableObject> {
   readonly type: CachedDataUpdateType.CREATED;
   readonly data: T;
 }
 
-export interface CachedDataUpdateUpdated<T extends CacheableObject> {
+interface CachedDataUpdateUpdated<T extends CacheableObject> {
   readonly type: CachedDataUpdateType.UPDATED;
   readonly original: T;
   readonly updated: T;
 }
 
-export interface CachedDataUpdateDeleted<T extends CacheableObject> {
+interface CachedDataUpdateDeleted<T extends CacheableObject> {
   readonly type: CachedDataUpdateType.DELETED;
   readonly data: T;
 }

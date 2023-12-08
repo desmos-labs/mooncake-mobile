@@ -6,7 +6,7 @@ import React from 'react';
 import { ColorValue } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export interface Props extends React.ComponentProps<typeof TouchableOpacity> {
+interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   /**
    * The tint color of the back arrow.
    */
@@ -16,7 +16,7 @@ export interface Props extends React.ComponentProps<typeof TouchableOpacity> {
 /**
  * A button with a back arrow image.
  */
-export const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColor }) => {
+const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColor }) => {
   const theme = useTheme();
   const styles = useStyles();
   return (

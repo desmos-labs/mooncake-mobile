@@ -1,6 +1,6 @@
 import { PrivateKeySigner, SigningMode } from '@desmoslabs/desmjs';
 import { AccountWithWallet } from 'types/account';
-import { WalletGenerationData, WalletType } from 'types/wallet';
+import { WalletType } from 'types/wallet';
 
 /**
  * Function allowing to generate a Web3AuthWallet.
@@ -38,29 +38,6 @@ export const generateWeb3AuthWallet = async (
       creationDate: new Date(),
     },
   };
-};
-
-/**
- * Function allowing to generate a list of Wallet.
- * @param data - Wallet generation config.
- */
-export const generateAccountWithWallets = async (
-  data: WalletGenerationData,
-): Promise<AccountWithWallet[]> => {
-  switch (data.type) {
-    case WalletType.Web3Auth: {
-      const wallet = await generateWeb3AuthWallet(
-        data.accountPrefix,
-        data.loginProvider,
-        data.privateKey,
-      );
-      return [wallet];
-    }
-
-    default:
-      // @ts-ignore
-      throw new Error(`Cannot generate wallet from HD path for import type ${data.type}`);
-  }
 };
 
 /**

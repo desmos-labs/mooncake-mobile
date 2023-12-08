@@ -1,5 +1,5 @@
 import React from 'react';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, useRecoilValue } from 'recoil';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { PendingTransaction } from 'types/transactions';
 
@@ -20,98 +20,13 @@ const pendingTransactionsState = atom<PendingTransaction[]>({
 });
 
 /**
- * Hook that allows to get the list of all pending tx for all users.
- */
-export const usePendingTransactions = () => useRecoilValue(pendingTransactionsState);
-
-/**
  * Hook that allows to get all the pending tx for the user having the provided address.
  */
+// It's fine to disable the eslint rule here, since this is a utility function
+// eslint-disable-next-line import/prefer-default-export
 export const useUserPendingTransactions = (user: string) => {
   const transactions = useRecoilValue(pendingTransactionsState);
   return React.useMemo(() => {
     return transactions.filter(tx => tx.user === user);
   }, [transactions, user]);
-};
-
-/**
- * Hook that allows to get the pending transaction having a specified hash, if it exists.
- */
-export const useGetPendingTransaction = () => {
-  const transactions = useRecoilValue(pendingTransactionsState);
-  return React.useCallback(
-    (txHash: string): PendingTransaction | undefined => {
-      return transactions.find(tx => tx.hash === txHash);
-    },
-    [transactions],
-  );
-};
-
-/**
- * Hook that allows to store a pending transaction inside the current list of pending tx for the given user.
- */
-export const useStorePendingTransaction = () => {
-  const setTransactions = useSetRecoilState(pendingTransactionsState);
-  return React.useCallback(
-    (transaction: PendingTransaction) => {
-      setTransactions(currentTransactions => {
-        // Get the user tx
-        const existingTransactionIndex = currentTransactions.findIndex(
-          t => t.hash === transaction.hash && t.user === transaction.user,
-        );
-
-        // Update the transaction, or insert it if not existing
-        const updatedTransactions = [...currentTransactions];
-        switch (existingTransactionIndex) {
-          case -1:
-            // The transaction is brand new, so just add it
-            updatedTransactions.push(transaction);
-            break;
-
-          default:
-            // The transaction exists, so replace the current one with the new one
-            updatedTransactions[existingTransactionIndex] = transaction;
-        }
-
-        // Update the stored value
-        return updatedTransactions;
-      });
-    },
-    [setTransactions],
-  );
-};
-
-/**
- * Hook that allows to delete a pending transaction given its hash.
- */
-export const useDeletePendingTransaction = () => {
-  const setTransactions = useSetRecoilState(pendingTransactionsState);
-  return React.useCallback(
-    (txHash: string) => {
-      setTransactions(currentTransactions => {
-        return currentTransactions.filter(t => t.hash !== txHash);
-      });
-    },
-    [setTransactions],
-  );
-};
-
-/**
- * Hook that allows to delete a series of pending transaction given their hash or a predicate.
- */
-export const useDeletePendingTransactions = () => {
-  const setTransactions = useSetRecoilState(pendingTransactionsState);
-  return React.useCallback(
-    (value: string[] | ((tx: PendingTransaction) => boolean)) => {
-      setTransactions(currentTransactions => {
-        switch (typeof value) {
-          case 'function':
-            return currentTransactions.filter(value);
-          case 'object':
-            return currentTransactions.filter(t => !value.includes(t.hash));
-        }
-      });
-    },
-    [setTransactions],
-  );
 };

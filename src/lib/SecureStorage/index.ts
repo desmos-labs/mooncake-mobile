@@ -8,8 +8,7 @@ import {
   WalletNotFoundError,
   WrongPasswordError,
 } from 'lib/SecureStorage/errors';
-import { deserializeWallet } from 'lib/WalletUtils/deserialize';
-import { serializeWallet } from 'lib/WalletUtils/serialize';
+import { deserializeWallet, serializeWallet } from 'lib/WalletUtils';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 import { SerializableWallet, Wallet } from 'types/wallet';
 
@@ -33,7 +32,7 @@ const defaultOptions: SecureStore.SecureStoreOptions = {
 /**
  * Options used to configure how the data will be stored into the device.
  */
-export interface StoreOptions {
+interface StoreOptions {
   /**
    * The password used to cipher the data.
    */
@@ -49,7 +48,7 @@ export interface StoreOptions {
  * @param key Item key.
  * @param options Options to describe how the data are stored into the device storage.
  */
-export async function getItem<T>(
+async function getItem<T>(
   key: string,
   options: StoreOptions | undefined = undefined,
 ): Promise<Result<T | undefined, SecureStorageError>> {
@@ -104,7 +103,7 @@ export async function getItem<T>(
  * @param value Value to insert into the storage.
  * @param options Options to describe how the data will be stored into the device storage.
  */
-export async function setItem<T>(
+async function setItem<T>(
   key: string,
   value: T,
   options: StoreOptions | undefined = undefined,
@@ -198,7 +197,7 @@ export const setUserPassword = async (password: string): Promise<void> => {
  * @return {true} if the password matches the previous one, or {false} otherwise.
  * @throws Error if for some reason the decryption operations fail.
  */
-export const checkUserPassword = async (
+const checkUserPassword = async (
   password: string,
 ): Promise<Result<boolean, SecureStorageError>> => {
   const value = await getItem<string>(SecureStoreKeys.PASSWORD_CHALLENGE, {

@@ -14,7 +14,7 @@ import ImageButton from 'components/ImageButton';
 import { infoIcon } from 'assets/images';
 import useStyles from './useStyles';
 
-export interface BalanceSectionProps {
+interface BalanceSectionProps {
   /**
    * Address of the profile for which to display the balance.
    */

@@ -3,14 +3,14 @@ import { Reports } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import useHasReportedPost from 'hooks/reports/useHasReportedPost';
-import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import Long from 'long';
 import { err, ok, Result } from 'neverthrow';
 import React from 'react';
 import { PostAlreadyReportedError } from 'types/error';
 import { Post } from 'types/posts';
-import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { useTranslation } from 'react-i18next';
+import { MsgCreateReportTypeUrl } from '@desmoslabs/desmjs/build/modules/reports/v1';
 
 /**
  * Hook that allows to report the given post for a given reason and with an optional message.
@@ -39,7 +39,7 @@ const useReportPost = (post: Post) => {
 
       // Create the message
       const msg: Reports.v1.MsgCreateReportEncodeObject = {
-        typeUrl: GrantEnums.MsgCreateReport,
+        typeUrl: MsgCreateReportTypeUrl,
         value: MsgCreateReport.fromPartial({
           subspaceId: Long.fromNumber(subspaceId),
           target: Reports.v1.postTargetToAny({

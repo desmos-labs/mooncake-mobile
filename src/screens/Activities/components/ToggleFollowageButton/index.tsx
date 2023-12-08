@@ -8,7 +8,7 @@ import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useStyles from './useStyles';
 
-export interface NotificationButtonProps {
+interface NotificationButtonProps {
   readonly user: DesmosProfile;
 }
 

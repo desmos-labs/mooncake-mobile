@@ -5,7 +5,7 @@ import { copyIcon } from 'assets/images';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useStyles from './useStyles';
 
-export interface AddressCopyProps {
+interface AddressCopyProps {
   /**
    * The address that will be displayed & copiable.
    */

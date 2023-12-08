@@ -6,7 +6,7 @@ import { HStack, useTheme } from 'native-base';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 
-export type Props = TouchableOpacityProps & {
+type Props = TouchableOpacityProps & {
   /**
    * goBack navigation function
    */

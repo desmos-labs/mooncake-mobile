@@ -9,7 +9,7 @@ import UserListItem from '../UserListItem';
 import useStyles from './useStyles';
 import Loading from '../Loading';
 
-export interface UsersListProps {
+interface UsersListProps {
   /**
    * The list of users to render.
    */
@@ -48,7 +48,7 @@ const ITEM_SEPARATOR_HEIGHT = 15;
  * Component that renders a list of users.
  * @constructor
  */
-export const UsersList = (props: UsersListProps) => {
+const UsersList = (props: UsersListProps) => {
   const styles = useStyles();
 
   const { users, loading, fetchMore, fetchingMore, refresh, refreshing, emptyText } = props;

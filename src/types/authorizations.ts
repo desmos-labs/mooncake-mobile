@@ -3,21 +3,6 @@ import { Feegrant } from '@desmoslabs/desmjs';
 
 export const UnsupportedMsgAllowanceTypeUrl = 'butter.v1.UnsupportedMsgAllowance';
 
-/**
- * Contains the information about a single message authorization grant
- * the user has granted to the centralized APIs.
- */
-export interface AuthzGrant {
-  /**
-   * Type url of the message this grant referes to.
-   */
-  readonly msgTypeUrl: string;
-  /**
-   * Date at which the grant will expire.
-   */
-  readonly expiration: Date;
-}
-
 export interface BasicAllowance {
   typeUrl: typeof Feegrant.v1beta1.BasicAllowanceTypeUrl;
   /**
@@ -31,7 +16,7 @@ export interface BasicAllowance {
   spendingLimit: Coin[];
 }
 
-export interface AllowedMsgAllowance {
+interface AllowedMsgAllowance {
   typeUrl: typeof Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl;
   /**
    * Nested basic allowance.
@@ -48,7 +33,7 @@ export interface AllowedMsgAllowance {
  * Interface that represents an allowance that is not supported from
  * the application.
  */
-export interface UnknownAllowance {
+interface UnknownAllowance {
   typeUrl: typeof UnsupportedMsgAllowanceTypeUrl;
   /**
    * Allowance data.
@@ -72,33 +57,4 @@ export interface FeeGrant {
    * a transaction.
    */
   readonly granterAddress: string;
-}
-
-/**
- * Contains the information about all kind of grants the user has
- * granted to the centralized APIs.
- */
-export interface AuthorizationsInformation {
-  readonly feeGrants: FeeGrant[];
-  readonly authzGrants: AuthzGrant[];
-}
-
-/**
- * Interface that represents the missing authorizations
- * that the user need to have to be able to broadcast a transaction
- * with the centralized API.
- */
-export interface AuthorizationsStatus {
-  /**
-   * List of message types that don't have a fee grant allowance.
-   */
-  readonly missingFeeGrant: string[];
-  /**
-   * List of message types that don't have the authz authorization.
-   */
-  readonly missingAuthz: string[];
-  /**
-   * Tells if all the permissions are granted.
-   */
-  readonly haveAllPermissions: boolean;
 }

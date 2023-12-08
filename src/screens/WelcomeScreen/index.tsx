@@ -20,7 +20,7 @@ export interface WelcomePageParams {
   action?: 'create' | 'import';
 }
 
-export type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.WELCOME_PAGE>;
+type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.WELCOME_PAGE>;
 
 /**
  * Welcome screen that is shown after the user has successfully created or imported an account.

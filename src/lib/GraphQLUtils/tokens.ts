@@ -1,4 +1,4 @@
-export interface GraphQLTokenPrice {
+interface GraphQLTokenPrice {
   /**
    * Denomination of the token.
    */
@@ -17,6 +17,8 @@ export interface GraphQLTokenPrice {
  * Convert the GraphQL response into a list of token prices.
  * @param data {any} - The GraphQL response.
  */
+// It's fine to disable the eslint rule here, since this is a utility function
+// eslint-disable-next-line import/prefer-default-export
 export const convertGraphQLTokenPrice = (data: any): GraphQLTokenPrice[] => {
   return (data?.tokens ?? [])
     .flatMap((token: any) => token.units)

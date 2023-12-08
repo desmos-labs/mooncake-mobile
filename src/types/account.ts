@@ -12,7 +12,7 @@ export enum AccountSerializationVersion {
 /**
  * Interface representing a base user account.
  */
-export interface BaseAccount {
+interface BaseAccount {
   /**
    * Type of the wallet associated with this account.
    */

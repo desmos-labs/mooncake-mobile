@@ -5,7 +5,7 @@ import { PostHog } from 'posthog-react-native';
  * Enum that contains all the user behaviours that the application
  * tracks.
  */
-export enum UserBehaviour {
+enum UserBehaviour {
   FeeEstimationFailed = 'Failed Fee Estimation',
   TXBroadcastFailed = 'Failed TX',
   ViewEvent = 'View Event',
@@ -29,7 +29,7 @@ export enum UserBehaviour {
  * Enum that contains the keys that will be used when adding extra informations
  * to the user behaviour that the application tracks.
  */
-export enum UserBehaviourArgsKey {
+enum UserBehaviourArgsKey {
   Error = 'Error',
   UserAddress = 'User Address',
   Messages = 'Messages',
@@ -48,26 +48,6 @@ export const identifyPostHogUser = async (posthog: PostHog, address: string) => 
     // We identify the user on PostHog
     posthog.identify(address);
   }
-};
-
-/**
- * Captures the event of a failed fee estimation.
- * @param postHog The PostHog instance to use.
- * @param params The parameters of the failed fee estimation.
- */
-export const captureFailedFeeEstimationError = (
-  postHog: PostHog,
-  params: {
-    error: any;
-    userAddress: string;
-    messages: EncodeObject[];
-  },
-) => {
-  postHog.capture(UserBehaviour.FeeEstimationFailed, {
-    [UserBehaviourArgsKey.Error]: params.error,
-    [UserBehaviourArgsKey.UserAddress]: params.userAddress,
-    [UserBehaviourArgsKey.Messages]: params.messages.map(msg => msg.typeUrl),
-  });
 };
 
 /**

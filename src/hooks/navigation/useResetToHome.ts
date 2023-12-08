@@ -4,7 +4,7 @@ import React from 'react';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 
-export type HomeTabs = ROUTES.HOME_TABS | ROUTES.HOME_TAB_DISCOVER | ROUTES.HOME_TAB_FOLLOWING;
+type HomeTabs = ROUTES.HOME_TABS | ROUTES.HOME_TAB_DISCOVER | ROUTES.HOME_TAB_FOLLOWING;
 
 /**
  * Hook that provides a function to reset the navigator to the home.

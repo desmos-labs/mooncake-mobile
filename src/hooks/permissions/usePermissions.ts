@@ -2,7 +2,7 @@ import { useSetAppState } from '@recoil/appState';
 import { PermissionResponse, PermissionStatus } from 'expo-image-picker';
 import React from 'react';
 import { AppState, Linking, Platform } from 'react-native';
-import { AppPermissionStatus } from 'types/permissions';
+import AppPermissionStatus from 'types/permissions';
 
 /**
  * Utility function to convert a `PermissionResponse` from expo into a `AppPermissionStatus`.
@@ -49,7 +49,7 @@ const openSettingsAndCheckPermissions = async (
 /**
  * Permissions request options.
  */
-export interface PermissionOptions {
+interface PermissionOptions {
   /**
    * Function to get the permission status.
    */

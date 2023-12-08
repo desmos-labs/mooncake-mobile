@@ -16,16 +16,6 @@ import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 
 /**
- * Hook that allows to report a user.
- */
-export const useHandlePressReportUser = () => {
-  return React.useCallback((user: DesmosProfile) => {
-    // TODO: Implement this
-    console.log('useHandlePressReportUser', user);
-  }, []);
-};
-
-/**
  * Hook that allows to follow or unfollow a user.
  */
 export const useHandlePressFollowOrUnfollow = () => {
@@ -146,19 +136,6 @@ export const useHandleCreateComment = (onCompleted: () => void) => {
       }
     },
     [createPost, showToast, t],
-  );
-};
-
-/**
- * Hook that allows to handle the reporting of a post.
- */
-export const useHandlePressReportPost = () => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
-  return React.useCallback(
-    (post: Post) => {
-      navigate(ROUTES.POST_REPORT, { post });
-    },
-    [navigate],
   );
 };
 

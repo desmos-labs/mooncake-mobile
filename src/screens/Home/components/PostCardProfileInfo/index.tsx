@@ -26,7 +26,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { isPostPending, Post } from 'types/posts';
 import useStyles from './useStyles';
 
-export interface PostCardProfileInfoProps {
+interface PostCardProfileInfoProps {
   readonly post: Post;
   readonly onPressAuthor: () => void;
   readonly onPressFollow: () => void;

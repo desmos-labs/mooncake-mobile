@@ -3,7 +3,7 @@ import { ColorValue, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import useStyles from './useStyles';
 
-export type Props = ViewProps & {
+type Props = ViewProps & {
   // @deprecated use innerShadowProps instead
   innerStyle?: ViewStyle;
 

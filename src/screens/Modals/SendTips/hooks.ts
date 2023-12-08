@@ -19,7 +19,7 @@ const useTipCurrency = () => {
  * Hook that allows to get the balance of coin that should be used to send tips.
  * @param accountBalance {[]Coin} - Current account balance.
  */
-export const useCoinBalance = (accountBalance: Coin[]): Coin => {
+const useCoinBalance = (accountBalance: Coin[]): Coin => {
   const tipCurrency = useTipCurrency();
   return (
     findCoinByDenom(accountBalance, tipCurrency.coinMinimalDenom) ?? {

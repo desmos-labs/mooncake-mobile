@@ -3,7 +3,7 @@ import { StyleProp, View, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
 import Typography from '../Typography';
 
-export type Props = {
+type Props = {
   /**
    * Title to display at the top of the section
    */

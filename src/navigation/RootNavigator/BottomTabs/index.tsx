@@ -23,7 +23,7 @@ import Profile from 'screens/Profile';
 import Settings from 'screens/Settings';
 import useStyles from './useStyles';
 
-export interface Props extends BottomTabBarProps {}
+interface Props extends BottomTabBarProps {}
 
 /**
  * Navigation bottom tabs

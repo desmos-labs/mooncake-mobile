@@ -2,7 +2,7 @@ import React from 'react';
 import { useSetAppStateValue } from '@recoil/appState';
 import axiosInstance from 'services/axios';
 
-export const useDeleteAuthToken = () => {
+const useDeleteAuthToken = () => {
   const setToken = useSetAppStateValue('bearerToken');
   return React.useCallback(() => {
     setToken('');

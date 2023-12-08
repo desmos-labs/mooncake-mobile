@@ -9,7 +9,6 @@ import {
   ComparableBlockedUser,
 } from 'types/blockedRelationships';
 import { DesmosProfile } from 'types/desmos';
-import { FollowedUser } from 'types/relationships';
 
 const blockedRelationshipsState = atom<MultipleUsersCache<BlockedUser, ComparableBlockedUser>>({
   key: 'blockedRelationshipsState',
@@ -126,38 +125,6 @@ export const useGetBlockedToSync = () => {
   );
 };
 
-/**
- * Hook that allows to get the relationship that was created locally for a given user, if any.
- */
-export const useGetCreatedBlockedRelationshipToSync = () => {
-  const blockedRelationships = useRecoilValue(blockedRelationshipsState);
-  return React.useCallback(
-    (user: string, counterparty: string) => {
-      const userBlocked = blockedRelationships.get(user);
-      return userBlocked
-        .filter({ address: counterparty })
-        .find(blockedRelationship => blockedRelationship.status === DataStatus.CREATED_LOCALLY);
-    },
-    [blockedRelationships],
-  );
-};
-
-/**
- * Hook that allows to get the relationships that were deleted locally, if any.
- */
-export const useGetDeletedBlockedRelationshipToSync = () => {
-  const blockedRelationships = useRecoilValue(blockedRelationshipsState);
-  return React.useCallback(
-    (user: string, counterparty: string) => {
-      const userBlocked = blockedRelationships.get(user);
-      return userBlocked
-        .filter({ address: counterparty })
-        .find(blocked => blocked.status === DataStatus.DELETED_LOCALLY);
-    },
-    [blockedRelationships],
-  );
-};
-
 export const useSetBlockedUserStatus = () => {
   const setBlocked = useSetRecoilState(blockedRelationshipsState);
   return React.useCallback(
@@ -205,40 +172,6 @@ export const useAddBlockedUser = () => {
             // Do nothing in other cases
             return currentBlockedRelationships;
         }
-      });
-    },
-    [setBlocked],
-  );
-};
-
-/**
- * Hook that allows to update a stored pending followed user for a given post.
- */
-export const useUpdatePendingBlockedUser = () => {
-  const setBlocked = useSetRecoilState(blockedRelationshipsState);
-  return React.useCallback(
-    (user: string, counterparty: string, update: FollowedUser) => {
-      setBlocked(currentBlocked => {
-        const existingBlocked = currentBlocked.get(user);
-        const updatedBlocked = existingBlocked.updatePending({ address: counterparty }, update);
-        return currentBlocked.update(user, updatedBlocked);
-      });
-    },
-    [setBlocked],
-  );
-};
-
-/**
- * Hook that allows to delete a stored pending followed user for a given user.
- */
-export const useRemovePendingBlockedUser = () => {
-  const setBlocked = useSetRecoilState(blockedRelationshipsState);
-  return React.useCallback(
-    (user: string, counterparty: string) => {
-      setBlocked(currentBlocked => {
-        const existingBlocked = currentBlocked.get(user);
-        const updatedBlocked = existingBlocked.removePending({ address: counterparty });
-        return currentBlocked.update(user, updatedBlocked);
       });
     },
     [setBlocked],

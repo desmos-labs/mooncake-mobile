@@ -1,11 +1,6 @@
 /**
  * File for all formatting related utils
  */
-import { HdPath } from 'types/hdpath';
-import { Slip10RawIndex } from '@cosmjs/crypto';
-import { SupportedChains } from 'config/LinkableChains';
-import { convertCoin, Currency } from '@desmoslabs/desmjs';
-import { Coin } from '@cosmjs/stargate';
 import numbro from 'numbro';
 
 /**
@@ -26,24 +21,10 @@ export const sanitizeMnemonic = (mnemonic: string) => {
 };
 
 /**
- * Converts our hdpath object to a cosmjs hdpath object.
- * @param hdPath hdpath object to covert.
- */
-export const toCosmjsHdPath = (hdPath: HdPath) => {
-  return [
-    Slip10RawIndex.hardened(44),
-    Slip10RawIndex.hardened(hdPath.coinType),
-    Slip10RawIndex.hardened(hdPath.account),
-    Slip10RawIndex.normal(hdPath.change),
-    Slip10RawIndex.normal(hdPath.addressIndex),
-  ];
-};
-
-/**
  * Gets the decimal separator used on the provided locale.
  * @param locale - The locale to us, if empty use the current one.
  */
-export const getDecimalSeparator = (locale?: string) => {
+const getDecimalSeparator = (locale?: string) => {
   // Get the thousands and decimal separator characters used in the locale.
   const [, separator] = (1.1).toLocaleString(locale);
   return separator;
@@ -64,22 +45,6 @@ export const safeParseFloat = (value: string | undefined, locale?: string) => {
 };
 
 /**
- * Safely parse the given value as an integer, returning 0 if malformed.
- * @param value - Value to be parsed.
- */
-export const safeParseInt = (value: string): number => {
-  const number = parseInt(value, 10);
-  if (Number.isNaN(number)) {
-    return 0;
-  }
-  return number;
-};
-
-const getChainCurrencies = (): Currency[] => {
-  return SupportedChains.flatMap(chain => chain.chainInfo || []).flatMap(info => info.currencies);
-};
-
-/**
  * Formats the given value into a human-readable string.
  * @param value - Value to be formatted
  */
@@ -87,27 +52,6 @@ export const formatNumber = (value: number): string =>
   numbro(value).format({
     thousandSeparated: true,
   });
-
-/**
- * Formats the given amount into a human-readable value.
- * @param amount - Coin that should be formatted.
- */
-export const formatCoin = (amount: Coin): string => {
-  const currencies = getChainCurrencies();
-  const convertedAmount = convertCoin(amount, 6, currencies) || amount;
-  const humanReadableAmount = formatNumber(safeParseFloat(convertedAmount.amount));
-  return `${humanReadableAmount} ${convertedAmount.denom.toUpperCase()}`;
-};
-
-/**
- * Formats the given coins and returns a string representing the overall amount.
- * @param amount - Amount to be formatted.
- * @param separator - Optional separator to be used.
- */
-export const formatCoins = (
-  amount: readonly Coin[] | undefined,
-  separator: string = '\n',
-): string => (amount || []).map(formatCoin).join(separator);
 
 export const mapPostFontSize = (numChars: number) => {
   let fontSize = 14;
@@ -140,18 +84,3 @@ export const formatMsToHumanReadable = (
 ) => {
   return Number((ms / msUnitMap[unit]).toFixed(0));
 };
-
-/**
- * Converts a [Slip10RawIndex] to it's base number representation.
- * @param index - The index to convert.
- */
-export const slip10IndexToBaseNumber = (index: Slip10RawIndex): number =>
-  index.isHardened() ? index.toNumber() - 2 ** 31 : index.toNumber();
-
-/**
- * Capitalize the provided word.
- * @param word - The word to capitalize.
- */
-export function capitalize(word: string) {
-  return word[0].toUpperCase() + word.slice(1).toLowerCase();
-}

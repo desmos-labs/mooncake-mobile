@@ -3,7 +3,7 @@ import React from 'react';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
-export interface NotificationImageProps {
+interface NotificationImageProps {
   readonly post: Post;
 }
 

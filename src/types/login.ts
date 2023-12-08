@@ -4,7 +4,7 @@ export interface LoginMethodPrivateKey {
   type: 'PrivateKey';
 }
 
-export interface LoginMethodWeb3Auth {
+interface LoginMethodWeb3Auth {
   type: 'Web3Auth';
   provider: Web3AuthLoginProvider;
 }
@@ -60,7 +60,7 @@ export enum LoginFlowStep {
  * Inteface that represents a login flow state where we are
  * not logged in.
  */
-export interface LoginFlowStateNone {
+interface LoginFlowStateNone {
   readonly step: LoginFlowStep.None;
 }
 
@@ -68,7 +68,7 @@ export interface LoginFlowStateNone {
  * Inteface that represents a login flow state where we are
  * waiting the fee grant.
  */
-export interface LoginFlowStateWaitingFeeGrant {
+interface LoginFlowStateWaitingFeeGrant {
   readonly step: LoginFlowStep.WaitingFeeGrant;
 }
 
@@ -77,7 +77,7 @@ export interface LoginFlowStateWaitingFeeGrant {
  * the user's account and the user have enough tokens or have requested
  * a fee grant to pay for the transaction to create the profile.
  */
-export interface LoginFlowStateAccountCreated {
+interface LoginFlowStateAccountCreated {
   readonly step: LoginFlowStep.AccountCreated;
   /**
    * Address of the fee granter that we should use to pay for the transaction
@@ -91,7 +91,7 @@ export interface LoginFlowStateAccountCreated {
  * Interface that represents a login flow state where we have
  * completed the login and we have both the account and the profile.
  */
-export interface LoginFlowStateCompleted {
+interface LoginFlowStateCompleted {
   readonly step: LoginFlowStep.Completed;
 }
 

@@ -6,7 +6,7 @@ import sleep from 'lib/sleep';
  * Type that represents the data fetched from @see {@link FetchDataFunction} function.
  * @typeParam T - Type of the fetched data.
  */
-export type PaginatedResult<T> = {
+type PaginatedResult<T> = {
   /**
    * List of fetched items.
    */
@@ -35,7 +35,7 @@ export type FetchDataFunction<T, F extends Object = {}> = (
  * Interface that represents the configurations that can be provided to the
  * usePaginatedData hook.
  */
-export interface PaginatedDataConfig<T, F extends Object> {
+interface PaginatedDataConfig<T, F extends Object> {
   /**
    * Number of items that should be fetched per page.
    */

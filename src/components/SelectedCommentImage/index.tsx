@@ -12,8 +12,8 @@ import { deleteButton } from 'assets/images';
 import { makeStyle } from 'config/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'native-base';
-import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import CommonStyles from 'config/theme/CommonStyles';
+import { UploadAssetType } from 'types/media';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {
   source: UploadAssetType | undefined;

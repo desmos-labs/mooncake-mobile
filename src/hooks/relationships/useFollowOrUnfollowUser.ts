@@ -12,7 +12,7 @@ import Long from 'long';
 import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
 import { useTranslation } from 'react-i18next';
-import { useSignAndBroadcastTx } from 'hooks/tx/useSignAndBroadcastTx';
+import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 
 /**

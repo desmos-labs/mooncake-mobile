@@ -43,7 +43,7 @@ export type Comparator<T, C> = (first: T, second: C) => boolean;
  * meaning they always return a new {@link MultipleUsersCache} instance.
  * This makes them safe to use even with libraries such as Recoil that freeze objects.
  */
-export class Cache<T extends CacheableObject, C> {
+class Cache<T extends CacheableObject, C> {
   private readonly values: T[];
 
   private readonly areEquals: Comparator<T, C>;

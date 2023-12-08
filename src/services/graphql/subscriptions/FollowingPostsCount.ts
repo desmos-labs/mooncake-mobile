@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const FollowingPostsCount = gql`
+const FollowingPostsCount = gql`
   subscription PostAggregateSubscriptionFollowing($subspaceId: bigint!, $addresses: [String]!)
   @api(name: butter) {
     posts: post_aggregate(

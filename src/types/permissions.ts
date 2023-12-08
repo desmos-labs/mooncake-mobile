@@ -1,7 +1,7 @@
 /**
  * Enum that represents a permission status
  */
-export enum AppPermissionStatus {
+enum AppPermissionStatus {
   /**
    * Permission granted.
    */
@@ -18,18 +18,4 @@ export enum AppPermissionStatus {
   Blocked,
 }
 
-/**
- * Enum that represents the permissions that can be asked to the
- * user.
- */
-export enum AppPermissions {
-  Camera = 'camera',
-  Bluetooth = 'bluetooth',
-  Storage = 'storage',
-}
-
-/**
- * Type representing the number of time each permission
- * has been asked to the user, if undefined means 0.
- */
-export type PermissionsRequestsCount = Record<AppPermissions, number | undefined>;
+export default AppPermissionStatus;

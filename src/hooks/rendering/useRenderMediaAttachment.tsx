@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Dimensions, ImageStyle, StyleProp, StyleSheet } from 'react-native';
 import { PostAttachment, PostAttachmentType } from 'types/posts';
 
-export interface MediaRenderOptions {
+interface MediaRenderOptions {
   readonly imageStyle?: StyleProp<ImageStyle>;
   readonly useAutoSize?: boolean;
   readonly resizeMode: ImageContentFit;

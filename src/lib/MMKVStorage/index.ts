@@ -1,4 +1,4 @@
-import { MMKV, useMMKVObject } from 'react-native-mmkv';
+import { MMKV } from 'react-native-mmkv';
 import { deserializeObject, serializeObject } from './encoding';
 
 export enum MMKVKEYS {
@@ -67,10 +67,3 @@ export const clearMMKV = () => MMKVStorage.clearAll();
  * Delete a value from MMKV by key
  */
 export const deleteMMKV = (key: MMKVKEYS) => MMKVStorage.delete(key);
-
-/**
- * A hook that wraps useMMKVObject to enforce MMKVKEYS enum usage.
- */
-export const useMMKVStorage = <T>(key: MMKVKEYS) => {
-  return useMMKVObject<T>(key, MMKVStorage);
-};

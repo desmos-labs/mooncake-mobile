@@ -3,7 +3,7 @@ import { FlatList, ListRenderItemInfo, StyleProp, StyleSheet, View, ViewStyle } 
 import MnemonicWordBadge from '../MnemonicWordBadge';
 import useStyles from './useStyles';
 
-export type Props = {
+type Props = {
   /**
    * The mnemonic that will be displayed.
    */

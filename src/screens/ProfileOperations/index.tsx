@@ -27,10 +27,10 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
-import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
 import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
 import useStyles from './useStyles';
+import useHooks from './useHooks';
 
 export interface ProfileOperationsParams {
   /**
@@ -59,6 +59,7 @@ const ProfileOperations = () => {
 
   const { balance, refetch: refreshBalance } = useAccountBalance(userAddress);
   const { symbol, amount: fiatAmount, refetch: refreshFiatAmount } = useBalanceFiatAmount(balance);
+  const { usePastActionsSections } = useHooks();
 
   const {
     sections,

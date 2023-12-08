@@ -45,3 +45,41 @@ jobs:
       - name: Run lint ✅
         if: env.GIT_DIFF
         run: yarn run lint
+
+  Deadcode:
+    name: Find deadcode
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Compute diff 📜
+        uses: technote-space/get-diff-action@v6.1.2
+        id: git_diff
+        with:
+          PATTERNS: +(src|__tests__)/**/*.+(js|jsx|ts|tsx)
+          FILES: |
+            package.json
+            yarn.lock
+
+      - name: Setup Node 👷
+        if: env.GIT_DIFF
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: yarn
+          cache-dependency-path: |
+            yarn.lock
+
+      - name: Cache Yarn files 💾
+        if: env.GIT_DIFF
+        uses: c-hive/gha-yarn-cache@v1
+
+      - name: Install 🔨
+        if: env.GIT_DIFF
+        run: yarn install --immutable
+
+      - name: Find dead code 🧟
+        if: env.GIT_DIFF
+        run: yarn find-deadcode

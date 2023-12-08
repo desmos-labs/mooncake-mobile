@@ -38,7 +38,7 @@ import {
   useValidationSchema,
 } from './hooks';
 
-export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SAVE_PROFILE>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SAVE_PROFILE>;
 
 /**
  * Optional that can be passed when navigating to this screen.

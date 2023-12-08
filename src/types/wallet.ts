@@ -40,7 +40,7 @@ interface BaseWallet {
 /**
  * Interface that represents a generic wallet with a private key.
  */
-export interface WalletWithPrivateKey extends BaseWallet {
+interface WalletWithPrivateKey extends BaseWallet {
   /**
    * Secp256k1 private key obtained from Web3Auth.
    */
@@ -98,14 +98,14 @@ export type Wallet = Web3AuthWallet | PrivateKeyWallet;
  */
 export type SerializableWallet = SerializableWeb3AuthWallet | SerializablePrivateKeyWallet;
 
-export interface BaseWalletGenerationData {
+interface BaseWalletGenerationData {
   readonly accountPrefix: string;
 }
 
 /**
  * Interface that represents the data required to generate a [Web3AuthWallet].
  */
-export interface Web3AuthGenerationData extends BaseWalletGenerationData {
+interface Web3AuthGenerationData extends BaseWalletGenerationData {
   readonly type: WalletType.Web3Auth;
   readonly privateKey: Uint8Array;
   readonly loginProvider: string;
@@ -114,7 +114,7 @@ export interface Web3AuthGenerationData extends BaseWalletGenerationData {
 /**
  * Interface that represents the data required to generate a [PrivateKeyWallet].
  */
-export interface PrivateKeyGenerationData extends BaseWalletGenerationData {
+interface PrivateKeyGenerationData extends BaseWalletGenerationData {
   readonly type: WalletType.PrivateKey;
   readonly privateKey: Uint8Array;
 }

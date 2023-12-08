@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, ImageProps, TouchableOpacity, View } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { UploadAssetType } from 'services/axios/requests/UploadMedia';
+import { UploadAssetType } from 'types/media';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {
   source: UploadAssetType | undefined;

@@ -8,7 +8,7 @@ import StyledSpinner from 'components/StyledSpinner';
 
 export type ListRenderItemInfo<T> = FlashListRenderItemInfo<T>;
 
-export type PaginatedFlashListProps<ItemT> = Omit<FlashListProps<ItemT>, 'data'> & {
+type PaginatedFlashListProps<ItemT> = Omit<FlashListProps<ItemT>, 'data'> & {
   /**
    * Function that loads the items from the provided offset to the limit (excluded).
    * If the function returns null means that there aren't any other elements to load.

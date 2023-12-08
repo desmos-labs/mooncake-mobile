@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from 'components/Button';
 
-export interface FollowUnfollowButtonProps {
+interface FollowUnfollowButtonProps {
   /**
    * Whether the user is following the profile or not.
    */

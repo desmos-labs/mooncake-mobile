@@ -24,7 +24,7 @@ interface PopupMenuItem {
   onPress: () => void;
 }
 
-export interface Props {
+interface Props {
   menuItems: (PopupMenuItem | undefined)[];
 
   /**

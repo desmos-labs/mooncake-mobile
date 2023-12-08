@@ -6,7 +6,7 @@ import { DesmosClient } from '@desmoslabs/desmjs';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { Wallet } from 'types/wallet';
 
-export interface DesmosClientResult {
+interface DesmosClientResult {
   readonly desmosClient: DesmosClient;
   readonly wallet: Wallet;
 }

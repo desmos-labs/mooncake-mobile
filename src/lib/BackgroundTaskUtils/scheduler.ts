@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 import BackgroundService from 'react-native-background-actions';
-import sleep from 'lib/sleep';
 import {
   AndroidTaskNotificationConfig,
   BackgroundTaskEvent,
@@ -55,12 +54,10 @@ const TaskQueue: Task[] = [];
  * Class that represents a reference to a task
  * that has been scheduled for execution.
  */
-export class TaskReference<R> {
+class TaskReference<R> {
   private readonly _taskId: number;
 
   private readonly _name: string;
-
-  private _status: TaskStatus;
 
   constructor(taskId: number, name: string, queued: boolean) {
     this._taskId = taskId;
@@ -69,21 +66,13 @@ export class TaskReference<R> {
     this.observeTaskStatus();
   }
 
+  private _status: TaskStatus;
+
   /**
-   * Function to subscribe to the task events
-   * to update the task reference status.
-   * @private
+   * Gets the task status.
    */
-  private observeTaskStatus() {
-    this.onStart(() => {
-      this._status = TaskStatus.Running;
-    })
-      .onComplete(() => {
-        this._status = TaskStatus.Completed;
-      })
-      .onError(() => {
-        this._status = TaskStatus.Failed;
-      });
+  get status(): TaskStatus {
+    return this._status;
   }
 
   /**
@@ -99,13 +88,6 @@ export class TaskReference<R> {
    */
   get queued(): boolean {
     return this._status === TaskStatus.Queued;
-  }
-
-  /**
-   * Gets the task status.
-   */
-  get status(): TaskStatus {
-    return this._status;
   }
 
   /**
@@ -150,6 +132,23 @@ export class TaskReference<R> {
   onError(callback: (event: FailedTaskEvent) => void): this {
     onTaskFailed(this.taskId, callback, true);
     return this;
+  }
+
+  /**
+   * Function to subscribe to the task events
+   * to update the task reference status.
+   * @private
+   */
+  private observeTaskStatus() {
+    this.onStart(() => {
+      this._status = TaskStatus.Running;
+    })
+      .onComplete(() => {
+        this._status = TaskStatus.Completed;
+      })
+      .onError(() => {
+        this._status = TaskStatus.Failed;
+      });
   }
 }
 
@@ -261,6 +260,8 @@ const taskExecutor = async (task?: Task) => {
  * @param notificationsParams - Notification config that will be used on Android
  * to display a notification while the task is running.
  */
+// It's fine to disable the eslint rule here because we might want to add more functions in the future
+// eslint-disable-next-line import/prefer-default-export
 export async function scheduleTask<T, R>(
   taskName: string,
   taskJob: TaskJob<T, R>,
@@ -361,32 +362,4 @@ function onTaskFailed(
   once?: boolean,
 ): () => void {
   return subscribeToEvent(`${BackgroundTaskEvent.TaskFailed}-${taskId}`, callback, once);
-}
-
-/**
- * Function to enqueue a test task.
- */
-export async function testTaskExecution() {
-  const taskReference = await scheduleTask(
-    'Test task',
-    async () => {
-      for (let i = 0; i < 10; i++) {
-        console.log(`Execution step ${i}/9`);
-        // eslint-disable-next-line no-await-in-loop
-        await sleep(1000);
-      }
-    },
-    undefined,
-  );
-
-  taskReference
-    .onStart(({ taskId }) => {
-      console.log('Test task started', taskId);
-    })
-    .onComplete(({ taskId }) => {
-      console.log('Test task completed', taskId);
-    })
-    .onError(({ taskId }) => {
-      console.log('Test task failed', taskId);
-    });
 }

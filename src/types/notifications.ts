@@ -20,11 +20,11 @@ export enum NotificationType {
   ReactionReply = 'reaction_reply',
 }
 
-export interface BaseNotificationData {
+interface BaseNotificationData {
   readonly type: NotificationType;
 }
 
-export interface TransactionNotificationData extends BaseNotificationData {
+interface TransactionNotificationData extends BaseNotificationData {
   readonly txHash: string;
 }
 
@@ -73,7 +73,7 @@ export interface ReplyNotificationData extends SocialNotificationData {
 // --- Reactions
 // --------------------------------------------
 
-export interface ReactionNotificationData extends SocialNotificationData {
+interface ReactionNotificationData extends SocialNotificationData {
   readonly subspaceId: number;
   readonly postId: number;
   readonly reactionId: number;
@@ -114,11 +114,6 @@ export type NotificationData =
   | CommentReactionNotificationData
   | ReplyReactionNotificationData
   | FollowNotificationData;
-
-export function isTransactionNotification(data: unknown): data is TransactionNotificationData {
-  const { type } = data as TransactionNotificationData;
-  return type === NotificationType.TransactionSuccess || type === NotificationType.TransactionFail;
-}
 
 export function isSocialNotification(data: unknown): data is SocialNotificationData {
   const { title, body } = data as SocialNotificationData;

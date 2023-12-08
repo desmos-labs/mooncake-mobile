@@ -10,7 +10,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { isPostPending, Post } from 'types/posts';
 import useStyles from './useStyles';
 
-export interface PostBottomBarProps {
+interface PostBottomBarProps {
   readonly post: Post;
   readonly onPressComment: () => void;
 }

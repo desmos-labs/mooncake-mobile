@@ -6,8 +6,8 @@ import * as SecureStorage from 'expo-secure-store';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
 // Remember to change this value also in android/app/src/main/AndroidManifest.xml.
-export const Web3authScheme = 'butterweb3auth';
-export const Web3authResolveRedirectUrl = makeRedirectUri({
+const Web3authScheme = 'butterweb3auth';
+const Web3authResolveRedirectUrl = makeRedirectUri({
   scheme: Web3authScheme,
   path: 'openlogin',
 });

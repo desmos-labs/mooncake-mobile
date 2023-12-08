@@ -10,9 +10,7 @@ import {
 } from 'types/account';
 import { WalletType } from 'types/wallet';
 
-export const serializeWeb3AuthAccount = (
-  account: Web3AuthAccount,
-): SerializableWeb3AuthAccount => ({
+const serializeWeb3AuthAccount = (account: Web3AuthAccount): SerializableWeb3AuthAccount => ({
   version: AccountSerializationVersion.Web3Auth,
   walletType: WalletType.Web3Auth,
   address: account.address,
@@ -26,7 +24,7 @@ export const serializeWeb3AuthAccount = (
  * Function to convert a [PrivateKeyAccount] into a [SerializablePrivateKeyAccount].
  * @param account - The account to convert.
  */
-export const serializePrivateKeyAuthAccount = (
+const serializePrivateKeyAuthAccount = (
   account: PrivateKeyAccount,
 ): SerializablePrivateKeyAccount => ({
   version: AccountSerializationVersion.PrivateKey,
@@ -37,7 +35,7 @@ export const serializePrivateKeyAuthAccount = (
   creationDate: account.creationDate,
 });
 
-export const serializeAccount = (account: Account): SerializableAccount => {
+const serializeAccount = (account: Account): SerializableAccount => {
   switch (account.walletType) {
     case WalletType.Web3Auth:
       return serializeWeb3AuthAccount(account);
@@ -49,6 +47,8 @@ export const serializeAccount = (account: Account): SerializableAccount => {
   }
 };
 
+// It's fine to disable the eslint rule here, since this is a utility function
+// eslint-disable-next-line import/prefer-default-export
 export const serializeAccounts = (
   accounts: Record<string, Account>,
 ): Record<string, SerializableAccount> => {

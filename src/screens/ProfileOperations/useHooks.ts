@@ -6,7 +6,7 @@ import { getDate } from 'date-fns';
 /**
  * Type that contains the details of a single section of the list of past actions.
  */
-export interface MessagesSection extends SectionBase<PastTransactionMessage> {
+interface MessagesSection extends SectionBase<PastTransactionMessage> {
   readonly title: string;
   readonly timestamp: string;
   readonly data: PastTransactionMessage[];
@@ -39,25 +39,31 @@ const groupMessagesByDate = (messages: PastTransactionMessage[]) => {
 
 /**
  * Hook that returns the list of past actions of a user, grouped by date.
- * @param address {string} - Address of the user whose past actions we want to retrieve.
- * @param transactionsPerPage {number} - Number of tx to retrieve per page.
  */
-export const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
-  const {
-    transactions,
-    loading,
-    fetchMore: fetchMoreTransactions,
-    fetchingMore,
-    refetch: refetchTransactions,
-    refreshing,
-  } = usePastTransactions(address, transactionsPerPage);
+
+const useHooks = () => {
+  const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
+    const {
+      transactions,
+      loading,
+      fetchMore: fetchMoreTransactions,
+      fetchingMore,
+      refetch: refetchTransactions,
+      refreshing,
+    } = usePastTransactions(address, transactionsPerPage);
+
+    return {
+      sections: groupMessagesByDate(transactions),
+      loading,
+      fetchMore: fetchMoreTransactions,
+      fetchingMore,
+      refetch: refetchTransactions,
+      refreshing,
+    };
+  };
 
   return {
-    sections: groupMessagesByDate(transactions),
-    loading,
-    fetchMore: fetchMoreTransactions,
-    fetchingMore,
-    refetch: refetchTransactions,
-    refreshing,
+    usePastActionsSections,
   };
 };
+export default useHooks;

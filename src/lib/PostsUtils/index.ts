@@ -97,29 +97,29 @@ export const sortPostsByCreationDate = (posts: Post[]): Post[] => {
   return posts.sort((a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate));
 };
 
-export enum PostUpdateType {
+enum PostUpdateType {
   CREATE,
   REPLACE,
   DELETE,
 }
 
-export interface PostCreatedUpdate {
+interface PostCreatedUpdate {
   readonly type: PostUpdateType.CREATE;
   readonly post: Post;
 }
 
-export interface PostUpdatedUpdate {
+interface PostUpdatedUpdate {
   readonly type: PostUpdateType.REPLACE;
   readonly original: Post;
   readonly updated: Post;
 }
 
-export interface PostDeletedUpdate {
+interface PostDeletedUpdate {
   readonly type: PostUpdateType.DELETE;
   readonly post: Post;
 }
 
-export type PostUpdate = PostCreatedUpdate | PostUpdatedUpdate | PostDeletedUpdate;
+type PostUpdate = PostCreatedUpdate | PostUpdatedUpdate | PostDeletedUpdate;
 
 /**
  * Allows to merge two lists of posts together.

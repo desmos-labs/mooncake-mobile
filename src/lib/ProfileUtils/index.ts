@@ -1,50 +1,26 @@
-import { defaultBanner, defaultProfilePic, twitterIcon } from 'assets/images';
-import LinkableChains from 'config/LinkableChains';
+import { defaultBanner, defaultProfilePic } from 'assets/images';
 import { ImageSource } from 'expo-image';
 import { ImageRequireSource, ImageURISource } from 'react-native';
 import { Asset } from 'react-native-image-picker';
-import { ApplicationLink, ChainLink, DesmosProfile } from 'types/desmos';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Tells whether the given picture is a valid URI or not.
  * @param picture {Asset | string | undefined} - Picture to check.
  */
-export const isPictureUri = (picture: Asset | string | undefined): picture is string => {
+const isPictureUri = (picture: Asset | string | undefined): picture is string => {
   return picture !== undefined && typeof picture === 'string';
-};
-
-/**
- * Tells whether the given picture is a local asset or not.
- * @param picture {Asset | string | undefined} - Picture to check.
- */
-export const isPictureLocalAsset = (picture: Asset | string | undefined): picture is Asset => {
-  const asset = asPictureAsset(picture);
-  return asset !== undefined && asset.uri?.startsWith('file://') === true;
 };
 
 /**
  * Tells whether the given picture is a valid {@link Asset} or not.
  */
-export const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
+const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
   if (picture === undefined) {
     return false;
   }
   const { uri } = picture as Asset;
   return uri !== undefined;
-};
-
-/**
- * Returns the given picture as an {@link Asset} if it is a valid URI or a valid {@link Asset}.
- * @param picture {Asset | string | undefined} - Picture to convert.
- */
-export const asPictureAsset = (picture: Asset | string | undefined): Asset | undefined => {
-  if (isPictureAsset(picture)) {
-    return picture;
-  }
-  if (isPictureUri(picture)) {
-    return { uri: picture };
-  }
-  return undefined;
 };
 
 /**
@@ -97,29 +73,6 @@ export const getProfileDisplayName = (profile: DesmosProfile): string => {
       return `${profile.address.substring(0, 8)}...${profile.address.substring(
         profile.address.length - 5,
       )}`;
-  }
-};
-
-/**
- * Returns the source that should be used to display the image of the given chain link.
- * @param chain {ChainLink} - Chain link for which to display the image.
- */
-export const getChainLinkImage = (chain: ChainLink): ImageSource => {
-  return (
-    LinkableChains.find(y => y.chainConfig.name === chain.chainName)?.icon || defaultProfilePic
-  );
-};
-
-/**
- * Returns the source that should be used to display the image of the given application link.
- * @param app {ApplicationLink} - Application link for which to display the image.
- */
-export const getAppLinkImage = (app: ApplicationLink): ImageSource => {
-  switch (app.application.toLowerCase()) {
-    case 'twitter':
-      return twitterIcon;
-    default:
-      return defaultProfilePic;
   }
 };
 

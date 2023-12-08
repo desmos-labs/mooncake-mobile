@@ -10,7 +10,7 @@ import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 import { useTranslation } from 'react-i18next';
 
-export interface SaveProfileOptions {
+interface SaveProfileOptions {
   readonly customHeader?: string;
   readonly customBody?: string;
   readonly onProfileSaved?: () => void;

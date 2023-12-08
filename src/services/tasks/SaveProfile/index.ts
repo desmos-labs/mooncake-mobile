@@ -2,12 +2,12 @@ import { SignAndBroadcastTxParams } from 'services/tasks/SignAndBroadcastTx';
 import { DesmosProfile } from 'types/desmos';
 import { getTaskContext, TaskJob } from 'lib/BackgroundTaskUtils';
 import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
-import { MediaPostResponse } from 'hooks/useUploadPicture';
 import { err, ok, Result } from 'neverthrow';
 import { uploadPicture } from 'lib/UploadUtils';
 import { unwrapResult } from 'lib/NeverThrowUtils';
+import { UploadMediaResponse } from 'types/media';
 
-export interface SaveProfileTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'> {
+interface SaveProfileTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'> {
   readonly profile: DesmosProfile;
 }
 
@@ -35,8 +35,8 @@ const uploadPictures = async (
   coverPicture: string | undefined,
   bearerToken: string,
 ): Promise<Result<ProfilePictureUploadResults, Error>> => {
-  let uploadProfilePictureResult: Result<MediaPostResponse, Error> | undefined;
-  let uploadCoverPictureResult: Result<MediaPostResponse, Error> | undefined;
+  let uploadProfilePictureResult: Result<UploadMediaResponse, Error> | undefined;
+  let uploadCoverPictureResult: Result<UploadMediaResponse, Error> | undefined;
 
   const isProfilePictureToUpload =
     profilePicture !== undefined && profilePicture.startsWith('file://');
