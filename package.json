@@ -265,5 +265,8 @@
         "react-native-screens"
       ]
     }
+  },
+  "ts-prune": {
+    "ignore": "app.config.js|storybook|jest"
   }
 }
