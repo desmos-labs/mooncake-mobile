@@ -4,7 +4,6 @@ import Typography from 'components/Typography';
 import { Image } from 'expo-image';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import { useTheme } from 'native-base';
 import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
@@ -30,19 +29,17 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   // --- Utility hooks
   // -------------------------------------------------------------------------------------
 
-  const { count: reactionsCount, refetch: refreshReactionsCount } = usePostReactionsCount(post);
   const { count: commentsCount, refetch: refreshCommentsCount } = usePostCommentsCount(post);
 
-  const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
+  const { liked, addOrRemoveLike, likesCount } = useAddOrRemoveLike(post);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
 
   React.useEffect(() => {
-    refreshReactionsCount();
     refreshCommentsCount();
-  }, [refreshCommentsCount, refreshReactionsCount]);
+  }, [refreshCommentsCount]);
 
   // -------------------------------------------------------------------------------------
   // --- Callbacks
@@ -70,7 +67,7 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
         />
         <Typography.Subtitle3
           style={liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }}>
-          {reactionsCount}
+          {likesCount}
         </Typography.Subtitle3>
 
         {/* I have completely removed the logic that changed the color of the button based on whether */}

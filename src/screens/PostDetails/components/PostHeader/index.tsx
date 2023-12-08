@@ -4,7 +4,6 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import Spacer from 'components/Spacer';
 import { Divider } from 'native-base';
 import { isRootPost, Post } from 'types/posts';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
@@ -30,14 +29,12 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  // Reactions data
-  const { count: reactionsCount, loading: isReactionsCountLoading } = usePostReactionsCount(post);
+  const { liked, addOrRemoveLike, likesCount } = useAddOrRemoveLike(post);
 
   // -------------------------------------------------------------------------------------
   // --- Handlers
   // -------------------------------------------------------------------------------------
 
-  const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
   const handlePressCounters = useHandlePressCounters();
 
   // -------------------------------------------------------------------------------------
@@ -68,7 +65,7 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
         {/* Like, Comment and Tips bar */}
         <InteractionCountersBar
           loading={isReactionsCountLoading}
-          likesCounter={reactionsCount}
+          likesCounter={likesCount}
           handlePressCounters={() => handlePressCounters(post!)}
           interactionAuthors={[]}
         />

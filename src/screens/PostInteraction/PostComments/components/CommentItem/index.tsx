@@ -23,7 +23,6 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
@@ -70,10 +69,9 @@ const CommentItem = (props: CommentItemProps) => {
   // -------------------------------------------------------------------------------------
 
   const { count: commentsCount } = usePostCommentsCount(comment);
-  const { count: reactionsCount } = usePostReactionsCount(comment);
   const { isFollowing } = useIsFollowing(comment.author.address);
   const { isBlocked } = useIsBlocked(comment.author.address);
-  const { liked, addOrRemoveLike } = useAddOrRemoveLike(comment);
+  const { liked, addOrRemoveLike, likesCount } = useAddOrRemoveLike(comment);
   const isAuthorActiveUser = useIsAuthorActiveUser(comment.author.address);
 
   // -------------------------------------------------------------------------------------
@@ -181,7 +179,6 @@ const CommentItem = (props: CommentItemProps) => {
     handlePressMore,
     handlePressReport,
     isFollowing,
-    returnToRootPost,
     t,
     handlePressBlock,
     isBlocked,
@@ -244,7 +241,7 @@ const CommentItem = (props: CommentItemProps) => {
                 ]}
               />
               <Typography.Subtitle3 style={liked ? styles.orangeIconAndText : styles.textStyle}>
-                {formatNumShorthand(reactionsCount)}
+                {formatNumShorthand(likesCount)}
               </Typography.Subtitle3>
             </TouchableOpacity>
           </View>

@@ -38,6 +38,11 @@ const PostFields = gql`
       hash
     }
     has_user_liked
+    likes_count: likes_aggregate {
+      aggregate {
+        count
+      }
+    }
   }
 `;
 

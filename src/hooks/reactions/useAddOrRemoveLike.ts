@@ -17,11 +17,13 @@ const useAddOrRemoveLike = (post: Post) => {
   // Local state used to avoid the need to wait for the server response
   // and have a more responsive UI as soon as the user presses the like button
   const [liked, setLiked] = React.useState(post.hasUserLiked);
+  const [likesCount, setLikesCount] = React.useState(post.likesCount);
 
   // Update the local state when the server response changes
   React.useEffect(() => {
     setLiked(post.hasUserLiked);
-  }, [post.hasUserLiked]);
+    setLikesCount(post.likesCount);
+  }, [post.hasUserLiked, post.likesCount]);
 
   // Debounce the add or remove reaction function to avoid spamming the server
   const likeUnlikePost = React.useCallback(
@@ -34,21 +36,22 @@ const useAddOrRemoveLike = (post: Post) => {
 
       if (p.hasUserLiked) {
         // Post already liked, unlike it.
-        const likeResult = await UnlikePost(p.id);
-        if (likeResult.isErr()) {
-          error = likeResult.error;
+        const unlikeResult = await UnlikePost(p.id);
+        if (unlikeResult.isErr()) {
+          error = unlikeResult.error;
         }
       } else {
         // Post not liked, like it.
-        const unlikeResult = await LikePost(p.id);
-        if (unlikeResult.isErr()) {
-          error = unlikeResult.error;
+        const likeResult = await LikePost(p.id);
+        if (likeResult.isErr()) {
+          error = likeResult.error;
         }
       }
 
       if (error) {
         // Restore the like status on error.
         setLiked(p.hasUserLiked);
+        setLikesCount(value => value + (p.hasUserLiked ? 1 : -1));
         return;
       }
 
@@ -56,6 +59,7 @@ const useAddOrRemoveLike = (post: Post) => {
       storePost(activeAddress, {
         ...p,
         hasUserLiked: !p.hasUserLiked,
+        likesCount: p.likesCount + (p.hasUserLiked ? -1 : +1),
       });
     },
     [activeAddress, storePost],
@@ -68,6 +72,7 @@ const useAddOrRemoveLike = (post: Post) => {
   const addOrRemoveLike = useCallback(
     (p: Post) => {
       setLiked(value => !value);
+      setLikesCount(value => value + (p.hasUserLiked ? -1 : 1));
       likeUnlikePostDebounced(p);
     },
     [likeUnlikePostDebounced],
@@ -76,6 +81,7 @@ const useAddOrRemoveLike = (post: Post) => {
   return {
     liked,
     addOrRemoveLike,
+    likesCount,
   };
 };
 

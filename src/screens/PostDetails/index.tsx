@@ -10,7 +10,6 @@ import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -67,6 +66,7 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
   // --- Loading states
   // -------------------------------------------------------------------------------------
+
   const [firstLoad, setFirstLoad] = useState(false);
   const [pageRefreshing, setPageRefreshing] = useState(false);
   const [commentPosting, setCommentPosting] = useState(false);
@@ -96,9 +96,6 @@ const PostDetails = () => {
   } = usePostComments(postData);
   const { refetch: refreshCommentsCount } = usePostCommentsCount(postData);
 
-  // Reactions data
-  const { refetch: refreshReactionsCount } = usePostReactionsCount(postData);
-
   // Comment creation
   const onCommentCreated = useCallback(() => {
     Keyboard.dismiss();
@@ -125,11 +122,10 @@ const PostDetails = () => {
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
     await refreshPost();
-    await refreshReactionsCount();
     await refreshComments();
     await refreshCommentsCount();
     setPageRefreshing(false);
-  }, [refreshComments, refreshCommentsCount, refreshPost, refreshReactionsCount]);
+  }, [refreshComments, refreshCommentsCount, refreshPost]);
 
   const onPullToRefresh = React.useCallback(() => {
     // set firstLoad to false so the loading indicator will be shown in the event
