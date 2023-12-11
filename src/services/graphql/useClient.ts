@@ -7,7 +7,6 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { MultiAPILink } from '@habx/apollo-multi-endpoint-link';
-import EnvConfig from 'config/EnvConfig';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import NotificationMergePolicy from 'services/graphql/queries/typePolicies/notification';
 import { useAppStateValue } from '@recoil/appState';
@@ -15,7 +14,11 @@ import { RetryLink } from '@apollo/client/link/retry';
 
 const multiApiLink = ApolloLink.from([
   new MultiAPILink({
-    endpoints: EnvConfig.GQL_ENDPOINT as any,
+    endpoints: {
+      forbole: 'https://gql.desmos.forbole.com',
+      desmos: 'https://gql.mainnet.desmos.network',
+      butter: 'https://gql.mainnet.butter.social',
+    },
     httpSuffix: '/v1/graphql',
     wsSuffix: '/v1/graphql',
     createHttpLink,
@@ -46,15 +49,6 @@ const cache = new InMemoryCache({
       case 'user_relationship':
         // @ts-ignore
         return `user_relationship:${object.subspace_id}-${object.creator.address}-${object.counterparty.address}`;
-      case 'reaction':
-        // @ts-ignore
-        if (object.post?.subspace_id && object.author?.address && object.post?.id && object.value) {
-          // @ts-ignore
-
-          return `reaction:${object.post.subspace_id}-${// @ts-ignore
-          object.author?.address}-${object.value.toString()}`;
-        }
-        return defaultDataIdFromObject(object);
       case 'notification':
         return `notification:${object.id}`;
       default:
