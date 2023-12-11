@@ -13,14 +13,14 @@ interface ProfileTextFields {
  * Tells whether the given picture is a valid URI or not.
  * @param picture {Asset | string | undefined} - Picture to check.
  */
-export const isPictureUri = (picture: Asset | string | undefined): picture is string => {
+const isPictureUri = (picture: Asset | string | undefined): picture is string => {
   return picture !== undefined && typeof picture === 'string';
 };
 
 /**
  * Tells whether the given picture is a valid {@link Asset} or not.
  */
-export const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
+const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
   if (picture === undefined) {
     return false;
   }
@@ -70,6 +70,18 @@ export const removeDuplicates = (profiles: DesmosProfile[]): DesmosProfile[] => 
 };
 
 /**
+ * Function that, given a {@link DesmosProfile}, returns its display DTag.
+ * @param profile {DesmosProfile} - Profile for which to display the DTag.
+ */
+const getProfileDisplayDTag = (profile: ProfileTextFields): string => {
+  if (profile.dTag && profile.dTag.length > 0) {
+    return `@${profile.dTag}`;
+  }
+
+  return profile.address;
+};
+
+/**
  * Function that, given a {@link DesmosProfile}, returns its display name.
  * The display name is either the nickname or the dtag if present, or the address otherwise.
  */
@@ -79,12 +91,4 @@ export const getProfileDisplayName = (profile: ProfileTextFields): string => {
   }
 
   return getProfileDisplayDTag(profile);
-};
-
-export const getProfileDisplayDTag = (profile: ProfileTextFields): string => {
-  if (profile.dTag && profile.dTag.length > 0) {
-    return `@${profile.dTag}`;
-  }
-
-  return profile.address;
 };
