@@ -24,7 +24,7 @@ const useGetHasBlocked = () => {
         throw error;
       }
 
-      return data?.user_block?.length > 0;
+      return data?.user_blocks?.length > 0;
     },
     [hasBlocked, subspaceId],
   );

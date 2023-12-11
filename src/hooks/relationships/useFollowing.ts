@@ -2,9 +2,9 @@ import React from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useLazyQuery } from '@apollo/client';
 import GetAccountFollowing from 'services/graphql/queries/GetAccountFollowing';
-import { convertGraphQLFollowedUser } from 'lib/GraphQLUtils/relationships';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { DesmosProfile } from 'types/desmos';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 
 /**
  * Hook that provides a function that can be used inside the usePaginatedData
@@ -32,8 +32,9 @@ const useFetchUserFollowing = (address: string | undefined) => {
         throw error;
       }
 
-      const following =
-        data?.following?.map(({ user }: { user: any }) => convertGraphQLFollowedUser(user)) ?? [];
+      const following = (data?.following ?? []).map((relationship: any) =>
+        convertGraphQLProfile(relationship.counterparty),
+      );
 
       return {
         data: following,

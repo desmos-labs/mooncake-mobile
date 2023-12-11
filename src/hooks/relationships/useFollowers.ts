@@ -35,10 +35,9 @@ const useFetchUserFollowers = (address: string | undefined) => {
         throw error;
       }
 
-      const followers =
-        data?.relationships?.map(({ creator }: { creator: any }) =>
-          convertGraphQLProfile(creator),
-        ) ?? [];
+      const followers = (data?.relationships ?? [])?.map((relationship: any) =>
+        convertGraphQLProfile(relationship.creator),
+      );
 
       return {
         data: followers,

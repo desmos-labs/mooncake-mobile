@@ -1,15 +1,15 @@
 import React from 'react';
 import { useLazyQuery } from '@apollo/client';
-import { BlockedUser } from 'types/blockedRelationships';
 import GetAccountBlocked from 'services/graphql/queries/GetAccountBlocked';
-import { convertGraphQLBlockedUser } from 'lib/GraphQLUtils/relationships';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { DesmosProfile } from 'types/desmos';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 
 const useFetchUserBlocked = (address: string | undefined) => {
   const [fetchBlocked] = useLazyQuery(GetAccountBlocked);
 
-  return React.useCallback<FetchDataFunction<BlockedUser>>(
+  return React.useCallback<FetchDataFunction<DesmosProfile>>(
     async (offset: number, limit: number) => {
       if (!address) {
         throw new Error('Cannot get the blocked list without an address.');
@@ -28,8 +28,9 @@ const useFetchUserBlocked = (address: string | undefined) => {
         throw error;
       }
 
-      const blocked =
-        data?.blocked?.map(({ user }: { user: any }) => convertGraphQLBlockedUser(user)) ?? [];
+      const blocked = (data?.user_blocks ?? []).map((block: any) =>
+        convertGraphQLProfile(block.blocked),
+      );
 
       return {
         data: blocked,

@@ -31,7 +31,7 @@ const FollowingTab = () => {
     loading,
     initialLoading: isFirstLoading,
     fetchMore,
-    refetch: refreshFollowing,
+    refresh: refreshFollowing,
     refreshing,
   } = useFollowing(userAddress);
 

@@ -8,7 +8,7 @@ const GetBlockedForAddress = gql`
     $blockerAddress: String!
     $blockedAddress: String!
   ) @api(name: desmos) {
-    user_block(
+    user_blocks: user_block(
       where: {
         subspace_id: { _eq: $subspaceId }
         blocker_address: { _eq: $blockerAddress }
