@@ -27,10 +27,10 @@ const FollowingTab = () => {
   // -------------------------------------------------------------------------------------
 
   const {
-    following,
+    data: following,
     loading,
+    initialLoading: isFirstLoading,
     fetchMore,
-    fetchingMore,
     refetch: refreshFollowing,
     refreshing,
   } = useFollowing(userAddress);
@@ -65,7 +65,7 @@ const FollowingTab = () => {
       users={following}
       loading={loading}
       fetchMore={fetchMore}
-      fetchingMore={fetchingMore}
+      fetchingMore={loading && !isFirstLoading}
       refresh={refreshFollowing}
       refreshing={refreshing}
       emptyText={t('noFollowers')}

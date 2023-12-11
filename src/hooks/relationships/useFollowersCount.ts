@@ -1,8 +1,6 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import GetFollowersCount from 'services/graphql/queries/GetFollowersCount';
-import { useGetFollowersDifference } from '@recoil/relationships';
 import { useAppStateValue } from '@recoil/appState';
 
 /**
@@ -13,35 +11,17 @@ import { useAppStateValue } from '@recoil/appState';
 const useFollowersCount = (address: string | undefined) => {
   const subspaceId = useAppStateValue('subspaceId');
   const activeAddress = useActiveAccountAddress();
-  const userAddress: string | undefined = useMemo(
-    () => address ?? activeAddress,
-    [activeAddress, address],
-  );
-  if (!userAddress) {
-    throw new Error('Cannot get followers count for undefined users address');
-  }
 
   // Get the followers count from the server
   const { data, loading, refetch } = useQuery(GetFollowersCount, {
-    variables: { subspaceId, userAddress },
+    variables: {
+      subspaceId,
+      userAddress: address ?? activeAddress ?? '',
+    },
   });
-  const serverFollowersCount = useMemo(() => data?.followers?.aggregate?.count ?? 0, [data]);
-
-  // Get the followers difference that is stored locally
-  const getFollowersDifference = useGetFollowersDifference();
-  const followersDifference = useMemo(
-    () => getFollowersDifference(userAddress),
-    [getFollowersDifference, userAddress],
-  );
-
-  // Compute the overall followers count by adding the difference to the server count
-  const followersCount = useMemo(
-    () => Math.max(0, serverFollowersCount + followersDifference),
-    [followersDifference, serverFollowersCount],
-  );
 
   return {
-    count: followersCount,
+    count: data?.followers?.aggregate?.count ?? 0,
     loading,
     refetch,
   };
