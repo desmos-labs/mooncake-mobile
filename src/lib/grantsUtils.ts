@@ -1,7 +1,7 @@
 import { ApolloClient } from '@apollo/client';
 import { Feegrant } from '@desmoslabs/desmjs';
 import { err, ok, Result } from 'neverthrow';
-import GetAccountFeeGrantAllowance from 'services/graphql/queries/desmos/GetAccountFeeGrantAllowance';
+import GetAccountFeeGrantAllowance from 'services/graphql/queries/GetAccountFeeGrantAllowance';
 import { FeeGrant } from 'types/authorizations';
 import { convertGraphQLFeeGrant } from './GraphQLUtils';
 

@@ -8,7 +8,7 @@ const GetAccountFollowing = gql`
     $userAddress: String!
     $limit: Int!
     $offset: Int!
-  ) @api(name: butter) {
+  ) @api(name: desmos) {
     following: user_relationship(
       where: { subspace_id: { _eq: $subspaceId }, creator_address: { _eq: $userAddress } }
       offset: $offset

@@ -2,7 +2,7 @@ import React from 'react';
 import { convertGraphQLFeeGrant } from 'lib/GraphQLUtils';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import GRANTER_ADDRESS from 'lib/grantsUtils';
-import GetAccountFeeGrantAllowance from 'services/graphql/queries/desmos/GetAccountFeeGrantAllowance';
+import GetAccountFeeGrantAllowance from 'services/graphql/queries/GetAccountFeeGrantAllowance';
 
 /**
  * Hook to get the fee grants and authz grants of a user's account (lazy mode).

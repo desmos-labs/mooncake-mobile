@@ -1,7 +1,6 @@
 import { useSetAppStateValue } from '@recoil/appState';
 import useRefreshSession from 'hooks/apis/useRefreshSession';
 import useInitializeAxios from 'hooks/axios/useInitializeAxios';
-import useButterConfig from 'hooks/config/useButterConfig';
 import useSubspaceParams from 'hooks/config/useSubspaceParams';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useProfileParams from 'hooks/profiles/useProfileParams';
@@ -14,7 +13,6 @@ import useInitTaskContext from 'hooks/tasks/useInitTaskContext';
  */
 const useInitializeAppData = () => {
   // Data refreshers
-  const { refetch: refreshButterConfig } = useButterConfig();
   const { refetch: refreshSubspaceParams } = useSubspaceParams();
   const { refetch: refreshProfileParams } = useProfileParams();
   const { refetch: refreshPostsParams } = usePostsParams();
@@ -34,7 +32,6 @@ const useInitializeAppData = () => {
   useEffect(() => {
     refreshSession();
     // Refresh the various params
-    refreshButterConfig();
     refreshSubspaceParams();
     refreshProfileParams();
     refreshPostsParams();
@@ -43,7 +40,6 @@ const useInitializeAppData = () => {
     setDataInitialized(true);
     setCurrentTimezone(RNLocalize.getTimeZone());
   }, [
-    refreshButterConfig,
     refreshPostsParams,
     refreshProfileParams,
     refreshSession,

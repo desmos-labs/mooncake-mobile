@@ -1,8 +1,10 @@
 import { gql } from '@apollo/client';
 
 const GetFollowersCount = gql`
-  query GetFollowersCount($userAddress: String!) @api(name: butter) {
-    followers: user_relationship_aggregate(where: { counterparty_address: { _eq: $userAddress } }) {
+  query GetFollowersCount($subspaceId: bigint!, $userAddress: String!) @api(name: demsos) {
+    followers: user_relationship_aggregate(
+      where: { subspace_id: { _eq: $subspaceId }, counterparty_address: { _eq: $userAddress } }
+    ) {
       aggregate {
         count
       }

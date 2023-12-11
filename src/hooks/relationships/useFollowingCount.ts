@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import GetFollowageCount from 'services/graphql/queries/GetFollowageCount';
 import { useGetFollowageDifference } from '@recoil/relationships';
+import { useAppStateValue } from '@recoil/appState';
 
 /**
  * Hook that returns the number of accounts that the user having the given address is following.
@@ -10,6 +11,7 @@ import { useGetFollowageDifference } from '@recoil/relationships';
  * If this is `undefined`, the current application's user address will be used instead.
  */
 const useFollowingCount = (address: string | undefined) => {
+  const subspaceId = useAppStateValue('subspaceId');
   const activeAddress = useActiveAccountAddress();
   const userAddress: string | undefined = useMemo(
     () => address ?? activeAddress,
@@ -21,7 +23,7 @@ const useFollowingCount = (address: string | undefined) => {
 
   // Get the followage count from the server
   const { data, loading, refetch } = useQuery(GetFollowageCount, {
-    variables: { userAddress },
+    variables: { subspaceId, userAddress },
   });
   const serverFollowageCount = useMemo(() => data?.followers?.aggregate?.count ?? 0, [data]);
 

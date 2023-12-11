@@ -4,7 +4,7 @@ import NotificationReadFields from 'services/graphql/queries/fragments/Notificat
 const GetNotifications = gql`
   ${NotificationReadFields}
   query GetNotifications($limit: Int!, $offset: Int!) @api(name: butter) {
-    notifications: notification(
+    notifications: notifications(
       where: { type: { _nilike: "%transaction%" } }
       order_by: { timestamp: desc }
       limit: $limit
@@ -12,7 +12,7 @@ const GetNotifications = gql`
     ) {
       id
       user_address
-      data
+      additional_data
       timestamp
       type
       ...NotificationReadFields
