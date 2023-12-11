@@ -45,7 +45,7 @@ const useFetchUserFollowers = (address: string | undefined) => {
         endReached: followers.length < limit,
       };
     },
-    [fetchFollowers, address],
+    [address, fetchFollowers, subspaceId],
   );
 };
 

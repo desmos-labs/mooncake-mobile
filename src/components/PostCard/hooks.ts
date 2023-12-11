@@ -6,7 +6,7 @@ import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser
 import { isPostPending, Post } from 'types/posts';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import useHidePost from 'hooks/posts/useHidePost';
-import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
+import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.

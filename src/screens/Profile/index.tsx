@@ -20,8 +20,8 @@ import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfi
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
-import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
-import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
+import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';

@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import usePost from 'hooks/posts/usePost';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import useBlockOrUnblockUser from 'hooks/relationships/blocked/useBlockOrUnblockUser';
+import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 

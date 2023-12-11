@@ -15,7 +15,7 @@ import CommonStyles from 'config/theme/CommonStyles';
 import { parseISO } from 'date-fns';
 import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';

@@ -49,7 +49,7 @@ const useFollowUser = () => {
         },
       });
     },
-    [subspaceId],
+    [signAndBroadcastTx, subspaceId, t],
   );
 };
 
@@ -122,7 +122,7 @@ const useFollowOrUnfollowUser = () => {
         await followUser(activeAddress, counterparty);
       }
     },
-    [activeAddress, unfollowUser, followUser],
+    [activeAddress, isFollowing, unfollowUser, followUser],
   );
 };
 

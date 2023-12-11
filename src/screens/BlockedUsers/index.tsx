@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import useBlocked from 'hooks/relationships/blocked/useBlocked';
+import useBlocked from 'hooks/relationships/useBlocked';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
@@ -16,9 +16,31 @@ import useStyles from './useStyles';
  * A screen that displays the blocked users of the active user.
  */
 const BlockedUsers = () => {
-  const { blocked, loading, refetch: refreshBlocked, fetchMore: fetchMoreBlocked } = useBlocked();
   const { t } = useTranslation('relationships');
   const styles = useStyles();
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // --- HOOKS
+  // -------------------------------------------------------------------------------------------------------------------
+
+  const {
+    data: blocked,
+    loading,
+    refresh: refreshBlocked,
+    fetchMore: fetchMoreBlocked,
+  } = useBlocked();
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // --- CALLBACKS
+  // -------------------------------------------------------------------------------------------------------------------
+
+  const onPullToRefresh = React.useCallback(() => {
+    refreshBlocked();
+  }, [refreshBlocked]);
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // --- SCREEN RENDERING
+  // -------------------------------------------------------------------------------------------------------------------
 
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<DesmosProfile>) => {
     return <BlockedUserItem profile={item} />;
@@ -39,10 +61,6 @@ const BlockedUsers = () => {
     () => <Divider my="s" color="dividerGrey" />,
     [],
   );
-
-  const onPullToRefresh = React.useCallback(() => {
-    refreshBlocked();
-  }, [refreshBlocked]);
 
   return (
     <DView topBar={<TopBar />} backgroundColor="white" disableHideKeyboardTouchable>

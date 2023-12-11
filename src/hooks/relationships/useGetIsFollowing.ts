@@ -9,23 +9,26 @@ import { useAppStateValue } from '@recoil/appState';
  */
 const useGetIsFollowing = () => {
   const subspaceId = useAppStateValue('subspaceId');
-  const [getIsFollowing] = useLazyQuery(GetRelationshipForAddress, {});
+  const [getIsFollowing] = useLazyQuery(GetRelationshipForAddress);
 
-  return React.useCallback(async (userAddress: string, counterpartyAddress: string) => {
-    const { data, error } = await getIsFollowing({
-      variables: {
-        subspaceId,
-        userAddress,
-        counterpartyAddress,
-      },
-    });
+  return React.useCallback(
+    async (userAddress: string, counterpartyAddress: string) => {
+      const { data, error } = await getIsFollowing({
+        variables: {
+          subspaceId,
+          userAddress,
+          counterpartyAddress,
+        },
+      });
 
-    if (error) {
-      throw error;
-    }
+      if (error) {
+        throw error;
+      }
 
-    return data?.relationships?.length > 0;
-  }, []);
+      return data?.relationships?.length > 0;
+    },
+    [getIsFollowing, subspaceId],
+  );
 };
 
 export default useGetIsFollowing;

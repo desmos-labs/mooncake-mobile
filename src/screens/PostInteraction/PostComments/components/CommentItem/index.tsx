@@ -23,7 +23,7 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
