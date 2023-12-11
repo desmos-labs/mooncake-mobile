@@ -1,21 +1,26 @@
 import { defaultBanner, defaultProfilePic } from 'assets/images';
+import { Asset } from 'expo-asset';
 import { ImageSource } from 'expo-image';
-import { ImageRequireSource, ImageURISource } from 'react-native';
-import { Asset } from 'react-native-image-picker';
 import { DesmosProfile } from 'types/desmos';
+
+interface ProfileTextFields {
+  readonly nickname?: string;
+  readonly dTag?: string;
+  readonly address: string;
+}
 
 /**
  * Tells whether the given picture is a valid URI or not.
  * @param picture {Asset | string | undefined} - Picture to check.
  */
-const isPictureUri = (picture: Asset | string | undefined): picture is string => {
+export const isPictureUri = (picture: Asset | string | undefined): picture is string => {
   return picture !== undefined && typeof picture === 'string';
 };
 
 /**
  * Tells whether the given picture is a valid {@link Asset} or not.
  */
-const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
+export const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
   if (picture === undefined) {
     return false;
   }
@@ -26,9 +31,9 @@ const isPictureAsset = (picture: Asset | string | undefined): picture is Asset =
 /**
  * Returns the source that should be used to display the given picture.
  * @param picture {Asset | string | undefined} - Picture to display.
- * @param defaultImage {ImageRequireSource} - Default image to be used if the given picture is not valid.
+ * @param defaultImage {ImageSource} - Default image to be used if the given picture is not valid.
  */
-const getPictureData = (picture: Asset | string | undefined, defaultImage: ImageRequireSource) => {
+const getPictureData = (picture: Asset | string | undefined, defaultImage: ImageSource) => {
   if (isPictureUri(picture)) {
     const trimmedUri = picture.trim();
     return trimmedUri.length > 0 ? { uri: trimmedUri } : defaultImage;
@@ -42,9 +47,7 @@ const getPictureData = (picture: Asset | string | undefined, defaultImage: Image
  * Returns the source that should be used to display the profile picture of the given profile.
  * @param profile {DesmosProfile} - Profile for which to display the profile picture.
  */
-export const getProfilePicture = (
-  profile: DesmosProfile | undefined,
-): ImageSource | ImageRequireSource => {
+export const getProfilePicture = (profile: DesmosProfile | undefined) => {
   return getPictureData(profile?.profilePicture, defaultProfilePic);
 };
 
@@ -52,28 +55,8 @@ export const getProfilePicture = (
  * Returns the source that should be used to display the cover picture of the given profile.
  * @param profile {DesmosProfile} - Profile for which to display the cover picture.
  */
-export const getCoverPicture = (
-  profile: DesmosProfile | undefined,
-): ImageURISource | ImageRequireSource => {
+export const getCoverPicture = (profile: DesmosProfile | undefined) => {
   return getPictureData(profile?.coverPicture, defaultBanner);
-};
-
-/**
- * Returns the name that should be displayed in order to identify the given Desmos profile.
- * @param profile {DesmosProfile} which names should be returned.
- * @return A combination of profile nickname and DTag that can be used inside lists of profiles.
- */
-export const getProfileDisplayName = (profile: DesmosProfile): string => {
-  switch (true) {
-    case profile.nickname !== undefined && profile.nickname !== '':
-      return `${profile.nickname} (@${profile.dTag})`;
-    case profile.dTag !== undefined:
-      return `@${profile.dTag}`;
-    default:
-      return `${profile.address.substring(0, 8)}...${profile.address.substring(
-        profile.address.length - 5,
-      )}`;
-  }
 };
 
 /**
@@ -84,4 +67,24 @@ export const removeDuplicates = (profiles: DesmosProfile[]): DesmosProfile[] => 
   return profiles.filter(
     (profile, index, self) => index === self.findIndex(p => p.address === profile.address),
   );
+};
+
+/**
+ * Function that, given a {@link DesmosProfile}, returns its display name.
+ * The display name is either the nickname or the dtag if present, or the address otherwise.
+ */
+export const getProfileDisplayName = (profile: ProfileTextFields): string => {
+  if (profile.nickname && profile.nickname.length > 0) {
+    return profile.nickname;
+  }
+
+  return getProfileDisplayDTag(profile);
+};
+
+export const getProfileDisplayDTag = (profile: ProfileTextFields): string => {
+  if (profile.dTag && profile.dTag.length > 0) {
+    return `@${profile.dTag}`;
+  }
+
+  return profile.address;
 };

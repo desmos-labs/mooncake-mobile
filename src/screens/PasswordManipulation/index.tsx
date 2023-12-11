@@ -137,7 +137,7 @@ const PasswordManipulation = () => {
        values greater than 75 will cause the button to shift upwards after a TextInput is focused
        */}
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? (bottomSafeInset ? 125 : 75) : 0}
+        keyboardVerticalOffset={10}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={CommonStyles.flex[1]}>
         <Formik
