@@ -27,7 +27,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import * as Yup from 'yup';
@@ -70,8 +69,6 @@ const PasswordManipulation = () => {
   const {
     params: { mode },
   } = useRoute<NavProps['route']>();
-
-  const { bottom: bottomSafeInset } = useSafeAreaInsets();
 
   const validationSchema = React.useMemo(() => {
     switch (mode) {
