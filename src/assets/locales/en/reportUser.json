@@ -1,7 +1,0 @@
-{
-  "user being blocked title": "The user is being blocked",
-  "user blocked title": "The user is blocked",
-  "user being unblocked title": "The user is being unblocked",
-  "user unblocked title": "The user is unblocked",
-  "user unblocked body": "You have successfully unblocked {{user}}"
-}

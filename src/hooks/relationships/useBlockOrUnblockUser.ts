@@ -46,7 +46,7 @@ const useBlockUser = () => {
         onSuccess: {
           popup: {
             title: t('user blocked title'),
-            description: t('user blocked text', { user: getProfileDisplayName(counterparty) }),
+            description: t('user blocked body', { user: getProfileDisplayName(counterparty) }),
           },
           action: () => {
             // Remove the cached posts for the blocked user.

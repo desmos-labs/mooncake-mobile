@@ -34,9 +34,6 @@ const useFollowUser = () => {
         onLoading: {
           popup: {
             title: t('creating relationship title'),
-            description: t('creating relationship body', {
-              user: getProfileDisplayName(counterparty),
-            }),
           },
         },
         onSuccess: {
@@ -79,9 +76,6 @@ const useUnfollowUser = () => {
         onLoading: {
           popup: {
             title: t('deleting relationship title'),
-            description: t('deleting relationship body', {
-              user: getProfileDisplayName(counterparty),
-            }),
           },
         },
         onSuccess: {
