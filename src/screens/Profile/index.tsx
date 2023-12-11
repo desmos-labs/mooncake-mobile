@@ -3,13 +3,19 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import * as WebBrowser from '@toruslabs/react-native-web-browser';
 import { block, profileBack, profileContextButton, reportIcon, unblock } from 'assets/images';
+import AnimatedCoverPicture from 'components/AnimatedCoverPicture';
 import Button from 'components/Button';
-import ImageButton from 'components/ImageButton';
 import PopupMenu from 'components/PopupMenu';
+import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { ImageSource } from 'expo-image';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
+import useGetStatusBarColorFromImage from 'hooks/colors/useGetStatusBarColorFromImage';
+import useSetStatusBarDarkOnImageFullScreen from 'hooks/colors/useSetStatusBarDarkOnImageFullScreen';
+import useSetStatusBarStyle from 'hooks/colors/useSetStatusBarStyle';
 import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfileConnections';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
@@ -20,6 +26,7 @@ import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -27,36 +34,40 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   InteractionManager,
-  LayoutChangeEvent,
+  Platform,
+  Pressable,
   RefreshControl,
   SafeAreaView,
-  StatusBar,
+  ScrollView,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Animated, {
-  Extrapolation,
-  FadeIn,
-  interpolate,
+import ImageView from 'react-native-image-viewing';
+import Reanimated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
+  withDelay,
+  withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
-import AnimatedBannerPicture from 'screens/Profile/components/AnimatedBannerPicture';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
 import UserBio from 'screens/Profile/components/UserBio';
-import useStyles from './useStyles';
+import useStyles, {
+  PROFILE_HEADER_HEIGHT,
+  PROFILE_HEADER_HEIGHT_COMPACT,
+  PROFILE_HEADER_HEIGHT_EXPANDED,
+} from './useStyles';
+
+const AnimatedView = Reanimated.createAnimatedComponent(View);
+const AnimatedScrollView = Reanimated.createAnimatedComponent(ScrollView);
+const AnimatedPressable = Reanimated.createAnimatedComponent(Pressable);
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
-
-export const HEADER_HEIGHT_COMPACT = 95;
-export const HEADER_HEIGHT_EXPANDED = 60;
 
 export interface ProfileParams {
   /**
@@ -72,8 +83,7 @@ export interface ProfileParams {
 const Profile = () => {
   const { t } = useTranslation('profile');
   const theme = useTheme();
-  const styles = useStyles({ insets: useSafeAreaInsets() });
-
+  const insets = useSafeAreaInsets();
   const route = useRoute<NavProps['route']>();
   const navigation = useNavigation<NavProps['navigation']>();
   const { navigate, goBack, pop } = navigation;
@@ -85,6 +95,7 @@ const Profile = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
+  // Memoized values
   const activeAccountAddress = useActiveAccountAddress();
   const address = useMemo(
     () => givenAddress ?? activeAccountAddress ?? '',
@@ -95,6 +106,7 @@ const Profile = () => {
     () => address === activeAccountAddress,
     [activeAccountAddress, address],
   );
+  const styles = useStyles({ insets, isActiveAccount });
 
   const {
     profile,
@@ -136,7 +148,11 @@ const Profile = () => {
 
   const [pageRefreshing, setPageRefreshing] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-
+  // Fullscreen image
+  const [fullscreenImage, setFullscreenImage] = useState({
+    image: {} as ImageSource,
+    isVisible: false,
+  });
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
@@ -193,68 +209,43 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Animations
   // -------------------------------------------------------------------------------------
-
-  const scrollY = useSharedValue(1);
-  const scrollOffset = useSharedValue(45 + HEADER_HEIGHT_EXPANDED);
-
-  // Start these initial values small so the dTag does not flash on initial load
-  const scrollContentSize = useSharedValue(0.2);
-  const scrollSize = useSharedValue(0.1);
-
-  /**
-   * Measure the size of the scrollView onLayout
-   * @param event - Layout change event
-   */
-  const onLayout = (event: LayoutChangeEvent) => {
-    scrollSize.value = event.nativeEvent.layout.height;
-  };
-
-  /**
-   * Measure the total size of the scroll content (onLayout)
-   * @param _ - The width, underscore so it is ignored by eslint.
-   * @param h - The height of the content
-   */
-  const onContentSizeChange = (_: number, h: number) => {
-    scrollContentSize.value = h;
-  };
-
-  /**
-   * Derived value that represents the total progress of the scrollView that has
-   * been scrolled.
-   *
-   * Example: 0 = scrollView has not been scrolled
-   *          1 = scrollView has been completely scrolled to the bottom
-   */
-  const scrollPercent = useDerivedValue(() => {
-    // Math.max to prevent division by 0
-    return scrollY.value / Math.max(scrollContentSize.value - scrollSize.value, 0.01);
-  });
-
-  const animatedDTagStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(scrollPercent.value, [0, 0.8], [0, 1]);
-
-    const translateY = interpolate(scrollPercent.value, [0, 0.8], [30, 0], {
-      extrapolateRight: Extrapolation.CLAMP,
-      extrapolateLeft: Extrapolation.CLAMP,
-    });
-
+  const opacity = useSharedValue(0);
+  const scrollOffset = useSharedValue(40 + PROFILE_HEADER_HEIGHT_EXPANDED);
+  const animatedStyle = useAnimatedStyle(() => {
     return {
-      opacity,
-      transform: [{ translateY }],
+      opacity: opacity.value,
     };
-  }, [scrollPercent]);
-
+  });
+  const scrollY = useSharedValue(1);
   const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      const { contentOffset } = event;
-      scrollOffset.value = 45 + HEADER_HEIGHT_EXPANDED - contentOffset.y;
+    onScroll: scrollEvent => {
+      const { contentOffset } = scrollEvent;
+      scrollOffset.value = 40 + PROFILE_HEADER_HEIGHT_EXPANDED - contentOffset.y;
       scrollY.value = contentOffset.y;
     },
   });
 
+  const animatedPressableStyle = useAnimatedStyle(() => {
+    return {
+      height:
+        PROFILE_HEADER_HEIGHT - scrollY.value >= PROFILE_HEADER_HEIGHT_COMPACT
+          ? PROFILE_HEADER_HEIGHT - scrollY.value
+          : PROFILE_HEADER_HEIGHT_COMPACT,
+    };
+  });
+
+  // Animate opacity
+  useEffect(() => {
+    opacity.value = withDelay(500, withTiming(1));
+    console.log(address);
+  }, [address, opacity, profile]);
+
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
+  const { statusBarStyle } = useGetStatusBarColorFromImage(profile?.coverPicture);
+  useSetStatusBarStyle(statusBarStyle);
+  useSetStatusBarDarkOnImageFullScreen(statusBarStyle, fullscreenImage.isVisible);
 
   const navigateToFollowageScreen = useNavigateToProfileConnections();
 
@@ -396,125 +387,157 @@ const Profile = () => {
   }
 
   return (
-    <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      {/* Back button */}
-      {!isActiveAccount && (
-        <ImageButton
-          image={profileBack}
-          buttonStyle={styles.buttonStyleLeft}
-          style={styles.topBarImage}
-          onPress={goBack}
-        />
-      )}
-      <View style={styles.contextButtonPosition}>{PopupContextMenu}</View>
-      {/* DTag */}
-      <Animated.View style={[styles.animatedDtag, animatedDTagStyle]}>
+    <View style={styles.root}>
+      {/* Fake Android statusbar */}
+      {Platform.OS === 'android' && (
         <View
           style={{
-            paddingTop: theme.spacing.s,
-          }}>
-          <Typography.Subtitle3 numberOfLines={1} style={styles.dtag}>
-            @{profile.dTag}
-          </Typography.Subtitle3>
+            backgroundColor: theme.colors.black,
+            height: insets.top,
+          }}
+        />
+      )}
+      <AnimatedView style={[styles.topBarView, animatedStyle]}>
+        <View style={CommonStyles.flex['1']}>
+          {!isActiveAccount && (
+            <ProfileHeaderButton
+              image={profileBack}
+              style={styles.topButton}
+              containerStyle={styles.topButton}
+              onPress={goBack}
+            />
+          )}
         </View>
-      </Animated.View>
-      {/* Banner */}
-      <AnimatedBannerPicture profile={profile} scrollY={scrollY} />
-      {/* Profile image */}
-      <AnimatedProfilePicture profile={profile} scrollY={scrollY} scrollOffset={scrollOffset} />
-      <Animated.ScrollView
-        overScrollMode="never"
-        pinchGestureEnabled={false}
-        showsVerticalScrollIndicator={false}
-        onScroll={scrollHandler}
+        <View>{PopupContextMenu}</View>
+      </AnimatedView>
+      {/* Cover picture fake pressable */}
+      <AnimatedPressable
+        style={[styles.coverPicturePressable, animatedPressableStyle]}
+        onTouchStart={() =>
+          setFullscreenImage({ image: getCoverPicture(profile), isVisible: true })
+        }
+      />
+      <AnimatedCoverPicture
+        picture={getCoverPicture(profile)}
+        scrollY={scrollY}
+        heightFixed={PROFILE_HEADER_HEIGHT}
+        cachePolicy="memory-disk"
+      />
+      {/* User's profile picture */}
+      <AnimatedProfilePicture
+        picture={getProfilePicture(profile)}
+        scrollY={scrollY}
+        scrollOffset={scrollOffset}
+        cachePolicy="memory-disk"
+        onPress={() => setFullscreenImage({ image: getProfilePicture(profile), isVisible: true })}
+      />
+      <AnimatedScrollView
+        onStartShouldSetResponder={() => true}
         refreshControl={
           <RefreshControl
-            enabled={true}
-            onRefresh={() => setPageRefreshing(true)}
             refreshing={pageRefreshing}
+            onRefresh={refreshPage}
             tintColor={theme.colors.white}
+            colors={[theme.colors.black]}
           />
         }
-        onLayout={onLayout}
-        onContentSizeChange={onContentSizeChange}
-        scrollEventThrottle={1}
-        style={{
-          marginTop: HEADER_HEIGHT_COMPACT,
-          paddingTop: HEADER_HEIGHT_EXPANDED,
-        }}>
-        <View style={styles.contentContainer}>
-          {/* Posts, following and followers counters */}
-          <View style={styles.flexRow}>
-            <View style={styles.innerContainer}>
-              {/* Posts count */}
-              <TouchableOpacity style={styles.postCount} onPress={handlePostsSectionPressed}>
-                <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
-                <Typography.Caption1>{t('posts')}</Typography.Caption1>
-              </TouchableOpacity>
-              {/* Followage count */}
-              <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowingPressed}>
-                {isFollowageCountLoading ? (
-                  <StyledSpinner size={21} />
-                ) : (
-                  <Typography.Subtitle3>{followageCount}</Typography.Subtitle3>
+        onScroll={scrollHandler}
+        style={styles.scrollView}
+        keyboardShouldPersistTaps="always"
+        contentContainerStyle={styles.contentContainerStyle}
+        scrollEventThrottle={16}>
+        <View style={styles.contentView}>
+          <View style={styles.innerContainer}>
+            {/* Posts, following and followers counters */}
+            <View style={styles.innerTopSection}>
+              <View>
+                {/* Profile nickname */}
+                <Typography.H5 style={styles.nickname} numberOfLines={1}>
+                  {profile.nickname}
+                </Typography.H5>
+                {/* Profile Dtag */}
+                <Typography.Body7 style={styles.profileDtag} numberOfLines={1}>
+                  @{profile.dTag}
+                </Typography.Body7>
+                {/* Profile address */}
+                <AddressCopy address={address} />
+                {/* Profile biography */}
+                {profile?.bio && (
+                  <Spacer paddingVertical={theme.spacing.m}>
+                    <UserBio content={profile.bio} />
+                  </Spacer>
                 )}
-                <Typography.Caption1>{t('following')}</Typography.Caption1>
-              </TouchableOpacity>
-              {/* Followers count */}
-              <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowersPressed}>
-                {isFollowersCountLoading ? (
-                  <StyledSpinner size={21} />
-                ) : (
-                  <Typography.Subtitle3>{followersCount}</Typography.Subtitle3>
-                )}
-                <Typography.Caption1>{t('followers')}</Typography.Caption1>
-              </TouchableOpacity>
+              </View>
+              <View style={styles.rightButtonsContainer}>
+                {/* Posts count */}
+                <TouchableOpacity style={styles.postCount} onPress={handlePostsSectionPressed}>
+                  <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
+                  <Typography.Caption1>{t('posts')}</Typography.Caption1>
+                </TouchableOpacity>
+                {/* Followage count */}
+                <TouchableOpacity
+                  style={styles.centerLeftSpacingM}
+                  onPress={handleFollowingPressed}>
+                  {isFollowageCountLoading ? (
+                    <StyledSpinner size={21} />
+                  ) : (
+                    <Typography.Subtitle3>{followageCount}</Typography.Subtitle3>
+                  )}
+                  <Typography.Caption1>{t('following')}</Typography.Caption1>
+                </TouchableOpacity>
+                {/* Followers count */}
+                <TouchableOpacity
+                  style={styles.centerLeftSpacingM}
+                  onPress={handleFollowersPressed}>
+                  {isFollowersCountLoading ? (
+                    <StyledSpinner size={21} />
+                  ) : (
+                    <Typography.Subtitle3>{followersCount}</Typography.Subtitle3>
+                  )}
+                  <Typography.Caption1>{t('followers')}</Typography.Caption1>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {/* Section to edit the profile */}
+            {isActiveAccount && <EditProfileSection profile={profile} />}
+            {/* Follow/Unfollow button */}
+            {ProfileInteractionButton}
+            <Spacer paddingVertical={theme.spacing.s} />
+            <View style={styles.divider} />
+            {/* Lower section (balance, posts, NFTs, badges, etc) */}
+            <View style={styles.container}>
+              {/* Balance */}
+              <BalanceSection
+                address={address}
+                balance={balance}
+                isLoading={isBalanceLoading}
+                handlePressBalanceInfo={handlePressBalanceInfo}
+              />
+              <View style={styles.divider} />
+              {/* Posts */}
+              <PostsSection
+                address={address}
+                posts={posts}
+                loading={arePostsLoading}
+                onPress={handlePostsSectionPressed}
+              />
             </View>
           </View>
-          {/* Profile nickname */}
-          <Typography.H5 style={styles.nickname} numberOfLines={1}>
-            {profile.nickname}
-          </Typography.H5>
-          {/* Profile Dtag */}
-          <Typography.Body7 style={styles.profileDtag} numberOfLines={1}>
-            @{profile.dTag}
-          </Typography.Body7>
-          {/* Profile address */}
-          <AddressCopy address={address} />
-          {/* Profile biography */}
-          {profile?.bio && (
-            <Spacer paddingVertical={theme.spacing.m}>
-              <UserBio content={profile.bio} />
-            </Spacer>
-          )}
-          {/* Section to edit the profile */}
-          {isActiveAccount && <EditProfileSection profile={profile} />}
-          {/* Follow/Unfollow button */}
-          {ProfileInteractionButton}
-          <Spacer paddingVertical={theme.spacing.s} />
-          <View style={styles.divider} />
-          {/* Lower section (balance, posts, NFTs, badges, etc) */}
-          <View style={styles.container}>
-            {/* Balance */}
-            <BalanceSection
-              address={address}
-              balance={balance}
-              isLoading={isBalanceLoading}
-              handlePressBalanceInfo={handlePressBalanceInfo}
-            />
-            <View style={styles.divider} />
-            {/* Posts */}
-            <PostsSection
-              address={address}
-              posts={posts}
-              loading={arePostsLoading}
-              onPress={handlePostsSectionPressed}
-            />
-          </View>
         </View>
-      </Animated.ScrollView>
-    </Animated.View>
+      </AnimatedScrollView>
+      <ImageView
+        presentationStyle="fullScreen"
+        images={[fullscreenImage.image]}
+        imageIndex={0}
+        visible={fullscreenImage.isVisible}
+        onRequestClose={() =>
+          setFullscreenImage({
+            image: {},
+            isVisible: false,
+          })
+        }
+      />
+    </View>
   );
 };
 

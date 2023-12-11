@@ -7,7 +7,6 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     padding: theme.spacing.m,
-    backgroundColor: 'transparent',
   },
   headerText: {
     marginBottom: theme.spacing.l,

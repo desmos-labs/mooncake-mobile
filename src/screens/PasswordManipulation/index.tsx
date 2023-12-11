@@ -27,7 +27,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import * as Yup from 'yup';
@@ -70,8 +69,6 @@ const PasswordManipulation = () => {
   const {
     params: { mode },
   } = useRoute<NavProps['route']>();
-
-  const { bottom: bottomSafeInset } = useSafeAreaInsets();
 
   const validationSchema = React.useMemo(() => {
     switch (mode) {
@@ -137,7 +134,7 @@ const PasswordManipulation = () => {
        values greater than 75 will cause the button to shift upwards after a TextInput is focused
        */}
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? (bottomSafeInset ? 125 : 75) : 0}
+        keyboardVerticalOffset={10}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={CommonStyles.flex[1]}>
         <Formik
