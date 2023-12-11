@@ -28,7 +28,7 @@ import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import PopupMenu from 'components/PopupMenu';
 import useHidePost from 'hooks/posts/useHidePost';
 import { useHandlePressReport } from 'components/PostCard/hooks';
-import useIsBlocked from 'hooks/relationships/blocked/useIsBlocked';
+import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import useStyles from './useStyles';
 

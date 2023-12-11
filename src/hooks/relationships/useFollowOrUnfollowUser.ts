@@ -1,19 +1,13 @@
 import React from 'react';
-import {
-  useAddFollowedUser,
-  useHasFollowedUser,
-  useRemoveFollowedUser,
-  useSetFollowedUserStatus,
-} from '@recoil/relationships';
 import { Relationships } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import Long from 'long';
-import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
 import { useTranslation } from 'react-i18next';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
+import useGetIsFollowing from 'hooks/relationships/useGetIsFollowing';
 
 /**
  * Hook that allows to follow a user both remotely and locally.
@@ -22,16 +16,10 @@ const useFollowUser = () => {
   const { t } = useTranslation('relationships');
   const subspaceId = useAppStateValue('subspaceId');
 
-  const addFollowedUser = useAddFollowedUser();
-  const removeFollowedUser = useRemoveFollowedUser();
-
   const signAndBroadcastTx = useSignAndBroadcastTx();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
-      // Add the relationships locally
-      addFollowedUser(user, counterparty);
-
       // If the relationship does not exist on the server, create it
       const messageCreateRelationship: Relationships.v1.MsgCreateRelationshipEncodeObject = {
         typeUrl: Relationships.v1.MsgCreateRelationshipTypeUrl,
@@ -59,15 +47,9 @@ const useFollowUser = () => {
             }),
           },
         },
-        onError: {
-          action: () => {
-            // If the transaction is canceled or errors, remove the added relationship
-            removeFollowedUser(user, counterparty.address);
-          },
-        },
       });
     },
-    [addFollowedUser, subspaceId, removeFollowedUser],
+    [signAndBroadcastTx, subspaceId, t],
   );
 };
 
@@ -78,15 +60,10 @@ const useUnfollowUser = () => {
   const { t } = useTranslation('relationships');
   const subspaceId = useAppStateValue('subspaceId');
 
-  const setFollowedUserStatus = useSetFollowedUserStatus();
-
   const signAndBroadcastTx = useSignAndBroadcastTx();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
-      // Delete the relationship locally
-      setFollowedUserStatus(user, counterparty.address, DataStatus.DELETED_LOCALLY);
-
       // If the relationship exists remotely, remote it from the server
       const messageDeleteRelationship: Relationships.v1.MsgDeleteRelationshipEncodeObject = {
         typeUrl: Relationships.v1.MsgDeleteRelationshipTypeUrl,
@@ -115,15 +92,9 @@ const useUnfollowUser = () => {
             }),
           },
         },
-        onError: {
-          action: () => {
-            // If the transaction is canceled or errors, re-add the removed relationship
-            setFollowedUserStatus(user, counterparty.address, DataStatus.SYNCED);
-          },
-        },
       });
     },
-    [setFollowedUserStatus, subspaceId, signAndBroadcastTx, t],
+    [subspaceId, signAndBroadcastTx, t],
   );
 };
 
@@ -134,7 +105,7 @@ const useUnfollowUser = () => {
 const useFollowOrUnfollowUser = () => {
   const activeAddress = useActiveAccountAddress();
 
-  const hasFollowedUser = useHasFollowedUser();
+  const isFollowing = useGetIsFollowing();
   const followUser = useFollowUser();
   const unfollowUser = useUnfollowUser();
 
@@ -144,14 +115,14 @@ const useFollowOrUnfollowUser = () => {
         throw new Error('Trying to follow or unfollow a user, without active user');
       }
 
-      const isFollowing = hasFollowedUser(activeAddress, counterparty.address);
-      if (isFollowing) {
+      const isUserFollowingCounterparty = await isFollowing(activeAddress, counterparty.address);
+      if (isUserFollowingCounterparty) {
         await unfollowUser(activeAddress, counterparty);
       } else {
         await followUser(activeAddress, counterparty);
       }
     },
-    [activeAddress, hasFollowedUser, unfollowUser, followUser],
+    [activeAddress, isFollowing, unfollowUser, followUser],
   );
 };
 

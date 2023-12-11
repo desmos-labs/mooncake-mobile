@@ -60,16 +60,6 @@ export const getCoverPicture = (profile: DesmosProfile | undefined) => {
 };
 
 /**
- * Function that, given a list of {@link DesmosProfile}, returns a new list
- * without any duplicated profile by their address.
- */
-export const removeDuplicates = (profiles: DesmosProfile[]): DesmosProfile[] => {
-  return profiles.filter(
-    (profile, index, self) => index === self.findIndex(p => p.address === profile.address),
-  );
-};
-
-/**
  * Function that, given a {@link DesmosProfile}, returns its display DTag.
  * @param profile {DesmosProfile} - Profile for which to display the DTag.
  */

@@ -96,3 +96,10 @@ export interface DesmosProfile {
    */
   readonly creationTime: string;
 }
+
+/**
+ * Interface representing a reaction to a post.
+ */
+export interface PostReaction {
+  readonly author: DesmosProfile;
+}

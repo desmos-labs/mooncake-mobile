@@ -1,12 +1,13 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useHasFollowedUser } from '@recoil/relationships';
-import React from 'react';
-import useRefreshRelationshipCache from 'hooks/relationships/useRefreshRelationshipCache';
+import { useQuery } from '@apollo/client';
+import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
+import { useAppStateValue } from '@recoil/appState';
 
 /**
  * Hook that allows to know if the current user is following a given user or not.
  */
 const useIsFollowing = (counterparty: string) => {
+  const subspaceId = useAppStateValue('subspaceId');
   const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error(
@@ -14,22 +15,16 @@ const useIsFollowing = (counterparty: string) => {
     );
   }
 
-  // Use the cached value in order to avoid unnecessary queries
-  const hasFollowedUser = useHasFollowedUser();
-  const isFollowing = React.useMemo(
-    // Do not perform the search if the active address and counterparty are the same
-    () => activeAddress !== counterparty && hasFollowedUser(activeAddress, counterparty),
-    [activeAddress, counterparty, hasFollowedUser],
-  );
-
-  // Allow to refresh the value when needed
-  const updateRelationshipsCache = useRefreshRelationshipCache();
-  const refetch = React.useCallback(async () => {
-    await updateRelationshipsCache(counterparty);
-  }, [counterparty, updateRelationshipsCache]);
+  const { data, refetch } = useQuery(GetRelationshipForAddress, {
+    variables: {
+      subspaceId,
+      userAddress: activeAddress,
+      counterpartyAddress: counterparty,
+    },
+  });
 
   return {
-    isFollowing,
+    isFollowing: data?.relationships?.length > 0,
     refetch,
   };
 };

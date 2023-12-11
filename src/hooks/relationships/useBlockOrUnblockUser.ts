@@ -1,21 +1,16 @@
 import { Relationships } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
-import {
-  useAddBlockedUser,
-  useHasBlockedUser,
-  useRemoveBlockedUser,
-  useSetBlockedUserStatus,
-} from '@recoil/blockedRelationships';
+
 import { useRemovePostsByAuthor } from '@recoil/posts';
 import usePromptConfirmUnblock from 'hooks/usePromptConfirmUnblock';
 import Long from 'long';
 import React from 'react';
-import { DataStatus } from 'types/cache';
 import { DesmosProfile } from 'types/desmos';
 import { useTranslation } from 'react-i18next';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
+import useGetHasBlocked from 'hooks/relationships/useGetHasBlocked';
 
 /**
  * Hook that allows to block a user both remotely and locally.
@@ -25,16 +20,10 @@ const useBlockUser = () => {
   const subspaceId = useAppStateValue('subspaceId');
 
   const signAndBroadcastTx = useSignAndBroadcastTx();
-
-  const addBlockedUser = useAddBlockedUser();
-  const removeBlockedUser = useRemoveBlockedUser();
   const removePostsForUser = useRemovePostsByAuthor();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
-      // Add the blocked user locally
-      addBlockedUser(user, counterparty);
-
       // If the blocked status does not exist on the server, create it
       const messageBlockUser: Relationships.v1.MsgBlockUserEncodeObject = {
         typeUrl: Relationships.v1.MsgBlockUserTypeUrl,
@@ -64,15 +53,9 @@ const useBlockUser = () => {
             removePostsForUser(user, counterparty);
           },
         },
-        onError: {
-          action: () => {
-            // If the transaction is canceled or errors, remove the added blocked relationship
-            removeBlockedUser(user, counterparty.address);
-          },
-        },
       });
     },
-    [addBlockedUser, subspaceId, signAndBroadcastTx, t, removePostsForUser, removeBlockedUser],
+    [subspaceId, signAndBroadcastTx, t, removePostsForUser],
   );
 };
 
@@ -84,8 +67,6 @@ const useUnblockUser = () => {
   const subspaceId = useAppStateValue('subspaceId');
 
   const promptConfirmUnblock = usePromptConfirmUnblock();
-  const setBlockedUserStatus = useSetBlockedUserStatus();
-
   const signAndBroadcastTx = useSignAndBroadcastTx();
 
   return React.useCallback(
@@ -95,9 +76,6 @@ const useUnblockUser = () => {
 
       // early exit if the user denies the prompt above.
       if (!confirmationResult.isOk()) return;
-
-      // Delete the blocked relationship locally
-      setBlockedUserStatus(user, counterparty.address, DataStatus.DELETED_LOCALLY);
 
       // If the block exists remotely, remote it from the server
       const messageUnblock: Relationships.v1.MsgUnblockUserEncodeObject = {
@@ -122,15 +100,9 @@ const useUnblockUser = () => {
             description: t('user unblocked body', { user: getProfileDisplayName(counterparty) }),
           },
         },
-        onError: {
-          action: () => {
-            // If the transaction is canceled or errors, re-add the removed blocked status
-            setBlockedUserStatus(user, counterparty.address, DataStatus.SYNCED);
-          },
-        },
       });
     },
-    [promptConfirmUnblock, setBlockedUserStatus, signAndBroadcastTx, subspaceId, t],
+    [promptConfirmUnblock, signAndBroadcastTx, subspaceId, t],
   );
 };
 
@@ -141,7 +113,7 @@ const useUnblockUser = () => {
 const useBlockOrUnblockUser = () => {
   const activeAddress = useActiveAccountAddress();
 
-  const hasBlockedUser = useHasBlockedUser();
+  const hasBlockedUser = useGetHasBlocked();
   const blockUser = useBlockUser();
   const unblockUser = useUnblockUser();
 
@@ -151,7 +123,7 @@ const useBlockOrUnblockUser = () => {
         throw new Error('Trying to follow or unfollow a user, without active user');
       }
 
-      const isBlocked = hasBlockedUser(activeAddress, counterparty.address);
+      const isBlocked = await hasBlockedUser(activeAddress, counterparty.address);
       if (isBlocked) {
         await unblockUser(activeAddress, counterparty);
       } else {
