@@ -1,9 +1,9 @@
-import React from 'react';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { findSamePost } from 'lib/PostsUtils';
+import React from 'react';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
+import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
@@ -24,16 +24,6 @@ const postsState = atom<Record<string, Post[]>>({
     },
   ],
 });
-
-/**
- * Hook that allows to get the details of a post given its subspace id and id.
- */
-export const usePostByID = (user: string, id: number) => {
-  const posts = useRecoilValue(postsState);
-  return React.useMemo(() => {
-    return posts[user]?.find(p => p.id === id);
-  }, [id, posts, user]);
-};
 
 /**
  * Hook that allows to get all the posts that are yet to-be-synced for a given user.
@@ -204,29 +194,6 @@ export const useRemoveStoredPendingPost = () => {
             p.externalId !== externalId ||
             p.status === PostStatus.SYNCED,
         );
-
-        return updatedPosts;
-      });
-    },
-    [setPosts],
-  );
-};
-
-/**
- * Hook that allows to remove the post having a given subspace ia and external id.
- */
-export const useRemovePost = () => {
-  const setPosts = useSetRecoilState(postsState);
-  return React.useCallback(
-    (user: string, externalId: string) => {
-      setPosts(currentTimeline => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...currentTimeline,
-        };
-
-        // Update the user posts by filtering out the post that has the same subspace id and external id
-        const userPosts = updatedPosts[user] ?? [];
-        updatedPosts[user] = userPosts.filter(p => p.externalId !== externalId);
 
         return updatedPosts;
       });
