@@ -33,7 +33,6 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Image,
   InteractionManager,
   Platform,
   Pressable,
@@ -291,15 +290,11 @@ const Profile = () => {
     });
   }, [t, navigate, pop]);
 
-  const startTipFlow = React.useCallback(() => {
-    console.warn('TODO: start tip flow');
-  }, []);
-
   // -------------------------------------------------------------------------------------
   // --- Memoized values
   // -------------------------------------------------------------------------------------
-  // This section will only be rendered if visiting another user's profile
-  const ProfileInteractionSection = React.useMemo(() => {
+  // This button will only be rendered if visiting another user's profile
+  const ProfileInteractionButton = React.useMemo(() => {
     if (!isActiveAccount) {
       // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
       if (isBlocked) {
@@ -316,42 +311,19 @@ const Profile = () => {
         );
       }
       return (
-        <View style={styles.profileInteractionSection}>
-          <Button
-            style={styles.followButton}
-            mt="s"
-            backgroundColor="surfaceGrey"
-            minWidth="80px"
-            size={32}
-            onPress={handlePressFollow}
-            textColor="surfaceBlack">
-            {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
-          </Button>
-          <Spacer paddingLeft="s" />
-          <Button
-            mt="s"
-            backgroundColor="surfaceGrey"
-            minWidth="35px"
-            size={32}
-            onPress={startTipFlow}>
-            <Image style={styles.tipIcon} source={tipUser} />
-          </Button>
-        </View>
+        <Button
+          mt="s"
+          backgroundColor="surfaceGrey"
+          minWidth="80px"
+          size={32}
+          onPress={handlePressFollow}
+          textColor="surfaceBlack">
+          {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
+        </Button>
       );
     }
     return undefined;
-  }, [
-    handlePressBlock,
-    handlePressFollow,
-    isActiveAccount,
-    isBlocked,
-    isFollowing,
-    startTipFlow,
-    styles.followButton,
-    styles.profileInteractionSection,
-    styles.tipIcon,
-    t,
-  ]);
+  }, [handlePressBlock, handlePressFollow, isActiveAccount, isBlocked, isFollowing, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
@@ -570,3 +542,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
