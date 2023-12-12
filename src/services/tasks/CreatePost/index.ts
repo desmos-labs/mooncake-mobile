@@ -1,9 +1,10 @@
-import { getTaskContext, TaskJob } from 'lib/BackgroundTaskUtils';
-import { SignAndBroadcastTxParams } from 'services/tasks/SignAndBroadcastTx';
-import { uploadPicture } from 'lib/UploadUtils';
-import { Post, PostAttachment, PostAttachmentType } from 'types/posts';
-import { err, Ok, ok, Result } from 'neverthrow';
+import { getTaskContext } from 'lib/BackgroundTaskUtils';
+import { TaskJob } from 'lib/BackgroundTaskUtils/types';
 import { convertPostToMsgCreatePost } from 'lib/PostsUtils';
+import { uploadPicture } from 'lib/UploadUtils';
+import { err, Ok, ok, Result } from 'neverthrow';
+import { SignAndBroadcastTxParams } from 'services/tasks/SignAndBroadcastTx';
+import { Post, PostAttachment, PostAttachmentType } from 'types/posts';
 
 interface CreatePostTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'> {
   readonly subspaceId: number;
@@ -74,7 +75,7 @@ const CreatePostTask: TaskJob<CreatePostTaskParams, string> = async (
   const postAttachments = attachments.map(
     attachment => (attachment as Ok<PostAttachment, Error>).value,
   );
-
+  console.log(attachments, postAttachments);
   // Update the post fields to the one that we have changed
   const postToConvert = {
     ...post,

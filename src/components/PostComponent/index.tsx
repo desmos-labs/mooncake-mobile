@@ -1,10 +1,10 @@
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
-import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
-import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 type Props = {
@@ -46,8 +46,8 @@ const PostComponent = (props: Props) => {
     } else {
       return (
         <View>
-          {MediaAttachment}
           <Typography.Body5 style={{ margin: theme.spacing.m }}>{post.text}</Typography.Body5>
+          {MediaAttachment}
         </View>
       );
     }

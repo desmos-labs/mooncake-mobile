@@ -100,11 +100,12 @@ const EnterCommentBottomBar = (props: Props) => {
 
   const { imageFromLibrary: selectPicture } = useImageFromDevice({
     onImageSelected: imageUri => {
-      editPostPicture(imageUri, (editedPicturePath, dimensions) => {
+      editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
         addPostAttachment({
           uri: editedPicturePath,
           width: dimensions.width,
           height: dimensions.height,
+          type: mimeType,
         });
       });
     },
