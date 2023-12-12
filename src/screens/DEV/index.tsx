@@ -1,4 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
+import TipUserBottomSheet from 'components/BottomSheets/TipUser';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -24,6 +25,7 @@ const routesToRender = [
   ROUTES.FEE_GRANT_WAITING_SCREEN,
   ROUTES.BOTTOM_TABS,
   ROUTES.UNLOCK_WALLET,
+  ROUTES.BOTTOM_SHEET,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
@@ -91,6 +93,14 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               navigate(item, {
                 onSuccess: () => {},
               });
+              break;
+            case ROUTES.BOTTOM_SHEET:
+              navigate(ROUTES.BOTTOM_SHEET, {
+                component: TipUserBottomSheet,
+                props: {
+                  text: 'Tip User Bottom Sheet',
+                },
+              })
               break;
             default:
               navigate(item);

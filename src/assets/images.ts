@@ -9,6 +9,7 @@ export const followBlackIcon = require("./images/followBlackIcon.png");
 export const unfollowBlackIcon = require("./images/unfollowBlackIcon.png");
 
 export const tipIcon = require("./images/tipIcon.png");
+export const tipUser = require("./images/tipUser.png");
 
 export const commentIcon = require("./images/commentIcon.png");
 

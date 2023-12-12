@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import { Coin } from '@cosmjs/stargate';
@@ -18,20 +18,22 @@ const useAccountBalance = (address?: string) => {
   }
 
   const [balance, setBalance] = useState<Coin[]>([]);
-  const { refetch, loading, data } = useQuery(GetAccountBalance, {
+  const [error, setError] = useState<Error>();
+  const { refetch, loading } = useQuery(GetAccountBalance, {
+    fetchPolicy: 'network-only',
     variables: { address: userAddress },
+    onCompleted(data) {
+      const { balance: onChainBalance } = data;
+      setBalance(onChainBalance.coins);
+    },
+    onError(e) {
+      setError(e);
+    },
   });
-
-  // Update the balance based on when the data from the server changes
-  React.useEffect(() => {
-    if (!data) return;
-
-    const { balance: onChainBalance } = data;
-    setBalance(onChainBalance.coins);
-  }, [data]);
 
   return {
     balance: filterCoins(balance),
+    error,
     loading,
     refetch,
   };

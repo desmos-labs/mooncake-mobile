@@ -21,6 +21,7 @@ import DevScreen from 'screens/DEV';
 import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
 import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
 import Landing from 'screens/Landing';
+import BottomSheetScreen, { BottomSheetScreenProps } from 'screens/Modals/BottomSheets';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SelectImageModal, { SelectImageModalParams } from 'screens/Modals/SelectImageModal';
@@ -138,6 +139,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.SELECT_IMAGE_MODAL]: SelectImageModalParams;
   [ROUTES.POST_REACTIONS]: PostReactionsParams;
+  [ROUTES.BOTTOM_SHEET]: BottomSheetScreenProps<any>;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -268,6 +270,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.POST_REACTIONS} component={PostReactions} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.SELECT_IMAGE_MODAL} component={SelectImageModal} />
+        <Stack.Screen name={ROUTES.BOTTOM_SHEET} component={BottomSheetScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
