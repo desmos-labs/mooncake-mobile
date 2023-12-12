@@ -29,8 +29,8 @@ import { useTranslation } from 'react-i18next';
 import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
 import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
-import useStyles from './useStyles';
 import useHooks from './useHooks';
+import useStyles from './useStyles';
 
 export interface ProfileOperationsParams {
   /**
@@ -216,7 +216,8 @@ const ProfileOperations = () => {
       backgroundColor={theme.colors.white}
       style={styles.container}>
       {/* Balance section title */}
-      <View style={styles.paddingHorizontalM}>
+      <View>
+        <Spacer paddingTop="s" />
         <Typography.Body5>{t('balance')}</Typography.Body5>
         {/* Balance amount (in coins) */}
         {/* TODO: Show something if the balance is still loading */}
@@ -238,7 +239,6 @@ const ProfileOperations = () => {
           </View>
         )}
       </View>
-
       {/* Messages list TODO: move to Flashlist */}
       {!isDataLoading && (
         <SectionList
