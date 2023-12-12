@@ -21,10 +21,10 @@ import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
@@ -392,7 +392,7 @@ const Profile = () => {
       {Platform.OS === 'android' && (
         <View
           style={{
-            backgroundColor: theme.colors.black,
+            backgroundColor: 'black',
             height: insets.top,
           }}
         />

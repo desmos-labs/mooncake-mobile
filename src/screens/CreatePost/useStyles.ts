@@ -6,6 +6,7 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
+    paddingHorizontal: theme.spacing.m,
   },
   topBar: {
     alignItems: 'center',
@@ -15,7 +16,8 @@ const useStyles = makeStyle(theme => ({
     height: 36,
   },
   contentContainer: {
-    padding: theme.spacing.m,
+    paddingVertical: theme.spacing.m,
+    paddingHorizontal: theme.spacing.s,
   },
   avatarGroup: {
     alignSelf: 'flex-start',

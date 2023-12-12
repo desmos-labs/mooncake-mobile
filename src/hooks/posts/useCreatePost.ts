@@ -2,9 +2,16 @@ import { useAppStateValue } from '@recoil/appState';
 import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
 import { useActiveProfile } from '@recoil/profiles';
 import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
+import { ToastType } from 'config/toast/toastConfig';
+import useToast from 'hooks/toasts/useToast';
+import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
+import { scheduleTask } from 'lib/BackgroundTaskUtils';
 import { getConversationId } from 'lib/PostsUtils';
 import { err, Ok, ok, Result } from 'neverthrow';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import CreatePostTask from 'services/tasks/CreatePost';
+import { ImageMedia } from 'types/media';
 import {
   Post,
   PostAttachment,
@@ -14,13 +21,6 @@ import {
   PostStatus,
 } from 'types/posts';
 import { v4 as uuidv4 } from 'uuid';
-import { scheduleTask } from 'lib/BackgroundTaskUtils';
-import CreatePostTask from 'services/tasks/CreatePost';
-import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
-import useToast from 'hooks/toasts/useToast';
-import { useTranslation } from 'react-i18next';
-import { ToastType } from 'config/toast/toastConfig';
-import { ImageMedia } from 'types/media';
 
 interface CreatePostOptions {
   readonly parent?: Post;
@@ -34,6 +34,7 @@ interface CreatePostOptions {
  */
 const convertPostImage = (index: number, attachment: ImageMedia): Result<PostAttachment, Error> => {
   const { uri, type } = attachment;
+  console.log(attachment);
   if (!uri || !type) {
     return err(new Error('Invalid attachment'));
   }

@@ -6,7 +6,7 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     backgroundColor: theme.colors.white,
-    paddingVertical: theme.spacing.m,
+    paddingTop: theme.spacing.m,
     alignItems: 'center',
     flexDirection: 'row',
   },

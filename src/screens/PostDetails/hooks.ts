@@ -1,19 +1,19 @@
-import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import ROUTES from 'navigation/routes';
-import { NavProps } from 'screens/PostDetails/index';
-import { isCommentReply, Post } from 'types/posts';
-import useCreatePost from 'hooks/posts/useCreatePost';
-import { DesmosProfile } from 'types/desmos';
-import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
-import { useTranslation } from 'react-i18next';
-import usePost from 'hooks/posts/usePost';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
+import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
+import useCreatePost from 'hooks/posts/useCreatePost';
+import usePost from 'hooks/posts/usePost';
+import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import useToast from 'hooks/toasts/useToast';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { NavProps } from 'screens/PostDetails/index';
+import { DesmosProfile } from 'types/desmos';
+import { isCommentReply, Post } from 'types/posts';
 
 /**
  * Hook that allows to follow or unfollow a user.
@@ -135,7 +135,7 @@ export const useHandleCreateComment = (onCompleted: () => void) => {
         });
       }
     },
-    [createPost, showToast, t],
+    [createPost, onCompleted, showToast, t],
   );
 };
 

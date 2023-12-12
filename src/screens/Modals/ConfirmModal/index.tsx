@@ -1,9 +1,12 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
+import Spacer from 'components/Spacer';
 // dismiss button
 // import {iconCross} from 'assets/images';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { ReactNode } from 'react';
@@ -17,9 +20,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useTheme } from 'native-base';
-import Spacer from 'components/Spacer';
-import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -142,22 +142,19 @@ const ConfirmModal = () => {
       />
       <View style={styles.innerContainer}>
         {image && <Image source={image} style={styles.imageStyle} />}
-
         <Spacer paddingBottom={16}>
           <Typography.H5 style={CommonStyles.textAlign.center}>{title}</Typography.H5>
         </Spacer>
-
         <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
           {typeof subtitle === 'string' ? (
             <Trans
-              i18nKey={subtitle as string}
+              i18nKey={subtitle as any}
               components={[<Typography.Subtitle2 style={subtitleStyle} />]}
             />
           ) : (
             subtitle
           )}
         </Typography.Body5>
-
         <Spacer paddingTop={theme.spacing.xl}>
           {primaryButtonLabel && (
             <Button

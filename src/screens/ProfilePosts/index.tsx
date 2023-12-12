@@ -5,9 +5,9 @@ import {
 import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
-import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -18,9 +18,8 @@ import {
   PanResponder,
   PanResponderGestureState,
 } from 'react-native';
-import { useTheme } from 'native-base';
-import UserLikedPostsTab from 'screens/ProfilePosts/UserLikedPostsTab';
 import UserPostsTab from 'screens/ProfilePosts/UserCreatedPostsTab';
+import UserLikedPostsTab from 'screens/ProfilePosts/UserLikedPostsTab';
 import useStyles from './useStyles';
 
 // -------------------------------------------------------------------------------------
@@ -109,7 +108,6 @@ const ProfilePosts = () => {
       style={styles.container}
       {...panResponder.panHandlers}
       onTouchStart={disableParentSwipeLeft}>
-      <Spacer paddingVertical={8} />
       <Typography.H3>{t('posts')}</Typography.H3>
       <Tab.Navigator screenOptions={screenOptions} initialRouteName={ROUTES.PROFILE_POSTS_POSTS}>
         <Tab.Screen

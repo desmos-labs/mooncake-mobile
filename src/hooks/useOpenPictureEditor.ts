@@ -1,7 +1,10 @@
 import { useCallback } from 'react';
 import { Dimensions } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import { HEADER_HEIGHT_COMPACT, HEADER_HEIGHT_EXPANDED } from 'screens/Profile';
+import {
+  PROFILE_HEADER_HEIGHT_COMPACT,
+  PROFILE_HEADER_HEIGHT_EXPANDED,
+} from 'screens/Profile/useStyles';
 
 const useOpenPictureEditor = () => {
   const editProfilePicture = useCallback(
@@ -55,7 +58,7 @@ const useOpenPictureEditor = () => {
         showCropFrame: true,
         hideBottomControls: true,
         width: Dimensions.get('window').width,
-        height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
+        height: PROFILE_HEADER_HEIGHT_COMPACT + PROFILE_HEADER_HEIGHT_EXPANDED,
         cropperToolbarTitle: 'Edit your cover picture',
         cropperRotateButtonsHidden: true,
         useCroppedDimensions: true,
@@ -76,6 +79,7 @@ const useOpenPictureEditor = () => {
       onEditedPicture: (
         editedPicturePath: string,
         dimensions: { width: number; height: number },
+        mimeType: string,
       ) => void,
       onError?: (err: any) => void,
     ) => {
@@ -95,10 +99,10 @@ const useOpenPictureEditor = () => {
         freeStyleCropEnabled: true,
         useCroppedDimensions: true,
         width: Dimensions.get('window').width,
-        height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
+        height: (Dimensions.get('window').width * 10) / 16,
       })
         .then(image => {
-          onEditedPicture(image.path, { width: image.width, height: image.height });
+          onEditedPicture(image.path, { width: image.width, height: image.height }, image.mime);
         })
         .catch(err => {
           onError && onError(err);

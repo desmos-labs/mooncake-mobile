@@ -18,10 +18,11 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { usePostHog } from 'posthog-react-native';
 import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { ScrollView } from 'react-native';
+import { getVersion } from 'react-native-device-info';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import useStyles from 'screens/Settings/useStyles';
-import { getVersion } from 'react-native-device-info';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
 import {
@@ -156,42 +157,49 @@ const Settings = (props: NavProps) => {
     <DView
       style={styles.root}
       showLoadingOverlay={signOutLoading}
+      disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.backgroundGrey}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
-      {/* Security section */}
-      <Section style={styles.spacer} title={t('security')}>
-        <SectionSwitch
-          label={t('enable analytics')}
-          value={analytics}
-          onValueChange={() => handleAnalyticsToggle(!analytics)}
-        />
-        <SectionSwitch
-          label={t('enable biometrics')}
-          value={biometrics}
-          onValueChange={handleBiometricsToggle}
-        />
-        <SectionButton label={t('change password')} onPress={navigateToChangePassword} />
-        <SectionButton label={t('blocked users')} onPress={handlePressBlockedUsers} />
-        {canShowPrivateKey && (
-          <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
-        )}
-      </Section>
-      {/* Other section */}
-      <Section style={styles.spacer} title={t('others')}>
-        <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
-        <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
-        <SectionButton label={t('about')} onPress={showAboutInfo} />
-      </Section>
-      <Spacer paddingVertical={12} />
-      <Button size={44} variant="outlined" onPress={openConfirmSignOutModal}>
-        {t('sign out')}
-      </Button>
-      <Typography.Body7 style={styles.bottomText}>
-        <Typography.Subtitle4>
-          {t('joined butter', { formattedDate: formattedAccountCreationDate })}
-        </Typography.Subtitle4>
-      </Typography.Body7>
-      <Typography.Body7 style={styles.bottomText}>Version {getVersion()}</Typography.Body7>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Security section */}
+        <Section style={styles.spacer} title={t('security')}>
+          <SectionSwitch
+            label={t('enable analytics')}
+            value={analytics}
+            onValueChange={() => handleAnalyticsToggle(!analytics)}
+          />
+          <SectionSwitch
+            label={t('enable biometrics')}
+            value={biometrics}
+            onValueChange={handleBiometricsToggle}
+          />
+          <SectionButton label={t('change password')} onPress={navigateToChangePassword} />
+          <SectionButton label={t('blocked users')} onPress={handlePressBlockedUsers} />
+          {canShowPrivateKey && (
+            <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
+          )}
+        </Section>
+        {/* Other section */}
+        <Section style={styles.spacer} title={t('others')}>
+          <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
+          <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
+          <SectionButton label={t('about')} onPress={showAboutInfo} />
+        </Section>
+        <Spacer paddingVertical={12} />
+        <Button size={44} variant="outlined" onPress={openConfirmSignOutModal}>
+          {t('sign out')}
+        </Button>
+        <Typography.Body7 style={styles.bottomText}>
+          <Trans
+            i18nKey="joined butter"
+            ns="settings"
+            values={{ formattedDate: formattedAccountCreationDate }}
+            components={[<Typography.Subtitle4 />]}
+          />
+        </Typography.Body7>
+        <Typography.Body7 style={styles.bottomText}>Version {getVersion()}</Typography.Body7>
+        <Spacer paddingBottom="l" />
+      </ScrollView>
     </DView>
   );
 };
