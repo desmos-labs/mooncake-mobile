@@ -1,12 +1,14 @@
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
+import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import { butterflyLandingIcon } from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { useTheme } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
-import { useTheme } from 'native-base';
 import Animated, {
   FadeInLeft,
   FadeOutLeft,
@@ -16,8 +18,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import PostTypeTab from 'screens/Home/components/PostTypeTab';
-import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
-import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 const ANIMATION_DURATION = 200;
@@ -50,8 +50,6 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
   const searchBarWidth = useSharedValue(windowWidth - 64 - 48);
   const xOffset = useSharedValue(0);
   const typeTabOpacity = useSharedValue(1);
-  const inviteOpacity = useSharedValue(1);
-  const invitePosition = useSharedValue(0);
   const cancelOpacity = useSharedValue(0);
   const cancelPosition = useSharedValue(ICON_OFFSET);
 
@@ -97,21 +95,13 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
       cancelPosition.value = withTiming(ICON_OFFSET, {
         duration: SLIDE_ANIMATION_DURATION,
       });
-      inviteOpacity.value = withDelay(ANIMATION_DURATION, withTiming(1));
-      invitePosition.value = withDelay(SLIDE_ANIMATION_DURATION, withTiming(0));
     } else {
-      inviteOpacity.value = withTiming(0, { duration: ANIMATION_DURATION });
-      invitePosition.value = withTiming(ICON_OFFSET, {
-        duration: SLIDE_ANIMATION_DURATION,
-      });
       cancelOpacity.value = withDelay(ANIMATION_DURATION, withTiming(1));
       cancelPosition.value = withDelay(SLIDE_ANIMATION_DURATION, withTiming(0));
     }
   }, [
     cancelOpacity,
     cancelPosition,
-    inviteOpacity,
-    invitePosition,
     listState.searchBarFocused,
     searchBarWidth,
     typeTabOpacity,
@@ -157,7 +147,6 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
             }}
           />
         </Animated.View>
-
         <Animated.View style={[styles.cancelIconContainer, cancelAnimatedStyle]}>
           <TouchableOpacity
             onPress={() => {
@@ -168,7 +157,6 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
-
       <Animated.View style={[styles.tabContainer, typeTabAnimatedStyle]}>
         <PostTypeTab
           disableButtons={typeTabOpacity.value === 0}
