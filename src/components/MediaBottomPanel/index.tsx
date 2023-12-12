@@ -1,10 +1,10 @@
 import { cameraIcon, galleryIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
+import usePostsParams from 'hooks/posts/usePostsParams';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import usePostsParams from 'hooks/posts/usePostsParams';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
 type MediaBottomPanelProps = {
@@ -49,13 +49,10 @@ const MediaBottomPanel = ({
 }: MediaBottomPanelProps) => {
   const styles = useStyles();
 
-  const { bottom } = useSafeAreaInsets();
   const { params } = usePostsParams();
 
   return (
-    <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? -bottom : 0}
-      behavior={Platform.OS === 'ios' ? 'position' : undefined}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
       <SafeAreaView edges={['bottom']} style={[style, styles.container]}>
         <View style={styles.leftGroup}>
           <ImageButton
@@ -75,7 +72,6 @@ const MediaBottomPanel = ({
             style={styles.imageButtonStyle}
           />
         </View>
-
         <View style={styles.rightGroup}>
           {!loading && <RadialTextCounter max={params.maxTextLength} current={commentLength} />}
           {rightComponent}

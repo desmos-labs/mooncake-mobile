@@ -9,7 +9,7 @@ const useStyles = makeStyle(theme => ({
     marginVertical: theme.spacing.m,
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   text: {
     color: theme.colors.surfaceBlack,

@@ -16,8 +16,11 @@ import SelectedCommentImage from 'components/SelectedCommentImage';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import { Image } from 'expo-image';
+import { CameraType } from 'expo-image-picker';
+import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useImageFromDevice from 'hooks/useImageFromDevice';
+import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -35,9 +38,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
 import { NavProps } from 'screens/Home';
 import { DesmosProfile } from 'types/desmos';
-import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
-import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
-import { CameraType } from 'expo-image-picker';
 import useStyles from './useStyles';
 
 type Props = {
@@ -172,7 +172,7 @@ const EnterCommentBottomBar = (props: Props) => {
         resetCreatePostState();
         removeAttachment(postAttachments[0]);
       }),
-    [navigation, removeAttachment, resetCreatePostState],
+    [navigation, postAttachments, removeAttachment, resetCreatePostState],
   );
 
   // -------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ const EnterCommentBottomBar = (props: Props) => {
         ml="12px"
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
-        disabled={postAttachments.length == 0 && comment.length === 0}
+        disabled={postAttachments.length === 0 && comment.length === 0}
         onPress={onPostCommentPressWrapper}>
         {t('post')}
       </Button>
@@ -212,6 +212,7 @@ const EnterCommentBottomBar = (props: Props) => {
     loading,
     theme.colors.white,
     theme.colors.butterOrange01,
+    postAttachments.length,
     comment.length,
     onPostCommentPressWrapper,
     t,
@@ -222,9 +223,7 @@ const EnterCommentBottomBar = (props: Props) => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? (bottom ? bottom + 40 : 75) : 0}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
         stretch={true}
         style={[styles.shadow, !keyboardShow ? { paddingBottom: bottom } : {}]}
