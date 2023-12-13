@@ -2,7 +2,14 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import * as WebBrowser from '@toruslabs/react-native-web-browser';
-import { block, profileBack, profileContextButton, reportIcon, unblock } from 'assets/images';
+import {
+  block,
+  profileBack,
+  profileContextButton,
+  reportIcon,
+  unblock,
+  tipUserIcon,
+} from 'assets/images';
 import AnimatedCoverPicture from 'components/AnimatedCoverPicture';
 import Button from 'components/Button';
 import PopupMenu from 'components/PopupMenu';
@@ -33,6 +40,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Image,
   InteractionManager,
   Platform,
   Pressable,
@@ -57,6 +65,8 @@ import BalanceSection from 'screens/Profile/components/BalanceSection';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
 import UserBio from 'screens/Profile/components/UserBio';
+import useShowBottomSheet from 'hooks/bottomsheets/useShowBottomSheet';
+import TipUserBottomSheet from 'components/BottomSheets/TipUser';
 import useStyles, {
   PROFILE_HEADER_HEIGHT,
   PROFILE_HEADER_HEIGHT_COMPACT,
@@ -290,10 +300,17 @@ const Profile = () => {
     });
   }, [t, navigate, pop]);
 
+  const { show: showBottomSheet } = useShowBottomSheet();
+  const tipUser = useCallback(() => {
+    showBottomSheet(TipUserBottomSheet, {
+      toTipUserAddress: address,
+    });
+  }, [address, showBottomSheet]);
+
   // -------------------------------------------------------------------------------------
   // --- Memoized values
   // -------------------------------------------------------------------------------------
-  // This button will only be rendered if visiting another user's profile
+  // This section will only be rendered if visiting another user's profile
   const ProfileInteractionButton = React.useMemo(() => {
     if (!isActiveAccount) {
       // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
@@ -311,19 +328,36 @@ const Profile = () => {
         );
       }
       return (
-        <Button
-          mt="s"
-          backgroundColor="surfaceGrey"
-          minWidth="80px"
-          size={32}
-          onPress={handlePressFollow}
-          textColor="surfaceBlack">
-          {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
-        </Button>
+        <View style={styles.followUnfollowSection}>
+          <Button
+            style={CommonStyles.flex['1']}
+            mt="s"
+            backgroundColor="surfaceGrey"
+            minWidth="80px"
+            size={32}
+            onPress={handlePressFollow}
+            textColor="surfaceBlack">
+            {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
+          </Button>
+          <Spacer paddingLeft="s" />
+          <Button mt="s" backgroundColor="surfaceGrey" minWidth="35px" size={32} onPress={tipUser}>
+            <Image style={styles.tipUserIcon} source={tipUserIcon} />
+          </Button>
+        </View>
       );
     }
     return undefined;
-  }, [handlePressBlock, handlePressFollow, isActiveAccount, isBlocked, isFollowing, t]);
+  }, [
+    handlePressBlock,
+    handlePressFollow,
+    isActiveAccount,
+    isBlocked,
+    isFollowing,
+    styles.followUnfollowSection,
+    styles.tipUserIcon,
+    t,
+    tipUser,
+  ]);
 
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
@@ -542,4 +576,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
