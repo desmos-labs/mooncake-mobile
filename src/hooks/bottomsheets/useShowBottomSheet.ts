@@ -7,11 +7,11 @@ import React from 'react';
 /**
  * Hook that provides a set of function to show and hide a bottom sheet.
  */
-export default function useShowBottomSheet<P>() {
+export default function useShowBottomSheet() {
   const navigation = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
 
   const show = React.useCallback(
-    (component: React.FC<P>, props?: P) => {
+    <P>(component: React.FC<P>, props?: P) => {
       navigation.navigate(ROUTES.BOTTOM_SHEET, {
         component,
         props,
