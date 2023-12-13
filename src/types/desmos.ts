@@ -107,7 +107,7 @@ export interface PostReaction {
 /**
  * Interface representing a Desmos profile typed as queried from the server.
  */
-export interface GqlDesmosProfile {
+interface GqlDesmosProfile {
   address: string;
   bio: string;
   dtag: string;
