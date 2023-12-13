@@ -11,7 +11,6 @@ import useInitializeAppData from 'hooks/useInitializeAppData';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
-import { PostInteractionTabParams } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { Dimensions, Platform } from 'react-native';
@@ -138,7 +137,7 @@ export type RootNavigatorParamList = {
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.SELECT_IMAGE_MODAL]: SelectImageModalParams;
-  [ROUTES.POST_REACTIONS]: PostInteractionTabParams;
+  [ROUTES.POST_REACTIONS]: PostReactionsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
