@@ -1,4 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import TipUserBottomSheet from 'components/BottomSheets/TipUser';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -45,6 +46,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   // -------------------------------------------------------------------------------------
 
   const navigateToHome = useNavigateToHome();
+  const activeAccountAddress = useActiveAccountAddress(); 
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -97,8 +99,8 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             case ROUTES.BOTTOM_SHEET:
               navigate(ROUTES.BOTTOM_SHEET, {
                 component: TipUserBottomSheet,
-                props: {
-                  text: 'Tip User Bottom Sheet',
+                props: { 
+                  toTipUserAddress: activeAccountAddress,
                 },
               })
               break;
