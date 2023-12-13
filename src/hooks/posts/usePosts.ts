@@ -4,9 +4,8 @@ import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@rec
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
-import sleep from 'lib/sleep';
 import _ from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import GetPosts from 'services/graphql/queries/GetPosts';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 
@@ -26,110 +25,72 @@ interface TimelineQueryParams {
 
 type PostsQueryParams = TimelineQueryParams | DiscoveryQueryParam;
 
-/**
- * Returns the query params based on the given query type.
- */
-const useQueryParams = (type: PostsQueryType, followingAddresses: string[]): PostsQueryParams => {
-  return React.useMemo(() => {
-    switch (type) {
-      case PostsQueryType.TIMELINE:
-        return {
-          type: PostsQueryType.TIMELINE,
-          followedUsers: followingAddresses,
-        } as TimelineQueryParams;
-      case PostsQueryType.DISCOVERY:
-        return {
-          type: PostsQueryType.DISCOVERY,
-        } as DiscoveryQueryParam;
+const useQueryParams = (type: PostsQueryType, followingAddresses: string[]) => {
+  return useMemo(() => {
+    if (type === PostsQueryType.TIMELINE) {
+      return { type, followedUsers: followingAddresses };
     }
+    return { type };
   }, [type, followingAddresses]);
 };
 
-/**
- * Gets the query that should be used in order to get the posts from the server.
- * @param params {PostsQueryParams} - Parameters to be used for the posts query.
- * @param postsPerPage {number} - Number of posts that should be fetched per each page.
- */
-const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): QueryOptions<any> => {
-  return React.useMemo(() => {
-    switch (params.type) {
-      case PostsQueryType.DISCOVERY:
-        return {
-          query: GetPosts,
-          variables: {
-            offset: 0,
-            limit: postsPerPage,
-          },
-        };
-
-      default:
-        return {
-          query: GetPostsFromFollowing,
-          variables: {
-            following: Array.from(params.followedUsers),
-            offset: 0,
-            limit: postsPerPage,
-          },
-        };
-    }
-  }, [params, postsPerPage]);
-};
-
-/**
- * Hook that allows to get the posts of the given type, for the currently active user.
- * @param queryType {PostsQueryType} - Type of posts query that should be performed.
- */
-const usePosts = (queryType: PostsQueryType) => {
-  const activeAddress = useActiveAccountAddress();
-  if (!activeAddress) {
-    throw new Error('Trying to get the posts, without active user');
-  }
-
-  const followingAddresses = useFollowingAddresses();
-
-  // Cached values
-  const discoveryPosts = useStoredRootPosts(activeAddress);
-  const timelinePosts = useStoredFollowingPosts(activeAddress, followingAddresses);
-  const storePosts = useStorePosts(activeAddress);
-
-  // The posts we should return are defined based on the query time we have been asked
-  const posts = useMemo(
-    () => (queryType === PostsQueryType.TIMELINE ? timelinePosts : discoveryPosts),
-    [queryType, timelinePosts, discoveryPosts],
+const useQueryData = (params: PostsQueryParams, postsPerPage = 10): QueryOptions<any> => {
+  const getDiscoveryQuery = useCallback(
+    () => ({
+      query: GetPosts,
+      variables: { offset: 0, limit: postsPerPage },
+    }),
+    [postsPerPage],
   );
 
-  // Local state, used as returned values
+  const getTimelineQuery = useCallback(
+    (followedUsers: string[]) => ({
+      query: GetPostsFromFollowing,
+      variables: { following: followedUsers, offset: 0, limit: postsPerPage },
+    }),
+    [postsPerPage],
+  );
+
+  return useMemo(() => {
+    if (params.type === PostsQueryType.TIMELINE) {
+      const timelineParams = params as TimelineQueryParams;
+      return getTimelineQuery(timelineParams.followedUsers);
+    }
+    return getDiscoveryQuery();
+  }, [getDiscoveryQuery, getTimelineQuery, params]);
+};
+
+const usePosts = (queryType: PostsQueryType) => {
+  const activeAddress = useActiveAccountAddress();
+  const followingAddresses = useFollowingAddresses();
   const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  // Callback used when the query for the posts has completed.
-  // It takes care of merging the results with the data stored
+  const storePosts = useStorePosts(activeAddress!);
+  const discoveryPosts = useStoredRootPosts(activeAddress!);
+  const timelinePosts = useStoredFollowingPosts(activeAddress!, followingAddresses);
+
+  const posts = useMemo(() => {
+    return queryType === PostsQueryType.TIMELINE ? timelinePosts : discoveryPosts;
+  }, [queryType, timelinePosts, discoveryPosts]);
+
   const onCompletedCallback = useCallback(
-    async (data: any) => {
-      // If there is no data, just return
+    (data: any) => {
       if (!data) {
         setLoading(false);
         return;
       }
 
-      // Filter all the posts that were created by someone who later deleted their profile
-      const filteredPosts = (data.posts as any[]).filter(post => post.author);
+      const filteredPosts = data.posts.filter((post: any) => post.author);
+      const graphQLPosts = filteredPosts.map(convertGraphQLPost);
 
-      // Convert the GraphQL data to the in-app format
-      const graphQLPosts = (filteredPosts as any[]).map(convertGraphQLPost);
-
-      // Store the posts by merging the existing ones with the ones from the server
       storePosts(cachedPosts => {
         const [merged] = mergePosts(cachedPosts, graphQLPosts);
         return merged;
       });
 
-      // This sleep is added on purpose in order to make the user wait,
-      // to trigger the release of serotonin inside their brain
-      // (just like slot machines)
-      await sleep(500);
       setLoading(false);
       setFetchingMore(false);
       setRefreshing(false);
@@ -137,9 +98,9 @@ const usePosts = (queryType: PostsQueryType) => {
     [storePosts],
   );
 
-  // Get the proper query to be executed
   const queryParams = useQueryParams(queryType, followingAddresses);
   const queryData = useQueryData(queryParams);
+
   const { refetch, fetchMore } = useQuery(queryData.query, {
     fetchPolicy: 'network-only',
     variables: queryData.variables,
@@ -147,14 +108,17 @@ const usePosts = (queryType: PostsQueryType) => {
     refetchWritePolicy: 'overwrite',
   });
 
-  const debouncedFetchMorePosts = useCallback(
+  const fetchMorePosts = useCallback(() => {
+    if (fetchingMore) {
+      return;
+    }
+    setFetchingMore(true);
     _.debounce(async () => {
       try {
         await fetchMore({
           variables: { offset: posts.length },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult || fetchMoreResult.posts.length === 0) {
-              setFetchingMore(false);
               return prev;
             }
 
@@ -164,36 +128,32 @@ const usePosts = (queryType: PostsQueryType) => {
           },
         });
       } catch (e: any) {
-        setError(e.message);
+        setError(e.toString());
       } finally {
         setFetchingMore(false);
       }
-    }, 500),
-    [fetchMore, posts.length, setError],
-  );
+    }, 500)();
+  }, [fetchMore, fetchingMore, posts.length]);
 
-  const fetchMorePosts = useCallback(() => {
-    if (!fetchingMore) {
-      setFetchingMore(true);
-      debouncedFetchMorePosts();
-    }
-  }, [debouncedFetchMorePosts, fetchingMore]);
-
-  // Callback that is used in order to re-fetch the entire list of posts
-  const refreshPosts = React.useCallback(async () => {
+  const refreshPosts = useCallback(async () => {
+    setError(undefined);
+    setRefreshing(true);
     try {
-      setError(undefined);
-      setRefreshing(true);
-
-      // Get the new data by resetting the fetch offset to restart post fetching
       const { data } = await refetch({ ...queryData.variables, offset: 0 });
-      await onCompletedCallback(data);
+      onCompletedCallback(data);
     } catch (e: any) {
-      setRefreshing(false);
       setError(e.toString());
+    } finally {
+      setRefreshing(false);
     }
-  }, [refetch, queryData.variables, onCompletedCallback]);
+  }, [onCompletedCallback, queryData, refetch]);
 
+  useEffect(() => {
+    if (!activeAddress) {
+    } // Handle no active user scenario
+  }, [activeAddress]);
+
+  // Return the hook's API
   return {
     posts,
     loading,
