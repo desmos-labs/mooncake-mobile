@@ -7,7 +7,11 @@ import { View } from 'react-native';
 import Spacer from 'components/Spacer';
 import DTextInput from 'components/DTextInput';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
-import { formatCoins } from 'lib/FormatUtils';
+import { formatCoin, safeParseFloat } from 'lib/FormatUtils';
+import { coin } from '@cosmjs/stargate';
+import { getThousandsSeparator, isStringNumberValid } from 'lib/NumberUtils';
+import { Coin } from '@desmoslabs/desmjs-types/cosmos/base/v1beta1/coin';
+import { useCurrentChainInfo } from '@recoil/settings';
 
 interface TipUserBottomSheetProps {
   /**
@@ -23,7 +27,9 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = () => {
   const { t } = useTranslation('tips');
   const styles = useStyles();
 
-  const [amount, setAmount] = React.useState<string>();
+  const [textAmount, setTextAmount] = React.useState<string>('');
+  const [tipCoin, setTipCoin] = React.useState<Coin>();
+  const currentChain = useCurrentChainInfo()!;
   const { balance, error: fetchBalanceError, loading: loadingBalance } = useAccountBalance();
 
   const interactionDisabled = React.useMemo(
@@ -31,18 +37,73 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = () => {
     [fetchBalanceError, loadingBalance],
   );
 
-  const onInputTextChange = React.useCallback(
+  // Memoize the amount of coins that the user can spend.
+  const spendableAmount = React.useMemo(() => {
+    if (loadingBalance || fetchBalanceError) {
+      return coin(0, currentChain.stakeCurrency.coinMinimalDenom);
+    }
+
+    const userBalance = balance.find(c => c.denom === currentChain.stakeCurrency.coinMinimalDenom);
+    if (userBalance === undefined) {
+      return coin(0, currentChain.stakeCurrency.coinMinimalDenom);
+    }
+    return userBalance;
+  }, [balance, currentChain.stakeCurrency.coinMinimalDenom, fetchBalanceError, loadingBalance]);
+
+  const onAmountChange = React.useCallback(
     (text: string) => {
       if (loadingBalance) return;
 
-      setAmount(text.trimEnd());
+      // Sanitize the amount by removing any endingin space and the thousand
+      // separators.
+      const sanitizedText = text
+        .trimEnd()
+        .replace(new RegExp(`[${getThousandsSeparator()}]`, 'g'), '');
+
+      // Allow the user to clear the amount.
+      if (sanitizedText === '') {
+        setTipCoin(undefined);
+        setTextAmount(sanitizedText);
+        return;
+      }
+
+      // Prevent an invalid amount from being entered.
+      if (!isStringNumberValid(sanitizedText)) {
+        setTipCoin(undefined);
+        return;
+      }
+
+      // Get the user spendable amount, parse it using en-US locale since is
+      // encoded with this locale.
+      const userBalance = safeParseFloat(spendableAmount.amount, 'en-US');
+      // Parse the user input using the user's locale.
+      const parsedAmount = safeParseFloat(sanitizedText);
+      // Get the factor to convert the user input to the base currency.
+      const conversionFactor = 10 ** currentChain.stakeCurrency.coinDecimals;
+      // Convert the user input to the base currency.
+      const sendAmountInBaseDenom = Math.trunc(parsedAmount * conversionFactor);
+
+      if (userBalance >= sendAmountInBaseDenom) {
+        setTipCoin(coin(sendAmountInBaseDenom, currentChain.stakeCurrency.coinMinimalDenom));
+      } else {
+        setTipCoin(undefined);
+      }
+
+      setTextAmount(sanitizedText);
     },
-    [loadingBalance],
+    [
+      currentChain.stakeCurrency.coinDecimals,
+      currentChain.stakeCurrency.coinMinimalDenom,
+      loadingBalance,
+      spendableAmount.amount,
+    ],
   );
 
   const sendTip = React.useCallback(() => {
-    console.warn('TODO: send tip');
-  }, []);
+    if (tipCoin === undefined) return;
+
+    console.warn('TODO: send tip', tipCoin);
+  }, [tipCoin]);
 
   // -------- Components --------
 
@@ -62,10 +123,17 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = () => {
 
     return (
       <Typography.Body7 style={styles.availableText}>
-        {t('available')} {formatCoins(balance)}
+        {t('available')} {formatCoin(spendableAmount)}
       </Typography.Body7>
     );
-  }, [balance, fetchBalanceError, loadingBalance, styles.availableText, styles.errorText, t]);
+  }, [
+    fetchBalanceError,
+    loadingBalance,
+    spendableAmount,
+    styles.availableText,
+    styles.errorText,
+    t,
+  ]);
 
   return (
     <View style={styles.root}>
@@ -77,31 +145,31 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = () => {
       {/* Amount selector row */}
       <View style={styles.quickSelectorRow}>
         <Button
-          variant={amount === '1' ? 'solid' : 'outline'}
+          variant={textAmount === '1' ? 'solid' : 'outline'}
           style={styles.quickSelectButton}
           disabled={interactionDisabled}
           onPress={() => {
-            setAmount('1');
+            onAmountChange('1');
           }}>
           1 DSM
         </Button>
         <Spacer paddingLeft="m" />
         <Button
-          variant={amount === '5' ? 'solid' : 'outline'}
+          variant={textAmount === '5' ? 'solid' : 'outline'}
           style={styles.quickSelectButton}
           disabled={interactionDisabled}
           onPress={() => {
-            setAmount('5');
+            onAmountChange('5');
           }}>
           5 DSM
         </Button>
         <Spacer paddingLeft="m" />
         <Button
-          variant={amount === '10' ? 'solid' : 'outline'}
+          variant={textAmount === '10' ? 'solid' : 'outline'}
           disabled={interactionDisabled}
           style={styles.quickSelectButton}
           onPress={() => {
-            setAmount('10');
+            onAmountChange('10');
           }}>
           10 DSM
         </Button>
@@ -111,12 +179,14 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = () => {
       <Spacer paddingTop={20} />
       <DTextInput
         style={styles.inputContainer}
+        showBorder
+        error={tipCoin === undefined && textAmount !== ''}
         editable={!interactionDisabled}
         rightElement={<Typography.Subtitle3>DSM</Typography.Subtitle3>}
         numberOfLines={1}
         placeholder={t('insert amount')}
-        value={amount}
-        onChangeText={onInputTextChange}
+        value={textAmount}
+        onChangeText={onAmountChange}
       />
       {userBalanceComponent}
       <Spacer paddingTop="l" />
@@ -127,6 +197,7 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = () => {
       <DTextInput
         style={styles.inputContainer}
         editable={!interactionDisabled}
+        showBorder
         multiline
         numberOfLines={4}
         textAlignVertical="top"
@@ -134,7 +205,11 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = () => {
       />
 
       <Spacer paddingTop={20} />
-      <Button bgColor="black" textColor="white" disabled={interactionDisabled} onPress={sendTip}>
+      <Button
+        bgColor="black"
+        textColor="white"
+        disabled={interactionDisabled || tipCoin === undefined || tipCoin.amount === '0'}
+        onPress={sendTip}>
         {t('confirm', { ns: 'common' })}
       </Button>
     </View>
@@ -163,9 +238,6 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   inputContainer: {
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: theme.colors.grey02,
     paddingHorizontal: theme.spacing.s,
     paddingVertical: theme.spacing.m,
   },
