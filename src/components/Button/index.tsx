@@ -121,12 +121,12 @@ const Button = ({
       outline: {
         borderWidth: 1,
         backgroundColor: theme.colors.white,
-        borderColor: theme.colors.black,
+        borderColor: borderColor ?? theme.colors.black,
       },
     };
 
     return variantStyleMap[variant as string];
-  }, [backgroundColor, theme, variant]);
+  }, [backgroundColor, borderColor, theme, variant]);
 
   return (
     <NBButton
