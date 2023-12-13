@@ -29,7 +29,7 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import React, { memo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
 import {
@@ -110,25 +110,33 @@ const CommentItem = (props: CommentItemProps) => {
   const handlePressBlock = useHandlePressBlock();
 
   const handlePressLike = () => {
-    if (isPostPending(comment)) return;
+    if (isPostPending(comment)) {
+      return;
+    }
     addOrRemoveLike(comment);
   };
   const handlePress = () => {
-    if (isPostPending(comment)) return;
+    if (isPostPending(comment)) {
+      return;
+    }
     handleShowCommentDetails(comment);
   };
   const handlePressCommentWithFocus = () => {
-    if (isPostPending(comment)) return;
+    if (isPostPending(comment)) {
+      return;
+    }
     handleShowCommentDetailsWithFocus(comment);
   };
   const handlePressHidePost = async () => {
-    if (isPostPending(comment)) return;
+    if (isPostPending(comment)) {
+      return;
+    }
     // Return to the main post first, so the usePostComments hook can catch the modified
     // localHiddenPosts state.
     if (renderedAsMainPost) {
       returnToRootPost();
     }
-    await handleHidePost(comment.id);
+    handleHidePost(comment.id);
   };
 
   // -------------------------------------------------------------------------------------
@@ -141,7 +149,9 @@ const CommentItem = (props: CommentItemProps) => {
    */
   const PressMoreComponent = React.useMemo(() => {
     // The context menu should not be visible if the user is the author of the comment
-    if (isAuthorActiveUser) return undefined;
+    if (isAuthorActiveUser) {
+      return undefined;
+    }
 
     const menuItems = [
       {
@@ -189,7 +199,6 @@ const CommentItem = (props: CommentItemProps) => {
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image source={getProfilePicture(comment.author)} style={styles.avatar} />
       </TouchableOpacity>
-
       <TouchableOpacity onPress={handlePress} style={styles.flex}>
         <View style={styles.contentContainer}>
           <TouchableOpacity
@@ -204,7 +213,6 @@ const CommentItem = (props: CommentItemProps) => {
               </Typography.Body7>
             </View>
           </TouchableOpacity>
-
           {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={loadingYellow} style={styles.loadingAnim} />
           ) : (
@@ -219,7 +227,6 @@ const CommentItem = (props: CommentItemProps) => {
               {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : formattedDate}
             </Typography.Body7>
           </View>
-
           <View style={styles.interactionButtonGroup}>
             {!disableInnerComment && (
               <TouchableOpacity
@@ -251,4 +258,4 @@ const CommentItem = (props: CommentItemProps) => {
   );
 };
 
-export default memo(CommentItem);
+export default CommentItem;

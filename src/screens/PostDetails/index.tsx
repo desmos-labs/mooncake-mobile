@@ -198,7 +198,6 @@ const PostDetails = () => {
       <FlashList
         estimatedItemSize={120}
         ref={scrollViewRef}
-        scrollEnabled={true}
         // Only show the loading indicator on the flatList if the user manually drags down on it
         refreshing={!firstLoad && pageRefreshing}
         onRefresh={onPullToRefresh}
