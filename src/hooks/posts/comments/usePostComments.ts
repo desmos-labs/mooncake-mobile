@@ -1,89 +1,63 @@
-import React, { useState } from 'react';
-import { Post } from 'types/posts';
 import { useQuery } from '@apollo/client';
-import GetPostComments from 'services/graphql/queries/GetPostComments';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { useIsPostHiddenLocally } from '@recoil/hiddenPosts';
 import { usePostCommentsToSync } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
-import { useIsPostHiddenLocally } from '@recoil/hiddenPosts';
+import { useCallback, useEffect, useState } from 'react';
+import GetPostComments from 'services/graphql/queries/GetPostComments';
+import { Post } from 'types/posts';
 
-/**
- * Hook that allows to get the comments for a given post.
- * The comments retrieved are all the ones found on chain, plus all the ones that have been created locally.
- * @param post - Post for which to get the comments.
- * @param commentsPerPage - Number of comments to get per page.
- */
 const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage: number = 50) => {
   const activeAccountAddress = useActiveAccountAddress();
   if (!activeAccountAddress) {
-    throw new Error('Trying to get post comments without active user');
+    throw new Error('Active user required for post comments');
   }
 
-  const { isPostHiddenLocally, localHiddenPosts } = useIsPostHiddenLocally();
-
   const [comments, setComments] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchingMore, setFetchingMore] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState();
 
-  // returnToRootPost(comments[0]);
-
-  // Get the comments to be synced
+  const { isPostHiddenLocally, localHiddenPosts } = useIsPostHiddenLocally();
   const commentsToSync = usePostCommentsToSync(activeAccountAddress, post.subspaceId, post.id);
 
-  // Update the comments when the comments to sync change
-  React.useEffect(() => {
-    // Update the comments
-    setComments(currentComments => {
-      // Don't show comments that have been hidden locally.
-      const filteredComments = currentComments.filter(
-        comment => !localHiddenPosts.includes(comment.id),
-      );
-      const [merged] = mergePosts(filteredComments, commentsToSync);
-      return merged;
-    });
+  useEffect(() => {
+    const updateComments = () => {
+      const filtered = comments.filter(comment => !localHiddenPosts.includes(comment.id));
+      const [merged] = mergePosts(filtered, commentsToSync);
+      setComments(merged);
+    };
+    updateComments();
   }, [commentsToSync, localHiddenPosts, isPostHiddenLocally]);
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [fetchingMore, setFetchingMore] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>();
-
-  // Callback that is used when some data is returned by the chain
-  const onCompletedCallback = React.useCallback((data: any) => {
-    if (!data) return;
-
-    // Filter all the comments that were created by someone who later deleted their profile
-    const filteredComments = (data.comments as any[]).filter(comment => comment.author);
-
-    // Convert the comments to the in-app format
-    const onChainComments = filteredComments.map(convertGraphQLPost);
-
-    // Update the comments
-    setComments(currentComments => {
-      const [merged] = mergePosts(currentComments, onChainComments);
-      return merged;
-    });
-    setFetchingMore(false);
-    setRefreshing(false);
-    setLoading(false);
-  }, []);
-
-  // Query used to get the comments
-  const { refetch, fetchMore } = useQuery(GetPostComments, {
-    variables: {
-      postId: post.id,
-      offset: 0,
-      limit: commentsPerPage,
+  const onCompleted = useCallback(
+    (data: { comments: Post[] }) => {
+      if (!data) {
+        return;
+      }
+      const filtered = data.comments.filter(comment => comment.author);
+      const onChainComments = filtered.map(convertGraphQLPost);
+      const [merged] = mergePosts(comments, onChainComments);
+      setComments(merged);
+      setFetchingMore(false);
+      setRefreshing(false);
+      setLoading(false);
     },
-    onCompleted: onCompletedCallback,
+    [comments],
+  );
+
+  const { refetch, fetchMore } = useQuery(GetPostComments, {
+    variables: { postId: post.id, offset: 0, limit: commentsPerPage },
+    onCompleted,
     refetchWritePolicy: 'overwrite',
   });
 
-  // Callback that is used to refetch the next page of comments
-  const fetchMoreComments = React.useCallback(async () => {
+  const fetchMoreComments = useCallback(async () => {
     try {
       setError(undefined);
       setFetchingMore(true);
-
       await fetchMore({
         variables: { offset: comments.length },
         updateQuery: (prev, { fetchMoreResult }) => ({
@@ -92,24 +66,21 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
       });
     } catch (e: any) {
       setFetchingMore(false);
-      setError(e.toString());
+      setError(e.message);
     }
   }, [fetchMore, comments.length]);
 
-  // Callback that is used in order to re-fetch the entire list of comments
-  const refreshComments = React.useCallback(async () => {
+  const refreshComments = useCallback(async () => {
     try {
       setError(undefined);
       setRefreshing(true);
-
-      // Get the new data by resetting the fetch offset to restart post fetching
       const { data } = await refetch({ offset: 0 });
-      onCompletedCallback(data);
+      onCompleted(data);
     } catch (e: any) {
       setRefreshing(false);
-      setError(e.toString());
+      setError(e.message);
     }
-  }, [onCompletedCallback, refetch]);
+  }, [onCompleted, refetch]);
 
   return {
     loading,

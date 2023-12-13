@@ -8,7 +8,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.l,
+    paddingHorizontal: theme.spacing.m,
     alignItems: 'center',
   },
   textStyle: {
@@ -39,8 +39,8 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   likedIcon: {
-    height: 20,
-    width: 20,
+    height: scale(24),
+    width: scale(24),
     resizeMode: 'contain',
     tintColor: theme.colors.butterOrange01,
   },

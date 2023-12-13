@@ -1,24 +1,34 @@
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
+import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import usePostReactions from 'hooks/reactions/usePostReactions';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import { formatNumShorthand } from 'lib/FormatUtils';
-import { PostInteractionTabsParamList } from 'navigation/RootNavigator/PostInteractionTabs';
+import { Center } from 'native-base';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
-import usePostReactions from 'hooks/reactions/usePostReactions';
-import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import { Center } from 'native-base';
-import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
-import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
-import StyledSpinner from 'components/StyledSpinner';
 import { PostReaction } from 'types/desmos';
+import { Post } from 'types/posts';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_REACTIONS>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_REACTIONS>;
+
+export type PostReactionsParams = {
+  /**
+   * The post to show the interactions for.
+   */
+  post: Post;
+};
 
 /**
  * Screen that allows to display the list of reactions related to a post.
@@ -27,7 +37,7 @@ type NavProps = StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_REACT
 const PostReactions = () => {
   const { t } = useTranslation('postDetails');
   const styles = useStyles();
-
+  const { goBack } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { post } = params;
 
@@ -74,24 +84,27 @@ const PostReactions = () => {
   }
 
   return (
-    <>
-      {count > 0 && (
-        <Typography.Body6 style={styles.countText}>
-          {t('likes counter', { likesCounter: formatNumShorthand(count) })}
-        </Typography.Body6>
-      )}
-      <FlashList
-        refreshing={refreshing}
-        onRefresh={refetch}
-        keyExtractor={(item, index) => `${item.author.address}-${index}`}
-        data={reactions}
-        renderItem={renderItem}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        ListEmptyComponent={<EmptyListComponent label={t('no likes')} />}
-        onEndReached={fetchMore}
-        estimatedItemSize={63}
-      />
-    </>
+    <BottomUpModalWrapper goBack={goBack} paddingHorizontal={0.1}>
+      <View style={styles.container}>
+        <Typography.H6 style={styles.header}>{t('likes')}</Typography.H6>
+        {count > 0 && (
+          <Typography.Body6 style={styles.countText}>
+            {t('likes counter', { likesCounter: formatNumShorthand(count) })}
+          </Typography.Body6>
+        )}
+        <FlashList
+          refreshing={refreshing}
+          onRefresh={refetch}
+          keyExtractor={(item, index) => `${item.author.address}-${index}`}
+          data={reactions}
+          renderItem={renderItem}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          ListEmptyComponent={<EmptyListComponent label={t('no likes')} />}
+          onEndReached={fetchMore}
+          estimatedItemSize={63}
+        />
+      </View>
+    </BottomUpModalWrapper>
   );
 };
 

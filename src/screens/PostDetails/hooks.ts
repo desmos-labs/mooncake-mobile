@@ -146,12 +146,7 @@ export const useHandlePressCounters = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
     (post: Post) => {
-      navigate(ROUTES.POST_INTERACTION, {
-        screen: ROUTES.POST_REACTIONS,
-        params: {
-          post,
-        },
-      });
+      navigate(ROUTES.POST_REACTIONS, { post });
     },
     [navigate],
   );
@@ -162,8 +157,8 @@ export const useHandlePressCounters = () => {
  * This is to speed up the initial load time when transitioning from the home page to the
  * post details page, as that data is already available.
  */
-export const usePostData = (postId: number) => {
-  const { post, loading: isPostLoading, refetch: refreshPost } = usePost(postId);
+export const usePostData = (postId: number, storedPost?: Post) => {
+  const { post, loading: isPostLoading, refetch: refreshPost } = usePost(postId, storedPost);
 
   return {
     loading: isPostLoading,

@@ -90,7 +90,7 @@ const AnimatedCoverPicture = ({
       placeholderContentFit="cover"
       source={picture}
       placeholder={pictureHash || ''}
-      transition={500}
+      transition={250}
       cachePolicy={cachePolicy ?? 'memory-disk'}
       style={[styles.banner, animatedImageBGStyle, Platform.OS === 'android' && { top }]}>
       <Animated.View

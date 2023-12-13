@@ -103,3 +103,30 @@ export interface DesmosProfile {
 export interface PostReaction {
   readonly author: DesmosProfile;
 }
+
+/**
+ * Interface representing a Desmos profile typed as queried from the server.
+ */
+interface GqlDesmosProfile {
+  address: string;
+  bio: string;
+  dtag: string;
+  creation_time: string;
+  cover_picture: string;
+  nickname: string;
+  profile_picture: string;
+}
+
+/**
+ * Interface representing a reaction to a post typed as queried from the server.
+ */
+export interface GqlPostReaction {
+  readonly author: GqlDesmosProfile;
+}
+
+/**
+ * Interface representing reactions to a post typed as queried from the server.
+ */
+export interface GqlPostReactions {
+  readonly reactions: GqlPostReaction[];
+}

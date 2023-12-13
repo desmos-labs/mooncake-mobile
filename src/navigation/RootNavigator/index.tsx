@@ -11,10 +11,6 @@ import useInitializeAppData from 'hooks/useInitializeAppData';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
-import PostInteractionTabs, {
-  PostInteractionTabParams,
-  PostInteractionTabsParamList,
-} from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { Dimensions, Platform } from 'react-native';
@@ -32,6 +28,7 @@ import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal
 import Onboarding, { OnboardingParams } from 'screens/Onboarding';
 import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
 import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
+import PostReactions, { PostReactionsParams } from 'screens/PostInteraction/PostReactions';
 import Profile, { ProfileParams } from 'screens/Profile';
 import ProfileConnections, {
   ProfileConnectionsParams,
@@ -97,8 +94,7 @@ export type RootNavigatorParamList = {
   [ROUTES.POST_REPORT]: ReportPostParams;
 
   // Post interactions
-  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
-  [ROUTES.POST_REACTIONS]: PostInteractionTabParams;
+  [ROUTES.POST_REACTIONS]: PostReactionsParams;
 
   // -------------------------------------------------------------------------------------
   // --- SETTINGS SCREENS
@@ -141,6 +137,7 @@ export type RootNavigatorParamList = {
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.SELECT_IMAGE_MODAL]: SelectImageModalParams;
+  [ROUTES.POST_REACTIONS]: PostReactionsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -254,7 +251,6 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.PROFILE_CONNECTIONS} component={ProfileConnections} />
       <Stack.Screen name={ROUTES.PROFILE_OPERATIONS} component={ProfileOperations} />
-
       {/* --------------------- */}
       {/* --- BOTTOM MODALS --- */}
       {/* --------------------- */}
@@ -269,7 +265,7 @@ const RootNavigator = () => {
         }}>
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
-        <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
+        <Stack.Screen name={ROUTES.POST_REACTIONS} component={PostReactions} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.SELECT_IMAGE_MODAL} component={SelectImageModal} />
       </Stack.Group>
