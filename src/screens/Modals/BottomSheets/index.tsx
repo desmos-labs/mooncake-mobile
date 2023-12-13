@@ -62,4 +62,3 @@ const useStyles = makeStyleWithProps((props: EdgeInsets, theme) => ({
     borderTopRightRadius: 28,
   },
 }));
-

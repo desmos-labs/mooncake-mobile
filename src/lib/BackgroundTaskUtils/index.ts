@@ -1,3 +1,3 @@
 export { scheduleTask } from './scheduler';
 export * from './context';
-export * from './types';
+export { TaskJob } from './types';

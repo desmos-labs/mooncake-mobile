@@ -90,7 +90,7 @@ const Button = ({
 
     const variantToTypographyMap: { [index: string]: any } = {
       solid: {
-        color: textColor ?? theme.colors.white,
+        color: textColor ?? defaultTextColor,
       },
       outline: {
         color: textColor ?? theme.colors.black,
@@ -106,7 +106,7 @@ const Button = ({
         },
       ]),
     };
-  }, [size, textColor, theme.colors.black, theme.colors.white, variant]);
+  }, [defaultTextColor, size, textColor, theme.colors.black, variant]);
 
   const buttonStyle = React.useMemo(() => {
     const backgroundColorFromTheme = _.get(theme, `colors.${backgroundColor}`, backgroundColor);
