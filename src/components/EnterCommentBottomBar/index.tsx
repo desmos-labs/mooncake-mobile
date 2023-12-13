@@ -9,7 +9,6 @@ import {
 import { expandCommentIcon } from 'assets/images';
 import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
-import CommentBottomBarLoadingOverlay from 'components/EnterCommentBottomBar/components/CommentBottomBarLoadingOverlay';
 import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import SelectedCommentImage from 'components/SelectedCommentImage';
@@ -23,7 +22,7 @@ import useImageFromDevice from 'hooks/useImageFromDevice';
 import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
@@ -64,7 +63,7 @@ type Props = {
   /**
    * A reference to the comment input box.
    */
-  textInputRef: any;
+  textInputRef: RefObject<TextInput>;
 };
 
 /**
@@ -77,22 +76,19 @@ const EnterCommentBottomBar = (props: Props) => {
   const theme = useTheme();
   const navigation = useNavigation<NavProps['navigation']>();
   const { author, onIconPress, handlePostComment, textInputRef, loading } = props;
-
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
-
   const removeAttachment = useRemoveCreatePostAttachment();
   const resetCreatePostState = useResetCreatePostState();
 
   // -------------------------------------------------------------------------------------
   // --- State
   // -------------------------------------------------------------------------------------
-
+  const [textInputNumberOfLines, setTextInputNumberOfLines] = useState(0);
   const { params: postsParams } = usePostsParams();
   const comment = useCreatePostValue('text');
   const setComment = useSetCreatePostValue('text');
-
   const postAttachments = useCreatePostValue('attachments');
   const addPostAttachment = useAddCreatePostAttachment();
   const { editPostPicture } = useOpenPictureEditor();
@@ -115,11 +111,12 @@ const EnterCommentBottomBar = (props: Props) => {
     takePhoto(CameraType.front).then(result => {
       if (result?.status === TakePictureActionResults.Taken) {
         const imageUri = result.uri;
-        editPostPicture(imageUri, (editedPicturePath, dimensions) => {
+        editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
           addPostAttachment({
             uri: editedPicturePath,
             width: dimensions.width,
             height: dimensions.height,
+            type: mimeType,
           });
         });
       }
@@ -198,7 +195,7 @@ const EnterCommentBottomBar = (props: Props) => {
     }
     return (
       <Button
-        size={26}
+        size={30}
         p={0}
         width={71}
         ml="12px"
@@ -209,20 +206,11 @@ const EnterCommentBottomBar = (props: Props) => {
         {t('post')}
       </Button>
     );
-  }, [
-    loading,
-    theme.colors.white,
-    theme.colors.butterOrange01,
-    postAttachments.length,
-    comment.length,
-    onPostCommentPressWrapper,
-    t,
-  ]);
+  }, [loading, theme, postAttachments.length, comment.length, onPostCommentPressWrapper, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering
   // -------------------------------------------------------------------------------------
-
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
@@ -231,7 +219,13 @@ const EnterCommentBottomBar = (props: Props) => {
         startColor="rgba(51, 51, 51, 0.1)"
         distance={30}>
         <View style={styles.container}>
-          <Image source={getProfilePicture(author)} style={styles.profilePic} />
+          <Image
+            source={getProfilePicture(author)}
+            style={[
+              styles.profilePic,
+              textInputNumberOfLines >= 2 ? { alignSelf: 'flex-start' } : { alignSelf: 'center' },
+            ]}
+          />
           <View style={styles.textInputContainer}>
             {/* TODO: Allow to have multiple attachments here */}
             {postAttachments[0] && (
@@ -248,6 +242,9 @@ const EnterCommentBottomBar = (props: Props) => {
               showsVerticalScrollIndicator
               contentContainerStyle={styles.textInputScrollContainer}>
               <TextInput
+                onContentSizeChange={e => {
+                  setTextInputNumberOfLines(Math.round(e.nativeEvent.contentSize.height / 21));
+                }}
                 multiline
                 ref={textInputRef}
                 maxLength={postsParams.maxTextLength}
@@ -284,7 +281,6 @@ const EnterCommentBottomBar = (props: Props) => {
           />
         )}
       </Shadow>
-      {loading && <CommentBottomBarLoadingOverlay />}
     </KeyboardAvoidingView>
   );
 };

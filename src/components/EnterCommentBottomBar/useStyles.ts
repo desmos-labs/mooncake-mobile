@@ -42,7 +42,6 @@ const useStyles = makeStyleWithProps(
         width: 38,
         height: 38,
         borderRadius: 38,
-        alignSelf: 'flex-start',
       },
       expandButtonContainer: {
         position: 'absolute',

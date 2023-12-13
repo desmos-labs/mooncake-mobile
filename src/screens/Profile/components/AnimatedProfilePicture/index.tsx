@@ -85,7 +85,7 @@ const AnimatedProfilePicture = ({
         placeholderContentFit="cover"
         source={picture}
         placeholder={pictureHash || ''}
-        transition={500}
+        transition={250}
         cachePolicy={cachePolicy ?? 'memory'}
         style={[styles.profileImage, animatedProfilePicStyle]}
       />

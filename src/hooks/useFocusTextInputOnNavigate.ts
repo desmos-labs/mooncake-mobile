@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react';
 import { useRoute } from '@react-navigation/native';
+import { useCallback, useEffect, useRef } from 'react';
+import { TextInput } from 'react-native';
 
 /**
  * A reusable hook that opens the keyboard and focuses on textInputRef, which should be
@@ -7,7 +8,7 @@ import { useRoute } from '@react-navigation/native';
  */
 const useFocusTextInputOnNavigate = () => {
   const { params } = useRoute<any>();
-  const textInputRef = useRef<any>(null);
+  const textInputRef = useRef<TextInput>(null);
 
   /**
    * Main keyboard focus callback for use when user presses the comment button

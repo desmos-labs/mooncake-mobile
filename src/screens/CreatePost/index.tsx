@@ -105,11 +105,12 @@ const CreatePost = () => {
     takePhoto(CameraType.front).then(result => {
       if (result?.status === TakePictureActionResults.Taken) {
         const imageUri = result.uri;
-        editPostPicture(imageUri, (editedPicturePath, dimensions) => {
+        editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
           addPostAttachment({
             uri: editedPicturePath,
             width: dimensions.width,
             height: dimensions.height,
+            type: mimeType,
           });
         });
       }

@@ -2,9 +2,9 @@ import { cameraIcon, galleryIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import usePostsParams from 'hooks/posts/usePostsParams';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
 type MediaBottomPanelProps = {
@@ -48,12 +48,12 @@ const MediaBottomPanel = ({
   loading,
 }: MediaBottomPanelProps) => {
   const styles = useStyles();
-
+  const theme = useTheme();
   const { params } = usePostsParams();
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
-      <SafeAreaView edges={['bottom']} style={[style, styles.container]}>
+      <View style={[style, styles.container]}>
         <View style={styles.leftGroup}>
           <ImageButton
             accessibilityLabel="use image from gallery"
@@ -62,6 +62,7 @@ const MediaBottomPanel = ({
             onPress={handlePressGallery}
             image={galleryIcon}
             style={styles.imageButtonStyle}
+            tintColor={theme.colors.darkGrey}
           />
           <ImageButton
             accessibilityLabel="use image from camera"
@@ -70,13 +71,14 @@ const MediaBottomPanel = ({
             onPress={handlePressCamera}
             image={cameraIcon}
             style={styles.imageButtonStyle}
+            tintColor={theme.colors.darkGrey}
           />
         </View>
         <View style={styles.rightGroup}>
           {!loading && <RadialTextCounter max={params.maxTextLength} current={commentLength} />}
           {rightComponent}
         </View>
-      </SafeAreaView>
+      </View>
     </KeyboardAvoidingView>
   );
 };

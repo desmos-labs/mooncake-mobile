@@ -25,7 +25,9 @@ const useRenderMediaAttachment = (
   const imageWidth = screenDimensions.width - (horizontalPaddingWithAutoSize || 0);
 
   const MediaAttachment = React.useMemo(() => {
-    if (!attachments || attachments.length === 0) return undefined;
+    if (!attachments || attachments.length === 0) {
+      return undefined;
+    }
 
     // Currently only render one attachment
     // TODO: Add the ability to render multiple attachments
@@ -43,6 +45,7 @@ const useRenderMediaAttachment = (
 
       return (
         <Image
+          transition={250}
           recyclingKey={attachment.content.uri}
           contentFit={resizeMode}
           onLoadStart={() => setLoading(true)}

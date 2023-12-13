@@ -13,7 +13,7 @@ interface Props
   /**
    * The relative height of the button.
    */
-  size?: 26 | 32 | 44 | 56;
+  size?: 26 | 28 | 30 | 32 | 44 | 56;
 
   /**
    * The text that will be rendered on the button.
@@ -65,6 +65,10 @@ const Button = ({
         return 12;
       case 32:
         return 8;
+      case 30:
+        return 6;
+      case 28:
+        return 4;
       case 26:
         return 2;
       default:
@@ -77,6 +81,8 @@ const Button = ({
       56: TypographyStyles.Subtitle2,
       44: TypographyStyles.Button2,
       32: TypographyStyles.Button3,
+      30: TypographyStyles.Button3,
+      28: TypographyStyles.Button3,
       26: TypographyStyles.Button3,
     };
 

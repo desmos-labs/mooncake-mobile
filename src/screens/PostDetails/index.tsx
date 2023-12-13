@@ -16,6 +16,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Keyboard, SafeAreaView } from 'react-native';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
@@ -24,7 +25,6 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
 import { isCommentReply, Post } from 'types/posts';
-import { useTranslation } from 'react-i18next';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
 
@@ -60,7 +60,7 @@ const PostDetails = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
-  const { postId } = params;
+  const { postId, initialPostData } = params;
   const postData = { id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
   // -------------------------------------------------------------------------------------
@@ -85,7 +85,11 @@ const PostDetails = () => {
   const activeProfile = useActiveProfile();
 
   // Post data
-  const { post, loading: isPostLoading, refetch: refreshPost } = usePostData(postData.id);
+  const {
+    post,
+    loading: isPostLoading,
+    refetch: refreshPost,
+  } = usePostData(postData.id, initialPostData);
 
   // Comments data
   const {
