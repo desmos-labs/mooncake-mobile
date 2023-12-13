@@ -5,7 +5,7 @@ const GetPostComments = gql`
   ${PostFields}
   query GetPostComments($postId: bigint, $offset: Int, $limit: Int) @api(name: butter) {
     comments: post(
-      order_by: { creation_date: asc }
+      order_by: { creation_date: desc }
       where: {
         references: {
           type: { _eq: "POST_REFERENCE_TYPE_REPLY" }

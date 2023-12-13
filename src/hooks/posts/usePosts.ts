@@ -1,13 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react';
 import { QueryOptions, useQuery } from '@apollo/client';
-import GetPosts from 'services/graphql/queries/GetPosts';
-import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
-import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@recoil/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@recoil/posts';
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import sleep from 'lib/sleep';
+import _ from 'lodash';
+import React, { useCallback, useMemo, useState } from 'react';
+import GetPosts from 'services/graphql/queries/GetPosts';
+import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -146,31 +147,37 @@ const usePosts = (queryType: PostsQueryType) => {
     refetchWritePolicy: 'overwrite',
   });
 
-  // Callback that is used to refetch the next page of posts
-  const fetchMorePosts = React.useCallback(async () => {
-    try {
-      setError(undefined);
+  const debouncedFetchMorePosts = useCallback(
+    _.debounce(async () => {
+      try {
+        await fetchMore({
+          variables: { offset: posts.length },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult || fetchMoreResult.posts.length === 0) {
+              setFetchingMore(false);
+              return prev;
+            }
+
+            return {
+              posts: [...prev.posts, ...fetchMoreResult.posts],
+            };
+          },
+        });
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setFetchingMore(false);
+      }
+    }, 500),
+    [fetchMore, posts.length, setError],
+  );
+
+  const fetchMorePosts = useCallback(() => {
+    if (!fetchingMore) {
       setFetchingMore(true);
-      await fetchMore({
-        variables: { offset: posts.length },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-
-          // If there are no more posts, stop fetching more
-          if (fetchMoreResult.posts.length === 0) {
-            setFetchingMore(false);
-          }
-
-          return {
-            posts: [...prev.posts, ...fetchMoreResult.posts],
-          };
-        },
-      });
-    } catch (e: any) {
-      setFetchingMore(false);
-      setError(e.toString());
+      debouncedFetchMorePosts();
     }
-  }, [setError, setFetchingMore, fetchMore, posts]);
+  }, [debouncedFetchMorePosts, fetchingMore]);
 
   // Callback that is used in order to re-fetch the entire list of posts
   const refreshPosts = React.useCallback(async () => {

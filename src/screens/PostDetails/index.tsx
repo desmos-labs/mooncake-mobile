@@ -165,7 +165,7 @@ const PostDetails = () => {
   // --- Conditional rendering
   // -------------------------------------------------------------------------------------
 
-  if (!post) {
+  if (!initialPostData) {
     // If the post is loading, show the loading screen
     if (isPostLoading) {
       return (
@@ -175,12 +175,18 @@ const PostDetails = () => {
         </SafeAreaView>
       );
     }
+  }
 
-    return (
-      <SafeAreaView style={styles.emptyView}>
-        <Typography.H1>Something went wrong when loading the post</Typography.H1>
-      </SafeAreaView>
-    );
+  if (!post) {
+    if (!isPostLoading) {
+      return (
+        <SafeAreaView style={styles.emptyView}>
+          <Typography.H1>Something went wrong when loading the post</Typography.H1>
+        </SafeAreaView>
+      );
+    }
+
+    return null;
   }
 
   // -------------------------------------------------------------------------------------

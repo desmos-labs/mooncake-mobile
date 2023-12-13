@@ -77,10 +77,12 @@ export const useGetPostCommentsDifference = (user: string) => {
  * @param subspaceId {number} - Subspace id of the post.
  * @param postId {number} - ID of the post for which to get the comments.
  */
-export const usePostCommentsToSync = (user: string, subspaceId: number, postId: number) => {
+export const usePostCommentsToSync = (user: string, subspaceId: number, postId: number): Post[] => {
   const posts = useRecoilValue(postsState);
+
   return React.useMemo(() => {
     const userPosts = posts[user] ?? [];
+
     return userPosts.filter(
       p =>
         p.subspaceId === subspaceId &&
@@ -89,7 +91,6 @@ export const usePostCommentsToSync = (user: string, subspaceId: number, postId: 
     );
   }, [posts, user, subspaceId, postId]);
 };
-
 /**
  * Hook that allows to store a given post.
  */

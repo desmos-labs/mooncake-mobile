@@ -1,13 +1,13 @@
+import { Posts } from '@desmoslabs/desmjs';
 import {
   Media,
   PostReference as DesmJSPostReference,
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
+import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v3/msgs';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { Posts } from '@desmoslabs/desmjs';
 import Long from 'long';
 import { Post, PostAttachment, PostAttachmentType, PostReference, PostStatus } from 'types/posts';
-import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v3/msgs';
 
 /**
  * Gets the conversation id to be used when creating a post.
@@ -91,10 +91,10 @@ export const findSamePost = (posts: Post[], post: Post): number =>
   posts.findIndex(p => p.subspaceId === post.subspaceId && p.externalId === post.externalId);
 
 /**
- * Allows to sort the given {@param posts} by creation date, from the most recent to the oldest.
+ * Allows sorting the given {@param posts} by creation date, from the most recent to the oldest.
  */
 export const sortPostsByCreationDate = (posts: Post[]): Post[] => {
-  return posts.sort((a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate));
+  return [...posts].sort((a, b) => b.creationDate.localeCompare(a.creationDate));
 };
 
 enum PostUpdateType {
