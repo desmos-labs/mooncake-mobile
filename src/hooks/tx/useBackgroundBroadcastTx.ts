@@ -13,20 +13,60 @@ import {
   TaskJob,
 } from 'lib/BackgroundTaskUtils';
 
-interface BackgroundTxTaskParams {
-  readonly signer: string;
-  readonly desmosClient: DesmosClient;
+/**
+ * Params that can be passed to the function that schedule the background
+ * broadcast tx.
+ */
+interface BroadcastBackgroundTxParams {
+  /**
+   * List of messages to broadcast.
+   */
   readonly messages: EncodeObject[];
+  /**
+   * Optional memo to attach to the transaction.
+   */
   readonly memo?: string;
+  /**
+   * Message that will be displayed to the user once
+   * the transaction is being broadcast.
+   */
+  readonly onStartMessage?: string;
+  /**
+   * Message that will be displayed to the user once
+   * the transaction has been broadcast.
+   */
+  readonly onCompleteMessage?: string;
+  /**
+   * Message that will be displayed to the user in case
+   * of an error while broadcasting the transaction.
+   */
+  readonly onErrorMessage?: string;
+  /**
+   * Configuration for the Android task notification.
+   */
+  readonly notificationConfig?: Partial<AndroidTaskNotificationConfig>;
 }
 
-interface BroadcastBackgroundTxParams {
+/**
+ * Params that are passed to the background task.
+ */
+interface BackgroundTxTaskParams {
+  /**
+   *  Address of the user that will sign the transaction.
+   */
+  readonly signer: string;
+  /**
+   * Desmos client that will be used to broadcast the transaction.
+   */
+  readonly desmosClient: DesmosClient;
+  /**
+   * List of messages to broadcast.
+   */
   readonly messages: EncodeObject[];
+  /**
+   * Optional memo to attach to the transaction.
+   */
   readonly memo?: string;
-  readonly onStartMessage?: string;
-  readonly onCompleteMessage?: string;
-  readonly onErrorMessage?: string;
-  readonly notificationConfig?: Partial<AndroidTaskNotificationConfig>;
 }
 
 /**
@@ -34,7 +74,7 @@ interface BroadcastBackgroundTxParams {
  * @param params - Parameters required to create the post.
  * @constructor
  */
-const backgroundTxTask: TaskJob<BackgroundTxTaskParams, string> = async params => {
+const BackgroundTxTask: TaskJob<BackgroundTxTaskParams, string> = async params => {
   const { desmosClient, signer, messages, memo } = params;
   const { broadcastTx } = getTaskContext();
 
@@ -84,7 +124,7 @@ const useBackgroundBroradcastTx = () => {
       const signer = wallet.address;
       const taskRef = await scheduleTask(
         'Broadcast Tx',
-        backgroundTxTask,
+        BackgroundTxTask,
         {
           signer,
           desmosClient,
