@@ -6,9 +6,9 @@ import {
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import { useLoginFlowState } from '@recoil/login';
 import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
+import useInitNotificationsLogic from 'hooks/notifications/useInitNotifications';
 import useInitTourGuidesState from 'hooks/tourguide/useInitTourGuidesState';
 import useInitializeAppData from 'hooks/useInitializeAppData';
-import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
@@ -148,8 +148,11 @@ const RootNavigator = () => {
   const loginFlowState = useLoginFlowState();
 
   useInitializeAppData();
-  useInitializeNotifications();
   usePosthogIdentification();
+
+  // Init notification logic
+  useInitNotificationsLogic();
+
   // Init the tour guides state.
   useInitTourGuidesState();
   //  To allow going back to previous screen via swipe left.

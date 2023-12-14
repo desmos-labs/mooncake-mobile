@@ -32,4 +32,7 @@ const useGetPostByID = () => {
   );
 };
 
+// Ignore this since we may need this in the future
+// when handling the notifications.
+// ts-prune-ignore-next
 export default useGetPostByID;
