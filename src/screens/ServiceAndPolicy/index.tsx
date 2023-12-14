@@ -16,7 +16,7 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
-import { LoginMethod } from 'types/login';
+import { LoginMethod, LoginMethodType } from 'types/login';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -55,7 +55,7 @@ const ServiceAndPolicy = () => {
 
   const loginWithSelectedMethod = useCallback(async () => {
     // Login the user with the We3Auth method if they selected it.
-    if (params?.loginMethod?.type === 'Web3Auth') {
+    if (params?.loginMethod?.type === LoginMethodType.Web3Auth) {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
       return;
     }
