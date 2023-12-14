@@ -30,12 +30,9 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     if (!data && !commentsToSync) {
       return [];
     }
-    console.log('Before', commentsToSync.length);
     const notHiddenComments = commentsToSync.filter(
       comment => !localHiddenPosts.includes(comment.id),
     );
-    console.log('After', notHiddenComments.length);
-
     const commentsWithAuthorFiltered = (data?.comments ?? []).filter(
       (comment: Post) => comment.author,
     );

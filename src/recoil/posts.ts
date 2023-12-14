@@ -82,24 +82,7 @@ export const usePostCommentsToSync = (user: string, subspaceId: number, postId: 
 
   return React.useMemo(() => {
     const userPosts = posts[user] ?? [];
-    console.log(
-      'userPosts ID',
-      userPosts.map(p => p.id),
-    );
-    console.log(
-      'userPosts subID',
-      userPosts.map(p => p.subspaceId),
-    );
-    console.log(
-      'userPosts isCommentTO',
-      userPosts.map(p => isCommentTo(p, postId)),
-    );
-    return userPosts.filter(
-      p =>
-        p.subspaceId === subspaceId &&
-        isCommentTo(p, postId) &&
-        p.status !== PostStatus.DELETED_LOCALLY,
-    );
+    return userPosts.filter(p => isCommentTo(p, postId) && p.status !== PostStatus.DELETED_LOCALLY);
   }, [posts, user, subspaceId, postId]);
 };
 /**
@@ -201,10 +184,7 @@ export const useRemoveStoredPendingPost = () => {
         // Update the user posts by filtering out the post that has the same subspace id, external id and is not synced
         const userPosts = updatedPosts[user] ?? [];
         updatedPosts[user] = userPosts.filter(
-          p =>
-            p.subspaceId !== subspaceId ||
-            p.externalId !== externalId ||
-            p.status === PostStatus.SYNCED,
+          p => p.externalId !== externalId || p.status === PostStatus.SYNCED,
         );
 
         return updatedPosts;

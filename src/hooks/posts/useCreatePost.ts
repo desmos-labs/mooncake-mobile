@@ -34,7 +34,6 @@ interface CreatePostOptions {
  */
 const convertPostImage = (index: number, attachment: ImageMedia): Result<PostAttachment, Error> => {
   const { uri, type } = attachment;
-  console.log(attachment);
   if (!uri || !type) {
     return err(new Error('Invalid attachment'));
   }

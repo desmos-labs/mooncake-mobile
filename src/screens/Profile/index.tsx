@@ -237,7 +237,6 @@ const Profile = () => {
   // Animate opacity
   useEffect(() => {
     opacity.value = withDelay(500, withTiming(1));
-    console.log(address);
   }, [address, opacity, profile]);
 
   // -------------------------------------------------------------------------------------
