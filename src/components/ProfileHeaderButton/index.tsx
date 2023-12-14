@@ -2,6 +2,7 @@ import { Image } from 'expo-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { scale } from 'react-native-size-matters';
 import { DesmosProfile } from 'types/desmos';
 
 type Props = {
@@ -42,6 +43,7 @@ const ProfileHeaderButton = (props: Props) => {
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
       <Image
+        recyclingKey={source?.toString()}
         contentFit="cover"
         source={source}
         style={style || styles.defaultStyle}
@@ -53,10 +55,11 @@ const ProfileHeaderButton = (props: Props) => {
 
 const styles = StyleSheet.create({
   defaultStyle: {
-    borderRadius: 36,
-    height: 36,
+    backgroundColor: 'grey',
+    borderRadius: scale(19),
+    height: scale(38),
     resizeMode: 'cover',
-    width: 36,
+    width: scale(38),
   },
 });
 

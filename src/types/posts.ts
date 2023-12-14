@@ -1,8 +1,9 @@
-import { DesmosProfile } from 'types/desmos';
 import { Entities, ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
+import { DesmosProfile } from 'types/desmos';
 
 export enum PostStatus {
   SYNCED = 'synced',
+  TO_BE_SYNCED = 'to_be_synced',
   CREATED_LOCALLY = 'created',
   EDITED_LOCALLY = 'edited',
   DELETED_LOCALLY = 'deleted',

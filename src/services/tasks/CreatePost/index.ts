@@ -75,7 +75,6 @@ const CreatePostTask: TaskJob<CreatePostTaskParams, string> = async (
   const postAttachments = attachments.map(
     attachment => (attachment as Ok<PostAttachment, Error>).value,
   );
-  console.log(attachments, postAttachments);
   // Update the post fields to the one that we have changed
   const postToConvert = {
     ...post,

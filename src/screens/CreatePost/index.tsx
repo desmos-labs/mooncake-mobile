@@ -12,6 +12,7 @@ import Button from 'components/Button';
 import DView from 'components/DView';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import SelectedPostImage from 'components/SelectedPostImage';
+import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -20,6 +21,7 @@ import { ToastType } from 'config/toast/toastConfig';
 import { CameraType } from 'expo-image-picker';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import useCreatePost from 'hooks/posts/useCreatePost';
+import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useToast from 'hooks/toasts/useToast';
 import useImageFromDevice from 'hooks/useImageFromDevice';
@@ -30,6 +32,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
@@ -65,14 +68,14 @@ const CreatePost = () => {
   const navigation = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const parent = params?.parent;
-
+  const insets = useSafeAreaInsets();
   // -------------------------------------------------------------------------------------
   // --- Useful hooks
   // -------------------------------------------------------------------------------------
 
   const { params: postsParams } = usePostsParams();
   const resetCreatePostState = useResetCreatePostState();
-
+  const { refresh } = usePosts(PostsQueryType.DISCOVERY);
   const createPost = useCreatePost();
   const setPostsListState = useSetPostsListState();
 
@@ -87,7 +90,6 @@ const CreatePost = () => {
   const removePostAttachment = useRemoveCreatePostAttachment();
   const { editPostPicture } = useOpenPictureEditor();
   const takePhoto = useTakePicture();
-
   const { imageFromLibrary: selectPicture } = useImageFromDevice({
     onImageSelected: imageUri => {
       editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
@@ -129,7 +131,7 @@ const CreatePost = () => {
   // Callback used when the user wants to create the post
   const handleCreatePost = React.useCallback(async () => {
     setLoading(true);
-    const result = await createPost({ parent });
+    const result = await createPost({ parent, onProcessCompleted: refresh });
     setLoading(false);
 
     if (result.isErr()) {
@@ -147,7 +149,7 @@ const CreatePost = () => {
     }
 
     navigation.goBack();
-  }, [createPost, navigation, parent, setPostsListState, showToast, t]);
+  }, [createPost, navigation, parent, refresh, setPostsListState, showToast, t]);
 
   const onCreatePostPressWrapper = useCallback(() => {
     requestAnimationFrame(async () => {
@@ -232,7 +234,7 @@ const CreatePost = () => {
   }, [loading]);
 
   return (
-    <>
+    <View style={styles.root}>
       <DView
         style={styles.container}
         backgroundColor={theme.colors.white}
@@ -277,7 +279,8 @@ const CreatePost = () => {
         handlePressGallery={selectPicture}
         handlePressCamera={handleTakePicture}
       />
-    </>
+      <Spacer paddingBottom={insets.bottom} />
+    </View>
   );
 };
 

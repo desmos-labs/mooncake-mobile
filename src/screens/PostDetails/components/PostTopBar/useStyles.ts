@@ -8,6 +8,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     zIndex: 2,
     paddingBottom: 10,
+    paddingHorizontal: theme.spacing.m,
   },
   followIcon: {
     zIndex: 1,
@@ -42,6 +43,9 @@ const useStyles = makeStyle(theme => ({
   customTopBarInnerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  subtitle: {
+    color: theme.colors.grey02,
   },
 }));
 

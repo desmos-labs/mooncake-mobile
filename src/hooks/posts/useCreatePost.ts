@@ -34,7 +34,6 @@ interface CreatePostOptions {
  */
 const convertPostImage = (index: number, attachment: ImageMedia): Result<PostAttachment, Error> => {
   const { uri, type } = attachment;
-  console.log(attachment);
   if (!uri || !type) {
     return err(new Error('Invalid attachment'));
   }
@@ -93,6 +92,7 @@ const useCreatePost = () => {
   // Callback that creates a post
   return React.useCallback(
     async (options?: CreatePostOptions): Promise<Result<void, Error>> => {
+      const uuid = uuidv4();
       if (!activeProfile) {
         return err(new Error('Cannot create a post without an active profile'));
       }
@@ -137,7 +137,7 @@ const useCreatePost = () => {
         sectionId: createPostState.sectionId ?? parent?.sectionId ?? 0,
 
         // Generate a random UUID to be used as external ID
-        externalId: uuidv4(),
+        externalId: uuid,
 
         conversationId: getConversationId(parent),
         references: postReferences,
@@ -192,6 +192,11 @@ const useCreatePost = () => {
           if (onProcessCompleted) {
             onProcessCompleted();
           }
+
+          storePost(activeProfile.address, {
+            ...post,
+            status: PostStatus.SYNCED,
+          });
 
           showToast({
             toastType: ToastType.success,
