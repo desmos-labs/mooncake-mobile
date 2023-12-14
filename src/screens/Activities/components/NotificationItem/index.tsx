@@ -9,7 +9,6 @@ import { CompleteNotification, NotificationType } from 'types/notifications';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 import useStyles from './useStyles';
@@ -32,7 +31,6 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------------------------------------------------------------------------------------
 
   const navigateToProfile = useNavigateToProfile();
-  const handleNotificationPressEvent = useHandleNotificationPressEvent();
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -45,16 +43,6 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // Get the profile address and the profile details of the other user involved in the notification
   const [profileAddress, profile] = useMemo(() => {
     switch (notification.type) {
-      case NotificationType.ReactionReply:
-      case NotificationType.ReactionComment:
-      case NotificationType.ReactionPost:
-        return [notification.reactionAuthorAddress, notification.reaction?.author];
-      case NotificationType.Comment:
-        return [notification.commentAuthorAddress, notification.comment?.author];
-      case NotificationType.Reply:
-        return [notification.replyAuthorAddress, notification.reply?.author];
-      case NotificationType.Follow:
-        return [notification.userAddress, notification.user];
       default:
         return [undefined, undefined];
     }
@@ -62,16 +50,6 @@ const NotificationItem = (props: NotificationComponentProps) => {
 
   const post = useMemo(() => {
     switch (notification.type) {
-      case NotificationType.ReactionPost:
-        return notification.post;
-      case NotificationType.ReactionComment:
-        return notification.comment;
-      case NotificationType.ReactionReply:
-        return notification.reply;
-      case NotificationType.Comment:
-        return notification.comment;
-      case NotificationType.Reply:
-        return notification.reply;
       default:
         return undefined;
     }
@@ -79,22 +57,10 @@ const NotificationItem = (props: NotificationComponentProps) => {
 
   const bodyText = useMemo(() => {
     switch (notification.type) {
-      case NotificationType.ReactionPost:
-        return t('liked your post');
-      case NotificationType.ReactionComment:
-        return t('liked comment');
-      case NotificationType.ReactionReply:
-        return t('liked reply');
-      case NotificationType.Comment:
-        return t('commented');
-      case NotificationType.Reply:
-        return t('commented reply');
-      case NotificationType.Follow:
-        return t('followed you');
       default:
         return 'Unsupported notification type';
     }
-  }, [notification, t]);
+  }, [notification]);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -111,11 +77,6 @@ const NotificationItem = (props: NotificationComponentProps) => {
     }
     navigateToProfile(profile.address);
   }, [navigateToProfile, profile, showToast, t]);
-
-  const handleNavigateToNotification = useCallback(() => {
-    // TODO: Probably we should handle the error somehow
-    handleNotificationPressEvent(notification);
-  }, [handleNotificationPressEvent, notification]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -149,7 +110,7 @@ const NotificationItem = (props: NotificationComponentProps) => {
         />
 
         {/* Notification texts */}
-        <TouchableOpacity style={styles.profileView} onPress={handleNavigateToNotification}>
+        <TouchableOpacity style={styles.profileView}>
           {profile && <Typography.Subtitle3>{getProfileDisplayName(profile)}</Typography.Subtitle3>}
           {!profile && profileAddress && (
             <Typography.Subtitle3
