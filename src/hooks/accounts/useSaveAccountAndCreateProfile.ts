@@ -60,45 +60,44 @@ const useSaveAccountAndCreateProfileFlow = () => {
       if (userHaveBalanceResult.isErr()) {
         return err(userHaveBalanceResult.error);
       }
-      const requestFeeGrant = !userHaveBalanceResult.value && profile === undefined;
 
-      // Get the tour guide step
-      const { login: loginTourGuideState } = await fetchTourGuidesState();
-
-      if (requestFeeGrant) {
+      // User without balance and profile, give them a fee grant
+      // to make the app experience more smoth and easy
+      // for not crypto native users.
+      if (!userHaveBalanceResult.value && profile === undefined) {
         navigation.navigate(ROUTES.ONBOARDING, {
           passwordManipulationMode: PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE,
           account,
           requestFeeGrant: true,
         });
-      } else if (!profile && password === undefined) {
-        if (loginTourGuideState === LoginOnboardingStep.NotStarted) {
-          navigation.navigate(ROUTES.ONBOARDING, {
-            passwordManipulationMode: PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE,
-            account,
-          });
-        } else {
-          navigation.navigate(ROUTES.PASSWORD_MANIPULATION, {
-            mode: PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE,
-            account,
-            profile,
-          });
-        }
-      } else {
-        if (loginTourGuideState === LoginOnboardingStep.NotStarted) {
-          navigation.navigate(ROUTES.ONBOARDING, {
-            passwordManipulationMode: PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT,
-            account,
-            profile,
-          });
-        } else {
-          navigation.navigate(ROUTES.PASSWORD_MANIPULATION, {
-            mode: PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT,
-            account,
-            profile,
-          });
-        }
+        return ok(undefined);
       }
+
+      // Get the tour guide step
+      const { login: loginTourGuideState } = await fetchTourGuidesState();
+      // Compute the proper password manipulation mode
+      const passwordManipulationMode =
+        !profile && password === undefined
+          ? PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE
+          : PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT;
+
+      if (loginTourGuideState === LoginOnboardingStep.NotStarted) {
+        // A new user, perform the onboarding.
+        navigation.navigate(ROUTES.ONBOARDING, {
+          passwordManipulationMode,
+          account,
+        });
+      } else {
+        // A user that has already performed the on-boarding
+        // from an another device is reimporting an account
+        // from which has previusly gone through the onboarding.
+        navigation.navigate(ROUTES.PASSWORD_MANIPULATION, {
+          mode: passwordManipulationMode,
+          account,
+          profile,
+        });
+      }
+
       return ok(undefined);
     },
     [checkAccountBalance, fetchProfile, fetchTourGuidesState, navigation, performLogin],
