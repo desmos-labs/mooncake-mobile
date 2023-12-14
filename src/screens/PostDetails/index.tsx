@@ -211,7 +211,6 @@ const PostDetails = () => {
         onRefresh={onPullToRefresh}
         ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        keyExtractor={item => item.externalId}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={comments}

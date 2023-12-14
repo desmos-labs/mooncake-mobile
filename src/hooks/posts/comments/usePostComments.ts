@@ -23,6 +23,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   const commentsToSync = usePostCommentsToSync(activeAccountAddress, post.subspaceId, post.id);
   const { data, refetch, fetchMore } = useQuery(GetPostComments, {
     variables: { postId: post.id, offset: 0, limit: commentsPerPage },
+    fetchPolicy: 'no-cache',
     refetchWritePolicy: 'overwrite',
   });
 
@@ -46,20 +47,31 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   }, [data, commentsToSync, localHiddenPosts]);
 
   const fetchMoreComments = useCallback(async () => {
-    try {
-      setError(null);
-      setFetchingMore(true);
-      await fetchMore({
-        variables: { offset: comments.length },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          comments: fetchMoreResult ? [...prev.comments, ...fetchMoreResult.comments] : prev,
-        }),
-      });
-    } catch (e) {
-      setFetchingMore(false);
-      setError(e instanceof Error ? e.message : String(e));
+    if (comments.length === 0) {
+      return;
     }
-  }, [fetchMore, comments.length]);
+    await fetchMore({
+      variables: { offset: comments.length },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!prev || !prev.comments) {
+          return {
+            comments: [],
+          };
+        }
+        if (!fetchMoreResult.comments) {
+          return prev;
+        }
+        if (fetchMoreResult.comments.length === 0) {
+          return prev;
+        }
+        setFetchingMore(true);
+        return {
+          comments: [...prev.comments, ...fetchMoreResult.comments],
+        };
+      },
+    });
+    setFetchingMore(false);
+  }, [comments.length, fetchMore]);
 
   const refreshComments = useCallback(async () => {
     try {

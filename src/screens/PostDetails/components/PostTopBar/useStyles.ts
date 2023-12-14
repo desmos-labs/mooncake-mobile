@@ -8,6 +8,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     zIndex: 2,
     paddingBottom: 10,
+    paddingHorizontal: theme.spacing.m,
   },
   followIcon: {
     zIndex: 1,
