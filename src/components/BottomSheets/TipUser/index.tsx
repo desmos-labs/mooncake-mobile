@@ -12,16 +12,12 @@ import { coin } from '@cosmjs/stargate';
 import { getThousandsSeparator, isStringNumberValid } from 'lib/NumberUtils';
 import { Coin } from '@desmoslabs/desmjs-types/cosmos/base/v1beta1/coin';
 import { useCurrentChainInfo } from '@recoil/settings';
-import { Bank } from '@desmoslabs/desmjs';
-import { MsgSend } from '@desmoslabs/desmjs-types/cosmos/bank/v1beta1/tx';
-import useBackgroundBroadcastTx from 'hooks/tx/useBackgroundBroadcastTx';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
+import useSendTip from 'hooks/tips/useSendTip';
 
 interface TipUserBottomSheetProps {
   /**
@@ -50,11 +46,9 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
 
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const showToast = useToast();
-  const activeAccountAddress = useActiveAccountAddress()!;
   const currentChain = useCurrentChainInfo()!;
   const { balance, error: fetchBalanceError, loading: loadingBalance } = useAccountBalance();
-  const getProfile = useGetOnChainProfile();
-  const broadcastTx = useBackgroundBroadcastTx();
+  const sendTipToUser = useSendTip();
 
   const interactionDisabled = React.useMemo(
     () => loadingBalance || fetchBalanceError !== undefined,
@@ -128,25 +122,8 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
   const sendTip = React.useCallback(async () => {
     if (tipCoin === undefined) return;
 
-    const receiverProfile = await getProfile(toTipUserAddress);
-    const sendMessage = {
-      typeUrl: Bank.v1beta1.MsgSendTypeUrl,
-      value: MsgSend.fromPartial({
-        fromAddress: activeAccountAddress,
-        toAddress: toTipUserAddress,
-        amount: [tipCoin],
-      }),
-    };
+    const result = await sendTipToUser(toTipUserAddress, [tipCoin]);
 
-    const userDtag = receiverProfile ? `@${receiverProfile.dTag}` : toTipUserAddress;
-    const formattedAmount = formatCoin(tipCoin);
-
-    const result = await broadcastTx({
-      messages: [sendMessage],
-      onStartMessage: t('sending tip'),
-      onCompleteMessage: t('tip sent', { userDtag, amount: formattedAmount }),
-      onErrorMessage: t('tip failed', { userDtag, amount: formattedAmount }),
-    });
     if (result.isErr()) {
       showToast({
         toastType: ToastType.error,
@@ -156,16 +133,7 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
     } else {
       navigation.goBack();
     }
-  }, [
-    activeAccountAddress,
-    broadcastTx,
-    getProfile,
-    navigation,
-    showToast,
-    t,
-    tipCoin,
-    toTipUserAddress,
-  ]);
+  }, [navigation, sendTipToUser, showToast, t, tipCoin, toTipUserAddress]);
 
   // -------- Components --------
 
