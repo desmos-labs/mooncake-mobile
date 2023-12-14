@@ -43,6 +43,9 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  subtitle: {
+    color: theme.colors.grey02,
+  },
 }));
 
 export default useStyles;

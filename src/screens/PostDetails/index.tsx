@@ -17,7 +17,7 @@ import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Keyboard, SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
@@ -100,12 +100,7 @@ const PostDetails = () => {
   } = usePostComments(postData);
   const { refetch: refreshCommentsCount } = usePostCommentsCount(postData);
 
-  // Comment creation
-  const onCommentCreated = useCallback(() => {
-    Keyboard.dismiss();
-    setCommentPosting(false);
-  }, []);
-  const handleCreateComment = useHandleCreateComment(onCommentCreated);
+  const handleCreateComment = useHandleCreateComment();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -113,14 +108,21 @@ const PostDetails = () => {
 
   const handleExpandCommentView = useHandleExpandCommentView();
 
+  // Comment creation
+  const onCommentCreated = useCallback(async () => {
+    await refreshComments();
+    await refreshCommentsCount();
+    setCommentPosting(false);
+  }, [refreshComments, refreshCommentsCount]);
+
   const handlePressCreateComment = useCallback(async () => {
     if (!post) {
       return;
     }
     setCommentPosting(true);
-    await handleCreateComment(post);
+    await handleCreateComment(post, onCommentCreated);
     // we will unlock the comment bottom bar using a useEffect that watches the comment recoil.
-  }, [post, handleCreateComment]);
+  }, [post, handleCreateComment, onCommentCreated]);
 
   // Method used to refresh the post data
   const refreshPage = useCallback(async () => {

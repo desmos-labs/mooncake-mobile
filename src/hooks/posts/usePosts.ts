@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import GetPosts from 'services/graphql/queries/GetPosts';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
+import { Post, PostStatus } from 'types/posts';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -87,7 +88,12 @@ const usePosts = (queryType: PostsQueryType) => {
       const graphQLPosts = filteredPosts.map(convertGraphQLPost);
 
       storePosts(cachedPosts => {
-        const [merged] = mergePosts(cachedPosts, graphQLPosts);
+        const [merged] = mergePosts(
+          cachedPosts.filter(
+            (post: Post) => post.id !== -1 && post.status === PostStatus.TO_BE_SYNCED,
+          ),
+          graphQLPosts,
+        );
         return merged;
       });
 

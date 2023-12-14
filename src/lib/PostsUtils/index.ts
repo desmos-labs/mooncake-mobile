@@ -138,7 +138,7 @@ export const mergePosts = (
 
   // Create the array to be stored.
   // This is copied so that if the object is frozen by someone (i.e. Recoil), we can still edit it
-  let postsToStore = [...existingPosts];
+  const postsToStore = [...existingPosts];
   const postsUpdates: PostUpdate[] = [];
 
   // First of all, update all the posts that have either been edited or created
@@ -198,7 +198,7 @@ export const mergePosts = (
           type: PostUpdateType.DELETE,
           post: deletedPost,
         });
-        postsToStore = postsToStore.splice(index, 1);
+        postsToStore.splice(index, 1);
         break;
 
       default:

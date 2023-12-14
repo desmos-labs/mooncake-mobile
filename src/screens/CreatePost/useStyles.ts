@@ -4,6 +4,10 @@ import { makeStyle } from 'config/theme';
  * Style hook for the EnterComment screen.
  */
 const useStyles = makeStyle(theme => ({
+  root: {
+    backgroundColor: theme.colors.background,
+    flex: 1,
+  },
   container: {
     flex: 1,
     paddingHorizontal: theme.spacing.m,

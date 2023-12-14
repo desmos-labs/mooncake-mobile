@@ -1,12 +1,3 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
-import { isComment, Post } from 'types/posts';
-import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
-import BackButton from 'components/BackButton';
-import Spacer from 'components/Spacer';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import { getProfileDisplayName } from 'lib/ProfileUtils';
 import {
   block,
   followBlackIcon,
@@ -15,21 +6,30 @@ import {
   unblock,
   unfollowBlackIcon,
 } from 'assets/images';
+import BackButton from 'components/BackButton';
+import PopupMenu from 'components/PopupMenu';
+import { useHandlePressReport } from 'components/PostCard/hooks';
+import ProfileHeaderButton from 'components/ProfileHeaderButton';
+import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
+import useHidePost from 'hooks/posts/useHidePost';
+import useIsBlocked from 'hooks/relationships/useIsBlocked';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
+import { getProfileDisplayName } from 'lib/ProfileUtils';
+import { useTheme } from 'native-base';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 import {
   useHandlePressBlockOrUnblock,
   useHandlePressFollowOrUnfollow,
 } from 'screens/PostDetails/hooks';
-import { useTheme } from 'native-base';
-import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
-import { useTranslation } from 'react-i18next';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import PopupMenu from 'components/PopupMenu';
-import useHidePost from 'hooks/posts/useHidePost';
-import { useHandlePressReport } from 'components/PostCard/hooks';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
-import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
+import { isComment, Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface Props {
@@ -89,7 +89,9 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
 
   const PressMoreComponent = React.useMemo(() => {
     // Hide the context menu if the user is the author of the post
-    if (isAuthorActiveUser) return undefined;
+    if (isAuthorActiveUser) {
+      return undefined;
+    }
 
     const menuItems = [
       {
@@ -161,23 +163,22 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     <View style={styles.customTopBarContainer}>
       <View style={styles.customTopBarInnerContainer}>
         <BackButton onPress={onBackButtonPress} />
-
-        <Spacer paddingLeft={theme.spacing.m}>
-          <View style={styles.rightContainer}>
-            <ProfileHeaderButton
-              profile={post!.author}
-              onPress={() => handleNavigateToProfile(post!.author.address)}
-            />
-            <View style={styles.middleTextContainer}>
-              <Typography.Subtitle3 numberOfLines={1}>
-                {getProfileDisplayName(post!.author)}
-              </Typography.Subtitle3>
-              <Typography.Body7>{formatDate(post!.creationDate)}</Typography.Body7>
-            </View>
+        <Spacer paddingLeft={theme.spacing.m} />
+        <View style={styles.rightContainer}>
+          <ProfileHeaderButton
+            profile={post!.author}
+            onPress={() => handleNavigateToProfile(post!.author.address)}
+          />
+          <View style={styles.middleTextContainer}>
+            <Typography.Subtitle3 numberOfLines={1}>
+              {getProfileDisplayName(post!.author)}
+            </Typography.Subtitle3>
+            <Typography.Body7 style={styles.subtitle}>
+              {formatDate(post!.creationDate)}
+            </Typography.Body7>
           </View>
-        </Spacer>
+        </View>
       </View>
-
       <View style={styles.rightContainer}>
         <Spacer paddingHorizontal="xs" />
         {PressMoreComponent}
