@@ -82,7 +82,18 @@ export const usePostCommentsToSync = (user: string, subspaceId: number, postId: 
 
   return React.useMemo(() => {
     const userPosts = posts[user] ?? [];
-
+    console.log(
+      'userPosts ID',
+      userPosts.map(p => p.id),
+    );
+    console.log(
+      'userPosts subID',
+      userPosts.map(p => p.subspaceId),
+    );
+    console.log(
+      'userPosts isCommentTO',
+      userPosts.map(p => isCommentTo(p, postId)),
+    );
     return userPosts.filter(
       p =>
         p.subspaceId === subspaceId &&

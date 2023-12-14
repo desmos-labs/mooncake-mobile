@@ -6,7 +6,7 @@ import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import { useCallback, useMemo, useState } from 'react';
 import GetPostComments from 'services/graphql/queries/GetPostComments';
-import { Post, PostStatus } from 'types/posts';
+import { Post } from 'types/posts';
 
 const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage: number = 50) => {
   const activeAccountAddress = useActiveAccountAddress();
@@ -21,27 +21,26 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
 
   const { localHiddenPosts } = useIsPostHiddenLocally();
   const commentsToSync = usePostCommentsToSync(activeAccountAddress, post.subspaceId, post.id);
-
   const { data, refetch, fetchMore } = useQuery(GetPostComments, {
     variables: { postId: post.id, offset: 0, limit: commentsPerPage },
     refetchWritePolicy: 'overwrite',
   });
 
   const comments: Post[] | [] = useMemo(() => {
-    if (!data) {
+    if (!data && !commentsToSync) {
       return [];
     }
-
+    console.log('Before', commentsToSync.length);
     const notHiddenComments = commentsToSync.filter(
       comment => !localHiddenPosts.includes(comment.id),
     );
+    console.log('After', notHiddenComments.length);
 
-    const commentsWithAuthorFiltered = data.comments.filter((comment: Post) => comment.author);
-    const onChainComments: Post[] = commentsWithAuthorFiltered.map(convertGraphQLPost);
-    const [merged] = mergePosts(
-      notHiddenComments.filter(c => c.id !== -1 && c.status === PostStatus.TO_BE_SYNCED),
-      onChainComments,
+    const commentsWithAuthorFiltered = (data?.comments ?? []).filter(
+      (comment: Post) => comment.author,
     );
+    const onChainComments: Post[] = commentsWithAuthorFiltered.map(convertGraphQLPost);
+    const [merged] = mergePosts(notHiddenComments, onChainComments);
 
     setFetchingMore(false);
     setRefreshing(false);

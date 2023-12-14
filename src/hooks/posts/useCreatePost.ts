@@ -194,6 +194,11 @@ const useCreatePost = () => {
             onProcessCompleted();
           }
 
+          storePost(activeProfile.address, {
+            ...post,
+            status: PostStatus.SYNCED,
+          });
+
           showToast({
             toastType: ToastType.success,
             title: t('success', { ns: 'common' }),
@@ -202,10 +207,6 @@ const useCreatePost = () => {
         })
         .onError(({ error }) => {
           if (onProcessCompleted) {
-            storePost(activeProfile.address, {
-              ...post,
-              status: PostStatus.TO_BE_SYNCED,
-            });
             onProcessCompleted();
           }
 

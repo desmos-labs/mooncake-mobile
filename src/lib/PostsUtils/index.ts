@@ -157,6 +157,7 @@ export const mergePosts = (
       // status that it has locally, and was has happened on the chain in the meanwhile
       const cachedPost = existingPosts[cachedPostIndex];
       switch (cachedPost.status) {
+        case PostStatus.SYNCED:
         case PostStatus.CREATED_LOCALLY:
           // The post was created locally, and now it's on-chain.
           // Replace the local post data with the new one from the chain
