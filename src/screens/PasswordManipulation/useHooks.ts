@@ -159,7 +159,8 @@ const useHooks = () => {
       Keyboard.dismiss();
       setLoading(true);
       /**
-       * If mode is setup password, we need to store the account and profile but not create a profile since we already have one
+       * If mode is setup password, we need to store the
+       * account and profile but not create a profile since we already have one
        */
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT && account && profile) {
         setSigninStatus(SignInStatus.SAVING_WALLET);
