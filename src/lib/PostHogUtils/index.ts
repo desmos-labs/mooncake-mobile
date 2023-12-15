@@ -85,10 +85,10 @@ export const captureFailedTxError = (
 export const captureLoggedInUser = (posthog: PostHog, account: Account) => {
   switch (account.walletType) {
     case WalletType.Web3Auth:
-      posthog.capture(UserBehaviour.SignedInWithWeb3Auth, {});
+      posthog.capture(UserBehaviour.SignedInWithWeb3Auth);
       break;
     case WalletType.PrivateKey:
-      posthog.capture(UserBehaviour.SignedInWithPrivateKey, {});
+      posthog.capture(UserBehaviour.SignedInWithPrivateKey);
       break;
     default:
       break;
