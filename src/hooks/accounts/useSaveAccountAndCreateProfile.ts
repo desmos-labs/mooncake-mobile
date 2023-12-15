@@ -62,8 +62,8 @@ const useSaveAccountAndCreateProfileFlow = () => {
       }
 
       // User without balance and profile, give them a fee grant
-      // to make the app experience more smoth and easy
-      // for not crypto native users.
+      // to make the app experience smoother and easier
+      // for non-crypto-native users.
       if (!userHaveBalanceResult.value && profile === undefined) {
         navigation.navigate(ROUTES.ONBOARDING, {
           passwordManipulationMode: PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE,
@@ -88,9 +88,9 @@ const useSaveAccountAndCreateProfileFlow = () => {
           account,
         });
       } else {
-        // A user that has already performed the on-boarding
-        // from an another device is reimporting an account
-        // from which has previusly gone through the onboarding.
+        // A user who has already completed the onboarding
+        // from another device is reimporting an account
+        // that has previously gone through the onboarding.
         navigation.navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: passwordManipulationMode,
           account,
