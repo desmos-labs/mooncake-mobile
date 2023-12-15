@@ -27,6 +27,7 @@ enum UserBehaviour {
   SkipBondContactShare = 'Skip Share Contacts',
   SignedInWithPrivateKey = 'Signed In With Private Key',
   SignedInWithWeb3Auth = 'Signed In With Web3Auth',
+  LegalTermsAccepted = 'Accepted Legal Terms',
 }
 
 /**
@@ -90,4 +91,8 @@ export const captureLoggedInUser = (posthog: PostHog, account: Account) => {
     default:
       break;
   }
+ * Captures when the user has accepted the legal terms.
+ */
+export const captureAcceptedLegalTerms = (posthog: PostHog) => {
+  posthog.capture(UserBehaviour.LegalTermsAccepted);
 };
