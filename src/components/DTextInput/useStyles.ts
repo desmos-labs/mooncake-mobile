@@ -6,6 +6,8 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
+    borderWidth: props.showBorder ? 1 : 0,
+    borderColor: props.error ? theme.colors.pink01 : undefined,
     borderRadius: 8,
     minHeight: 48,
     alignItems: 'center',

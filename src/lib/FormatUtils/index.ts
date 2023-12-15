@@ -63,7 +63,7 @@ const getChainCurrencies = (): Currency[] => {
  * Formats the given amount into a human-readable value.
  * @param amount - Coin that should be formatted.
  */
-const formatCoin = (amount: Coin): string => {
+export const formatCoin = (amount: Coin): string => {
   const currencies = getChainCurrencies();
   const convertedAmount = convertCoin(amount, 6, currencies) || amount;
   const humanReadableAmount = formatNumber(safeParseFloat(convertedAmount.amount));
