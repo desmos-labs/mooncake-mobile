@@ -91,6 +91,9 @@ export const captureLoggedInUser = (posthog: PostHog, account: Account) => {
     default:
       break;
   }
+};
+
+/**
  * Captures when the user has accepted the legal terms.
  */
 export const captureAcceptedLegalTerms = (posthog: PostHog) => {
