@@ -13,6 +13,9 @@ import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
 import { useTranslation } from 'react-i18next';
+import useTrackLoggedInUser from 'hooks/analytics/useTrackLoggedInUser';
+import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
+import useTrackProfileSelected from 'hooks/analytics/useTrackProfileSelected';
 import useStyles from './useStyles';
 
 /**
@@ -69,6 +72,9 @@ const useHooks = () => {
   const enableBiometrics = useEnableBiometrics();
   const setLoginFlowState = useSetLoginFlowState();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();
+  const trackLoggedInUser = useTrackLoggedInUser();
+  const trackProfileCreated = useTrackProfileCreated();
+  const trackProfileSelected = useTrackProfileSelected();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -159,7 +165,8 @@ const useHooks = () => {
       Keyboard.dismiss();
       setLoading(true);
       /**
-       * If mode is setup password, we need to store the account and profile but not create a profile since we already have one
+       * If mode is setup password, we need to store the
+       * account and profile but not create a profile since we already have one
        */
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT && account && profile) {
         setSigninStatus(SignInStatus.SAVING_WALLET);
@@ -174,6 +181,8 @@ const useHooks = () => {
           setLoginFlowState({
             step: LoginFlowStep.Completed,
           });
+          trackLoggedInUser(account.account);
+          trackProfileSelected();
           setSigninStatus(SignInStatus.DONE);
           navigate(ROUTES.WELCOME_PAGE, {
             action: 'import',
@@ -205,6 +214,8 @@ const useHooks = () => {
             setLoginFlowState({
               step: LoginFlowStep.Completed,
             });
+            trackLoggedInUser(account.account);
+            trackProfileCreated();
             navigate(ROUTES.WELCOME_PAGE, {
               action: 'create',
             });
@@ -226,6 +237,7 @@ const useHooks = () => {
             setSigninStatus(SignInStatus.ENABLING_BIOMETRICS);
             await enableBiometrics(formValues.newPassword, false, account.wallet.address);
           }
+          trackLoggedInUser(account.account);
           setLoginFlowState({
             step: LoginFlowStep.WaitingFeeGrant,
           });
@@ -263,6 +275,9 @@ const useHooks = () => {
       setLoginFlowState,
       storeAccount,
       storeProfile,
+      trackLoggedInUser,
+      trackProfileCreated,
+      trackProfileSelected,
       updateAccount,
     ],
   );

@@ -16,7 +16,8 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
-import { LoginMethod } from 'types/login';
+import { LoginMethod, LoginMethodType } from 'types/login';
+import useTrackAcceptedLegalTerms from 'hooks/analytics/useTrackAcceptedLegalTerms';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -48,21 +49,24 @@ const ServiceAndPolicy = () => {
   // -------------------------------------------------------------------------------------
 
   const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
+  const trackAcceptedLegalTerms = useTrackAcceptedLegalTerms();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const loginWithSelectedMethod = useCallback(async () => {
+    trackAcceptedLegalTerms();
+
     // Login the user with the We3Auth method if they selected it.
-    if (params?.loginMethod?.type === 'Web3Auth') {
+    if (params?.loginMethod?.type === LoginMethodType.Web3Auth) {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
       return;
     }
 
     // Otherwise, navigate to the screen that allows to use the private key
     navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
-  }, [loginWithWeb3Auth, navigate, params]);
+  }, [loginWithWeb3Auth, navigate, params?.loginMethod, trackAcceptedLegalTerms]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -111,7 +115,7 @@ const ServiceAndPolicy = () => {
           textColor={theme.colors.white}
           size={44}
           disabled={!conditionAndPolicyAccepted || loginLoading}
-          onPress={() => loginWithSelectedMethod()}>
+          onPress={loginWithSelectedMethod}>
           {t('accept', { ns: 'common' })}
         </Button>
         <Spacer paddingBottom="m" />

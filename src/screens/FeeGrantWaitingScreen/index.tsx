@@ -20,6 +20,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { LoginFlowStep } from 'types/login';
+import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
 import useStyles from './useStyles';
 
 export interface FeeGrantWaitingScreenParams {
@@ -50,6 +51,7 @@ const FeeGrantWaitingScreen = () => {
     useGetAuthorizationInformation(activeAccount?.address!);
 
   const saveProfile = useNavigateToProfileEdit();
+  const trackProfileCreated = useTrackProfileCreated();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -60,6 +62,7 @@ const FeeGrantWaitingScreen = () => {
     saveProfile({
       blockBackAction: true,
       onProfileSaved: async () => {
+        trackProfileCreated();
         setLoginFlowState({
           step: LoginFlowStep.Completed,
         });
@@ -68,7 +71,7 @@ const FeeGrantWaitingScreen = () => {
         });
       },
     });
-  }, [navigation, saveProfile, setLoginFlowState]);
+  }, [navigation, saveProfile, setLoginFlowState, trackProfileCreated]);
 
   const checkFeeGrant = useCallback(async () => {
     startCheckingFeeGrants(1000);
@@ -132,7 +135,7 @@ const FeeGrantWaitingScreen = () => {
           <Image
             source={butterflyLandingIcon}
             tintColor={theme.colors.primary}
-            style={{ width: 180, height: 180 }}
+            style={styles.feeGrantReadyImage}
           />
         ) : (
           <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />

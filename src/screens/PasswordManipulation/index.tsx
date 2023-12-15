@@ -145,7 +145,7 @@ const PasswordManipulation = () => {
             return (
               <>
                 <ScrollView
-                  contentContainerStyle={{ flexGrow: 1 }}
+                  contentContainerStyle={CommonStyles.flexGrow['1']}
                   ref={scrollViewRef}
                   keyboardDismissMode="on-drag">
                   <View style={styles.labelGroup}>

@@ -1,27 +1,35 @@
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
+/**
+ * Login methods supperthed by the application.
+ */
+export enum LoginMethodType {
+  PrivateKey = 'PrivateKey',
+  Web3Auth = 'Web3Auth',
+}
+
 export interface LoginMethodPrivateKey {
-  type: 'PrivateKey';
+  type: LoginMethodType.PrivateKey;
 }
 
 interface LoginMethodWeb3Auth {
-  type: 'Web3Auth';
+  type: LoginMethodType.Web3Auth;
   provider: Web3AuthLoginProvider;
 }
 
 export type LoginMethod = LoginMethodPrivateKey | LoginMethodWeb3Auth;
 
 export const LoginMethodPrivateKey: LoginMethodPrivateKey = {
-  type: 'PrivateKey',
+  type: LoginMethodType.PrivateKey,
 };
 
 export const LoginMethodWeb3AuthApple: LoginMethodWeb3Auth = {
-  type: 'Web3Auth',
+  type: LoginMethodType.Web3Auth,
   provider: Web3AuthLoginProvider.Apple,
 };
 
 export const LoginMethodWeb3AuthGoogle: LoginMethodWeb3Auth = {
-  type: 'Web3Auth',
+  type: LoginMethodType.Web3Auth,
   provider: Web3AuthLoginProvider.Google,
 };
 
