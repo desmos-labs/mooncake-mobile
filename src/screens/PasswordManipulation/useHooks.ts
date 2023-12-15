@@ -13,6 +13,7 @@ import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
 import { useTranslation } from 'react-i18next';
+import useTrackLoggedInUser from 'hooks/analytics/useTrackLoggedInUser';
 import useStyles from './useStyles';
 
 /**
@@ -69,6 +70,7 @@ const useHooks = () => {
   const enableBiometrics = useEnableBiometrics();
   const setLoginFlowState = useSetLoginFlowState();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();
+  const trackLoggedInUser = useTrackLoggedInUser();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -175,6 +177,7 @@ const useHooks = () => {
           setLoginFlowState({
             step: LoginFlowStep.Completed,
           });
+          trackLoggedInUser(account.account);
           setSigninStatus(SignInStatus.DONE);
           navigate(ROUTES.WELCOME_PAGE, {
             action: 'import',
@@ -206,6 +209,7 @@ const useHooks = () => {
             setLoginFlowState({
               step: LoginFlowStep.Completed,
             });
+            trackLoggedInUser(account.account);
             navigate(ROUTES.WELCOME_PAGE, {
               action: 'create',
             });
@@ -227,6 +231,7 @@ const useHooks = () => {
             setSigninStatus(SignInStatus.ENABLING_BIOMETRICS);
             await enableBiometrics(formValues.newPassword, false, account.wallet.address);
           }
+          trackLoggedInUser(account.account);
           setLoginFlowState({
             step: LoginFlowStep.WaitingFeeGrant,
           });

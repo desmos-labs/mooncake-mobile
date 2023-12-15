@@ -3,7 +3,6 @@ import {
   useSetActiveAccountAddress,
   useStoreAccount as usePersistAccount,
 } from '@recoil/accounts';
-import { captureLoggedInUser } from 'lib/PostHogUtils';
 import {
   deleteItem,
   deleteWallet,
@@ -12,7 +11,6 @@ import {
   setUserPassword,
 } from 'lib/SecureStorage';
 import { err, ok, Result } from 'neverthrow';
-import { usePostHog } from 'posthog-react-native';
 import { useCallback, useMemo } from 'react';
 import { AccountWithWallet } from 'types/account';
 
@@ -28,7 +26,6 @@ import { AccountWithWallet } from 'types/account';
  * This hook only implements the logic of an account storing.
  */
 const useStoreAccount = () => {
-  const postHog = usePostHog();
   const hasAccount = useHasAccount();
   const savingFirstAccount = useMemo(() => !hasAccount, [hasAccount]);
   const storeAccount = usePersistAccount();
@@ -48,11 +45,6 @@ const useStoreAccount = () => {
 
         // Finally, store the account on the local storage
         storeAccount(account.account);
-
-        // Track user logged in.
-        if (postHog) {
-          captureLoggedInUser(postHog, account.account);
-        }
       } catch (error: any) {
         if (error) {
           await deleteWallet(account.wallet.address);
@@ -65,7 +57,7 @@ const useStoreAccount = () => {
 
       return ok(undefined);
     },
-    [postHog, savingFirstAccount, setActiveAccountAddress, storeAccount],
+    [savingFirstAccount, setActiveAccountAddress, storeAccount],
   );
 };
 
