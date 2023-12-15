@@ -20,6 +20,10 @@ const useStyles = makeStyle(theme => ({
   subtitle: {
     textAlign: 'center',
   },
+  feeGrantReadyImage: {
+    width: 180,
+    height: 180,
+  },
 }));
 
 export default useStyles;

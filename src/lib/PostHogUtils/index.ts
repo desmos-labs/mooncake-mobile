@@ -28,6 +28,8 @@ enum UserBehaviour {
   SignedInWithPrivateKey = 'Signed In With Private Key',
   SignedInWithWeb3Auth = 'Signed In With Web3Auth',
   LegalTermsAccepted = 'Accepted Legal Terms',
+  ProfileSelected = 'Selected Profile',
+  ProfileCreated = 'Created Profile',
 }
 
 /**
@@ -98,4 +100,18 @@ export const captureLoggedInUser = (posthog: PostHog, account: Account) => {
  */
 export const captureAcceptedLegalTerms = (posthog: PostHog) => {
   posthog.capture(UserBehaviour.LegalTermsAccepted);
+};
+
+/**
+ * Captures when the user has created a new profile.
+ */
+export const captureProfileCreated = (posthog: PostHog) => {
+  posthog.capture(UserBehaviour.ProfileCreated);
+};
+
+/**
+ * Captures when the user has selected a previously created profile.
+ */
+export const captureProfileSelected = (posthog: PostHog) => {
+  posthog.capture(UserBehaviour.ProfileSelected);
 };

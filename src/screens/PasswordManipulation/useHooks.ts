@@ -14,6 +14,8 @@ import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
 import { useTranslation } from 'react-i18next';
 import useTrackLoggedInUser from 'hooks/analytics/useTrackLoggedInUser';
+import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
+import useTrackProfileSelected from 'hooks/analytics/useTrackProfileSelected';
 import useStyles from './useStyles';
 
 /**
@@ -71,6 +73,8 @@ const useHooks = () => {
   const setLoginFlowState = useSetLoginFlowState();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();
   const trackLoggedInUser = useTrackLoggedInUser();
+  const trackProfileCreated = useTrackProfileCreated();
+  const trackProfileSelected = useTrackProfileSelected();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -178,6 +182,7 @@ const useHooks = () => {
             step: LoginFlowStep.Completed,
           });
           trackLoggedInUser(account.account);
+          trackProfileSelected();
           setSigninStatus(SignInStatus.DONE);
           navigate(ROUTES.WELCOME_PAGE, {
             action: 'import',
@@ -210,6 +215,7 @@ const useHooks = () => {
               step: LoginFlowStep.Completed,
             });
             trackLoggedInUser(account.account);
+            trackProfileCreated();
             navigate(ROUTES.WELCOME_PAGE, {
               action: 'create',
             });
@@ -269,6 +275,9 @@ const useHooks = () => {
       setLoginFlowState,
       storeAccount,
       storeProfile,
+      trackLoggedInUser,
+      trackProfileCreated,
+      trackProfileSelected,
       updateAccount,
     ],
   );
