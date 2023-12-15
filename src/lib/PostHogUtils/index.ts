@@ -23,6 +23,7 @@ enum UserBehaviour {
   AcceptBondPicture = 'Accept Bond Picture',
   RefuseBondPicture = 'Refuse Bond Picture',
   SkipBondContactShare = 'Skip Share Contacts',
+  LegalTermsAccepted = 'Accepted Legal Terms',
 }
 
 /**
@@ -70,4 +71,11 @@ export const captureFailedTxError = (
     [UserBehaviourArgsKey.Messages]: params.messages.map(msg => msg.typeUrl),
     [UserBehaviourArgsKey.Fees]: params.fees,
   });
+};
+
+/**
+ * Captures when the user has accepted the legal terms.
+ */
+export const captureAcceptedLegalTerms = (posthog: PostHog) => {
+  posthog.capture(UserBehaviour.LegalTermsAccepted);
 };

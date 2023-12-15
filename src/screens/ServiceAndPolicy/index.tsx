@@ -17,6 +17,8 @@ import { useTranslation } from 'react-i18next';
 import { Linking, TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod } from 'types/login';
+import { usePostHog } from 'posthog-react-native';
+import { captureAcceptedLegalTerms } from 'lib/PostHogUtils';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -36,6 +38,7 @@ const ServiceAndPolicy = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
+  const postHog = usePostHog();
 
   // -------------------------------------------------------------------------------------
   // --- State
@@ -54,6 +57,10 @@ const ServiceAndPolicy = () => {
   // -------------------------------------------------------------------------------------
 
   const loginWithSelectedMethod = useCallback(async () => {
+    if (postHog) {
+      captureAcceptedLegalTerms(postHog);
+    }
+
     // Login the user with the We3Auth method if they selected it.
     if (params?.loginMethod?.type === 'Web3Auth') {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
@@ -62,7 +69,13 @@ const ServiceAndPolicy = () => {
 
     // Otherwise, navigate to the screen that allows to use the private key
     navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
-  }, [loginWithWeb3Auth, navigate, params]);
+  }, [
+    loginWithWeb3Auth,
+    navigate,
+    params?.loginMethod?.provider,
+    params?.loginMethod?.type,
+    postHog,
+  ]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -111,7 +124,7 @@ const ServiceAndPolicy = () => {
           textColor={theme.colors.white}
           size={44}
           disabled={!conditionAndPolicyAccepted || loginLoading}
-          onPress={() => loginWithSelectedMethod()}>
+          onPress={loginWithSelectedMethod}>
           {t('accept', { ns: 'common' })}
         </Button>
         <Spacer paddingBottom="m" />
