@@ -72,6 +72,13 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     fontSize: 22,
     letterSpacing: 0.0015,
   },
+  Semibold22: {
+    fontFamily: 'Poppins_600SemiBold',
+    fontSize: 22,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    letterSpacing: 0.033,
+  },
   H5: {
     fontFamily: 'Poppins_600SemiBold',
     fontStyle: 'normal',
@@ -244,6 +251,7 @@ const Typography = {
   H2: createTextComponent(() => TypographyStyles.H2),
   H3: createTextComponent(() => TypographyStyles.H3),
   H4: createTextComponent(() => TypographyStyles.H4),
+  Semibold22: createTextComponent(() => TypographyStyles.Semibold22),
   H5: createTextComponent(() => TypographyStyles.H5),
   H6: createTextComponent(() => TypographyStyles.H6),
   Subtitle1: createTextComponent(() => TypographyStyles.Subtitle1),

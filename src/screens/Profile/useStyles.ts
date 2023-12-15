@@ -180,6 +180,13 @@ const useStyles = makeStyleWithProps(
     linkText: {
       color: theme.colors.accentBlue01,
     },
+    followUnfollowSection: {
+      flexDirection: 'row',
+    },
+    tipUserIcon: {
+      width: 16,
+      height: 16,
+    },
   }),
 );
 

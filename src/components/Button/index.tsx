@@ -88,20 +88,28 @@ const Button = ({
 
     const typographyStyle = sizeToTypographyMap[size as number];
 
+    const variantToTypographyMap: { [index: string]: any } = {
+      solid: {
+        color: textColor ?? defaultTextColor,
+      },
+      outline: {
+        color: textColor ?? theme.colors.black,
+      },
+    };
+
     return {
       _text: StyleSheet.flatten([
         typographyStyle,
+        variantToTypographyMap[variant as string],
         {
-          color: textColor || defaultTextColor,
           numberOfLines: 1,
         },
       ]),
     };
-  }, [defaultTextColor, size, textColor]);
+  }, [defaultTextColor, size, textColor, theme.colors.black, variant]);
 
   const buttonStyle = React.useMemo(() => {
     const backgroundColorFromTheme = _.get(theme, `colors.${backgroundColor}`, backgroundColor);
-    const borderColorFromTheme = _.get(theme, `colors.${borderColor}`, borderColor);
 
     const variantStyleMap: { [index: string]: any } = {
       solid: {
@@ -110,9 +118,10 @@ const Button = ({
       link: {
         textDecorationLine: 'none',
       },
-      outlined: {
-        borderColor: borderColorFromTheme || theme.colors.surfaceBlack,
+      outline: {
         borderWidth: 1,
+        backgroundColor: theme.colors.white,
+        borderColor: borderColor ?? theme.colors.black,
       },
     };
 

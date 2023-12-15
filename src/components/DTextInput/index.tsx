@@ -11,6 +11,11 @@ export type Props = Omit<React.ComponentProps<typeof TextInput>, 'style'> & {
    */
   error?: boolean;
   /**
+   * If true, show a border around the
+   * input field.
+   */
+  showBorder?: boolean;
+  /**
    * Element to show on the right side of the
    * input area.
    */
