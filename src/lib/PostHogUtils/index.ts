@@ -1,5 +1,7 @@
 import { EncodeObject, StdFee } from '@desmoslabs/desmjs';
 import { PostHog } from 'posthog-react-native';
+import { Account } from 'types/account';
+import { WalletType } from 'types/wallet';
 
 /**
  * Enum that contains all the user behaviours that the application
@@ -23,6 +25,8 @@ enum UserBehaviour {
   AcceptBondPicture = 'Accept Bond Picture',
   RefuseBondPicture = 'Refuse Bond Picture',
   SkipBondContactShare = 'Skip Share Contacts',
+  SignedInWithPrivateKey = 'Signed In With Private Key',
+  SignedInWithWeb3Auth = 'Signed In With Web3Auth',
 }
 
 /**
@@ -70,4 +74,20 @@ export const captureFailedTxError = (
     [UserBehaviourArgsKey.Messages]: params.messages.map(msg => msg.typeUrl),
     [UserBehaviourArgsKey.Fees]: params.fees,
   });
+};
+
+/**
+ * Captures the event of a logged in user.
+ */
+export const captureLoggedInUser = (posthog: PostHog, account: Account) => {
+  switch (account.walletType) {
+    case WalletType.Web3Auth:
+      posthog.capture(UserBehaviour.SignedInWithWeb3Auth, {});
+      break;
+    case WalletType.PrivateKey:
+      posthog.capture(UserBehaviour.SignedInWithPrivateKey, {});
+      break;
+    default:
+      break;
+  }
 };
