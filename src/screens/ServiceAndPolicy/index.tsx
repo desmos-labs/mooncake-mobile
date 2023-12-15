@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { Linking, TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
+import useTrackAcceptedLegalTerms from 'hooks/analytics/useTrackAcceptedLegalTerms';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -48,12 +49,15 @@ const ServiceAndPolicy = () => {
   // -------------------------------------------------------------------------------------
 
   const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
+  const trackAcceptedLegalTerms = useTrackAcceptedLegalTerms();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const loginWithSelectedMethod = useCallback(async () => {
+    trackAcceptedLegalTerms();
+
     // Login the user with the We3Auth method if they selected it.
     if (params?.loginMethod?.type === LoginMethodType.Web3Auth) {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
@@ -62,7 +66,7 @@ const ServiceAndPolicy = () => {
 
     // Otherwise, navigate to the screen that allows to use the private key
     navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
-  }, [loginWithWeb3Auth, navigate, params?.loginMethod]);
+  }, [loginWithWeb3Auth, navigate, params?.loginMethod, trackAcceptedLegalTerms]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
