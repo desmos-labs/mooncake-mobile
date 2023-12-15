@@ -30,6 +30,7 @@ enum UserBehaviour {
   LegalTermsAccepted = 'Accepted Legal Terms',
   ProfileSelected = 'Selected Profile',
   ProfileCreated = 'Created Profile',
+  OnboardingCompleted = 'Completed Onboarding',
 }
 
 /**
@@ -114,4 +115,11 @@ export const captureProfileCreated = (posthog: PostHog) => {
  */
 export const captureProfileSelected = (posthog: PostHog) => {
   posthog.capture(UserBehaviour.ProfileSelected);
+};
+
+/**
+ * Captures when the user has completed the onboarding.
+ */
+export const captureOnboardingCompleted = (posthog: PostHog) => {
+  posthog.capture(UserBehaviour.OnboardingCompleted);
 };

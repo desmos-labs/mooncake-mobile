@@ -23,6 +23,7 @@ import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import { LoginOnboardingStep } from 'types/tourguide';
+import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
 import useStyles, { fixedWidth } from './useStyles';
 
 export interface OnboardingParams {
@@ -105,6 +106,7 @@ const Onboarding = () => {
 
   const getAuthorizationInformation = useGetLazyAuthorizationInformation();
   const setTourGuideStep = useSetTourGuideStep();
+  const trackOnboardingCompleted = useTrackOnboardingCompleted();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -115,6 +117,7 @@ const Onboarding = () => {
       slidesRef?.current?.scrollToIndex({ index: currentIndex + 1 });
     } else {
       if (!loading) {
+        trackOnboardingCompleted();
         setTourGuideStep({ login: LoginOnboardingStep.Completed });
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: params.passwordManipulationMode,
@@ -131,6 +134,7 @@ const Onboarding = () => {
     params.passwordManipulationMode,
     params.profile,
     setTourGuideStep,
+    trackOnboardingCompleted,
   ]);
 
   /**
