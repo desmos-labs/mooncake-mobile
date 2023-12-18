@@ -287,6 +287,8 @@ const useHooks = () => {
       setLoginFlowState,
       storeAccount,
       storeProfile,
+      t,
+      toast,
       trackLoggedInUser,
       trackProfileCreated,
       trackProfileSelected,
