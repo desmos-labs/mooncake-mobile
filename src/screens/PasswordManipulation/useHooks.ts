@@ -2,20 +2,22 @@ import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/nativ
 import { useSetLoginFlowState } from '@recoil/login';
 import { useStoreProfile } from '@recoil/profiles';
 import { passwordStrength } from 'check-password-strength';
+import { ToastType } from 'config/toast/toastConfig';
 import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import useUpdateAccount from 'hooks/accounts/useUpdateAccount';
-import useCheckBiometrics from 'hooks/biometrics/useCheckBiometrics';
-import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
-import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
-import ROUTES from 'navigation/routes';
-import React from 'react';
-import { InteractionManager, Keyboard } from 'react-native';
-import { NavProps } from 'screens/PasswordManipulation';
-import { LoginFlowStep } from 'types/login';
-import { useTranslation } from 'react-i18next';
 import useTrackLoggedInUser from 'hooks/analytics/useTrackLoggedInUser';
 import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
 import useTrackProfileSelected from 'hooks/analytics/useTrackProfileSelected';
+import useCheckBiometrics from 'hooks/biometrics/useCheckBiometrics';
+import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
+import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
+import useToast from 'hooks/toasts/useToast';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { InteractionManager, Keyboard } from 'react-native';
+import { NavProps } from 'screens/PasswordManipulation';
+import { LoginFlowStep } from 'types/login';
 import useStyles from './useStyles';
 
 /**
@@ -64,7 +66,7 @@ const useHooks = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { mode, account, profile } = params;
-
+  const toast = useToast();
   const storeAccount = useStoreAccount();
   const updateAccount = useUpdateAccount();
   const storeProfile = useStoreProfile();
@@ -168,6 +170,7 @@ const useHooks = () => {
        * If mode is setup password, we need to store the
        * account and profile but not create a profile since we already have one
        */
+      console.log('SUBMITTING FORM', mode);
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT && account && profile) {
         setSigninStatus(SignInStatus.SAVING_WALLET);
         const storeAccountResult = await storeAccount(account, formValues.newPassword);
@@ -255,12 +258,21 @@ const useHooks = () => {
         setLoading(false);
         if (result.isErr()) {
           console.error(result.error);
+          toast({
+            toastType: ToastType.error,
+            title: 'Error',
+            message: result.error.message,
+          });
         } else {
-          /*          navigate(ROUTES.SUCCESS_MODAL, {
-           title: t('success', { ns: 'common' }),
-           body: t('pwChangedText'),
-           onClose: () => navigate(ROUTES.SETTINGS),
-           }); */
+          navigate(ROUTES.CONFIRM_MODAL, {
+            title: t('success', { ns: 'common' }),
+            subtitle: t('you changed your password'),
+            primaryButtonLabel: t('go back'),
+            onPressPrimary: () =>
+              navigate(ROUTES.BOTTOM_TABS, {
+                screen: ROUTES.SETTINGS,
+              }),
+          });
         }
       }
     },
