@@ -93,11 +93,11 @@ interface BaseNotificationData {
 // --- Post related notifications
 // ---------------------------------------------------------------------
 
-export interface PostCreatedNotificationData extends BaseNotificationData {
+interface PostCreatedNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostCreated;
 }
 
-export interface PostRepostNotificationData extends BaseNotificationData {
+interface PostRepostNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostRepost;
   /**
    * ID of the original post that has been reposted.
@@ -115,7 +115,7 @@ export interface PostRepostNotificationData extends BaseNotificationData {
   readonly repost_author_address: string;
 }
 
-export interface PostQuoteNotificationData extends BaseNotificationData {
+interface PostQuoteNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostQuote;
   /**
    * ID of the original post that has been quoted.
@@ -133,7 +133,7 @@ export interface PostQuoteNotificationData extends BaseNotificationData {
   readonly quote_author_address: string;
 }
 
-export interface PostCommentNotificationData extends BaseNotificationData {
+interface PostCommentNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostComment;
   /**
    * ID of the original post that has been commented.
@@ -151,7 +151,7 @@ export interface PostCommentNotificationData extends BaseNotificationData {
   readonly comment_author_address: string;
 }
 
-export interface PostReplyNotificationData extends BaseNotificationData {
+interface PostReplyNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostReply;
   /**
    * ID of the original post that has been replied to.
@@ -169,7 +169,7 @@ export interface PostReplyNotificationData extends BaseNotificationData {
   readonly reply_author_address: string;
 }
 
-export interface PostMentionNotificationData extends BaseNotificationData {
+interface PostMentionNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostMention;
   /**
    * ID of the post that contains the mention.
@@ -182,7 +182,7 @@ export interface PostMentionNotificationData extends BaseNotificationData {
   readonly mention_author_address: string;
 }
 
-export interface PostLikeNotificationData extends BaseNotificationData {
+interface PostLikeNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostLike;
   /**
    * ID of the original post that has been liked.
@@ -199,7 +199,7 @@ export interface PostLikeNotificationData extends BaseNotificationData {
 // --- Profile notifications
 // ---------------------------------------------------------------------
 
-export interface ProfileSavedNotificationData extends BaseNotificationData {
+interface ProfileSavedNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.ProfileSaved;
 }
 
@@ -207,11 +207,11 @@ export interface ProfileSavedNotificationData extends BaseNotificationData {
 // --- Relationship notifications
 // ---------------------------------------------------------------------
 
-export interface RelationshipCreatedNotificationData extends BaseNotificationData {
+interface RelationshipCreatedNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.RelationshipCreated;
 }
 
-export interface NewFollowerNotificationData extends BaseNotificationData {
+interface NewFollowerNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.NewFollower;
 
   /**
@@ -224,7 +224,7 @@ export interface NewFollowerNotificationData extends BaseNotificationData {
 // --- Tips notifications
 // ---------------------------------------------------------------------
 
-export interface NewTipNotificationData extends BaseNotificationData {
+interface NewTipNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.NewTip;
   /**
    * Amount of the tip.
