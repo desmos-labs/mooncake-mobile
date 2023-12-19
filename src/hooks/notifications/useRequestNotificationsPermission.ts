@@ -2,6 +2,7 @@ import { PermissionStatus } from 'expo-image-picker';
 import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import useRegisterDeviceForNotifications from './useRegisterDeviceForNotifications';
 
 /**
@@ -11,6 +12,8 @@ import useRegisterDeviceForNotifications from './useRegisterDeviceForNotificatio
  */
 const useRequestNotificationsPermission = () => {
   const registerDeviceForNotifications = useRegisterDeviceForNotifications();
+  const { t } = useTranslation('permissions');
+
   const requestUserPermission = useCallback(async () => {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -19,14 +22,12 @@ const useRequestNotificationsPermission = () => {
       finalStatus = status;
     }
     if (finalStatus !== PermissionStatus.GRANTED) {
-      Alert.alert(
-        'If you change your mind, you will be able to enable notifications in the appropriate section of the settings',
-      );
+      Alert.alert(t('you can change the permissions from the settings'));
       return;
     }
     // After we have the permission, we can register the device for notifications.
     await registerDeviceForNotifications();
-  }, [registerDeviceForNotifications]);
+  }, [registerDeviceForNotifications, t]);
 
   useEffect(() => {
     requestUserPermission();
