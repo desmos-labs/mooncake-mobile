@@ -77,16 +77,16 @@ export enum NotificationType {
 }
 
 interface BaseNotificationData {
-  readonly type: NotificationType;
+  readonly notification_type: NotificationType;
   readonly notification_id: string;
   /**
    * Title of the notification.
    */
-  readonly title: string;
+  readonly notification_title: string;
   /**
    * Body of the notification.
    */
-  readonly body: string;
+  readonly notification_body: string;
 }
 
 // ---------------------------------------------------------------------
@@ -94,20 +94,20 @@ interface BaseNotificationData {
 // ---------------------------------------------------------------------
 
 export interface PostCreatedNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.PostCreated;
+  readonly notification_type: NotificationType.PostCreated;
 }
 
 export interface PostRepostNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.PostRepost;
+  readonly notification_type: NotificationType.PostRepost;
   /**
    * ID of the original post that has been reposted.
    */
-  readonly post_id: number;
+  readonly post_id: string;
 
   /**
    * ID of the post representing the repost.
    */
-  readonly repost_id: number;
+  readonly repost_id: string;
 
   /**
    * Address of the user that has reposted the post.
@@ -116,16 +116,16 @@ export interface PostRepostNotificationData extends BaseNotificationData {
 }
 
 export interface PostQuoteNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.PostQuote;
+  readonly notification_type: NotificationType.PostQuote;
   /**
    * ID of the original post that has been quoted.
    */
-  readonly post_id: number;
+  readonly post_id: string;
 
   /**
    * ID of the post representing the quote.
    */
-  readonly quote_id: number;
+  readonly quote_id: string;
 
   /**
    * Address of the user that has quoted the post.
@@ -134,16 +134,16 @@ export interface PostQuoteNotificationData extends BaseNotificationData {
 }
 
 export interface PostCommentNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.PostComment;
+  readonly notification_type: NotificationType.PostComment;
   /**
    * ID of the original post that has been commented.
    */
-  readonly post_id: number;
+  readonly post_id: string;
 
   /**
    * ID of the post representing the comment.
    */
-  readonly comment_id: number;
+  readonly comment_id: string;
 
   /**
    * Address of the user that has commented the post.
@@ -152,16 +152,16 @@ export interface PostCommentNotificationData extends BaseNotificationData {
 }
 
 export interface PostReplyNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.PostReply;
+  readonly notification_type: NotificationType.PostReply;
   /**
    * ID of the original post that has been replied to.
    */
-  readonly post_id: number;
+  readonly post_id: string;
 
   /**
    * ID of the post representing the reply.
    */
-  readonly reply_id: number;
+  readonly reply_id: string;
 
   /**
    * Address of the user that has replied to the post.
@@ -170,11 +170,11 @@ export interface PostReplyNotificationData extends BaseNotificationData {
 }
 
 export interface PostMentionNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.PostMention;
+  readonly notification_type: NotificationType.PostMention;
   /**
    * ID of the post that contains the mention.
    */
-  readonly mention_id: number;
+  readonly mention_id: string;
 
   /**
    * Address of the user that has mentioned the user.
@@ -183,11 +183,11 @@ export interface PostMentionNotificationData extends BaseNotificationData {
 }
 
 export interface PostLikeNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.PostLike;
+  readonly notification_type: NotificationType.PostLike;
   /**
    * ID of the original post that has been liked.
    */
-  readonly post_id: number;
+  readonly post_id: string;
 
   /**
    * Address of the user that has liked the post.
@@ -200,7 +200,7 @@ export interface PostLikeNotificationData extends BaseNotificationData {
 // ---------------------------------------------------------------------
 
 export interface ProfileSavedNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.ProfileSaved;
+  readonly notification_type: NotificationType.ProfileSaved;
 }
 
 // ---------------------------------------------------------------------
@@ -208,11 +208,11 @@ export interface ProfileSavedNotificationData extends BaseNotificationData {
 // ---------------------------------------------------------------------
 
 export interface RelationshipCreatedNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.RelationshipCreated;
+  readonly notification_type: NotificationType.RelationshipCreated;
 }
 
 export interface NewFollowerNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.NewFollower;
+  readonly notification_type: NotificationType.NewFollower;
 
   /**
    * Address of the user that has started following the recipient of the notification.
@@ -225,7 +225,7 @@ export interface NewFollowerNotificationData extends BaseNotificationData {
 // ---------------------------------------------------------------------
 
 export interface NewTipNotificationData extends BaseNotificationData {
-  readonly type: NotificationType.NewTip;
+  readonly notification_type: NotificationType.NewTip;
   /**
    * Amount of the tip.
    */

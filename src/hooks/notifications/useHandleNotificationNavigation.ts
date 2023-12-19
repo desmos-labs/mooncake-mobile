@@ -14,10 +14,11 @@ const useHandleNotificationNavigation = () => {
 
   return React.useCallback(
     (notficationData: NotificationData) => {
-      switch (notficationData.type) {
+      console.log('[Notification-Navigation]', notficationData.notification_type);
+      switch (notficationData.notification_type) {
         case NotificationType.PostRepost:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: notficationData.repost_id,
+            postId: parseInt(notficationData.repost_id, 10),
           });
           break;
         case NotificationType.PostQuote:
@@ -41,7 +42,7 @@ const useHandleNotificationNavigation = () => {
 
         case NotificationType.PostLike:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: notficationData.post_id,
+            postId: parseInt(notficationData.post_id, 10),
           });
           break;
 
