@@ -1,17 +1,17 @@
-import React from 'react';
 import { useApolloClient } from '@apollo/client';
-import { usePostHog } from 'posthog-react-native';
 import { DesmosClient, EncodeObject } from '@desmoslabs/desmjs';
+import { useAppStateValue } from '@recoil/appState';
 import { useCurrentChainInfo } from '@recoil/settings';
 import { setTaskContext } from 'lib/BackgroundTaskUtils';
-import { useAppStateValue } from '@recoil/appState';
+import { getFeeGrantAllowanceForMessages, getOnChainGrants } from 'lib/grantsUtils';
+import { unwrapResult } from 'lib/NeverThrowUtils';
 import {
   queryUserBalance,
   signAndBroadcastWithGranter,
   userCanUseOurFeeGranter,
 } from 'lib/TxUtils';
-import { unwrapResult } from 'lib/NeverThrowUtils';
-import { getFeeGrantAllowanceForMessages, getOnChainGrants } from 'lib/grantsUtils';
+import { usePostHog } from 'posthog-react-native';
+import React from 'react';
 
 /**
  * Hook that will initialize the taks context and will update it if
@@ -49,7 +49,7 @@ const useInitTaskContext = () => {
       // Broadcast the messages.
       return signAndBroadcastWithGranter(postHog!, client, signer, msgs, {
         feeGranter,
-        memo: memo ?? 'Broadcast using Butter',
+        memo: memo ?? 'Broadcast using Mooncake',
       }).then(unwrapResult);
     },
     [apolloClient, chainInfo, postHog],

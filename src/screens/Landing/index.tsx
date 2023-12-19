@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { appleLoginIcon, butterflyLandingIcon, googleLoginIcon, landingBG } from 'assets/images';
+import { appleLoginIcon, googleLoginIcon, landingBG, mooncakeWithTextLogo } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
@@ -55,10 +55,7 @@ const Landing = () => {
   return (
     <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>
       <View style={styles.innerView}>
-        <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
-        <Text style={styles.title} allowFontScaling>
-          {t('butter')}
-        </Text>
+        <Image source={mooncakeWithTextLogo} style={styles.dummyAvatar} />
         <Text style={styles.subtitle} allowFontScaling>
           {t('butter slogan')}
         </Text>
