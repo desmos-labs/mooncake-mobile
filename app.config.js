@@ -54,7 +54,7 @@ export default {
         },
       ],
     },
-    scheme: ['butterweb3auth', 'mooncake'],
+    scheme: ['mooncakeweb3auth', 'mooncake'],
     plugins: [
       ['sentry-expo'],
       ['expo-localization'],
