@@ -2,8 +2,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
-import { broadcastAnim } from 'assets/animations';
-import { butterflyLandingIcon } from 'assets/images';
+import { dotsAnimation } from 'assets/animations';
+import { mooncakeHomeIcon } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -11,6 +11,7 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
+import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
 import GRANTER_ADDRESS, { hasSaveProfileAllowance } from 'lib/grantsUtils';
@@ -20,7 +21,6 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { LoginFlowStep } from 'types/login';
-import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
 import useStyles from './useStyles';
 
 export interface FeeGrantWaitingScreenParams {
@@ -133,12 +133,12 @@ const FeeGrantWaitingScreen = () => {
       <View style={styles.innerContainer}>
         {feeGrantReady ? (
           <Image
-            source={butterflyLandingIcon}
+            source={mooncakeHomeIcon}
             tintColor={theme.colors.primary}
             style={styles.feeGrantReadyImage}
           />
         ) : (
-          <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+          <ThemedLottieView autoSize autoPlay loop source={dotsAnimation} />
         )}
         <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>

@@ -1,4 +1,4 @@
-import { loadingYellow } from 'assets/animations';
+import { squaresAnimation } from 'assets/animations';
 import Button from 'components/Button';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
@@ -91,7 +91,7 @@ const toastConfig = {
           autoSize
           loop
           autoPlay
-          source={loadingYellow}
+          source={squaresAnimation}
           style={styles.loadingImage as ImageStyle}
         />
       </View>

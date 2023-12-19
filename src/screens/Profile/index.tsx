@@ -7,10 +7,11 @@ import {
   profileBack,
   profileContextButton,
   reportIcon,
-  unblock,
   tipUserIcon,
+  unblock,
 } from 'assets/images';
 import AnimatedCoverPicture from 'components/AnimatedCoverPicture';
+import TipUserBottomSheet from 'components/BottomSheets/TipUser';
 import Button from 'components/Button';
 import PopupMenu from 'components/PopupMenu';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -20,6 +21,7 @@ import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { ImageSource } from 'expo-image';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
+import useShowBottomSheet from 'hooks/bottomsheets/useShowBottomSheet';
 import useGetStatusBarColorFromImage from 'hooks/colors/useGetStatusBarColorFromImage';
 import useSetStatusBarDarkOnImageFullScreen from 'hooks/colors/useSetStatusBarDarkOnImageFullScreen';
 import useSetStatusBarStyle from 'hooks/colors/useSetStatusBarStyle';
@@ -52,6 +54,7 @@ import {
 } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import Reanimated, {
+  FadeIn,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -65,8 +68,6 @@ import BalanceSection from 'screens/Profile/components/BalanceSection';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
 import UserBio from 'screens/Profile/components/UserBio';
-import useShowBottomSheet from 'hooks/bottomsheets/useShowBottomSheet';
-import TipUserBottomSheet from 'components/BottomSheets/TipUser';
 import useStyles, {
   PROFILE_HEADER_HEIGHT,
   PROFILE_HEADER_HEIGHT_COMPACT,
@@ -420,7 +421,7 @@ const Profile = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <AnimatedView style={styles.root} entering={FadeIn.duration(500)}>
       {/* Fake Android statusbar */}
       {Platform.OS === 'android' && (
         <View
@@ -570,7 +571,7 @@ const Profile = () => {
           })
         }
       />
-    </View>
+    </AnimatedView>
   );
 };
 
