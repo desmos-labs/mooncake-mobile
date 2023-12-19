@@ -7,7 +7,7 @@ const GetRelationshipForAddress = gql`
     $subspaceId: bigint!
     $userAddress: String!
     $counterpartyAddress: String!
-  ) @api(name: butter) {
+  ) @api(name: desmos) {
     relationships: user_relationship(
       where: {
         subspace_id: { _eq: $subspaceId }

@@ -123,6 +123,7 @@ export default {
       ],
       'react-native-compressor',
       '@react-native-firebase/app',
+      '@react-native-firebase/messaging',
       './plugins/withBackgroundActions',
     ],
     hooks: {
