@@ -4,6 +4,17 @@ import { NotificationData } from 'types/notifications';
 import useHandleNotificationNavigation from './useHandleNotificationNavigation';
 
 /**
+ * Hook that provides a function to display a toast once a notification
+ * is received whne the application is active.
+ */
+const useShowNotificationToast = () => {
+  return React.useCallback((notficationData: NotificationData) => {
+    // TODO: Implement the notification toast display logic.
+    console.warn('TODO: Display notification toast', notficationData);
+  }, []);
+};
+
+/**
  * Hook that parse a firebase notification.
  * If the notification has been received in the background then
  * this hook will take care of navigating to the proper screen, otherwise
@@ -11,6 +22,7 @@ import useHandleNotificationNavigation from './useHandleNotificationNavigation';
  */
 const useParseNotificationAndNavigate = () => {
   const navigate = useHandleNotificationNavigation();
+  const showToast = useShowNotificationToast();
 
   return React.useCallback(
     (
@@ -28,9 +40,13 @@ const useParseNotificationAndNavigate = () => {
         console.log('[Firebase]: Data', data);
       }
 
-      navigate(data);
+      if (!onAppVisible) {
+        navigate(data);
+      } else {
+        showToast(data);
+      }
     },
-    [navigate],
+    [navigate, showToast],
   );
 };
 
