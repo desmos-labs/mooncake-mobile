@@ -266,7 +266,7 @@ const SaveProfile = (props: NavProps) => {
                       value={values.dTag}
                       placeholder={t('enter dtag')}
                       onChangeText={value => {
-                        setFieldValue('dtag', value, true);
+                        setFieldValue('dTag', value, true);
                       }}
                       error={!!errors.dTag}
                       inputRef={dTagInputRef}
