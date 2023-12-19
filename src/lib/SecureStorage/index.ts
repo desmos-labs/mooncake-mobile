@@ -12,7 +12,7 @@ import { deserializeWallet, serializeWallet } from 'lib/WalletUtils';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 import { SerializableWallet, Wallet } from 'types/wallet';
 
-const passwordChallenge = 'butter-password-challenge';
+const passwordChallenge = 'mooncake-password-challenge';
 
 export enum SecureStoreKeys {
   /**

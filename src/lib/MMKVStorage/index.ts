@@ -12,29 +12,19 @@ export enum MMKVKEYS {
   ACCOUNTS = 'ACCOUNTS',
   ACTIVE_ACCOUNT_ADDRESS = 'ACTIVE_ACCOUNT_ADDRESS',
   PROFILES = 'PROFILES',
-  APPLICATION_LINKS = 'APPLICATION_LINKS',
-  CHAIN_LINKS = 'CHAIN_LINKS',
-  FOLLOWAGE = 'FOLLOWAGE',
-  BLOCKED = 'BLOCKED',
-  TIPS = 'TIPS',
-  AUTHORIZATIONS = 'AUTHORIZATIONS',
 
   // Posts data
   POSTS = 'POSTS',
-  POST_REACTIONS = 'POST_REACTIONS',
 
   // Transactions data
   PENDING_TRANSACTIONS = 'PENDING_TRANSACTIONS',
-
-  // Key used to store the permissions request count.
-  PERMISSIONS_REQUEST_COUNT = 'PERMISSIONS_REQUEST_COUNT',
 
   // Tour guide
   TOUR_GUIDE = 'TOUR_GUIDE',
 }
 
 const MMKVStorage = new MMKV({
-  id: 'butter',
+  id: 'mooncake',
 });
 
 /**
@@ -44,7 +34,9 @@ const MMKVStorage = new MMKV({
 export const getMMKV = <T>(key: MMKVKEYS): T | undefined => {
   const mmkvValue = MMKVStorage.getString(key);
 
-  if (!mmkvValue) return undefined;
+  if (!mmkvValue) {
+    return undefined;
+  }
   try {
     return deserializeObject(mmkvValue);
   } catch (err: any) {
