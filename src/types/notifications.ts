@@ -1,3 +1,5 @@
+import { Coin } from '@desmoslabs/desmjs-types/cosmos/base/v1beta1/coin';
+
 /**
  * Type of notifications supported by the application.
  */
@@ -63,6 +65,15 @@ export enum NotificationType {
    * Received when a user starts following another user.
    */
   NewFollower = 'new_follower',
+
+  // ---------------------------------------------------------------------
+  // --- Tips related notifications
+  // ---------------------------------------------------------------------
+
+  /**
+   * Received when a tip from another user is received.
+   */
+  NewTip = 'new_tip',
 }
 
 interface BaseNotificationData {
@@ -209,6 +220,22 @@ export interface NewFollowerNotificationData extends BaseNotificationData {
   readonly follower_address: string;
 }
 
+// ---------------------------------------------------------------------
+// --- Tips notifications
+// ---------------------------------------------------------------------
+
+export interface NewTipNotificationData extends BaseNotificationData {
+  readonly type: NotificationType.NewTip;
+  /**
+   * Amount of the tip.
+   */
+  readonly tip_amount: Coin;
+  /**
+   * Address of the user that has sent the tip.
+   */
+  readonly tipper_address: string;
+}
+
 export type NotificationData =
   | PostCreatedNotificationData
   | PostRepostNotificationData
@@ -219,4 +246,5 @@ export type NotificationData =
   | PostLikeNotificationData
   | ProfileSavedNotificationData
   | RelationshipCreatedNotificationData
-  | NewFollowerNotificationData;
+  | NewFollowerNotificationData
+  | NewTipNotificationData;
