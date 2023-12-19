@@ -1,4 +1,5 @@
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+import { NotificationData } from 'types/notifications';
 
 /**
  * Function to handle the notifications received in the background
