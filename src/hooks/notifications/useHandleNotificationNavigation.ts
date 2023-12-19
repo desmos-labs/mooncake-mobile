@@ -23,20 +23,20 @@ const useHandleNotificationNavigation = () => {
           break;
         case NotificationType.PostQuote:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: notficationData.quote_id,
+            postId: parseInt(notficationData.quote_id, 10),
           });
           break;
 
         case NotificationType.PostComment:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: notficationData.post_id,
-            focusPostId: notficationData.comment_id,
+            postId: parseInt(notficationData.post_id, 10),
+            focusPostId: parseInt(notficationData.comment_id, 10),
           });
           break;
 
         case NotificationType.PostMention:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: notficationData.mention_id,
+            postId: parseInt(notficationData.mention_id, 10),
           });
           break;
 
