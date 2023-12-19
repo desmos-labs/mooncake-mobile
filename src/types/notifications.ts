@@ -1,5 +1,3 @@
-import { Coin } from '@desmoslabs/desmjs-types/cosmos/base/v1beta1/coin';
-
 /**
  * Type of notifications supported by the application.
  */
@@ -228,8 +226,10 @@ interface NewTipNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.NewTip;
   /**
    * Amount of the tip.
+   * The amount will have the following syntax: "<amount><denom>".
+   * For example: "10udms"
    */
-  readonly tip_amount: Coin;
+  readonly tip_amount: string;
   /**
    * Address of the user that has sent the tip.
    */
