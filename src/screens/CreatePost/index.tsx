@@ -10,7 +10,7 @@ import {
 import { useSetPostsListState } from '@recoil/screens/postsListState';
 import Button from 'components/Button';
 import DView from 'components/DView';
-import MediaBottomPanel from 'components/MediaBottomPanel';
+import MediaBottomPanel, { OnImageSelectedCallback } from 'components/MediaBottomPanel';
 import SelectedPostImage from 'components/SelectedPostImage';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
@@ -18,14 +18,10 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { ToastType } from 'config/toast/toastConfig';
-import { CameraType } from 'expo-image-picker';
-import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import useCreatePost from 'hooks/posts/useCreatePost';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useToast from 'hooks/toasts/useToast';
-import useImageFromDevice from 'hooks/useImageFromDevice';
-import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -88,36 +84,18 @@ const CreatePost = () => {
   const postAttachments = useCreatePostValue('attachments');
   const addPostAttachment = useAddCreatePostAttachment();
   const removePostAttachment = useRemoveCreatePostAttachment();
-  const { editPostPicture } = useOpenPictureEditor();
-  const takePhoto = useTakePicture();
-  const { imageFromLibrary: selectPicture } = useImageFromDevice({
-    onImageSelected: imageUri => {
-      editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
-        addPostAttachment({
-          uri: editedPicturePath,
-          width: dimensions.width,
-          height: dimensions.height,
-          type: mimeType,
-        });
+
+  const onImageSelected = useCallback<OnImageSelectedCallback>(
+    (editedPicturePath, dimensions, mimeType) => {
+      addPostAttachment({
+        uri: editedPicturePath,
+        width: dimensions.width,
+        height: dimensions.height,
+        type: mimeType,
       });
     },
-  });
-
-  const handleTakePicture = useCallback(async () => {
-    takePhoto(CameraType.front).then(result => {
-      if (result?.status === TakePictureActionResults.Taken) {
-        const imageUri = result.uri;
-        editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
-          addPostAttachment({
-            uri: editedPicturePath,
-            width: dimensions.width,
-            height: dimensions.height,
-            type: mimeType,
-          });
-        });
-      }
-    });
-  }, [addPostAttachment, editPostPicture, takePhoto]);
+    [addPostAttachment],
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
   const canCreatePost = useMemo(() => {
@@ -276,8 +254,7 @@ const CreatePost = () => {
         style={styles.bottomPanel}
         commentLength={postText.length}
         imageSelected={postAttachments.length > 0}
-        handlePressGallery={selectPicture}
-        handlePressCamera={handleTakePicture}
+        onImageSelected={onImageSelected}
       />
       <Spacer paddingBottom={insets.bottom} />
     </View>
