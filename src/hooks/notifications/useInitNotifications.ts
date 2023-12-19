@@ -16,7 +16,10 @@ const useInitNotificationsLogic = () => {
     firebase
       .messaging()
       .getInitialNotification()
-      .then(m => navigateToCorrectScreen(m, false));
+      .then(m => {
+        backgroundNotification = m?.data?.notification_id;
+        navigateToCorrectScreen(m, false);
+      });
   }, [navigateToCorrectScreen]);
 
   // Effect to handle the notification that the user has pressed while the application
