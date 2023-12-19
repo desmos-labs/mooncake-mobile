@@ -44,6 +44,12 @@ const useHandleNotificationNavigation = () => {
             postId: notficationData.post_id,
           });
           break;
+
+        case NotificationType.NewFollower:
+          navigation.navigate(ROUTES.GUEST_PROFILE, {
+            address: notficationData.follower_address,
+          });
+          break;
       }
     },
     [navigation],
