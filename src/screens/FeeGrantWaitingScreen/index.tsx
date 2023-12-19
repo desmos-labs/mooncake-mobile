@@ -2,7 +2,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
-import { broadcastAnim } from 'assets/animations';
+import { dotsAnimation } from 'assets/animations';
 import { mooncakeHomeIcon } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -138,7 +138,7 @@ const FeeGrantWaitingScreen = () => {
             style={styles.feeGrantReadyImage}
           />
         ) : (
-          <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+          <ThemedLottieView autoSize autoPlay loop source={dotsAnimation} />
         )}
         <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>

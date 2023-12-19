@@ -1,5 +1,5 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { loadingYellow } from 'assets/animations';
+import { squaresAnimation } from 'assets/animations';
 import {
   block,
   followBlackIcon,
@@ -155,7 +155,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
 
   const PendingIndicator = useMemo(() => {
     if (isPending) {
-      return <ThemedLottieView source={loadingYellow} autoPlay style={styles.pendingIcon} />;
+      return <ThemedLottieView source={squaresAnimation} autoPlay style={styles.pendingIcon} />;
     } else if (!isCurrentUserAuthor) {
       return <PopupMenu menuItems={popupMenuItems} />;
     }

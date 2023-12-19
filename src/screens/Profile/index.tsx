@@ -53,7 +53,6 @@ import {
   View,
 } from 'react-native';
 import ImageView from 'react-native-image-viewing';
-import Animated from 'react-native-reanimated';
 import Reanimated, {
   FadeIn,
   useAnimatedScrollHandler,
@@ -422,7 +421,7 @@ const Profile = () => {
   }
 
   return (
-    <Animated.View style={styles.root} entering={FadeIn.duration(500)}>
+    <AnimatedView style={styles.root} entering={FadeIn.duration(500)}>
       {/* Fake Android statusbar */}
       {Platform.OS === 'android' && (
         <View
@@ -572,7 +571,7 @@ const Profile = () => {
           })
         }
       />
-    </Animated.View>
+    </AnimatedView>
   );
 };
 

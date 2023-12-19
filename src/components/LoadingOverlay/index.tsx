@@ -1,6 +1,6 @@
-import React from 'react';
+import { squaresAnimation } from 'assets/animations';
 import ThemedLottieView from 'components/ThemedLottieView';
-import { loadingYellow } from 'assets/animations';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 type Props = {
@@ -31,7 +31,7 @@ const LoadingOverlay = ({ isVisible, zIndexOverride = 2 }: Props) => {
         style={styles.lottieView}
         autoPlay
         loop={true}
-        source={loadingYellow}
+        source={squaresAnimation}
         resizeMode="cover"
       />
     </View>
