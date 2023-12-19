@@ -8,7 +8,7 @@ import axiosInstance from 'services/axios';
 const MarkNotificationAsReaded = (id: string) => {
   return promiseToResult(
     axiosInstance.post(`/notifications/${id}/read`),
-    'Error marking notification as readed',
+    'Error marking notification as read',
   );
 };
 
