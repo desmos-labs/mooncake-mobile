@@ -25,11 +25,11 @@ export default {
       bundleIdentifier: 'mobile.mooncake.app',
       infoPlist: {
         NSFaceIDUsageDescription: 'Allow $(PRODUCT_NAME) to use Face ID.',
-        FirebaseDynamicLinksCustomDomains: ['https://butter.social'],
+        FirebaseDynamicLinksCustomDomains: ['https://mooncake.social'],
         UIBackgroundModes: ['remote-notification'],
       },
       googleServicesFile: './GoogleService-Info.plist',
-      associatedDomains: ['applinks:butter.social'],
+      associatedDomains: ['applinks:mooncake.social'],
     },
     android: {
       adaptiveIcon: {
@@ -54,7 +54,7 @@ export default {
         },
       ],
     },
-    scheme: ['butterweb3auth', 'butter'],
+    scheme: ['mooncakeweb3auth', 'mooncake'],
     plugins: [
       ['sentry-expo'],
       ['expo-localization'],
@@ -136,14 +136,14 @@ export default {
           file: 'sentry-expo/upload-sourcemaps',
           config: {
             organization: 'desmos-labs',
-            project: 'butter',
+            project: 'mooncake',
           },
         },
       ],
     },
     extra: {
       eas: {
-        projectId: 'a484cef2-20d2-4864-b940-f59bbc956049',
+        projectId: '43a55d00-d274-46be-8bc8-f09e1373e573',
       },
     },
     updates: {
