@@ -86,6 +86,7 @@ const useSaveAccountAndCreateProfileFlow = () => {
         navigation.navigate(ROUTES.ONBOARDING, {
           passwordManipulationMode,
           account,
+          profile,
         });
       } else {
         // A user who has already completed the onboarding
