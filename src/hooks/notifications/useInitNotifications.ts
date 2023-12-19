@@ -3,6 +3,8 @@ import { AppState } from 'react-native';
 import { firebase } from '@react-native-firebase/messaging';
 import useParseNotificationAndNavigate from './useParseNotificationAndNavigate';
 
+let notificationSubscription: () => void | undefined;
+
 const useInitNotificationsLogic = () => {
   const navigateToCorrectScreen = useParseNotificationAndNavigate();
 
@@ -25,11 +27,22 @@ const useInitNotificationsLogic = () => {
 
   // Effect to handle the notifications received while the application is opened.
   React.useEffect(() => {
-    return firebase.messaging().onMessage(m => {
+    const subscription = AppState.addEventListener('change', () => {
+      console.log('[Notifications] AppState change', AppState.currentState);
       if (AppState.currentState === 'active') {
-        navigateToCorrectScreen(m, true);
+        notificationSubscription = firebase.messaging().onMessage(m => {
+          navigateToCorrectScreen(m, true);
+        });
+      } else if (AppState.currentState === 'background') {
+        if (notificationSubscription) {
+          notificationSubscription();
+          notificationSubscription = undefined;
+        }
       }
     });
+    return () => {
+      subscription.remove();
+    };
   }, [navigateToCorrectScreen]);
 };
 
