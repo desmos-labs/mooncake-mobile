@@ -1,6 +1,8 @@
 import React from 'react';
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import { NotificationData } from 'types/notifications';
+import useToast from 'hooks/toasts/useToast';
+import { ToastType } from 'config/toast/toastConfig';
 import useHandleNotificationNavigation from './useHandleNotificationNavigation';
 import useMarkNotificationAsReaded from './useMarkNotificationAsReaded';
 
@@ -9,10 +11,18 @@ import useMarkNotificationAsReaded from './useMarkNotificationAsReaded';
  * is received whne the application is active.
  */
 const useShowNotificationToast = () => {
-  return React.useCallback((notficationData: NotificationData) => {
-    // TODO: Implement the notification toast display logic.
-    console.warn('TODO: Display notification toast', notficationData);
-  }, []);
+  const showToast = useToast();
+
+  return React.useCallback(
+    (notficationData: NotificationData) => {
+      showToast({
+        toastType: ToastType.info,
+        title: notficationData.notification_title,
+        message: notficationData.notification_body,
+      });
+    },
+    [showToast],
+  );
 };
 
 /**
