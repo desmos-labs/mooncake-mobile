@@ -1,14 +1,13 @@
-import React, { useCallback } from 'react';
-import { ListRenderItemInfo, Platform, RefreshControl, View } from 'react-native';
-import { Post } from 'types/posts';
-import { useTheme } from 'native-base';
-import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
-import StyledSpinner from 'components/StyledSpinner';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import PostCard from 'components/PostCard';
-import { AndroidColor } from '@notifee/react-native';
-import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import { useGetPostType } from 'components/PostCard/hooks';
+import StyledSpinner from 'components/StyledSpinner';
+import { useTheme } from 'native-base';
+import React, { useCallback } from 'react';
+import { Platform, RefreshControl, View } from 'react-native';
+import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
+import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface UserPostsListProps {
@@ -106,7 +105,6 @@ const UserPostsList = (props: UserPostsListProps) => {
         refreshControl={
           <RefreshControl
             tintColor={theme.colors.surfaceBlack}
-            colors={[AndroidColor.BLACK]}
             enabled
             onRefresh={onRefresh}
             refreshing={refreshing}

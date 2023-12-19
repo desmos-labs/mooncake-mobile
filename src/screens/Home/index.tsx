@@ -1,25 +1,24 @@
-import { AndroidColor } from '@notifee/react-native';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import { emptyListPlaceholder } from 'assets/images';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
+import HomePostListContentLoader from 'components/Loaders/HomePostListContentLoader';
+import PostCard from 'components/PostCard';
+import { useGetPostType } from 'components/PostCard/hooks';
 import Typography from 'components/Typography';
+import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
+import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
+import { useTheme } from 'native-base';
+import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
-import { useTheme } from 'native-base';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
-import PostCard from 'components/PostCard';
-import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
-import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
-import { Post } from 'types/posts';
-import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
-import ROUTES from 'navigation/routes';
-import { emptyListPlaceholder } from 'assets/images';
-import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import SearchViewComponent from 'screens/Home/components/SearchViewComponent';
-import HomePostListContentLoader from 'components/Loaders/HomePostListContentLoader';
-import { useGetPostType } from 'components/PostCard/hooks';
+import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
@@ -161,7 +160,6 @@ const Home = () => {
           refreshControl={
             <RefreshControl
               tintColor={theme.colors.surfaceBlack}
-              colors={[AndroidColor.BLACK]}
               enabled
               onRefresh={onRefresh}
               refreshing={refreshing}
