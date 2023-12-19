@@ -1,5 +1,6 @@
 import notifee from '@notifee/react-native';
 import { useCallback, useEffect } from 'react';
+import useRegisterDeviceForNotifications from './useRegisterDeviceForNotifications';
 
 /**
  * Hook that allows to ask the user permission to access the device notifications.
@@ -7,6 +8,7 @@ import { useCallback, useEffect } from 'react';
  * it can be later disabled by the user.
  */
 const useRequestNotificationsPermission = () => {
+  const registerDeviceForNotifications = useRegisterDeviceForNotifications();
   const requestUserPermission = useCallback(async () => {
     try {
       await notifee.requestPermission({
@@ -15,10 +17,13 @@ const useRequestNotificationsPermission = () => {
         badge: true,
         carPlay: true,
       });
+
+      // After we have the permission, we can register the device for notifications.
+      await registerDeviceForNotifications();
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [registerDeviceForNotifications]);
 
   useEffect(() => {
     requestUserPermission();
