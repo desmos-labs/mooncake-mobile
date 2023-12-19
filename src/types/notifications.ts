@@ -49,6 +49,20 @@ export enum NotificationType {
    * Received when the save profile transaction has been included in a block.
    */
   ProfileSaved = 'profile_saved',
+
+  // ---------------------------------------------------------------------
+  // --- Relationships related notifications
+  // ---------------------------------------------------------------------
+
+  /**
+   * Received when the transaction to create a new relationship
+   * has been included in a block.
+   */
+  RelationshipCreated = 'relationship_created',
+  /**
+   * Received when a user starts following another user.
+   */
+  NewFollower = 'new_follower',
 }
 
 interface BaseNotificationData {
@@ -178,6 +192,23 @@ export interface ProfileSavedNotificationData extends BaseNotificationData {
   readonly type: NotificationType.ProfileSaved;
 }
 
+// ---------------------------------------------------------------------
+// --- Relationship notifications
+// ---------------------------------------------------------------------
+
+export interface RelationshipCreatedNotificationData extends BaseNotificationData {
+  readonly type: NotificationType.RelationshipCreated;
+}
+
+export interface NewFollowerNotificationData extends BaseNotificationData {
+  readonly type: NotificationType.NewFollower;
+
+  /**
+   * Address of the user that has started following the recipient of the notification.
+   */
+  readonly follower_address: string;
+}
+
 export type NotificationData =
   | PostCreatedNotificationData
   | PostRepostNotificationData
@@ -186,4 +217,6 @@ export type NotificationData =
   | PostReplyNotificationData
   | PostMentionNotificationData
   | PostLikeNotificationData
-  | ProfileSavedNotificationData;
+  | ProfileSavedNotificationData
+  | RelationshipCreatedNotificationData
+  | NewFollowerNotificationData;
