@@ -13,10 +13,9 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: theme.spacing.m,
   },
   dummyAvatar: {
-    width: 150,
-    height: 133,
+    width: 187,
+    height: 120,
     resizeMode: 'contain',
-    marginBottom: -theme.spacing.s,
   },
   title: {
     color: theme.colors.white,
@@ -29,7 +28,7 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   subtitle: {
-    marginTop: 2,
+    marginTop: 40,
     marginBottom: 50,
     fontFamily: 'Poppins-Regular',
     fontSize: 16,

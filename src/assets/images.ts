@@ -1,112 +1,114 @@
-export const desmosIcon = require("./images/desmosIcon.png");
+export const mooncakeHomeIcon = require ('./images/mooncakeHomeIcon.png');
 
-export const copyIcon = require("./images/copy.png");
+export const desmosIcon = require ('./images/desmosIcon.png');
 
-export const iconCrossBlack = require("./images/iconCrossBlack.png");
+export const copyIcon = require ('./images/copy.png');
 
-export const followBlackIcon = require("./images/followBlackIcon.png");
+export const iconCrossBlack = require ('./images/iconCrossBlack.png');
 
-export const unfollowBlackIcon = require("./images/unfollowBlackIcon.png");
+export const followBlackIcon = require ('./images/followBlackIcon.png');
 
-export const tipIcon = require("./images/tipIcon.png");
-export const tipUserIcon = require("./images/tipUser.png");
+export const unfollowBlackIcon = require ('./images/unfollowBlackIcon.png');
 
-export const commentIcon = require("./images/commentIcon.png");
+export const tipIcon = require ('./images/tipIcon.png');
+export const tipUserIcon = require ('./images/tipUser.png');
 
-export const commentLikeEmptyIcon = require("./images/commentLikeIconEmpty.png");
+export const commentIcon = require ('./images/commentIcon.png');
 
-export const defaultBanner = require("./images/defaultBanner.png");
+export const commentLikeEmptyIcon = require ('./images/commentLikeIconEmpty.png');
 
-export const settingsButton = require("./images/settingsButton.png");
+export const defaultBanner = require ('./images/defaultBanner.png');
 
-export const check = require("./images/check.png");
+export const settingsButton = require ('./images/settingsButton.png');
 
-export const validCheck = require("./images/validCheck.png");
+export const check = require ('./images/check.png');
 
-export const eyeClosed = require("./images/eyeClosed.png");
+export const validCheck = require ('./images/validCheck.png');
 
-export const checkboxChecked = require("./images/checkboxChecked.png");
+export const eyeClosed = require ('./images/eyeClosed.png');
 
-export const checkboxUnchecked = require("./images/checkbox.png");
+export const checkboxChecked = require ('./images/checkboxChecked.png');
 
-export const defaultProfilePic = require("./images/defaultProfilePic.png");
+export const checkboxUnchecked = require ('./images/checkbox.png');
 
-export const editProfilePic = require("./images/editProfilePic.png");
+export const defaultProfilePic = require ('./images/defaultProfilePic.png');
 
-export const backButton = require("./images/backButton.png");
+export const editProfilePic = require ('./images/editProfilePic.png');
 
-export const landingBG = require("./images/landingBG.png");
+export const backButton = require ('./images/backButton.png');
 
-export const magnifyingGlass = require("./images/magnifyingGlass.png");
+export const landingBG = require ('./images/landingBG.png');
 
-export const commentLiked = require("./images/commentLiked.png");
+export const magnifyingGlass = require ('./images/magnifyingGlass.png');
 
-export const reportIcon = require("./images/report.png");
+export const commentLiked = require ('./images/commentLiked.png');
 
-export const moreBlackIcon = require("./images/moreBlackIcon.png");
+export const reportIcon = require ('./images/report.png');
 
-export const galleryIcon = require("./images/galleryIcon.png");
+export const moreBlackIcon = require ('./images/moreBlackIcon.png');
 
-export const cameraIcon = require("./images/cameraIcon.png");
+export const galleryIcon = require ('./images/galleryIcon.png');
 
-export const deleteButton = require("./images/delete.png");
+export const cameraIcon = require ('./images/cameraIcon.png');
 
-export const expandCommentIcon = require("./images/expandComment.png");
+export const deleteButton = require ('./images/delete.png');
 
-export const onboarding1 = require("./images/onboarding/onboarding1.png");
-export const onboarding2 = require("./images/onboarding/onboarding2.png");
-export const onboarding3 = require("./images/onboarding/onboarding3.png");
-export const onboarding4 = require("./images/onboarding/onboarding4.png");
-export const bgonboarding = require("./images/onboarding/backgroundOnboarding.png");
+export const expandCommentIcon = require ('./images/expandComment.png');
 
-export const profileBack = require("./images/profileBack.png");
+export const onboarding1 = require ('./images/onboarding/onboarding1.png');
+export const onboarding2 = require ('./images/onboarding/onboarding2.png');
+export const onboarding3 = require ('./images/onboarding/onboarding3.png');
+export const onboarding4 = require ('./images/onboarding/onboarding4.png');
+export const bgonboarding = require ('./images/onboarding/backgroundOnboarding.png');
 
-export const infoIcon = require("assets/images/infoIcon.png");
+export const profileBack = require ('./images/profileBack.png');
 
-export const eyeOpen = require("./images/eyeOpen.png");
+export const infoIcon = require ('assets/images/infoIcon.png');
 
-export const butterflyLandingIcon = require("./images/butterflyLanding.png");
+export const eyeOpen = require ('./images/eyeOpen.png');
 
-export const emptyPostsIcon = require("./images/emptyPosts.png");
+export const mooncakeWithTextLogo = require ('./images/mooncakeWithTextLogo.png');
 
-export const accountCreatedBg = require("./images/accountCreatedBg.png");
+export const emptyPostsIcon = require ('./images/emptyPosts.png');
 
-export const accountCreatedIcon = require("./images/accountCreatedIcon.png");
+export const accountCreatedBg = require ('./images/accountCreatedBg.png');
 
-export const reportSuccessIcon = require("./images/reportSuccessIcon.png");
-export const emptyListPlaceholder = require("./images/emptyListsPlaceholders/emptyListPlaceholder.png");
+export const accountCreatedIcon = require ('./images/accountCreatedIcon.png');
 
-export const block = require("./images/block.png");
-export const unblock = require("./images/unblockIcon.png");
+export const reportSuccessIcon = require ('./images/reportSuccessIcon.png');
+export const emptyListPlaceholder = require ('./images/emptyListsPlaceholders/emptyListPlaceholder.png');
 
-export const settingsNavbarIcon = require("./images/settingsNavbarIcon.png");
-export const googleLoginIcon = require("./images/googleLoginIcon.png");
-export const appleLoginIcon = require("./images/appleLoginIcon.png");
+export const block = require ('./images/block.png');
+export const unblock = require ('./images/unblockIcon.png');
 
-export const profileContextButton = require("./images/profile_context.png");
+export const settingsNavbarIcon = require ('./images/settingsNavbarIcon.png');
+export const googleLoginIcon = require ('./images/googleLoginIcon.png');
+export const appleLoginIcon = require ('./images/appleLoginIcon.png');
+
+export const profileContextButton = require ('./images/profile_context.png');
 
 // TX
 
-export const editProfileTxIcon = require("./images/txIcons/editProfileTx.png");
-export const createPostTxIcon = require("./images/txIcons/createPostTx.png");
-export const addReactionTxIcon = require("./images/txIcons/addReactionTx.png");
-export const sendReportTxIcon = require("./images/txIcons/sendReportTx.png");
+export const editProfileTxIcon = require ('./images/txIcons/editProfileTx.png');
+export const createPostTxIcon = require ('./images/txIcons/createPostTx.png');
+export const addReactionTxIcon = require ('./images/txIcons/addReactionTx.png');
+export const sendReportTxIcon = require ('./images/txIcons/sendReportTx.png');
 
-export const hidePost = require("./images/hidePost.png");
+export const hidePost = require ('./images/hidePost.png');
 
 // Bottom tabs bar
 
-export const bottomActivitiesIcon = require("./images/bottomBarIcons/bottomActivities.png");
-export const bottomHomeIcon = require("./images/bottomBarIcons/bottomHome.png");
-export const bottomProfileIcon = require("./images/bottomBarIcons/bottomProfile.png");
-export const middleButtonIcon = require("./images/bottomBarIcons/middleButton.png");
+export const bottomActivitiesIcon = require ('./images/bottomBarIcons/bottomActivities.png');
+export const bottomHomeIcon = require ('./images/bottomBarIcons/bottomHome.png');
+export const bottomProfileIcon = require ('./images/bottomBarIcons/bottomProfile.png');
+export const middleButtonIcon = require ('./images/bottomBarIcons/middleButton.png');
 
 // Post icons
 
-export const postToCommentIcon = require("./images/homePostIcons/postToCommentIcon.png");
-export const postLikedIcon = require("./images/homePostIcons/postLikedIcon.png");
-export const postToLikeIcon = require("./images/homePostIcons/postToLikeIcon.png");
+export const postToCommentIcon = require ('./images/homePostIcons/postToCommentIcon.png');
+export const postLikedIcon = require ('./images/homePostIcons/postLikedIcon.png');
+export const postToLikeIcon = require ('./images/homePostIcons/postToLikeIcon.png');
 
 // Checkbox
-export const uncheck_circle = require("./images/checkbox/uncheck_circle.png");
-export const check_circle = require("./images/checkbox/check_circle.png");
+export const uncheck_circle = require ('./images/checkbox/uncheck_circle.png');
+export const check_circle = require ('./images/checkbox/check_circle.png');

@@ -1,6 +1,6 @@
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
-import { butterflyLandingIcon } from 'assets/images';
+import { mooncakeHomeIcon } from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
@@ -124,7 +124,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
             <ImageButton
               tintColor={theme.colors.butterOrange01}
               style={styles.butterflyImage}
-              image={butterflyLandingIcon}
+              image={mooncakeHomeIcon}
               onPress={() => setListState({ ...listState, scrollToTop: true })}
             />
           </Animated.View>

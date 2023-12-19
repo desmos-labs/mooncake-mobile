@@ -1,8 +1,7 @@
-import React from 'react';
-import { clearMMKV } from 'lib/MMKVStorage';
-import { resetSecureStorage } from 'lib/SecureStorage';
 import { useNavigation } from '@react-navigation/native';
+import { clearMMKV } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -16,7 +15,6 @@ const useClearUserData = () => {
 
   const handleConfirmReset = React.useCallback(async () => {
     clearMMKV();
-    await resetSecureStorage();
 
     reset({
       index: 0,
