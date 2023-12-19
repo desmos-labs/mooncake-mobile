@@ -1,7 +1,7 @@
 export default {
   expo: {
-    name: 'Butter',
-    slug: 'butter',
+    name: 'Mooncake',
+    slug: 'moonkace',
     owner: 'desmos',
     version: '2.0.0',
     orientation: 'portrait',
@@ -22,21 +22,21 @@ export default {
     },
     ios: {
       supportsTablet: false,
-      bundleIdentifier: 'mobile.butter.app',
+      bundleIdentifier: 'mobile.mooncake.app',
       infoPlist: {
         NSFaceIDUsageDescription: 'Allow $(PRODUCT_NAME) to use Face ID.',
         FirebaseDynamicLinksCustomDomains: ['https://butter.social'],
         UIBackgroundModes: ['remote-notification'],
       },
       googleServicesFile: './GoogleService-Info.plist',
-      associatedDomains: ['applinks:butter.social', 'applinks:bondscape.app.link'],
+      associatedDomains: ['applinks:butter.social'],
     },
     android: {
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#FEB027',
       },
-      package: 'mobile.butter.app',
+      package: 'mobile.mooncake.app',
       permissions: ['android.permission.USE_BIOMETRIC', 'android.permission.USE_FINGERPRINT'],
       googleServicesFile: './google-services.json',
       intentFilters: [
@@ -46,7 +46,7 @@ export default {
           data: [
             {
               scheme: 'https',
-              host: 'butter.social',
+              host: 'mooncake.social',
               pathPrefix: '/',
             },
           ],
