@@ -2,6 +2,10 @@
  * Type of notifications supported by the application.
  */
 export enum NotificationType {
+  // ---------------------------------------------------------------------
+  // --- Post related notifications
+  // ---------------------------------------------------------------------
+
   /**
    * Received when the transaction related to a post
    * creation has been sucessfully included inside a block.
@@ -36,6 +40,15 @@ export enum NotificationType {
    * Received when another user likes the user's post.
    */
   PostLike = 'post_like',
+
+  // ---------------------------------------------------------------------
+  // --- Profile related notifications
+  // ---------------------------------------------------------------------
+
+  /**
+   * Received when the save profile transaction has been included in a block.
+   */
+  ProfileSaved = 'profile_saved',
 }
 
 interface BaseNotificationData {
@@ -157,6 +170,14 @@ export interface PostLikeNotificationData extends BaseNotificationData {
   readonly post_liker_address: string;
 }
 
+// ---------------------------------------------------------------------
+// --- Profile notifications
+// ---------------------------------------------------------------------
+
+export interface ProfileSavedNotificationData extends BaseNotificationData {
+  readonly type: NotificationType.ProfileSaved;
+}
+
 export type NotificationData =
   | PostCreatedNotificationData
   | PostRepostNotificationData
@@ -164,4 +185,5 @@ export type NotificationData =
   | PostCommentNotificationData
   | PostReplyNotificationData
   | PostMentionNotificationData
-  | PostLikeNotificationData;
+  | PostLikeNotificationData
+  | ProfileSavedNotificationData;
