@@ -1,9 +1,9 @@
 export default {
   expo: {
     name: 'Mooncake',
-    slug: 'moonkace',
+    slug: 'mooncake',
     owner: 'desmos',
-    version: '2.0.0',
+    version: '0.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'light',
@@ -90,11 +90,6 @@ export default {
 -keep public class com.bumptech.glide.integration.webp.WebpImage { *; }
 -keep public class com.bumptech.glide.integration.webp.WebpFrame { *; }
 -keep public class com.bumptech.glide.integration.webp.WebpBitmapFactory { *; }`,
-            extraMavenRepos: [
-              // Extra maven repo to compile @notifee/react-native
-              // Ref: https://github.com/invertase/notifee/issues/911#issuecomment-1822234807
-              '../../node_modules/@notifee/react-native/android/libs',
-            ],
           },
         },
       ],
@@ -128,6 +123,7 @@ export default {
       ],
       'react-native-compressor',
       '@react-native-firebase/app',
+      '@react-native-firebase/messaging',
       './plugins/withBackgroundActions',
     ],
     hooks: {

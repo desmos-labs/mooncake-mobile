@@ -12,6 +12,7 @@ import { LoginFlowStep } from 'types/login';
 import useToast from 'hooks/toasts/useToast';
 import { useTranslation } from 'react-i18next';
 import { ToastType } from 'config/toast/toastConfig';
+import useUnregistDeviceForNotifications from 'hooks/notifications/useUnregistDeviceForNotifications';
 
 /**
  * Hook that provides a function to logout the user from the application.
@@ -24,6 +25,7 @@ const usePerformLogout = () => {
   const { reset } = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
 
   const client = useApolloClient();
+  const unregisterDeviceForNotifications = useUnregistDeviceForNotifications();
   const deleteToken = useDeleteAuthToken();
   const deleteCachedAccounts = useDeleteCachedAccounts();
   const setActiveAccountAddress = useSetActiveAccountAddress();
@@ -42,6 +44,8 @@ const usePerformLogout = () => {
         message: error.message,
       });
     } finally {
+      await unregisterDeviceForNotifications();
+
       // We can now navigate to the landing screen while clearing up our recoils
       reset({
         index: 0,
@@ -75,6 +79,7 @@ const usePerformLogout = () => {
     setLoginFlowState,
     showToast,
     t,
+    unregisterDeviceForNotifications,
   ]);
 };
 

@@ -1,5 +1,7 @@
-import notifee from '@notifee/react-native';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
+import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import {
   bottomActivitiesIcon,
   bottomHomeIcon,
@@ -8,18 +10,15 @@ import {
   settingsNavbarIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import { Box, useTheme } from 'native-base';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { Box, useTheme } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import PingAnimation from 'screens/Profile/components/PingAnimation';
-import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
-import { useResetCreatePostState } from '@recoil/screens/createPostState';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import Activities from 'screens/Activities';
 import Profile from 'screens/Profile';
+import PingAnimation from 'screens/Profile/components/PingAnimation';
 import Settings from 'screens/Settings';
 import useStyles from './useStyles';
 
@@ -94,7 +93,9 @@ const BottomTabBar = (props: Props) => {
   // -------------------------------------------------------------------------------------
 
   const handlePressCreatePost = React.useCallback(async () => {
-    if (!activeAddress) return;
+    if (!activeAddress) {
+      return;
+    }
 
     // Reset the post creation state to clean any previous post/comment data
     resetCreatePostState();
@@ -128,7 +129,6 @@ const BottomTabBar = (props: Props) => {
           if (!isFocused && !event.defaultPrevented) {
             // The `merge: true` option makes sure that the params inside the tab screen are preserved
             if (route.name === ROUTES.ACTIVITIES) {
-              await notifee.setBadgeCount(0);
               setNotificationsCount(0);
             }
             // @ts-ignore

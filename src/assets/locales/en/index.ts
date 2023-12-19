@@ -22,6 +22,7 @@ import settings from './settings.json';
 import signup from './signup.json';
 import sendTips from './tips.json';
 import tips from './tips.json';
+import permissions from './permissions.json';
 
 const en = {
   activities,
@@ -38,6 +39,7 @@ const en = {
   onboarding,
   operations,
   password,
+  permissions,
   postDetails,
   postOperations,
   profile,

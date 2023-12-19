@@ -1,19 +1,17 @@
-import notifee, { AndroidColor } from '@notifee/react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useSetAppStateValue } from '@recoil/appState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
+import ActivitiesListContentLoader from 'components/Loaders/ActivitiesListContentLoader';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
+import { Divider, useTheme } from 'native-base';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
-import { Divider, useTheme } from 'native-base';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
-import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
-import { CompleteNotification } from 'types/notifications';
-import { useSetAppStateValue } from '@recoil/appState';
-import StyledSpinner from 'components/StyledSpinner';
-import ActivitiesListContentLoader from 'components/Loaders/ActivitiesListContentLoader';
 import { useKeyExtractor, useSplitNotificationsByWeek } from './hooks';
 import useStyles from './useStyles';
 
@@ -83,7 +81,7 @@ const Activities = () => {
 
   // Function that is used in order to render each item within the list
   const renderItem = useCallback(
-    (info: ListRenderItemInfo<CompleteNotification | string>) => {
+    (info: ListRenderItemInfo<any | string>) => {
       const { item } = info;
       if (typeof item === 'string') {
         // Render a divider
@@ -125,7 +123,6 @@ const Activities = () => {
   const setNotificationsCount = useSetAppStateValue('notificationsCount');
   const resetNotificationsCounter = useCallback(async () => {
     setNotificationsCount(0);
-    await notifee.setBadgeCount(0);
   }, [setNotificationsCount]);
 
   useFocusEffect(
@@ -152,7 +149,6 @@ const Activities = () => {
         }}>
         <Typography.H3>{t('activities')}</Typography.H3>
       </View>
-
       {/* Notifications list */}
       {!loading ? (
         <FlashList
@@ -160,7 +156,6 @@ const Activities = () => {
           refreshControl={
             <RefreshControl
               tintColor={theme.colors.surfaceBlack}
-              colors={[AndroidColor.BLACK]}
               enabled
               onRefresh={refreshNotifications}
               refreshing={refreshing}

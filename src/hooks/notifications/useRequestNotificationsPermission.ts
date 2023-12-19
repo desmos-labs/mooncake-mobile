@@ -1,5 +1,9 @@
-import notifee from '@notifee/react-native';
+import { PermissionStatus } from 'expo-image-picker';
+import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect } from 'react';
+import { Alert } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import useRegisterDeviceForNotifications from './useRegisterDeviceForNotifications';
 
 /**
  * Hook that allows to ask the user permission to access the device notifications.
@@ -7,18 +11,23 @@ import { useCallback, useEffect } from 'react';
  * it can be later disabled by the user.
  */
 const useRequestNotificationsPermission = () => {
+  const registerDeviceForNotifications = useRegisterDeviceForNotifications();
+  const { t } = useTranslation('permissions');
+
   const requestUserPermission = useCallback(async () => {
-    try {
-      await notifee.requestPermission({
-        sound: true,
-        alert: true,
-        badge: true,
-        carPlay: true,
-      });
-    } catch (e) {
-      console.error(e);
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== PermissionStatus.GRANTED) {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
     }
-  }, []);
+    if (finalStatus !== PermissionStatus.GRANTED) {
+      Alert.alert(t('you can change the permissions from the settings'));
+      return;
+    }
+    // After we have the permission, we can register the device for notifications.
+    await registerDeviceForNotifications();
+  }, [registerDeviceForNotifications, t]);
 
   useEffect(() => {
     requestUserPermission();
