@@ -10,16 +10,12 @@ import { expandCommentIcon } from 'assets/images';
 import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
 import ImageButton from 'components/ImageButton';
-import MediaBottomPanel from 'components/MediaBottomPanel';
+import MediaBottomPanel, { OnImageSelectedCallback } from 'components/MediaBottomPanel';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import { Image } from 'expo-image';
-import { CameraType } from 'expo-image-picker';
-import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import usePostsParams from 'hooks/posts/usePostsParams';
-import useImageFromDevice from 'hooks/useImageFromDevice';
-import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
 import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
@@ -91,38 +87,18 @@ const EnterCommentBottomBar = (props: Props) => {
   const setComment = useSetCreatePostValue('text');
   const postAttachments = useCreatePostValue('attachments');
   const addPostAttachment = useAddCreatePostAttachment();
-  const { editPostPicture } = useOpenPictureEditor();
-  const takePhoto = useTakePicture();
 
-  const { imageFromLibrary: selectPicture } = useImageFromDevice({
-    onImageSelected: imageUri => {
-      editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
-        addPostAttachment({
-          uri: editedPicturePath,
-          width: dimensions.width,
-          height: dimensions.height,
-          type: mimeType,
-        });
+  const onPictureTaken = useCallback<OnImageSelectedCallback>(
+    (editedPicturePath, dimensions, mimeType) => {
+      addPostAttachment({
+        uri: editedPicturePath,
+        width: dimensions.width,
+        height: dimensions.height,
+        type: mimeType,
       });
     },
-  });
-
-  const handleTakePicture = useCallback(async () => {
-    takePhoto(CameraType.front).then(result => {
-      if (result?.status === TakePictureActionResults.Taken) {
-        const imageUri = result.uri;
-        editPostPicture(imageUri, (editedPicturePath, dimensions, mimeType) => {
-          addPostAttachment({
-            uri: editedPicturePath,
-            width: dimensions.width,
-            height: dimensions.height,
-            type: mimeType,
-          });
-        });
-      }
-    });
-  }, [addPostAttachment, editPostPicture, takePhoto]);
-
+    [addPostAttachment],
+  );
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
 
   const dTextInputStyles = useDTextInputStyles({});
@@ -274,8 +250,7 @@ const EnterCommentBottomBar = (props: Props) => {
           <MediaBottomPanel
             imageSelected={false}
             loading={loading}
-            handlePressGallery={selectPicture}
-            handlePressCamera={handleTakePicture}
+            onImageSelected={onPictureTaken}
             rightComponent={RightButtonComponent}
             commentLength={comment.length}
           />

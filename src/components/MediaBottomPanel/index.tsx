@@ -1,21 +1,23 @@
-import { cameraIcon, galleryIcon } from 'assets/images';
-import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import usePostsParams from 'hooks/posts/usePostsParams';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
+import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
+import useImageFromDevice from 'hooks/useImageFromDevice';
+import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
+import { CameraType } from 'expo-image-picker';
+import ImageButton from 'components/ImageButton';
+import { useTheme } from 'native-base';
+import { cameraIcon, galleryIcon } from 'assets/images';
 import useStyles from './useStyles';
 
+export type OnImageSelectedCallback = (
+  editedPicturePath: string,
+  dimensions: { width: number; height: number },
+  mimeType: string,
+) => void;
+
 type MediaBottomPanelProps = {
-  /**
-   * Action to execute when the gallery icon is pressed
-   */
-  handlePressGallery: () => void;
-  /**
-   * Action to execute when the camera icon is pressed
-   */
-  handlePressCamera: () => void;
   /**
    * Actual length of the comment
    */
@@ -24,6 +26,10 @@ type MediaBottomPanelProps = {
    * If the image is selected
    */
   imageSelected: boolean;
+  /**
+   * Callback to handle when the user selects an image
+   */
+  onImageSelected: OnImageSelectedCallback;
   /**
    * Optional style
    */
@@ -36,20 +42,57 @@ type MediaBottomPanelProps = {
    * Is the app processing a comment?
    */
   loading?: boolean;
+  /**
+   * Camera that will be used to take a picture.
+   * Defaults to <code>CameraType.front</code>.
+   */
+  readonly cameraType?: CameraType;
 };
 
 const MediaBottomPanel = ({
-  handlePressCamera,
-  handlePressGallery,
-  commentLength,
   imageSelected,
+  commentLength,
   rightComponent,
   style,
   loading,
+  onImageSelected,
+  cameraType,
 }: MediaBottomPanelProps) => {
   const styles = useStyles();
   const theme = useTheme();
   const { params } = usePostsParams();
+
+  // --------------------------------------
+  // ----- Hooks
+  // --------------------------------------
+
+  const { editPostPicture } = useOpenPictureEditor();
+  const { imageFromLibrary } = useImageFromDevice({
+    onImageSelected: React.useCallback(
+      (imageUri: string) => {
+        editPostPicture(imageUri, onImageSelected);
+      },
+      [editPostPicture, onImageSelected],
+    ),
+  });
+  const takePhoto = useTakePicture();
+
+  // --------------------------------------
+  // ----- Callbacks
+  // --------------------------------------
+
+  const handlePressGallery = React.useCallback(() => {
+    imageFromLibrary();
+  }, [imageFromLibrary]);
+
+  const handlePressCamera = React.useCallback(() => {
+    takePhoto(cameraType ?? CameraType.front).then(result => {
+      if (result?.status === TakePictureActionResults.Taken) {
+        const imageUri = result.uri;
+        editPostPicture(imageUri, onImageSelected);
+      }
+    });
+  }, [cameraType, editPostPicture, onImageSelected, takePhoto]);
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
