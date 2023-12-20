@@ -44,7 +44,7 @@ const useFetchUserFollowing = (address: string | undefined) => {
         endReached: following.length < limit,
       };
     },
-    [address, fetchFollowing],
+    [address, fetchFollowing, subspaceId],
   );
 };
 
