@@ -26,7 +26,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
+import { ListRenderItemInfo, SafeAreaView, SectionList, SectionListData, View } from 'react-native';
 import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
 import useHooks from './useHooks';
@@ -57,7 +57,11 @@ const ProfileOperations = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { balance, refetch: refreshBalance } = useAccountBalance(userAddress);
+  const {
+    balance,
+    refetch: refreshBalance,
+    loading: balanceLoading,
+  } = useAccountBalance(userAddress);
   const { symbol, amount: fiatAmount, refetch: refreshFiatAmount } = useBalanceFiatAmount(balance);
   const { usePastActionsSections } = useHooks();
 
@@ -165,17 +169,15 @@ const ProfileOperations = () => {
   const renderItem = React.useCallback(
     ({ item }: ListRenderItemInfo<PastTransactionMessage>) => {
       return (
-        <View style={styles.paddingHorizontalM}>
-          <MessageListItem
-            timestamp={item.timestamp}
-            fees={item.fees}
-            title={getTitle(item.type)}
-            image={getImage(item.type)}
-          />
-        </View>
+        <MessageListItem
+          timestamp={item.timestamp}
+          fees={item.fees}
+          title={getTitle(item.type)}
+          image={getImage(item.type)}
+        />
       );
     },
-    [getImage, getTitle, styles.paddingHorizontalM],
+    [getImage, getTitle],
   );
 
   // Component used to render an empty list
@@ -208,6 +210,14 @@ const ProfileOperations = () => {
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
+
+  if (isDataLoading || balanceLoading) {
+    return (
+      <SafeAreaView style={styles.flexCenter}>
+        <StyledSpinner />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <DView

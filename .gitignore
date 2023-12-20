@@ -95,3 +95,5 @@ ios/
 #GQL
 graphql.config.yml
 schema.desmos.graphql
+schema.forbole.graphql
+schema.butter.graphql

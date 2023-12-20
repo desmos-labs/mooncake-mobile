@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { PastTransactionMessage, PendingTransaction } from 'types/transactions';
 import { useQuery } from '@apollo/client';
-import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
 import { useUserPendingTransactions } from '@recoil/transactions';
 import { convertGraphQLTransactionMessage } from 'lib/GraphQLUtils/transactions';
+import sleep from 'lib/sleep';
+import React, { useMemo, useState } from 'react';
+import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
+import { PastTransactionMessage, PendingTransaction } from 'types/transactions';
 
 /**
  * Function that converts a {@link PendingTransaction} into a list of {@link PastTransactionMessage}
@@ -53,79 +54,77 @@ const mergeTransactions = (
  * Hook that allows to retrieve the past actions of a user querying them from the GraphQL server.
  */
 const usePastTransactions = (address: string, transactionsPerPage: number = 20) => {
-  // Get the pending tx for the user
   const pendingTransactions = useUserPendingTransactions(address);
-  const pendingMessages = pendingTransactions.flatMap(convertPendingTransaction);
-
-  // Set the pending tx as the current value of the tx
-  const [remoteMessages, setRemoteMessages] = React.useState<PastTransactionMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
-  // Merge the pending tx with the tx from the chain
-  const transactions = React.useMemo(() => {
-    return mergeTransactions(remoteMessages, pendingMessages);
-  }, [remoteMessages, pendingMessages]);
-
-  // Callback to be called when the query is completed
-  const onCompletedCallback = React.useCallback((data: any) => {
-    if (!data) return;
-
-    const onChainMessages = (data.messages as any[]).map(convertGraphQLTransactionMessage);
-    setRemoteMessages(onChainMessages);
-
-    setLoading(false);
-    setFetchingMore(false);
-    setRefreshing(false);
-  }, []);
+  const pendingMessages = useMemo(() => {
+    return pendingTransactions.flatMap(convertPendingTransaction);
+  }, [pendingTransactions]);
 
   // Query the past tx from the server
-  const { fetchMore, refetch } = useQuery(GetTransactionsByAddress, {
+  const { data, fetchMore, refetch } = useQuery(GetTransactionsByAddress, {
     variables: {
-      address: `${address}`,
+      address: `{${address}}`,
       limit: transactionsPerPage,
       offset: 0,
       types: '{}',
     },
-    onCompleted: onCompletedCallback,
   });
+
+  // Merge the pending tx with the tx from the chain
+  const transactions = React.useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    const onChainMessages = (data.messages as any[]).map(convertGraphQLTransactionMessage);
+    setLoading(false);
+    setFetchingMore(false);
+    setRefreshing(false);
+    return mergeTransactions(onChainMessages, pendingMessages);
+  }, [data, pendingMessages]);
 
   // Callback to fetch more tx
   const fetchMoreTransactions = React.useCallback(async () => {
+    if (fetchingMore) {
+      return;
+    }
+    setFetchingMore(true);
     try {
-      setError(undefined);
-      setFetchingMore(true);
-
-      // Fetch more notifications
       await fetchMore({
-        variables: { offset: remoteMessages.length },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          messages: fetchMoreResult ? [...prev.messages, ...fetchMoreResult.messages] : prev,
-        }),
+        variables: { offset: transactions.length },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult || fetchMoreResult.messages.length === 0) {
+            return prev;
+          }
+
+          return {
+            messages: [...prev.messages, ...fetchMoreResult.messages],
+          };
+        },
       });
     } catch (e: any) {
-      console.log(e);
-      setFetchingMore(false);
       setError(e.toString());
+    } finally {
+      await sleep(500).then(() => setFetchingMore(false));
     }
-  }, [fetchMore, remoteMessages.length]);
+  }, [fetchMore, fetchingMore, transactions.length]);
 
   // Callback to be called when the tx list is refreshed
   const refetchTransactions = React.useCallback(async () => {
     try {
       setError(undefined);
       setRefreshing(true);
-
       // Get the new data by resetting the fetch offset to restart post fetching
-      const { data } = await refetch({ offset: 0 });
-      onCompletedCallback(data);
+      await refetch({ offset: 0 });
     } catch (e: any) {
-      setRefreshing(true);
       setError(e.toString());
+    } finally {
+      setRefreshing(false);
     }
-  }, [onCompletedCallback, refetch]);
+  }, [refetch]);
 
   return {
     transactions,

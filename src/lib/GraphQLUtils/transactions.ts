@@ -9,8 +9,8 @@ import { PastTransactionMessage } from 'types/transactions';
 export const convertGraphQLTransactionMessage = (data: any): PastTransactionMessage => {
   return {
     type: data.type,
-    fees: data.fees,
-    timestamp: data.timestamp,
+    fees: data.transaction.fee.amount,
+    timestamp: data.transaction.block.timestamp,
     index: data.index,
     hash: data.transaction_hash,
   };
