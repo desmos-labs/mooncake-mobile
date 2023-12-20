@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import Constants from 'config/Constants';
+import { useAppStateValue } from '@recoil/appState';
 import { useMemo } from 'react';
 import GetBlockedForAddress from 'services/graphql/queries/GetBlockedForAddress';
 
@@ -9,11 +9,12 @@ import GetBlockedForAddress from 'services/graphql/queries/GetBlockedForAddress'
  */
 const useIsBlocked = (counterparty: string) => {
   const activeAddress = useActiveAccountAddress();
+  const subspaceId = useAppStateValue('subspaceId');
 
   const { data, refetch } = useQuery(GetBlockedForAddress, {
     fetchPolicy: 'network-only',
     variables: {
-      subspaceId: Constants.subspaceId,
+      subspaceId,
       blockerAddress: activeAddress,
       blockedAddress: counterparty,
     },

@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import Constants from 'config/Constants';
+import { useAppStateValue } from '@recoil/appState';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import React from 'react';
@@ -13,6 +13,7 @@ import { DesmosProfile } from 'types/desmos';
  */
 const useFetchUserFollowing = (address: string | undefined) => {
   const [fetchFollowing] = useLazyQuery(GetAccountFollowing);
+  const subspaceId = useAppStateValue('subspaceId');
 
   return React.useCallback<FetchDataFunction<DesmosProfile>>(
     async (offset: number, limit: number) => {
@@ -23,7 +24,7 @@ const useFetchUserFollowing = (address: string | undefined) => {
       const { data, error } = await fetchFollowing({
         fetchPolicy: 'no-cache',
         variables: {
-          subspaceId: Constants.subspaceId,
+          subspaceId,
           userAddress: address,
           offset,
           limit,
