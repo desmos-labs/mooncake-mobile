@@ -9,6 +9,7 @@
   "follow": "Follow",
   "unfollow": "Unfollow",
   "following": "Following",
+  "followers": "Followers",
   "creating relationship title": "Relationship being created",
   "relationship created title": "Relationship created",
   "relationship created body": "You have successfully followed {{user}}",

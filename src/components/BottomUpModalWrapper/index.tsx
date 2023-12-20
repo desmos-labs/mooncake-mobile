@@ -1,8 +1,8 @@
 import { makeStyle } from 'config/theme';
-import React, { useState } from 'react';
-import { Keyboard, TouchableOpacity, TouchableOpacityProps } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
 import { HStack, useTheme } from 'native-base';
+import React, { useState } from 'react';
+import { DimensionValue, Keyboard, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 
@@ -14,9 +14,9 @@ type Props = TouchableOpacityProps & {
   /**
    * optional padding
    */
-  paddingHorizontal?: number | string;
-  paddingTop?: number | string;
-  paddingBottom?: number | string;
+  paddingHorizontal?: number | DimensionValue;
+  paddingTop?: number | DimensionValue;
+  paddingBottom?: number | DimensionValue;
 };
 
 /**

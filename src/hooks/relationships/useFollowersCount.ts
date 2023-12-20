@@ -1,7 +1,7 @@
-import { useActiveAccountAddress } from '@recoil/accounts';
 import { useQuery } from '@apollo/client';
-import GetFollowersCount from 'services/graphql/queries/GetFollowersCount';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
+import GetFollowersCount from 'services/graphql/queries/GetFollowersCount';
 
 /**
  * Hook that returns the number of users that the user having the given address is being followed by.
@@ -17,6 +17,9 @@ const useFollowersCount = (address: string | undefined) => {
     variables: {
       subspaceId,
       userAddress: address ?? activeAddress ?? '',
+    },
+    onError: error => {
+      console.error('ERROR FOLLOWERS', error);
     },
   });
 

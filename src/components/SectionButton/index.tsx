@@ -1,7 +1,7 @@
+import { FontAwesome } from '@expo/vector-icons';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { Image, ImageProps, TouchableOpacity } from 'react-native';
-import { useTheme } from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Typography from '../Typography';
 import useStyles from './useStyles';
 
@@ -18,7 +18,7 @@ type Props = {
   /**
    * This will change based on how we manage custom icons
    */
-  rightIconName?: string;
+  rightIconName?: any;
 };
 
 const SectionButton: React.FC<Props> = props => {
@@ -30,7 +30,7 @@ const SectionButton: React.FC<Props> = props => {
     <TouchableOpacity style={styles.root} onPress={onPress ?? onPress}>
       {leftIcon && <Image style={styles.icon} source={leftIcon} resizeMode="contain" />}
       <Typography.Subtitle2 style={styles.label}>{label}</Typography.Subtitle2>
-      <Icon
+      <FontAwesome
         name={rightIconName || 'angle-right'}
         color={theme.colors.surfaceBlack}
         size={24}

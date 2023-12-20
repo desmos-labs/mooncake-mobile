@@ -1,10 +1,11 @@
-import React from 'react';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import { useLazyQuery } from '@apollo/client';
-import GetAccountFollowing from 'services/graphql/queries/GetAccountFollowing';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import Constants from 'config/Constants';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
-import { DesmosProfile } from 'types/desmos';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
+import React from 'react';
+import GetAccountFollowing from 'services/graphql/queries/GetAccountFollowing';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Hook that provides a function that can be used inside the usePaginatedData
@@ -22,6 +23,7 @@ const useFetchUserFollowing = (address: string | undefined) => {
       const { data, error } = await fetchFollowing({
         fetchPolicy: 'no-cache',
         variables: {
+          subspaceId: Constants.subspaceId,
           userAddress: address,
           offset,
           limit,

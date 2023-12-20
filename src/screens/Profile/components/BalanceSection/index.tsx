@@ -1,17 +1,17 @@
+import { Coin } from '@cosmjs/stargate';
+import { FontAwesome } from '@expo/vector-icons';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import { infoIcon } from 'assets/images';
+import ImageButton from 'components/ImageButton';
+import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
+import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfileOperations';
+import { formatCoins, formatNumber } from 'lib/FormatUtils';
+import { Divider, HStack, useTheme, VStack } from 'native-base';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { Divider, HStack, useTheme, VStack } from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Coin } from '@cosmjs/stargate';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import { formatCoins, formatNumber } from 'lib/FormatUtils';
-import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
-import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfileOperations';
-import StyledSpinner from 'components/StyledSpinner';
-import ImageButton from 'components/ImageButton';
-import { infoIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 interface BalanceSectionProps {
@@ -79,14 +79,12 @@ const BalanceSection = (props: BalanceSectionProps) => {
           <VStack>
             <HStack>
               <Typography.Body6>{t('balance')}</Typography.Body6>
-
               <ImageButton
                 style={styles.infoButtonIcon}
                 image={infoIcon}
                 onPress={handlePressBalanceInfo}
               />
             </HStack>
-
             <Typography.H3
               style={{
                 color: theme.colors.surfaceBlack,
@@ -94,7 +92,6 @@ const BalanceSection = (props: BalanceSectionProps) => {
               {formatCoins(balance, ', ')}
             </Typography.H3>
           </VStack>
-
           {/* Fiat amount (USD, EUR, etc) */}
           {isFiatAmountLoading ? (
             <StyledSpinner />
@@ -104,12 +101,10 @@ const BalanceSection = (props: BalanceSectionProps) => {
               {formatNumber(fiatAmount)}
             </Typography.Body6>
           )}
-
           {/* Personal data - Only displayed if not guest */}
           {!isGuestProfile && (
             <>
               <Divider style={styles.divider} />
-
               {/* Operations button */}
               <TouchableOpacity style={styles.button} onPress={handlePressOperations}>
                 <Typography.Body6
@@ -119,7 +114,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
                   }}>
                   {t('operations')}
                 </Typography.Body6>
-                <Icon
+                <FontAwesome
                   name="angle-right"
                   color={theme.colors.butterOrange01}
                   size={22}

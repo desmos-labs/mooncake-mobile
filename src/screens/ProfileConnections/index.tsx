@@ -8,7 +8,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useFollowersCount from 'hooks/relationships/useFollowersCount';
+import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import { formatNumShorthand } from 'lib/FormatUtils';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -19,12 +22,9 @@ import {
   PanResponder,
   PanResponderGestureState,
 } from 'react-native';
-import { useTheme } from 'native-base';
-import useFollowersCount from 'hooks/relationships/useFollowersCount';
-import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import { DesmosProfile } from 'types/desmos';
-import FollowingTab from './components/FollowingTab';
 import FollowersTab from './components/FollowersTab';
+import FollowingTab from './components/FollowingTab';
 import useStyles from './useStyles';
 
 // -------------------------------------------------------------------------------------
@@ -133,6 +133,7 @@ const ProfileConnections = () => {
     tabBarInactiveTintColor: theme.colors.grey01,
     tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled,
+    lazy: true,
   };
 
   const CenterElement = useMemo(() => {

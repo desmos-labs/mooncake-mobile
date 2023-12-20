@@ -15,6 +15,9 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  topBar: {
+    paddingHorizontal: theme.spacing.m,
+  },
 }));
 
 export default useStyles;
