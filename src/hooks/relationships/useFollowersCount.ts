@@ -18,9 +18,6 @@ const useFollowersCount = (address: string | undefined) => {
       subspaceId,
       userAddress: address ?? activeAddress ?? '',
     },
-    onError: error => {
-      console.error('ERROR FOLLOWERS', error);
-    },
   });
 
   return {
