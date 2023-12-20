@@ -13,15 +13,19 @@ import { DesmosProfile } from 'types/desmos';
 import Button from 'components/Button';
 import { useTheme } from 'native-base';
 import useStyles from './useStyles';
-import { useCreators } from './hooks';
+import { FollowedProfile, useCreators } from './hooks';
 import CreatorListItem from './components/CreatorListItem';
 
 export interface FollowCreatorsParams {}
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.FOLLOW_CREATORS>;
 
+// The number of users that the current user must follow before
+// they can continue with the onboarding process.
+const MIN_FOLLOWAGE_COUNT = 3;
+
 /**
- * Screen that will allow the user to follow their first 3 creators.
+ * Screen that will allow the user to follow their first creators.
  * This screen will be shown during the onboarding process.
  */
 const FollowCreators: React.FC<NavProps> = () => {
@@ -30,24 +34,77 @@ const FollowCreators: React.FC<NavProps> = () => {
   const { t } = useTranslation('onboarding');
 
   // -----------------------------------------------------
+  // ----- States
+  // -----------------------------------------------------
+
+  const [selectedAccounts, setSelectedAccounts] = React.useState<DesmosProfile[]>([]);
+
+  // -----------------------------------------------------
   // ----- Hooks
   // -----------------------------------------------------
-  //
-  const { creators, loading, fetchMore, refresh, refreshing } = useCreators();
+
+  const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
+
+  // -----------------------------------------------------
+  // ----- Variables
+  // -----------------------------------------------------
+
+  const totalFollowageCount = React.useMemo(() => {
+    return selectedAccounts.length + followageCount;
+  }, [followageCount, selectedAccounts.length]);
+
+  const buttonLabel = React.useMemo(() => {
+    // The user is following at least the required number of accounts,
+    // so they can skip the creation of new relationships.
+    if (followageCount >= MIN_FOLLOWAGE_COUNT && selectedAccounts.length === 0) {
+      return t('skip', { ns: 'common' });
+    }
+
+    return t('next', { ns: 'common' });
+  }, [followageCount, selectedAccounts.length, t]);
 
   // -----------------------------------------------------
   // ----- Callbacks
   // -----------------------------------------------------
 
-  const renderItem = React.useCallback<ListRenderItem<DesmosProfile>>(({ item }) => {
-    return (
-      <CreatorListItem profile={item} onSelectChange={() => {}} selected={false} disabled={true} />
-    );
+  const onAccountSelected = React.useCallback((profile: DesmosProfile, selected: boolean) => {
+    if (selected) {
+      setSelectedAccounts(currentAccounts => [...currentAccounts, profile]);
+    } else {
+      setSelectedAccounts(currentAccounts =>
+        currentAccounts.filter(account => account.address !== profile.address),
+      );
+    }
   }, []);
 
+  const renderItem = React.useCallback<ListRenderItem<FollowedProfile>>(
+    ({ item }) => {
+      const isSelected =
+        item.following ||
+        selectedAccounts.findIndex(account => account.address === item.address) > -1;
+
+      return (
+        <CreatorListItem
+          profile={item}
+          onSelectChange={onAccountSelected}
+          selected={isSelected}
+          disabled={item.following}
+        />
+      );
+    },
+    [onAccountSelected, selectedAccounts],
+  );
+
   const onNextPressed = React.useCallback(() => {
-    console.warn('TODO: on next pressed');
-  }, []);
+    if (selectedAccounts.length > 0) {
+      // TODO: Broadcast the MsgCreateRelationship.
+      console.warn('TODO: broadcast the MsgCreateRelationship', selectedAccounts);
+    } else {
+      // TODO: Skip the MsgCreateRelationship broadcast, the user
+      // is already following the required amount of creators.
+      console.warn('TODO: skip the MsgCreateRelationship broadcast');
+    }
+  }, [selectedAccounts]);
 
   return (
     <DView style={styles.root} topBar={<TopBar />}>
@@ -64,15 +121,17 @@ const FollowCreators: React.FC<NavProps> = () => {
         refreshing={refreshing}
         onRefresh={refresh}
         onEndReached={fetchMore}
+        extraData={selectedAccounts}
         ListFooterComponent={<ActivityIndicator hidesWhenStopped animating={loading} />}
       />
 
       <Spacer paddingTop="l" />
       <Button
+        disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT}
         bgColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={onNextPressed}>
-        {t('next', { ns: 'common' })}
+        {buttonLabel}
       </Button>
 
       <Spacer paddingBottom={58} />
