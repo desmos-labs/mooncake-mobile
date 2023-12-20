@@ -1,15 +1,15 @@
-import React, { useMemo } from 'react';
-import useBlocked from 'hooks/relationships/useBlocked';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
-import { Image, View } from 'react-native';
-import { DesmosProfile } from 'types/desmos';
 import Typography from 'components/Typography';
+import useBlocked from 'hooks/relationships/useBlocked';
 import { Box, Divider } from 'native-base';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { emptyListPlaceholder } from 'assets/images';
+import { Image, View } from 'react-native';
 import BlockedUserItem from 'screens/BlockedUsers/components/BlockedUserItem';
+import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
 /**
@@ -63,11 +63,13 @@ const BlockedUsers = () => {
   );
 
   return (
-    <DView topBar={<TopBar />} backgroundColor="white" disableHideKeyboardTouchable>
+    <DView
+      topBar={<TopBar style={styles.topBar} />}
+      backgroundColor="white"
+      disableHideKeyboardTouchable>
       <Box ml="20px" mb="l">
         <Typography.H3>{t('blocked users')}</Typography.H3>
       </Box>
-
       <FlashList
         scrollEnabled
         refreshing={loading}

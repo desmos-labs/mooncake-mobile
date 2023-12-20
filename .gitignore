@@ -91,3 +91,7 @@ contents.xcworkspacedata
 .expo/
 android/
 ios/
+
+#GQL
+graphql.config.yml
+schema.desmos.graphql

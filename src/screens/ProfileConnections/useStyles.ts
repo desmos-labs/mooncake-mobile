@@ -8,6 +8,7 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   topBar: {
     backgroundColor: theme.colors.white,
     shadowOpacity: 0,
+    marginHorizontal: theme.spacing.m,
   },
   tabBar: {
     backgroundColor: theme.colors.white,
