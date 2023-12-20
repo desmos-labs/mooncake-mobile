@@ -27,6 +27,7 @@ const routesToRender = [
   ROUTES.BOTTOM_TABS,
   ROUTES.UNLOCK_WALLET,
   ROUTES.BOTTOM_SHEET,
+  ROUTES.FOLLOW_CREATORS,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
