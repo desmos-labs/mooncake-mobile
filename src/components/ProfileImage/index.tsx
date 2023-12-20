@@ -53,12 +53,10 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ imageSource, size, disabled
   // -----------------------------------------------------
 
   const onLoadStart = React.useCallback(() => {
-    console.log('on load start');
     setLoading(true);
   }, []);
 
   const onLoadEnd = React.useCallback(() => {
-    console.log('on load end');
     setLoading(false);
   }, []);
 
