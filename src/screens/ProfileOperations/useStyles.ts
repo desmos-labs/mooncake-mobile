@@ -5,6 +5,11 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     paddingHorizontal: theme.spacing.m,
   },
+  flexCenter: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   sectionHeader: {
     flex: 1,
     backgroundColor: theme.colors.white,

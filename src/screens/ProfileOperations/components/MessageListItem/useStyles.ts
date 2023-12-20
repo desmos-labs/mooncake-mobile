@@ -1,4 +1,5 @@
 import { makeStyle } from 'config/theme';
+import { scale } from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -6,10 +7,9 @@ const useStyles = makeStyle(theme => ({
     paddingVertical: theme.spacing.m,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    resizeMode: 'cover',
-    borderRadius: 20,
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
   },
   profileView: {
     marginLeft: theme.spacing.s,
