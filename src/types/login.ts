@@ -58,35 +58,39 @@ export enum LoginFlowStep {
    */
   AccountCreated,
   /**
+   * The user has created their profile, and we need to let the user
+   * select which creators they want to follow before navigating to the home.
+   */
+  FollowCreators,
+  /**
    * The login flow is completed, we have both the user's account
    * and their profile.
    */
   Completed,
 }
 
+interface BaseLoginFlowState<T extends LoginFlowStep> {
+  readonly step: T;
+}
+
 /**
  * Inteface that represents a login flow state where we are
  * not logged in.
  */
-interface LoginFlowStateNone {
-  readonly step: LoginFlowStep.None;
-}
+interface LoginFlowStateNone extends BaseLoginFlowState<LoginFlowStep.None> {}
 
 /**
  * Inteface that represents a login flow state where we are
  * waiting the fee grant.
  */
-interface LoginFlowStateWaitingFeeGrant {
-  readonly step: LoginFlowStep.WaitingFeeGrant;
-}
+interface LoginFlowStateWaitingFeeGrant extends BaseLoginFlowState<LoginFlowStep.WaitingFeeGrant> {}
 
 /**
  * Inteface that represents a login flow state where we have
  * the user's account and the user have enough tokens or have requested
  * a fee grant to pay for the transaction to create the profile.
  */
-interface LoginFlowStateAccountCreated {
-  readonly step: LoginFlowStep.AccountCreated;
+interface LoginFlowStateAccountCreated extends BaseLoginFlowState<LoginFlowStep.AccountCreated> {
   /**
    * Address of the fee granter that we should use to pay for the transaction
    * fees. If undefined means that the user have enough tokens to pay for the
@@ -97,14 +101,20 @@ interface LoginFlowStateAccountCreated {
 
 /**
  * Interface that represents a login flow state where we have
+ * the user's account and the user has created their profile and we have to ask
+ * the user to select which creators they want to follow.
+ */
+interface LoginFlowStateFollowCreators extends BaseLoginFlowState<LoginFlowStep.FollowCreators> {}
+
+/**
+ * Interface that represents a login flow state where we have
  * completed the login and we have both the account and the profile.
  */
-interface LoginFlowStateCompleted {
-  readonly step: LoginFlowStep.Completed;
-}
+interface LoginFlowStateCompleted extends BaseLoginFlowState<LoginFlowStep.Completed> {}
 
 export type LoginFlowState =
   | LoginFlowStateNone
   | LoginFlowStateWaitingFeeGrant
   | LoginFlowStateAccountCreated
+  | LoginFlowStateFollowCreators
   | LoginFlowStateCompleted;
