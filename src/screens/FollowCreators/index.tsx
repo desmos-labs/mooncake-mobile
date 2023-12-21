@@ -21,11 +21,6 @@ import CreatorListItem from './components/CreatorListItem';
 
 export interface FollowCreatorsParams {
   /**
-   * The user's  wallet that will be used to broadcast
-   * the MsgCreateRelationship messages.
-   */
-  readonly wallet: Wallet;
-  /**
    * Callback that will be called when the user has finished the
    * following process.
    * This can be called in both cases, whether the transaction has been
@@ -48,7 +43,7 @@ const MIN_FOLLOWAGE_COUNT = 3;
  */
 const FollowCreators: React.FC<NavProps> = ({
   route: {
-    params: { wallet, onDone },
+    params: { onDone },
   },
 }) => {
   const styles = useStyles();
@@ -65,10 +60,8 @@ const FollowCreators: React.FC<NavProps> = ({
   // ----- Hooks
   // -----------------------------------------------------
 
-  const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators(
-    wallet.address,
-  );
-  const followCreators = useFollowCreators(wallet, onDone);
+  const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
+  const followCreators = useFollowCreators(onDone);
   const setLoginFlowState = useSetLoginFlowState();
 
   // -----------------------------------------------------
@@ -129,6 +122,9 @@ const FollowCreators: React.FC<NavProps> = ({
     setLoginFlowState({
       step: LoginFlowStep.FollowCreators,
     });
+
+    // Safe to ignore, we want to execute this effect just one time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
