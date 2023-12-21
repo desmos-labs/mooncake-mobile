@@ -1,5 +1,5 @@
 import { getWeek } from 'date-fns';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Notification } from 'types/notifications';
 
@@ -49,20 +49,4 @@ export const useSplitNotificationsByWeek = () => {
     },
     [t],
   );
-};
-
-/**
- * Function that is used to get the key for each item inside the list
- */
-export const useKeyExtractor = () => {
-  return useCallback((item: string | Notification, index: number) => {
-    switch (typeof item) {
-      case 'string':
-        return `sectionHeader${index}`;
-      default: {
-        const { id, timestamp } = item as Notification;
-        return `row${id}${timestamp}`;
-      }
-    }
-  }, []);
 };

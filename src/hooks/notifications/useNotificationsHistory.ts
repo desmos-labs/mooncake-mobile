@@ -1,77 +1,68 @@
-import { useQuery } from '@apollo/client';
-import _ from 'lodash';
-import { useCallback, useMemo, useState } from 'react';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
+import React from 'react';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
-import { GqlGetNotificationsResult } from 'types/notifications';
+import { Notification } from 'types/notifications';
+
+/**
+ * Hook that provides a function that can be used from the usePaginatedData hook
+ * to fetch the notifications.
+ */
+const useFetchNotifications = () => {
+  const [getNotifications] = useCustomLazyQuery(GetNotifications);
+
+  return React.useCallback<FetchDataFunction<Notification, Date>>(
+    async (offset, limit, filter) => {
+      const data = await getNotifications({
+        query: GetNotifications,
+        fetchPolicy: 'network-only',
+        variables: {
+          startDate: filter!.toISOString(),
+          limit,
+          offset,
+        },
+      });
+
+      const safeNotifications: Notification[] = data?.notifications ?? [];
+
+      return {
+        data: safeNotifications,
+        endReached: safeNotifications.length < limit,
+      };
+    },
+    [getNotifications],
+  );
+};
 
 /**
  * Hook that allows to get the notifications history of the current application user.
  */
 const useNotificationsHistory = (_notificationsPerPage: number = 20) => {
-  const [fetchingMore, setFetchingMore] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const { data, loading, fetchMore, refetch } = useQuery<GqlGetNotificationsResult>(
-    GetNotifications,
+  const fetchNotifications = useFetchNotifications();
+  const [lastFetchTimestamp, setLastFetchTimestamp] = React.useState(new Date());
+  const { data, loading, updateFilter, error, ...otherFields } = usePaginatedData(
+    fetchNotifications,
     {
-      variables: {
-        limit: _notificationsPerPage,
-        offset: 0,
-      },
+      itemsPerPage: 20,
+      initialFilter: lastFetchTimestamp,
+      autoFetchFirstPage: true,
     },
   );
 
-  const notifications = useMemo(() => {
-    if (!data) {
-      return [];
-    }
-    return data.notifications;
-  }, [data]);
-
-  const fetchMoreNotifications = useCallback(() => {
-    if (fetchingMore) {
-      return;
-    }
-    setFetchingMore(true);
-    _.debounce(async () => {
-      try {
-        await fetchMore({
-          variables: { offset: notifications.length },
-          updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult || fetchMoreResult.notifications.length === 0) {
-              return prev;
-            }
-
-            return {
-              notifications: [...prev.notifications, ...fetchMoreResult.notifications],
-            };
-          },
-        });
-      } catch (e: any) {
-        console.log(e.toString());
-      } finally {
-        setFetchingMore(false);
-      }
-    }, 500)();
-  }, [fetchMore, fetchingMore, notifications.length]);
-
-  const refresh = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      await refetch({ offset: 0 });
-    } catch (e: any) {
-    } finally {
-      setRefreshing(false);
-    }
-  }, [refetch]);
+  const refetch = React.useCallback(async () => {
+    // Since here we use a filter to define the start date from which
+    // the notification will be fetched, we use the update filter fucntion
+    // to trigger a refetch.
+    const newDate = new Date();
+    setLastFetchTimestamp(newDate);
+    updateFilter(newDate, true);
+  }, [updateFilter]);
 
   return {
-    notifications,
+    notifications: data,
     loading,
-    fetchMore: fetchMoreNotifications,
-    fetchingMore,
-    refresh,
-    refreshing,
-    error: undefined,
+    refetch,
+    ...otherFields,
   };
 };
 

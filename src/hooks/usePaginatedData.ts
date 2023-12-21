@@ -1,12 +1,12 @@
+import sleep from 'lib/sleep';
 import _ from 'lodash';
 import React from 'react';
-import sleep from 'lib/sleep';
 
 /**
  * Type that represents the data fetched from @see {@link FetchDataFunction} function.
  * @typeParam T - Type of the fetched data.
  */
-type PaginatedResult<T> = {
+export type PaginatedResult<T> = {
   /**
    * List of fetched items.
    */
@@ -35,7 +35,7 @@ export type FetchDataFunction<T, F extends Object = {}> = (
  * Interface that represents the configurations that can be provided to the
  * usePaginatedData hook.
  */
-interface PaginatedDataConfig<T, F extends Object> {
+export interface PaginatedDataConfig<T, F extends Object> {
   /**
    * Number of items that should be fetched per page.
    */

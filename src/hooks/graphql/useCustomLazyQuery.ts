@@ -1,11 +1,13 @@
-import React from 'react';
 import { DocumentNode, useLazyQuery as useApolloLazyQuery } from '@apollo/client';
 import { OperationVariables } from '@apollo/client/core';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { LazyQueryHookOptions, QueryResult } from '@apollo/client/react/types/types';
+import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import React from 'react';
 
-type CustomLazyQueryResultTuple<TData, TVariables extends OperationVariables> = [
-  (opts?: Partial<LazyQueryHookOptions<TData, TVariables>> | undefined) => Promise<any>,
+export type CustomLazyQueryResultTuple<TData, TVariables extends OperationVariables> = [
+  (
+    opts?: Partial<LazyQueryHookOptions<TData, TVariables>> | undefined,
+  ) => Promise<TData | undefined>,
   Pick<QueryResult<TData, TVariables>, 'fetchMore' | 'refetch'>,
 ];
 
@@ -21,12 +23,16 @@ const useCustomLazyQuery = <
 ): CustomLazyQueryResultTuple<TData, TVariables> => {
   const [getData, { refetch, fetchMore }] = useApolloLazyQuery<TData, TVariables>(query, options);
   const getLazyData = React.useCallback(
-    async (opts?: Partial<LazyQueryHookOptions<TData, TVariables>>): Promise<any | undefined> => {
-      return new Promise((resolve, reject) => {
+    async (opts?: Partial<LazyQueryHookOptions<TData, TVariables>>): Promise<TData | undefined> => {
+      return new Promise<TData | undefined>((resolve, reject) => {
         const extraOptions = opts || {};
-        extraOptions.onCompleted = resolve;
-        extraOptions.onError = reject;
-        getData(extraOptions);
+        getData(extraOptions).then(data => {
+          if (data.error) {
+            reject(data.error);
+          } else {
+            resolve(data.data);
+          }
+        });
       });
     },
     [getData],

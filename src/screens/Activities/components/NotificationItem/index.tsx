@@ -8,7 +8,6 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useToast from 'hooks/toasts/useToast';
 import { getNotificationOriginator } from 'lib/NotificationsUtils';
-import { getProfileDisplayName } from 'lib/ProfileUtils';
 import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
@@ -132,18 +131,14 @@ const NotificationItem = (props: NotificationComponentProps) => {
       <View style={styles.flexRowView}>
         {/* User profile image */}
         {notificationOriginator ? (
-          <AvatarImage
-            profile={profile}
-            size={40}
-            loading={loadingProfile}
-            onPress={handleNavigateToProfile}
-          />
+          <TouchableOpacity onPress={handleNavigateToProfile}>
+            <AvatarImage imageSource={profile} size={40} loading={loadingProfile} />
+          </TouchableOpacity>
         ) : (
           <Image style={styles.avatar} source={defaultProfilePic} />
         )}
         {/* Notification texts */}
         <TouchableOpacity style={styles.profileView} onPress={onNotificationPressed}>
-          {profile && <Typography.Subtitle3>{getProfileDisplayName(profile)}</Typography.Subtitle3>}
           <Typography.Body6>{notification.title}</Typography.Body6>
           <Typography.Body7 style={styles.date}>{formattedDate}</Typography.Body7>
         </TouchableOpacity>
