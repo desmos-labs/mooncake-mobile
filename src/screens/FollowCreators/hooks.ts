@@ -5,7 +5,7 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import React from 'react';
-import GetCreators from 'services/graphql/queries/GetCreators';
+import GetCreators, { GetCreatorsGqlResponse } from 'services/graphql/queries/GetCreators';
 import GetFollowageCount, {
   GetFollowageCountGqlResponse,
 } from 'services/graphql/queries/GetFollowageCount';
@@ -34,7 +34,7 @@ const useFetchCreators = () => {
   const subspaceId = useAppStateValue('subspaceId');
   const activeAccountAddress = useActiveAccountAddress();
 
-  return React.useCallback<FetchDataFunction<DesmosProfile>>(
+  return React.useCallback<FetchDataFunction<FollowedProfile>>(
     async (offset, limit) => {
       // Query a list of profiles.
       const { data, error } = await apolloClient.query<GetCreatorsGqlResponse>({
