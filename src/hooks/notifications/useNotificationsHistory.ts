@@ -2,14 +2,14 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import React from 'react';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
-import { Notification } from 'types/notifications';
+import { GqlGetNotificationsResult, Notification } from 'types/notifications';
 
 /**
  * Hook that provides a function that can be used from the usePaginatedData hook
  * to fetch the notifications.
  */
 const useFetchNotifications = () => {
-  const [getNotifications] = useCustomLazyQuery(GetNotifications);
+  const [getNotifications] = useCustomLazyQuery<GqlGetNotificationsResult>(GetNotifications);
 
   return React.useCallback<FetchDataFunction<Notification, Date>>(
     async (offset, limit, filter) => {
