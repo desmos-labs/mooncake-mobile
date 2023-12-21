@@ -21,7 +21,8 @@ interface AvatarImageProps {
    */
   readonly disabled?: boolean;
   /**
-   * Tells if the image source is loaded from the parent component.
+   * Tells if the image source it's being loaded from
+   * the parent component.
    */
   readonly loading?: boolean;
 }
