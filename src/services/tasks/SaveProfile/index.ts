@@ -1,10 +1,10 @@
+import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
+import { getTaskContext, TaskJob } from 'lib/BackgroundTaskUtils';
+import { unwrapResult } from 'lib/NeverThrowUtils';
+import { uploadPicture } from 'lib/UploadUtils';
+import { err, ok, Result } from 'neverthrow';
 import { SignAndBroadcastTxParams } from 'services/tasks/SignAndBroadcastTx';
 import { DesmosProfile } from 'types/desmos';
-import { getTaskContext, TaskJob } from 'lib/BackgroundTaskUtils';
-import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
-import { err, ok, Result } from 'neverthrow';
-import { uploadPicture } from 'lib/UploadUtils';
-import { unwrapResult } from 'lib/NeverThrowUtils';
 import { UploadMediaResponse } from 'types/media';
 
 interface SaveProfileTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'> {
@@ -24,6 +24,10 @@ interface ProfilePictureUploadResults {
   readonly coverPictureUrl?: string;
 }
 
+const isPictureLocal = (picture: string | undefined): picture is string => {
+  return picture !== undefined && (picture.startsWith('file://') || picture.startsWith('/'));
+};
+
 /**
  * Uploads the given pictures to the Desmos media server.
  * @param profilePicture - Profile picture to be uploaded.
@@ -38,19 +42,14 @@ const uploadPictures = async (
   let uploadProfilePictureResult: Result<UploadMediaResponse, Error> | undefined;
   let uploadCoverPictureResult: Result<UploadMediaResponse, Error> | undefined;
 
-  const isProfilePictureToUpload =
-    profilePicture !== undefined && profilePicture.startsWith('file://');
-
-  const isCoverPictureToUpload = coverPicture !== undefined && coverPicture.startsWith('file://');
-
-  if (isProfilePictureToUpload) {
+  if (isPictureLocal(profilePicture)) {
     uploadProfilePictureResult = await uploadPicture(profilePicture, bearerToken);
     if (uploadProfilePictureResult.isErr()) {
       return err(uploadProfilePictureResult.error);
     }
   }
 
-  if (isCoverPictureToUpload) {
+  if (isPictureLocal(coverPicture)) {
     uploadCoverPictureResult = await uploadPicture(coverPicture, bearerToken);
     if (uploadCoverPictureResult.isErr()) {
       return err(uploadCoverPictureResult.error);
@@ -87,13 +86,9 @@ const SaveProfileTask: TaskJob<SaveProfileTaskParams, string> = async (
     profile.profilePicture,
     profile.coverPicture,
     apiBearerToken,
-  );
-  if (uploadPictureResult.isErr()) {
-    return err(uploadPictureResult.error);
-  }
+  ).then(unwrapResult);
 
-  const { profilePictureUrl, coverPictureUrl } = uploadPictureResult.value;
-
+  const { profilePictureUrl, coverPictureUrl } = uploadPictureResult;
   // Build the message to save the profile on-chain
   const msgSaveProfile: Profiles.v3.MsgSaveProfileEncodeObject = {
     typeUrl: Profiles.v3.MsgSaveProfileTypeUrl,
