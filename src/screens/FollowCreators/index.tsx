@@ -53,16 +53,6 @@ const FollowCreators: React.FC<NavProps> = () => {
     return selectedAccounts.length + followageCount;
   }, [followageCount, selectedAccounts.length]);
 
-  const buttonLabel = React.useMemo(() => {
-    // The user is following at least the required number of accounts,
-    // so they can skip the creation of new relationships.
-    if (followageCount >= MIN_FOLLOWAGE_COUNT && selectedAccounts.length === 0) {
-      return t('skip', { ns: 'common' });
-    }
-
-    return t('next', { ns: 'common' });
-  }, [followageCount, selectedAccounts.length, t]);
-
   // -----------------------------------------------------
   // ----- Callbacks
   // -----------------------------------------------------
@@ -131,7 +121,7 @@ const FollowCreators: React.FC<NavProps> = () => {
         bgColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={onNextPressed}>
-        {buttonLabel}
+        {t('next', { ns: 'common' })}
       </Button>
 
       <Spacer paddingBottom={58} />
