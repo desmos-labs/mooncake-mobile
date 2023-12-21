@@ -30,6 +30,10 @@ interface ErrorActionOptions {
 }
 
 interface SignAndBroadcastOptions {
+  /**
+   * Optional wallet to use to sign the transaction
+   * instead of using the current active user's wallet.
+   */
   readonly wallet?: Wallet;
   readonly memo?: string;
   readonly onLoading?: ActionOptions;

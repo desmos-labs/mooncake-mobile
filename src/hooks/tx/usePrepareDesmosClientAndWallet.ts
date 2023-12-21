@@ -20,29 +20,32 @@ const usePrepareDesmosClientAndWallet = () => {
   const unlockWallet = useUnlockWallet();
 
   return React.useCallback(
-    async (wallet?: Wallet): Promise<Result<DesmosClientResult, Error>> => {
+    async (walletOvveride?: Wallet): Promise<Result<DesmosClientResult, Error>> => {
       if (!chainInfo || !chainGasPrice) {
         return err(Error('Missing chain info or gas price'));
       }
 
-      let userWallet = wallet;
-      if (userWallet === undefined) {
-        // Get the user's wallet by unlocking it or using the in-memory one
+      // Get the user's wallet by unlocking it or using the in-memory one
+      let wallet: Wallet;
+      if (walletOvveride === undefined) {
         const walletUnlockResult = await unlockWallet();
         if (walletUnlockResult.isErr()) {
           return err(walletUnlockResult.error);
         }
-        userWallet = walletUnlockResult.value.wallet;
+        const { wallet: unlockedWallet } = walletUnlockResult.value;
+        wallet = unlockedWallet;
+      } else {
+        wallet = walletOvveride;
       }
 
       // Prepare the desmos client
-      const result = await buildDesmosClient(chainInfo.rpcUrl, userWallet.signer, chainGasPrice);
+      const result = await buildDesmosClient(chainInfo.rpcUrl, wallet.signer, chainGasPrice);
       if (result.isErr()) {
         return err(result.error);
       }
 
       return ok({
-        wallet: userWallet,
+        wallet,
         desmosClient: result.value,
       });
     },
