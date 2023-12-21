@@ -1,6 +1,8 @@
+import { defaultProfilePic } from 'assets/images';
 import AvatarImage from 'components/AvatarImage';
 import Typography from 'components/Typography';
 import { ToastType } from 'config/toast/toastConfig';
+import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
@@ -18,6 +20,10 @@ import useStyles from './useStyles';
 
 interface NotificationComponentProps {
   readonly notification: Notification;
+  /**
+   * Callback called when the user press the notification.
+   */
+  readonly onPress?: (notification: Notification) => any;
 }
 
 /**
@@ -28,7 +34,7 @@ const NotificationItem = (props: NotificationComponentProps) => {
   const { t } = useTranslation('activities');
   const styles = useStyles();
   const showToast = useToast();
-  const { notification } = props;
+  const { notification, onPress } = props;
   const getProfile = useGetOnChainProfile();
 
   const [loadingProfile, setLoadingProfile] = React.useState(
@@ -39,16 +45,14 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------- VARIABLES ---------
 
   const notificationOriginator = React.useMemo(() => {
-    const ori = getNotificationOriginator(notification);
-    console.log('ORI', ori);
-    return ori;
+    return getNotificationOriginator(notification);
   }, [notification]);
 
   // -------- CALLBACKS --------
 
   const onNotificationPressed = React.useCallback(() => {
-    console.log('test');
-  }, [notification]);
+    onPress?.(notification);
+  }, [notification, onPress]);
 
   // -------- EFFECTS --------
 
@@ -127,14 +131,18 @@ const NotificationItem = (props: NotificationComponentProps) => {
     <View style={[styles.container]}>
       <View style={styles.flexRowView}>
         {/* User profile image */}
-        <AvatarImage
-          profile={profile}
-          size={40}
-          loading={loadingProfile}
-          onPress={handleNavigateToProfile}
-        />
+        {notificationOriginator ? (
+          <AvatarImage
+            profile={profile}
+            size={40}
+            loading={loadingProfile}
+            onPress={handleNavigateToProfile}
+          />
+        ) : (
+          <Image style={styles.avatar} source={defaultProfilePic} />
+        )}
         {/* Notification texts */}
-        <TouchableOpacity style={styles.profileView}>
+        <TouchableOpacity style={styles.profileView} onPress={onNotificationPressed}>
           {profile && <Typography.Subtitle3>{getProfileDisplayName(profile)}</Typography.Subtitle3>}
           <Typography.Body6>{notification.title}</Typography.Body6>
           <Typography.Body7 style={styles.date}>{formattedDate}</Typography.Body7>

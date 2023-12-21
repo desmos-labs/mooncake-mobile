@@ -8,7 +8,6 @@ const useStyles = makeStyle(theme => ({
   avatar: {
     width: 40,
     height: 40,
-    resizeMode: 'cover',
     borderRadius: 20,
   },
   profileAddressText: {

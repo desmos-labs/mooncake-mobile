@@ -6,6 +6,7 @@ import DView from 'components/DView';
 import ActivitiesListContentLoader from 'components/Loaders/ActivitiesListContentLoader';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import useHandleNotificationNavigation from 'hooks/notifications/useHandleNotificationNavigation';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { Divider, useTheme } from 'native-base';
 import React, { useCallback, useMemo } from 'react';
@@ -40,6 +41,16 @@ const Activities = () => {
 
   const splitNotificationsByWeek = useSplitNotificationsByWeek();
   const keyExtractor = useKeyExtractor();
+  const handleNotificationNavigation = useHandleNotificationNavigation();
+
+  // -------- CALLBACKS --------
+
+  const onNotificationPressed = React.useCallback(
+    (notification: Notification) => {
+      handleNotificationNavigation(notification.additionalData);
+    },
+    [handleNotificationNavigation],
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -97,15 +108,15 @@ const Activities = () => {
         // Render a section header
         return (
           <View style={styles.sectionHeader}>
-            <Typography.Button2>{t(item)}</Typography.Button2>
+            <Typography.Button2>{t(item as any)}</Typography.Button2>
           </View>
         );
       }
 
       // Render a notification
-      return <NotificationComponent notification={item} />;
+      return <NotificationComponent notification={item} onPress={onNotificationPressed} />;
     },
-    [styles.divider, styles.sectionHeader, t],
+    [styles, onNotificationPressed, t],
   );
 
   // Component shown at the bottom tof the page
