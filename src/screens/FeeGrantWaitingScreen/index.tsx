@@ -62,12 +62,16 @@ const FeeGrantWaitingScreen = () => {
     saveProfile({
       blockBackAction: true,
       onProfileSaved: async () => {
-        trackProfileCreated();
-        setLoginFlowState({
-          step: LoginFlowStep.Completed,
-        });
-        navigation.navigate(ROUTES.WELCOME_PAGE, {
-          action: 'create',
+        navigation.navigate(ROUTES.FOLLOW_CREATORS, {
+          onDone: () => {
+            trackProfileCreated();
+            setLoginFlowState({
+              step: LoginFlowStep.Completed,
+            });
+            navigation.navigate(ROUTES.WELCOME_PAGE, {
+              action: 'create',
+            });
+          },
         });
       },
     });

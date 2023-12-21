@@ -199,16 +199,19 @@ const useHooks = () => {
         saveProfile({
           accountWithWallet: account,
           onProfileSaved: async () => {
-            // TODO: Navigate to the select followers screen,
-            // and then navigate to the welcome screen.
-            setSigninStatus(SignInStatus.DONE);
-            setLoginFlowState({
-              step: LoginFlowStep.Completed,
-            });
-            trackLoggedInUser(account.account);
-            trackProfileCreated();
-            navigate(ROUTES.WELCOME_PAGE, {
-              action: 'create',
+            navigate(ROUTES.FOLLOW_CREATORS, {
+              wallet: account.wallet,
+              onDone: () => {
+                setSigninStatus(SignInStatus.DONE);
+                setLoginFlowState({
+                  step: LoginFlowStep.Completed,
+                });
+                trackLoggedInUser(account.account);
+                trackProfileCreated();
+                navigate(ROUTES.WELCOME_PAGE, {
+                  action: 'create',
+                });
+              },
             });
           },
         });
