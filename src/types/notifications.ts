@@ -190,7 +190,7 @@ interface PostLikeNotificationData extends BaseNotificationData {
   /**
    * Address of the user that has liked the post.
    */
-  readonly post_liker_address: string;
+  readonly post_like_address: string;
 }
 
 // ---------------------------------------------------------------------
@@ -248,3 +248,46 @@ export type NotificationData =
   | RelationshipCreatedNotificationData
   | NewFollowerNotificationData
   | NewTipNotificationData;
+
+/**
+ * Interface that represents the notifications that
+ * we retrive from the GQL endpoint.
+ */
+export interface Notification {
+  /**
+   * Notification ID.
+   */
+  readonly id: string;
+  /**
+   * Notification type.
+   */
+  readonly type: NotificationType;
+  /**
+   * Notification title.
+   */
+  readonly title: string;
+  /**
+   * Notification body.
+   */
+  readonly body: string;
+  /**
+   * Optional notification image.
+   */
+  readonly imageUrl?: string | null;
+  /**
+   * Notification timestamp.
+   */
+  readonly timestamp: string;
+  /**
+   * Data attached to the notification.
+   */
+  readonly additionalData: NotificationData;
+  /**
+   * Tells if the notification has been read.
+   */
+  readonly hasBeenRead: boolean;
+}
+
+export interface GqlGetNotificationsResult {
+  readonly notifications: Notification[];
+}

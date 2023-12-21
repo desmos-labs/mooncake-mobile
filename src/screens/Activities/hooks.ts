@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
-import { CompleteNotification } from 'types/notifications';
-import { useTranslation } from 'react-i18next';
 import { getWeek } from 'date-fns';
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Notification } from 'types/notifications';
 
 /**
- * Hook that, given a list of {@link CompleteNotification}, splits them into two lists:
+ * Hook that, given a list of {@link Notification}, splits them into two lists:
  * 1. the first one containing all the notifications that have timestamp within the current week
  * 2. the second one containing all the notifications that have timestamp older than the current week
  */
@@ -12,12 +12,12 @@ export const useSplitNotificationsByWeek = () => {
   const { t } = useTranslation('activities');
 
   return React.useCallback(
-    (notifications: CompleteNotification[]) => {
+    (notifications: Notification[]) => {
       const currentWeek = getWeek(new Date());
       const currentYear = new Date().getFullYear();
 
-      const notificationsThisWeek: CompleteNotification[] = [];
-      const notificationsOlderThanThisWeek: CompleteNotification[] = [];
+      const notificationsThisWeek: Notification[] = [];
+      const notificationsOlderThanThisWeek: Notification[] = [];
 
       notifications.forEach(notification => {
         const notificationDate = new Date(notification.timestamp);
@@ -55,12 +55,12 @@ export const useSplitNotificationsByWeek = () => {
  * Function that is used to get the key for each item inside the list
  */
 export const useKeyExtractor = () => {
-  return useCallback((item: string | CompleteNotification, index: number) => {
+  return useCallback((item: string | Notification, index: number) => {
     switch (typeof item) {
       case 'string':
         return `sectionHeader${index}`;
       default: {
-        const { id, timestamp } = item as CompleteNotification;
+        const { id, timestamp } = item as Notification;
         return `row${id}${timestamp}`;
       }
     }

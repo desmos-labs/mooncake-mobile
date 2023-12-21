@@ -1,10 +1,9 @@
 import { Image } from 'expo-image';
 import React from 'react';
-import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface NotificationImageProps {
-  readonly post: Post;
+  readonly imageUrl: string;
 }
 
 /**
@@ -14,14 +13,10 @@ interface NotificationImageProps {
  */
 const PostAttachmentsPreview = (props: NotificationImageProps) => {
   const styles = useStyles();
-  const { post } = props;
-
-  if (post.attachments.length === 0) {
-    return null;
-  }
+  const { imageUrl } = props;
 
   // TODO: Support multiple attachments
-  return <Image style={styles.postImage} source={{ uri: post.attachments[0].content.uri }} />;
+  return <Image style={styles.postImage} source={imageUrl} />;
 };
 
 export default PostAttachmentsPreview;

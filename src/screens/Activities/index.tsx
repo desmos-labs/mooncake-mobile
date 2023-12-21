@@ -12,6 +12,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
+import { Notification } from 'types/notifications';
 import { useKeyExtractor, useSplitNotificationsByWeek } from './hooks';
 import useStyles from './useStyles';
 
@@ -81,7 +82,7 @@ const Activities = () => {
 
   // Function that is used in order to render each item within the list
   const renderItem = useCallback(
-    (info: ListRenderItemInfo<any | string>) => {
+    (info: ListRenderItemInfo<Notification | string>) => {
       const { item } = info;
       if (typeof item === 'string') {
         // Render a divider
