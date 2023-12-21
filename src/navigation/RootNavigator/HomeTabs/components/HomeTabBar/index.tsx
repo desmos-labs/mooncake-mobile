@@ -3,7 +3,6 @@ import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsLi
 import HomeSearchBar from 'components/HomeSearchBar';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
-import { useTheme } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
@@ -27,7 +26,6 @@ const ICON_OFFSET = 80;
 const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
-  const theme = useTheme();
   const windowWidth = Dimensions.get('window').width;
 
   // -------------------------------------------------------------------------------------
