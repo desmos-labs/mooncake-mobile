@@ -15,8 +15,14 @@ import NotificationFields from './fragments/NotificationFields';
  */
 const GetNotifications = gql`
   ${NotificationFields}
-  query QueryNotifications($limit: Int = 100, $offset: Int = 0) @api(name: butter) {
-    notifications(order_by: { timestamp: desc }, limit: $limit, offset: $offset) {
+  query QueryNotifications($startDate: timestamptz, $limit: Int = 100, $offset: Int = 0)
+  @api(name: butter) {
+    notifications(
+      order_by: { timestamp: desc }
+      where: { timestamp: { _lte: $startDate } }
+      limit: $limit
+      offset: $offset
+    ) {
       ...NotificationFields
     }
   }
