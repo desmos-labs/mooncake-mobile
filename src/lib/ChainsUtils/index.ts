@@ -11,15 +11,6 @@ export const findChainInfoByName = (chainName: string) => {
   );
 };
 
-/**
- * Find the currency with the given minimal {@param denom} inside the list of currencies of the supported chains.
- */
-export const findCurrencyByMinimalDenom = (denom: string) => {
-  return SupportedChains.flatMap(chain => chain.chainInfo ?? [])
-    .flatMap(info => info.currencies ?? [])
-    .find(value => value.coinMinimalDenom === denom);
-};
-
 const supportedBalanceDenoms = [DesmosMainnet, DesmosTestnet]
   .flatMap(chain => chain.currencies ?? [])
   .map(currency => currency.coinMinimalDenom);

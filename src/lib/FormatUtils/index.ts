@@ -53,7 +53,7 @@ export const safeParseFloat = (value: string | undefined, locale?: string) => {
  * @param value - Value to be formatted
  * @param decimalPlaces - Optional number of decimal places to be used.
  */
-export const formatNumber = (value: number, decimalPlaces: number = 6): string =>
+const formatNumber = (value: number, decimalPlaces: number = 6): string =>
   numbro(value).format({
     thousandSeparated: true,
     mantissa: decimalPlaces,
