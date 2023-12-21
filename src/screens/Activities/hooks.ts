@@ -8,7 +8,7 @@ import { Notification } from 'types/notifications';
  * 1. the first one containing all the notifications that have timestamp within the current week
  * 2. the second one containing all the notifications that have timestamp older than the current week
  */
-export const useSplitNotificationsByWeek = () => {
+const useSplitNotificationsByWeek = () => {
   const { t } = useTranslation('activities');
 
   return React.useCallback(
@@ -50,3 +50,5 @@ export const useSplitNotificationsByWeek = () => {
     [t],
   );
 };
+
+export default useSplitNotificationsByWeek;

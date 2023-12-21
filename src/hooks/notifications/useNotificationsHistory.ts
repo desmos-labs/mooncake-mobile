@@ -40,14 +40,11 @@ const useFetchNotifications = () => {
 const useNotificationsHistory = (_notificationsPerPage: number = 20) => {
   const fetchNotifications = useFetchNotifications();
   const [lastFetchTimestamp, setLastFetchTimestamp] = React.useState(new Date());
-  const { data, loading, updateFilter, error, ...otherFields } = usePaginatedData(
-    fetchNotifications,
-    {
-      itemsPerPage: 20,
-      initialFilter: lastFetchTimestamp,
-      autoFetchFirstPage: true,
-    },
-  );
+  const { data, loading, updateFilter, ...otherFields } = usePaginatedData(fetchNotifications, {
+    itemsPerPage: 20,
+    initialFilter: lastFetchTimestamp,
+    autoFetchFirstPage: true,
+  });
 
   const refetch = React.useCallback(async () => {
     // Since here we use a filter to define the start date from which

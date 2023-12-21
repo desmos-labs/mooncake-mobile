@@ -12,8 +12,8 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
+import useSplitNotificationsByWeek from 'screens/Activities/hooks';
 import { Notification } from 'types/notifications';
-import { useSplitNotificationsByWeek } from './hooks';
 import useStyles from './useStyles';
 
 /**
