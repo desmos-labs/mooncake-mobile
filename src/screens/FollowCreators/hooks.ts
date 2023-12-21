@@ -62,7 +62,6 @@ const useFetchCreators = (userAddress: string) => {
       // from the current user.
       const counterpartyAddresses = fetchedProfiles.map(profile => profile.address);
 
-      console.log('counterpartyAddresses', counterpartyAddresses);
       const { data: followedProfilesData, error: followedError } =
         await apolloClient.query<GetFollowedProfileAddressesGqlResponse>({
           query: GetFollowedProfileAddresses,
