@@ -79,7 +79,7 @@ const useSignAndBroadcastTx = () => {
         },
         {
           title: options?.onLoading?.popup?.title ?? t('performing transaction'),
-          desc: options?.onLoading?.popup?.description,
+          desc: options?.onLoading?.popup?.description ?? t('performing transaction'),
           progressBar: {
             indeterminate: true,
           },
