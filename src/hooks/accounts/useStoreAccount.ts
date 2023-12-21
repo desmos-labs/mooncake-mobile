@@ -3,6 +3,7 @@ import {
   useSetActiveAccountAddress,
   useStoreAccount as usePersistAccount,
 } from '@recoil/accounts';
+import { useSetUserWallet } from '@recoil/userWallet';
 import {
   deleteItem,
   deleteWallet,
@@ -30,6 +31,7 @@ const useStoreAccount = () => {
   const savingFirstAccount = useMemo(() => !hasAccount, [hasAccount]);
   const storeAccount = usePersistAccount();
   const setActiveAccountAddress = useSetActiveAccountAddress();
+  const setUserWallet = useSetUserWallet();
 
   return useCallback(
     async (account: AccountWithWallet, password: string): Promise<Result<void, Error>> => {
@@ -45,6 +47,8 @@ const useStoreAccount = () => {
 
         // Finally, store the account on the local storage
         storeAccount(account.account);
+        // Save the user wallet in the global state.
+        setUserWallet(account.wallet);
       } catch (error: any) {
         if (error) {
           await deleteWallet(account.wallet.address);
@@ -57,7 +61,7 @@ const useStoreAccount = () => {
 
       return ok(undefined);
     },
-    [savingFirstAccount, setActiveAccountAddress, storeAccount],
+    [savingFirstAccount, setActiveAccountAddress, setUserWallet, storeAccount],
   );
 };
 
