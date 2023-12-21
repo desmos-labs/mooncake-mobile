@@ -19,7 +19,7 @@
     "detox:build-ios": "detox build -c ios.sim.release",
     "detox:test-ios": "detox test -c ios.sim.release",
     "prebuild": "source ./.prebuild.env && yarn eas-build-pre-install && npx expo prebuild --clean",
-    "android:generateGogleServices": "printf $ANDROID_GOOGLE_SERVICES_BAS64 | base64 --decode > ./google-services.json",
+    "android:generateGogleServices": "printf $ANDROID_GOOGLE_SERVICES_BASE64 | base64 --decode > ./google-services.json",
     "ios:generateGogleServices": "printf $IOS_GOOGLE_SERVICES_BASE64 | base64 --decode > ./GoogleService-Info.plist",
     "eas-build-pre-install": "yarn android:generateGogleServices && yarn ios:generateGogleServices",
     "check-translations": "i18n-unused display-unused",
