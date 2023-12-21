@@ -2,12 +2,12 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: theme.spacing.s,
   },
   addressText: {
-    maxWidth: '35%',
     color: theme.colors.darkGrey,
   },
   copyIcon: {

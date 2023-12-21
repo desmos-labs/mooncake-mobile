@@ -484,7 +484,7 @@ const Profile = () => {
           <View style={styles.innerContainer}>
             {/* Posts, following and followers counters */}
             <View style={styles.innerTopSection}>
-              <View>
+              <View style={{ flex: 1 }}>
                 {/* Profile nickname */}
                 <Typography.H5 style={styles.nickname} numberOfLines={1}>
                   {profile.nickname}
