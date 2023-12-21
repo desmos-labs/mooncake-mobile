@@ -24,7 +24,6 @@ const useNotificationsHistory = (_notificationsPerPage: number = 20) => {
     if (!data) {
       return [];
     }
-
     return data.notifications;
   }, [data]);
 

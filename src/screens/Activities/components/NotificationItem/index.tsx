@@ -121,7 +121,7 @@ const NotificationItem = (props: NotificationComponentProps) => {
     }
 
     return null;
-  }, [notification.imageUrl, notification.type, profile]);
+  }, [notification.type, notification.imageUrl, profile]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
