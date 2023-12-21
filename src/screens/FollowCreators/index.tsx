@@ -12,7 +12,6 @@ import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { DesmosProfile } from 'types/desmos';
 import Button from 'components/Button';
 import { useTheme } from 'native-base';
-import { Wallet } from 'types/wallet';
 import { useSetLoginFlowState } from '@recoil/login';
 import { LoginFlowStep } from 'types/login';
 import useStyles from './useStyles';
@@ -61,7 +60,7 @@ const FollowCreators: React.FC<NavProps> = ({
   // -----------------------------------------------------
 
   const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
-  const followCreators = useFollowCreators(onDone);
+  const { followCreators, sendingTransaction } = useFollowCreators(onDone);
   const setLoginFlowState = useSetLoginFlowState();
 
   // -----------------------------------------------------
@@ -128,7 +127,7 @@ const FollowCreators: React.FC<NavProps> = ({
   }, []);
 
   return (
-    <DView style={styles.root} topBar={<TopBar />}>
+    <DView style={styles.root} topBar={<TopBar />} disableHideKeyboardTouchable>
       <Typography.Semibold24>{t('build your feed')}</Typography.Semibold24>
       <Spacer paddingTop="m" />
       <Typography.Body5>{t('follow 3 creators')}</Typography.Body5>
@@ -148,7 +147,7 @@ const FollowCreators: React.FC<NavProps> = ({
 
       <Spacer paddingTop="l" />
       <Button
-        disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT}
+        disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT || sendingTransaction}
         bgColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={onNextPressed}>

@@ -18,7 +18,7 @@ import { gql } from '@apollo/client';
  * const variables = {
  *   subspaceId: 123,
  *   userAddress: 'desmos1....',
- *   couterparty_addresses: ['desmos1...', 'desmos1...'],
+ *   counterpartyAddresses: ['desmos1...', 'desmos1...'],
  * };
  *
  * const result = await apolloClient.query({
@@ -35,13 +35,13 @@ const GetFollowedProfileAddresses = gql`
   query GetFollowedProfileAddresses(
     $subspaceId: bigint!
     $userAddress: String!
-    $couterpartyAdresses: [String!]
+    $counterpartyAddresses: [String!]
   ) @api(name: desmos) {
     relationships: user_relationship(
       where: {
         subspace_id: { _eq: $subspaceId }
         creator_address: { _eq: $userAddress }
-        counterparty_address: { _in: $couterpartyAdresses }
+        counterparty_address: { _in: $counterpartyAddresses }
       }
     ) {
       counterpartyAddress: counterparty_address

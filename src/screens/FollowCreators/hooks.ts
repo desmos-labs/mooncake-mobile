@@ -42,7 +42,7 @@ const useFetchCreators = (userAddress: string) => {
       // Query a list of profiles.
       const { data, error } = await apolloClient.query<GetCreatorsGqlResponse>({
         query: GetCreators,
-        fetchPolicy: 'network-only',
+        fetchPolicy: 'no-cache',
         variables: {
           offset,
           limit,
@@ -58,17 +58,19 @@ const useFetchCreators = (userAddress: string) => {
       const profiles = data?.profile || [];
       // Convert the GraphQL profiles to a DesmosProfile.
       const fetchedProfiles = profiles.map(convertGraphQLProfile);
-
       // Query to check which of the fetched profiles are followed
       // from the current user.
+      const counterpartyAddresses = fetchedProfiles.map(profile => profile.address);
+
+      console.log('counterpartyAddresses', counterpartyAddresses);
       const { data: followedProfilesData, error: followedError } =
         await apolloClient.query<GetFollowedProfileAddressesGqlResponse>({
           query: GetFollowedProfileAddresses,
-          fetchPolicy: 'network-only',
+          fetchPolicy: 'no-cache',
           variables: {
             subspaceId,
             userAddress,
-            couterpartyAdresses: fetchedProfiles.map(profile => profile.address),
+            counterpartyAddresses,
           },
         });
 
@@ -114,7 +116,7 @@ export const useCreators = () => {
   // Lazy query to fetch the total number of users that
   // the current user is following.
   const [getFollowageCount] = useCustomLazyQuery<GetFollowageCountGqlResponse>(GetFollowageCount, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
     variables: {
       subspaceId,
       userAddress,
@@ -162,8 +164,9 @@ export const useFollowCreators = (onDone: () => void) => {
   const broadcastTx = useSignAndBroadcastTx();
   const subspaceId = useAppStateValue('subspaceId');
   const activeAccountAddress = useActiveAccountAddress()!;
+  const [sendingTransaction, setSendingTransaction] = React.useState(false);
 
-  return React.useCallback(
+  const followCreators = React.useCallback(
     (creators: DesmosProfile[]) => {
       // List of MsgCreateRelationship to be broadcasted.
       const msgs = creators.map(c => {
@@ -180,6 +183,7 @@ export const useFollowCreators = (onDone: () => void) => {
       broadcastTx(msgs, {
         onLoading: {
           action: () => {
+            setSendingTransaction(true);
             // TODO: Show a loading dialog.
           },
         },
@@ -187,15 +191,24 @@ export const useFollowCreators = (onDone: () => void) => {
           action: () => {
             // TODO: Show a success toast.
             onDone();
+            setSendingTransaction(false);
           },
         },
         onError: {
           action: () => {
             // TODO: Show a error dialog.
+            onDone();
+            setSendingTransaction(false);
           },
         },
       });
     },
-    [broadcastTx, onDone, subspaceId],
+
+    [activeAccountAddress, broadcastTx, onDone, subspaceId],
   );
+
+  return {
+    followCreators,
+    sendingTransaction,
+  };
 };
