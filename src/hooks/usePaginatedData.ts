@@ -1,6 +1,6 @@
+import sleep from 'lib/sleep';
 import _ from 'lodash';
 import React from 'react';
-import sleep from 'lib/sleep';
 
 /**
  * Type that represents the data fetched from @see {@link FetchDataFunction} function.

@@ -3,16 +3,17 @@ import { useSetAppStateValue } from '@recoil/appState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
-import ActivitiesListContentLoader from 'components/Loaders/ActivitiesListContentLoader';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
+import useHandleNotificationNavigation from 'hooks/notifications/useHandleNotificationNavigation';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { Divider, useTheme } from 'native-base';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
-import { useKeyExtractor, useSplitNotificationsByWeek } from './hooks';
+import useSplitNotificationsByWeek from 'screens/Activities/hooks';
+import { Notification } from 'types/notifications';
 import useStyles from './useStyles';
 
 /**
@@ -32,13 +33,21 @@ const Activities = () => {
     notifications,
     loading,
     fetchMore,
-    fetchingMore,
     refresh: refreshNotifications,
     refreshing,
   } = useNotificationsHistory();
 
   const splitNotificationsByWeek = useSplitNotificationsByWeek();
-  const keyExtractor = useKeyExtractor();
+  const handleNotificationNavigation = useHandleNotificationNavigation();
+
+  // -------- CALLBACKS --------
+
+  const onNotificationPressed = React.useCallback(
+    (notification: Notification) => {
+      handleNotificationNavigation(notification.additionalData);
+    },
+    [handleNotificationNavigation],
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -81,7 +90,7 @@ const Activities = () => {
 
   // Function that is used in order to render each item within the list
   const renderItem = useCallback(
-    (info: ListRenderItemInfo<any | string>) => {
+    (info: ListRenderItemInfo<Notification | string>) => {
       const { item } = info;
       if (typeof item === 'string') {
         // Render a divider
@@ -96,25 +105,25 @@ const Activities = () => {
         // Render a section header
         return (
           <View style={styles.sectionHeader}>
-            <Typography.Button2>{t(item)}</Typography.Button2>
+            <Typography.Button2>{t(item as any)}</Typography.Button2>
           </View>
         );
       }
 
       // Render a notification
-      return <NotificationComponent notification={item} />;
+      return <NotificationComponent notification={item} onPress={onNotificationPressed} />;
     },
-    [styles.divider, styles.sectionHeader, t],
+    [styles, onNotificationPressed, t],
   );
 
   // Component shown at the bottom tof the page
   const FooterComponent = useMemo(() => {
-    if (fetchingMore) {
+    if (!refreshing && loading) {
       return <StyledSpinner p="m" />;
     } else {
       return null;
     }
-  }, [fetchingMore]);
+  }, [refreshing, loading]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -150,35 +159,28 @@ const Activities = () => {
         <Typography.H3>{t('activities')}</Typography.H3>
       </View>
       {/* Notifications list */}
-      {!loading ? (
-        <FlashList
-          keyExtractor={keyExtractor}
-          refreshControl={
-            <RefreshControl
-              tintColor={theme.colors.surfaceBlack}
-              enabled
-              onRefresh={refreshNotifications}
-              refreshing={refreshing}
-              progressViewOffset={Platform.OS === 'android' ? 80 : 0}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={EmptyActivities}
-          data={items}
-          renderItem={renderItem}
-          ListFooterComponent={FooterComponent}
-          estimatedItemSize={90}
-          stickyHeaderIndices={stickyHeaderIndices}
-          getItemType={item => {
-            return typeof item === 'string' ? 'sectionHeader' : 'row';
-          }}
-          onEndReached={fetchMore}
-        />
-      ) : (
-        <View style={{ margin: theme.spacing.m }}>
-          <ActivitiesListContentLoader />
-        </View>
-      )}
+      <FlashList
+        refreshControl={
+          <RefreshControl
+            tintColor={theme.colors.surfaceBlack}
+            enabled
+            onRefresh={refreshNotifications}
+            refreshing={refreshing}
+            progressViewOffset={Platform.OS === 'android' ? 80 : 0}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={EmptyActivities}
+        data={items}
+        renderItem={renderItem}
+        ListFooterComponent={FooterComponent}
+        estimatedItemSize={70}
+        stickyHeaderIndices={stickyHeaderIndices}
+        getItemType={item => {
+          return typeof item === 'string' ? 'sectionHeader' : 'row';
+        }}
+        onEndReached={fetchMore}
+      />
     </DView>
   );
 };

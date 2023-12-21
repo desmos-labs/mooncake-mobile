@@ -26,7 +26,7 @@
     "find-deadcode": "ts-prune -e"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.17",
+    "@apollo/client": "3.7.17",
     "@bam.tech/react-native-image-resizer": "^3.0.7",
     "@cosmjs/cosmwasm-stargate": "^0.31.0",
     "@cosmjs/crypto": "^0.31.0",

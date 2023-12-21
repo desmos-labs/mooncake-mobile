@@ -20,7 +20,7 @@ import { Image } from 'expo-image';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
+import { formatCoins, formatCurrencyAmount } from 'lib/FormatUtils';
 import { Center, Divider, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -235,7 +235,8 @@ const ProfileOperations = () => {
         {/* Balance amount (in fiat) */}
         {/* TODO: Show something if the balance is still loading */}
         <Typography.H3>
-          {symbol} {formatNumShorthand(fiatAmount)}
+          {symbol}
+          {formatCurrencyAmount(fiatAmount)}
         </Typography.H3>
         <Spacer paddingVertical={theme.spacing.m} />
         {/* Past operations section title */}

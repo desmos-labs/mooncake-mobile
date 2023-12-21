@@ -2,6 +2,7 @@ import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/b
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
+import { useSetPostsListState } from '@recoil/screens/postsListState';
 import {
   bottomActivitiesIcon,
   bottomHomeIcon,
@@ -81,6 +82,7 @@ const BottomTabBar = (props: Props) => {
   const activeAddress = useActiveAccountAddress();
   const notificationsCount = useAppStateValue('notificationsCount');
   const setNotificationsCount = useSetAppStateValue('notificationsCount');
+  const setPostsListState = useSetPostsListState();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -131,8 +133,18 @@ const BottomTabBar = (props: Props) => {
             if (route.name === ROUTES.ACTIVITIES) {
               setNotificationsCount(0);
             }
+
             // @ts-ignore
             navigation.navigate({ name: route.name, merge: true });
+          } else {
+            if (route.name === ROUTES.HOME_TABS) {
+              setPostsListState(value => {
+                return {
+                  ...value,
+                  scrollToTop: true,
+                };
+              });
+            }
           }
         };
 
@@ -183,8 +195,8 @@ const BottomTabsNavigator = () => {
         {/* <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} /> */}
         <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
         <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
-        <Tab.Screen name={ROUTES.SETTINGS} component={Settings} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
+        <Tab.Screen name={ROUTES.SETTINGS} component={Settings} />
       </Tab.Navigator>
     </Box>
   );

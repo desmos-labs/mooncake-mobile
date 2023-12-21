@@ -49,8 +49,8 @@ const useStyles = makeStyleWithProps(
     },
     topViewButton: { justifyContent: 'center', alignItems: 'center' },
     innerContainer: {
+      flex: 1,
       marginTop: props.isActiveAccount ? 36 : 32,
-      backgroundColor: theme.colors.background,
     },
     innerTopSection: {
       flexDirection: 'row',

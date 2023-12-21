@@ -1,17 +1,12 @@
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
-import { mooncakeHomeIcon } from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
-import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
-import { useTheme } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
 import Animated, {
-  FadeInLeft,
-  FadeOutLeft,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -31,7 +26,6 @@ const ICON_OFFSET = 80;
 const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
-  const theme = useTheme();
   const windowWidth = Dimensions.get('window').width;
 
   // -------------------------------------------------------------------------------------
@@ -47,7 +41,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
   // --- Animated values
   // -------------------------------------------------------------------------------------
 
-  const searchBarWidth = useSharedValue(windowWidth - 64 - 48);
+  const searchBarWidth = useSharedValue(windowWidth - 32);
   const xOffset = useSharedValue(0);
   const typeTabOpacity = useSharedValue(1);
   const cancelOpacity = useSharedValue(0);
@@ -84,7 +78,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
   useEffect(() => {
     if (!listState.searchBarFocused) {
       setFocused(false);
-      searchBarWidth.value = withTiming(windowWidth - 64 - 48, {
+      searchBarWidth.value = withTiming(windowWidth - 32, {
         duration: ANIMATION_DURATION,
       });
       xOffset.value = withTiming(0, { duration: ANIMATION_DURATION });
@@ -116,26 +110,13 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
   return (
     <Animated.View style={styles.container}>
       <Animated.View style={styles.animatedView}>
-        {!listState.searchBarFocused && (
-          <Animated.View
-            entering={FadeInLeft.duration(ANIMATION_DURATION + 50)}
-            exiting={FadeOutLeft.duration(ANIMATION_DURATION - 50)}
-            style={styles.butterFlyImageContainer}>
-            <ImageButton
-              tintColor={theme.colors.butterOrange01}
-              style={styles.butterflyImage}
-              image={mooncakeHomeIcon}
-              onPress={() => setListState({ ...listState, scrollToTop: true })}
-            />
-          </Animated.View>
-        )}
         <Animated.View style={[CommonStyles.position.absolute, animatedStyle]}>
           <HomeSearchBar
             focused={focused}
             searchPlaceHolder={t('search something')}
             handleChange={value => setListState({ ...listState, valueToSearch: value })}
             onFocus={() => {
-              searchBarWidth.value = withTiming(windowWidth - 64 - 24, {
+              searchBarWidth.value = withTiming(windowWidth - 72 - 24, {
                 duration: ANIMATION_DURATION,
               });
               xOffset.value = withTiming(-32, { duration: ANIMATION_DURATION });

@@ -1,9 +1,9 @@
 /**
  * File for all formatting related utils
  */
-import numbro from 'numbro';
-import { SupportedChains } from 'config/LinkableChains';
 import { Coin, convertCoin, Currency } from '@desmoslabs/desmjs';
+import { SupportedChains } from 'config/LinkableChains';
+import numbro from 'numbro';
 
 /**
  * Very naive way to format interactionCount into something like 5000 > 5k
@@ -13,7 +13,9 @@ export const formatNumShorthand = (value: number): string => {
   if (value < 1000) {
     return value.toString(10);
   }
-  if (value < 1000000) return `${value / 1000}k`;
+  if (value < 1000000) {
+    return `${value / 1000}k`;
+  }
   return `${value / 1000000}m`;
 };
 
@@ -49,11 +51,20 @@ export const safeParseFloat = (value: string | undefined, locale?: string) => {
 /**
  * Formats the given value into a human-readable string.
  * @param value - Value to be formatted
+ * @param decimalPlaces - Optional number of decimal places to be used.
  */
-export const formatNumber = (value: number): string =>
+const formatNumber = (value: number, decimalPlaces: number = 6): string =>
   numbro(value).format({
     thousandSeparated: true,
+    mantissa: decimalPlaces,
+    trimMantissa: true,
   });
+
+/**
+ * Formats the given value as a currency amount.
+ * @param value - Value to format
+ */
+export const formatCurrencyAmount = (value: number): string => formatNumber(value, 2);
 
 const getChainCurrencies = (): Currency[] => {
   return SupportedChains.flatMap(chain => chain.chainInfo || []).flatMap(info => info.currencies);

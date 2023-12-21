@@ -84,14 +84,18 @@ const AvatarImage: React.FC<AvatarImageProps> = ({
 
   return (
     <View>
-      {loading && <Skeleton style={styles.skeleton} size={imageSize / 4} rounded="full" />}
-      {!imageSourceLoading && (
+      {(loading || imageSourceLoading) && (
+        <Skeleton style={styles.skeleton} size={imageSize / 4} rounded="full" />
+      )}
+      {!imageSourceLoading ? (
         <Image
           style={styles.image}
           source={profileImage}
           onLoadStart={onLoadStart}
           onLoadEnd={onLoadEnd}
         />
+      ) : (
+        <View style={styles.image} />
       )}
     </View>
   );

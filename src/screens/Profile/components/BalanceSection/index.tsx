@@ -7,7 +7,7 @@ import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfileOperations';
-import { formatCoins, formatNumber } from 'lib/FormatUtils';
+import { formatCoins, formatCurrencyAmount } from 'lib/FormatUtils';
 import { Divider, HStack, useTheme, VStack } from 'native-base';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -98,7 +98,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
           ) : (
             <Typography.Body6 style={{ color: theme.colors.midGrey }}>
               {currencySymbol}
-              {formatNumber(fiatAmount)}
+              {formatCurrencyAmount(fiatAmount)}
             </Typography.Body6>
           )}
           {/* Personal data - Only displayed if not guest */}

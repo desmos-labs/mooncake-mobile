@@ -11,7 +11,6 @@ const useBalanceFiatAmount = (balance: Coin[]) => {
   return {
     // Currently the APIs allow to get only the price in USD.
     symbol: '$',
-
     amount: prices.map(p => p.price).reduce((a, b) => a + b, 0),
     loading,
     refetch: refetchPrices,
