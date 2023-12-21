@@ -161,14 +161,20 @@ const useHooks = () => {
           }
           setSigninStatus(SignInStatus.SAVING_PROFILE);
           storeProfile(profile.address, profile);
-          setLoginFlowState({
-            step: LoginFlowStep.Completed,
-          });
-          trackLoggedInUser(account.account);
-          trackProfileSelected();
-          setSigninStatus(SignInStatus.DONE);
-          navigate(ROUTES.WELCOME_PAGE, {
-            action: 'import',
+
+          navigate(ROUTES.FOLLOW_CREATORS, {
+            wallet: account.wallet,
+            onDone: () => {
+              setLoginFlowState({
+                step: LoginFlowStep.Completed,
+              });
+              trackLoggedInUser(account.account);
+              trackProfileSelected();
+              setSigninStatus(SignInStatus.DONE);
+              navigate(ROUTES.WELCOME_PAGE, {
+                action: 'import',
+              });
+            },
           });
         } else {
           setLoading(false);
@@ -193,6 +199,8 @@ const useHooks = () => {
         saveProfile({
           accountWithWallet: account,
           onProfileSaved: async () => {
+            // TODO: Navigate to the select followers screen,
+            // and then navigate to the welcome screen.
             setSigninStatus(SignInStatus.DONE);
             setLoginFlowState({
               step: LoginFlowStep.Completed,

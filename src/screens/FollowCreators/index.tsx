@@ -12,11 +12,29 @@ import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { DesmosProfile } from 'types/desmos';
 import Button from 'components/Button';
 import { useTheme } from 'native-base';
+import { Wallet } from 'types/wallet';
+import { useSetLoginFlowState } from '@recoil/login';
+import { LoginFlowStep } from 'types/login';
 import useStyles from './useStyles';
-import { FollowedProfile, useCreators } from './hooks';
+import { FollowedProfile, useCreators, useFollowCreators } from './hooks';
 import CreatorListItem from './components/CreatorListItem';
 
-export interface FollowCreatorsParams {}
+export interface FollowCreatorsParams {
+  /**
+   * The user's  wallet that will be used to broadcast
+   * the MsgCreateRelationship messages.
+   */
+  readonly wallet: Wallet;
+  /**
+   * Callback that will be called when the user has finished the
+   * following process.
+   * This can be called in both cases, whether the transaction has been
+   * performed successfully or not.
+   * In case the transaction has failed, this screen will take care of storing
+   * the accounts that the user wants to follow.
+   */
+  readonly onDone: () => void;
+}
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.FOLLOW_CREATORS>;
 
@@ -28,7 +46,11 @@ const MIN_FOLLOWAGE_COUNT = 3;
  * Screen that will allow the user to follow their first creators.
  * This screen will be shown during the onboarding process.
  */
-const FollowCreators: React.FC<NavProps> = () => {
+const FollowCreators: React.FC<NavProps> = ({
+  route: {
+    params: { wallet, onDone },
+  },
+}) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('onboarding');
@@ -43,7 +65,11 @@ const FollowCreators: React.FC<NavProps> = () => {
   // ----- Hooks
   // -----------------------------------------------------
 
-  const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
+  const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators(
+    wallet.address,
+  );
+  const followCreators = useFollowCreators(wallet, onDone);
+  const setLoginFlowState = useSetLoginFlowState();
 
   // -----------------------------------------------------
   // ----- Variables
@@ -87,14 +113,23 @@ const FollowCreators: React.FC<NavProps> = () => {
 
   const onNextPressed = React.useCallback(() => {
     if (selectedAccounts.length > 0) {
-      // TODO: Broadcast the MsgCreateRelationship.
-      console.warn('TODO: broadcast the MsgCreateRelationship', selectedAccounts);
+      followCreators(selectedAccounts);
     } else {
       // TODO: Skip the MsgCreateRelationship broadcast, the user
       // is already following the required amount of creators.
       console.warn('TODO: skip the MsgCreateRelationship broadcast');
     }
-  }, [selectedAccounts]);
+  }, [followCreators, selectedAccounts]);
+
+  // -----------------------------------------------------
+  // ----- Effects
+  // -----------------------------------------------------
+
+  React.useEffect(() => {
+    setLoginFlowState({
+      step: LoginFlowStep.FollowCreators,
+    });
+  }, []);
 
   return (
     <DView style={styles.root} topBar={<TopBar />}>

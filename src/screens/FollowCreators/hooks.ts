@@ -1,7 +1,10 @@
 import { useApolloClient } from '@apollo/client';
-import { useActiveAccountAddress } from '@recoil/accounts';
+import { Relationships } from '@desmoslabs/desmjs';
+import { MsgCreateRelationship } from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
+import { MsgCreateRelationshipEncodeObject } from '@desmoslabs/desmjs/build/modules/relationships/v1';
 import { useAppStateValue } from '@recoil/appState';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import React from 'react';
@@ -13,6 +16,7 @@ import GetFollowedProfileAddresses, {
   GetFollowedProfileAddressesGqlResponse,
 } from 'services/graphql/queries/GetFollowedProfileAddresses';
 import { DesmosProfile } from 'types/desmos';
+import { Wallet } from 'types/wallet';
 
 /**
  * Extension of the {@link DesmosProfile} interface to have also a
@@ -29,10 +33,9 @@ export type FollowedProfile = DesmosProfile & {
  * Hook that provides a list of {@link FollowedProfile} that can be used
  * in the usePaginatedData hook.
  */
-const useFetchCreators = () => {
+const useFetchCreators = (userAddress: string) => {
   const apolloClient = useApolloClient();
   const subspaceId = useAppStateValue('subspaceId');
-  const activeAccountAddress = useActiveAccountAddress();
 
   return React.useCallback<FetchDataFunction<FollowedProfile>>(
     async (offset, limit) => {
@@ -64,7 +67,7 @@ const useFetchCreators = () => {
           fetchPolicy: 'network-only',
           variables: {
             subspaceId,
-            userAddress: activeAccountAddress,
+            userAddress,
             couterpartyAdresses: fetchedProfiles.map(profile => profile.address),
           },
         });
@@ -93,7 +96,7 @@ const useFetchCreators = () => {
         endReached: profiles.length < limit,
       };
     },
-    [activeAccountAddress, apolloClient, subspaceId],
+    [apolloClient, subspaceId, userAddress],
   );
 };
 
@@ -101,9 +104,7 @@ const useFetchCreators = () => {
  * Hook that provides a list of {@link FollowedProfile} an the total number of users that
  * the current user is following.
  */
-// Disable since in the future we may want to export other hooks.
-export const useCreators = () => {
-  const activeAccountAddress = useActiveAccountAddress();
+export const useCreators = (userAddress: string) => {
   const subspaceId = useAppStateValue('subspaceId');
 
   // The number of users that the current user is following.
@@ -115,7 +116,7 @@ export const useCreators = () => {
     fetchPolicy: 'network-only',
     variables: {
       subspaceId,
-      userAddress: activeAccountAddress,
+      userAddress,
     },
   });
 
@@ -126,7 +127,7 @@ export const useCreators = () => {
     refresh,
     refreshing,
     error,
-  } = usePaginatedData(useFetchCreators(), {
+  } = usePaginatedData(useFetchCreators(userAddress), {
     itemsPerPage: 20,
     onPreFetchPage: React.useCallback(
       // When fetching the first page fetch also the total number
@@ -150,4 +151,50 @@ export const useCreators = () => {
     followageCount,
     error,
   };
+};
+
+/**
+ * Hook that provides a function to broadcast
+ * the `MsgCreateRelationship` messages to follow the creators.
+ */
+export const useFollowCreators = (wallet: Wallet, onDone: () => void) => {
+  const broadcastTx = useSignAndBroadcastTx();
+  const subspaceId = useAppStateValue('subspaceId');
+
+  return React.useCallback(
+    (creators: DesmosProfile[]) => {
+      // List of MsgCreateRelationship to be broadcasted.
+      const msgs = creators.map(c => {
+        return {
+          typeUrl: Relationships.v1.MsgCreateRelationshipTypeUrl,
+          value: MsgCreateRelationship.fromPartial({
+            counterparty: c.address,
+            signer: wallet.address,
+            subspaceId,
+          }),
+        } as MsgCreateRelationshipEncodeObject;
+      });
+
+      broadcastTx(msgs, {
+        wallet,
+        onLoading: {
+          action: () => {
+            // TODO: Show a loading dialog.
+          },
+        },
+        onSuccess: {
+          action: () => {
+            // TODO: Show a success toast.
+            onDone();
+          },
+        },
+        onError: {
+          action: () => {
+            // TODO: Show a error dialog.
+          },
+        },
+      });
+    },
+    [broadcastTx, onDone, subspaceId, wallet],
+  );
 };
