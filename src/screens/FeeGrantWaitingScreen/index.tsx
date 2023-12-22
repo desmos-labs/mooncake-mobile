@@ -63,6 +63,7 @@ const FeeGrantWaitingScreen = () => {
       blockBackAction: true,
       onProfileSaved: async () => {
         navigation.navigate(ROUTES.FOLLOW_CREATORS, {
+          isOnboarding: true,
           onStartBroadcasting: () => {
             trackProfileCreated();
             setLoginFlowState({

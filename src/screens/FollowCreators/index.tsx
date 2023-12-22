@@ -15,11 +15,17 @@ import { useTheme } from 'native-base';
 import { useSetLoginFlowState } from '@recoil/login';
 import { LoginFlowStep } from 'types/login';
 import { useAppStateValue } from '@recoil/appState';
+import useTrackSelectedUsersToFollow from 'hooks/analytics/useTrackSelectedUsersToFollow';
 import useStyles from './useStyles';
 import { FollowCreatorsCallbacks, FollowedProfile, useCreators, useFollowCreators } from './hooks';
 import CreatorListItem from './components/CreatorListItem';
 
-export interface FollowCreatorsParams extends FollowCreatorsCallbacks {}
+export interface FollowCreatorsParams extends FollowCreatorsCallbacks {
+  /**
+   * Tells if the screen is being shown during the onboarding process.
+   */
+  readonly isOnboarding?: boolean;
+}
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.FOLLOW_CREATORS>;
 
@@ -50,6 +56,7 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
   const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
   const { followCreators, broadcasting } = useFollowCreators(params);
   const setLoginFlowState = useSetLoginFlowState();
+  const trackSelectedUsersToFollow = useTrackSelectedUsersToFollow();
 
   // -----------------------------------------------------
   // ----- Variables
@@ -93,6 +100,9 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
   const onNextPressed = React.useCallback(() => {
     if (selectedAccounts.length > 0) {
       followCreators(selectedAccounts);
+      if (params.isOnboarding) {
+        trackSelectedUsersToFollow();
+      }
     } else {
       // If the user has not selected any creator,
       // it means that they are already following
@@ -101,7 +111,7 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
       params?.onStartBroadcasting?.();
       params?.onSuccess?.();
     }
-  }, [followCreators, params, selectedAccounts]);
+  }, [followCreators, params, selectedAccounts, trackSelectedUsersToFollow]);
 
   // -----------------------------------------------------
   // ----- Effects
