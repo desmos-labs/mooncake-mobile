@@ -27,6 +27,7 @@ const routesToRender = [
   ROUTES.BOTTOM_TABS,
   ROUTES.UNLOCK_WALLET,
   ROUTES.BOTTOM_SHEET,
+  ROUTES.LOADING_MODAL,
   ROUTES.FOLLOW_CREATORS,
 ];
 
@@ -109,6 +110,11 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               navigate(item, {
                 onDone: () => {},
               });
+              break;
+            case ROUTES.LOADING_MODAL:
+              navigate(item, {
+                message: 'Test modal',
+              })
               break;
             default:
               navigate(item);
