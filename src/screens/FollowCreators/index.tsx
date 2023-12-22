@@ -60,7 +60,7 @@ const FollowCreators: React.FC<NavProps> = ({
   // -----------------------------------------------------
 
   const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
-  const { followCreators, sendingTransaction } = useFollowCreators(onDone);
+  const followCreators = useFollowCreators(onDone);
   const setLoginFlowState = useSetLoginFlowState();
 
   // -----------------------------------------------------
@@ -145,7 +145,7 @@ const FollowCreators: React.FC<NavProps> = ({
 
       <Spacer paddingTop="l" />
       <Button
-        disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT || sendingTransaction}
+        disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT}
         bgColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={onNextPressed}>

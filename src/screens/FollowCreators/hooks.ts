@@ -5,7 +5,6 @@ import { MsgCreateRelationshipEncodeObject } from '@desmoslabs/desmjs/build/modu
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
-import useLoadingModal from 'hooks/modals/useLoadingModal';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
@@ -162,12 +161,10 @@ export const useCreators = () => {
  * the `MsgCreateRelationship` messages to follow the creators.
  */
 export const useFollowCreators = (onDone: () => void) => {
-  const { t } = useTranslation('broadcastTx');
+  const { t } = useTranslation('onboarding');
   const broadcastTx = useSignAndBroadcastTx();
   const subspaceId = useAppStateValue('subspaceId');
   const activeAccountAddress = useActiveAccountAddress()!;
-  const [sendingTransaction, setSendingTransaction] = React.useState(false);
-  const { show, hide } = useLoadingModal();
 
   const followCreators = React.useCallback(
     (creators: DesmosProfile[]) => {
@@ -185,35 +182,31 @@ export const useFollowCreators = (onDone: () => void) => {
 
       broadcastTx(msgs, {
         onLoading: {
+          popup: {
+            description: t('following creator', { count: creators.length }),
+          },
           action: () => {
-            show({
-              message: t('performing transaction'),
-              blockBackAction: true,
-            });
-            setSendingTransaction(true);
+            onDone();
           },
         },
         onSuccess: {
-          action: () => {
-            hide();
-            onDone();
-            setSendingTransaction(false);
+          popup: {
+            title: t('follow success'),
+            description: t('you are now following the selected creator', {
+              count: creators.length,
+            }),
           },
         },
         onError: {
-          action: () => {
-            hide();
-            onDone();
-            setSendingTransaction(false);
+          popup: {
+            title: t('follow failed'),
+            description: t('follow failed description', { count: creators.length }),
           },
         },
       });
     },
-    [activeAccountAddress, broadcastTx, hide, onDone, show, subspaceId, t],
+    [activeAccountAddress, broadcastTx, onDone, subspaceId, t],
   );
 
-  return {
-    followCreators,
-    sendingTransaction,
-  };
+  return followCreators;
 };
