@@ -30,4 +30,6 @@ const useLoadingModal = () => {
   return { show, hide };
 };
 
+// Keep this since it may be useful in the future.
+// ts-prune-ignore-next
 export default useLoadingModal;
