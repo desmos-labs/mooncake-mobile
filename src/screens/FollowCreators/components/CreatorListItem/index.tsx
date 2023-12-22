@@ -1,5 +1,5 @@
 import BCheckbox from 'components/BCheckbox';
-import ProfileImage from 'components/ProfileImage';
+import AvatarImage from 'components/AvatarImage';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
@@ -45,7 +45,7 @@ const CreatorListItem: React.FC<CreatorListItemProps> = ({
 
   return (
     <View style={styles.root}>
-      <ProfileImage imageSource={profile} size={40} disabled={disabled} />
+      <AvatarImage imageSource={profile} size={40} disabled={disabled} />
       <Spacer paddingLeft={12} />
       <View style={styles.profileInfo}>
         <Typography.Subtitle2 style={disabled ? styles.disabledText : undefined}>
