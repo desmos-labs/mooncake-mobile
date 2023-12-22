@@ -4,7 +4,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 
 interface CreatorListItemProps {
@@ -36,27 +36,26 @@ const CreatorListItem: React.FC<CreatorListItemProps> = ({
 }) => {
   const styles = useStyles();
 
-  const onCheckBoxStateChange = React.useCallback(
-    (state: boolean) => {
-      onSelectChange(profile, state);
-    },
-    [profile, onSelectChange],
-  );
+  const onPress = React.useCallback(() => {
+    onSelectChange(profile, !selected);
+  }, [onSelectChange, profile, selected]);
 
   return (
-    <View style={styles.root}>
-      <AvatarImage imageSource={profile} size={40} disabled={disabled} />
-      <Spacer paddingLeft={12} />
-      <View style={styles.profileInfo}>
-        <Typography.Subtitle2 style={disabled ? styles.disabledText : undefined}>
-          {profile.nickname}
-        </Typography.Subtitle2>
-        <Typography.Body6 style={disabled ? styles.disabledText : undefined}>
-          @{profile.dTag}
-        </Typography.Body6>
+    <TouchableOpacity disabled={disabled} onPress={onPress}>
+      <View style={styles.root}>
+        <AvatarImage imageSource={profile} size={40} disabled={disabled} />
+        <Spacer paddingLeft={12} />
+        <View style={styles.profileInfo}>
+          <Typography.Subtitle2 style={disabled ? styles.disabledText : undefined}>
+            {profile.nickname}
+          </Typography.Subtitle2>
+          <Typography.Body6 style={disabled ? styles.disabledText : undefined}>
+            @{profile.dTag}
+          </Typography.Body6>
+        </View>
+        <BCheckbox value={selected} disabled={disabled} />
       </View>
-      <BCheckbox value={selected} onValueChange={onCheckBoxStateChange} disabled={disabled} />
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -8,20 +8,28 @@ interface Props {
   style?: any;
   value?: boolean;
   disabled?: boolean;
-  onValueChange: (value: boolean) => void;
+  onValueChange?: (value: boolean) => void;
 }
 
 const BCheckbox = ({ style, value, disabled, onValueChange }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
 
+  const onPress = React.useMemo(() => {
+    if (onValueChange) {
+      return () => onValueChange(!value || false);
+    } else {
+      return undefined;
+    }
+  }, [onValueChange, value]);
+
   return (
     <Pressable
       // Announces "checked" status and "checkbox" as the focused element
       accessibilityRole="checkbox"
       style={style}
-      disabled={disabled}
-      onPress={() => onValueChange(!value || false)}>
+      disabled={disabled || onPress === undefined}
+      onPress={onPress}>
       <Image
         tintColor={disabled ? theme.colors.lightGrey02 : theme.colors.surfaceBlack}
         source={value ? check_circle : uncheck_circle}
