@@ -28,6 +28,13 @@ interface SimpleToastProps extends CommonToastProps {
   readonly toastType: ToastType.success | ToastType.error;
 }
 
+interface ErrorToastProps extends CommonToastProps {
+  readonly toastType: ToastType.error;
+  readonly title: string;
+  readonly retryAction?: () => void;
+  readonly retryLabel?: string;
+}
+
 interface LoadingToastProps extends CommonToastProps {
   readonly toastType: ToastType.loading;
 }
@@ -46,6 +53,7 @@ interface InfoToastProps extends CommonToastProps {
 
 export type ToastProps =
   | SimpleToastProps
+  | ErrorToastProps
   | LoadingToastProps
   | OneButtonToastProps
   | InfoToastProps;
@@ -68,16 +76,33 @@ const toastConfig = {
       </View>
     );
   },
-  error: ({ props }: { props: ThemedToastProps<SimpleToastProps> }) => {
+  error: ({ props }: { props: ThemedToastProps<ErrorToastProps> }) => {
     const styles = makeStyles();
     return (
       <View style={styles.error}>
-        <Typography.Subtitle3 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-          {props.title || 'Error'}
-        </Typography.Subtitle3>
-        <Typography.Body7 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-          {props.message}
-        </Typography.Body7>
+        <View style={styles.errorContent}>
+          <Typography.Subtitle3 style={{ color: (props.theme ?? lightTheme).colors.black }}>
+            {props.title || 'Error'}
+          </Typography.Subtitle3>
+          <Typography.Body7 style={{ color: (props.theme ?? lightTheme).colors.black }}>
+            {props.message}
+          </Typography.Body7>
+        </View>
+        {props.retryAction && (
+          <>
+            <View style={CommonStyles.flex['1']} />
+            <Button
+              variant="text"
+              onPress={() => {
+                Toast.hide();
+                props.retryAction();
+              }}>
+              <Typography.Button1 style={{ color: (props.theme ?? lightTheme).colors.black }}>
+                {props.retryLabel ?? 'Retry'}
+              </Typography.Button1>
+            </Button>
+          </>
+        )}
       </View>
     );
   },
@@ -157,7 +182,11 @@ const makeStyles = makeStyle(theme => ({
     borderRadius: 14,
     borderWidth: 1,
     borderColor: theme.colors.toast.errorBorder,
-    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  errorContent: {
+    flexShrink: 1,
   },
   info: {
     paddingHorizontal: 16,
