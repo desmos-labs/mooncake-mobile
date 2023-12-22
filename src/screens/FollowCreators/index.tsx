@@ -107,11 +107,9 @@ const FollowCreators: React.FC<NavProps> = ({
     if (selectedAccounts.length > 0) {
       followCreators(selectedAccounts);
     } else {
-      // TODO: Skip the MsgCreateRelationship broadcast, the user
-      // is already following the required amount of creators.
-      console.warn('TODO: skip the MsgCreateRelationship broadcast');
+      onDone();
     }
-  }, [followCreators, selectedAccounts]);
+  }, [followCreators, onDone, selectedAccounts]);
 
   // -----------------------------------------------------
   // ----- Effects

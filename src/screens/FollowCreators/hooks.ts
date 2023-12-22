@@ -5,10 +5,12 @@ import { MsgCreateRelationshipEncodeObject } from '@desmoslabs/desmjs/build/modu
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import useLoadingModal from 'hooks/modals/useLoadingModal';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import GetCreators, { GetCreatorsGqlResponse } from 'services/graphql/queries/GetCreators';
 import GetFollowageCount, {
   GetFollowageCountGqlResponse,
@@ -160,10 +162,12 @@ export const useCreators = () => {
  * the `MsgCreateRelationship` messages to follow the creators.
  */
 export const useFollowCreators = (onDone: () => void) => {
+  const { t } = useTranslation('broadcastTx');
   const broadcastTx = useSignAndBroadcastTx();
   const subspaceId = useAppStateValue('subspaceId');
   const activeAccountAddress = useActiveAccountAddress()!;
   const [sendingTransaction, setSendingTransaction] = React.useState(false);
+  const { show, hide } = useLoadingModal();
 
   const followCreators = React.useCallback(
     (creators: DesmosProfile[]) => {
@@ -182,28 +186,30 @@ export const useFollowCreators = (onDone: () => void) => {
       broadcastTx(msgs, {
         onLoading: {
           action: () => {
+            show({
+              message: t('performing transaction'),
+              blockBackAction: true,
+            });
             setSendingTransaction(true);
-            // TODO: Show a loading dialog.
           },
         },
         onSuccess: {
           action: () => {
-            // TODO: Show a success toast.
+            hide();
             onDone();
             setSendingTransaction(false);
           },
         },
         onError: {
           action: () => {
-            // TODO: Show a error dialog.
+            hide();
             onDone();
             setSendingTransaction(false);
           },
         },
       });
     },
-
-    [activeAccountAddress, broadcastTx, onDone, subspaceId],
+    [activeAccountAddress, broadcastTx, hide, onDone, show, subspaceId, t],
   );
 
   return {
