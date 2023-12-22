@@ -14,21 +14,12 @@ import Button from 'components/Button';
 import { useTheme } from 'native-base';
 import { useSetLoginFlowState } from '@recoil/login';
 import { LoginFlowStep } from 'types/login';
+import { useAppStateValue } from '@recoil/appState';
 import useStyles from './useStyles';
-import { FollowedProfile, useCreators, useFollowCreators } from './hooks';
+import { FollowCreatorsCallbacks, FollowedProfile, useCreators, useFollowCreators } from './hooks';
 import CreatorListItem from './components/CreatorListItem';
 
-export interface FollowCreatorsParams {
-  /**
-   * Callback that will be called when the user has finished the
-   * following process.
-   * This can be called in both cases, whether the transaction has been
-   * performed successfully or not.
-   * In case the transaction has failed, this screen will take care of storing
-   * the accounts that the user wants to follow.
-   */
-  readonly onDone: () => void;
-}
+export interface FollowCreatorsParams extends FollowCreatorsCallbacks {}
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.FOLLOW_CREATORS>;
 
@@ -40,11 +31,7 @@ const MIN_FOLLOWAGE_COUNT = 3;
  * Screen that will allow the user to follow their first creators.
  * This screen will be shown during the onboarding process.
  */
-const FollowCreators: React.FC<NavProps> = ({
-  route: {
-    params: { onDone },
-  },
-}) => {
+const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('onboarding');
@@ -53,14 +40,15 @@ const FollowCreators: React.FC<NavProps> = ({
   // ----- States
   // -----------------------------------------------------
 
-  const [selectedAccounts, setSelectedAccounts] = React.useState<DesmosProfile[]>([]);
+  const [selectedAccounts, setSelectedAccounts] = React.useState<string[]>([]);
 
   // -----------------------------------------------------
   // ----- Hooks
   // -----------------------------------------------------
 
+  const failedToFollowCreators = useAppStateValue('failedToFollowCreators');
   const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
-  const followCreators = useFollowCreators(onDone);
+  const { followCreators, broadcasting } = useFollowCreators(params);
   const setLoginFlowState = useSetLoginFlowState();
 
   // -----------------------------------------------------
@@ -77,10 +65,10 @@ const FollowCreators: React.FC<NavProps> = ({
 
   const onAccountSelected = React.useCallback((profile: DesmosProfile, selected: boolean) => {
     if (selected) {
-      setSelectedAccounts(currentAccounts => [...currentAccounts, profile]);
+      setSelectedAccounts(currentAccounts => [...currentAccounts, profile.address]);
     } else {
       setSelectedAccounts(currentAccounts =>
-        currentAccounts.filter(account => account.address !== profile.address),
+        currentAccounts.filter(address => address !== profile.address),
       );
     }
   }, []);
@@ -88,8 +76,7 @@ const FollowCreators: React.FC<NavProps> = ({
   const renderItem = React.useCallback<ListRenderItem<FollowedProfile>>(
     ({ item }) => {
       const isSelected =
-        item.following ||
-        selectedAccounts.findIndex(account => account.address === item.address) > -1;
+        item.following || selectedAccounts.findIndex(address => address === item.address) > -1;
 
       return (
         <CreatorListItem
@@ -107,9 +94,14 @@ const FollowCreators: React.FC<NavProps> = ({
     if (selectedAccounts.length > 0) {
       followCreators(selectedAccounts);
     } else {
-      onDone();
+      // If the user has not selected any creator,
+      // it means that they are already following
+      // the required number of creators.
+      // Simulate a successful completed tx.
+      params?.onStartBroadcasting?.();
+      params?.onSuccess?.();
     }
-  }, [followCreators, onDone, selectedAccounts]);
+  }, [followCreators, params, selectedAccounts]);
 
   // -----------------------------------------------------
   // ----- Effects
@@ -121,6 +113,14 @@ const FollowCreators: React.FC<NavProps> = ({
     });
 
     // Safe to ignore, we want to execute this effect just one time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    // Set the failed to follow creators as selected.
+    setSelectedAccounts(failedToFollowCreators);
+
+    // Safe to ignore, we just want to reload the failed to follow creators.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -145,7 +145,7 @@ const FollowCreators: React.FC<NavProps> = ({
 
       <Spacer paddingTop="l" />
       <Button
-        disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT}
+        disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT || broadcasting}
         bgColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={onNextPressed}>

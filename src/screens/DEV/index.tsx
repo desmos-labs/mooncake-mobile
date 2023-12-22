@@ -107,9 +107,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               })
               break;
             case ROUTES.FOLLOW_CREATORS:
-              navigate(item, {
-                onDone: () => {},
-              });
+              navigate(item, {});
               break;
             case ROUTES.LOADING_MODAL:
               navigate(item, {

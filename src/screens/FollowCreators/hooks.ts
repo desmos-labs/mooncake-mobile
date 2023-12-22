@@ -3,7 +3,7 @@ import { Relationships } from '@desmoslabs/desmjs';
 import { MsgCreateRelationship } from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
 import { MsgCreateRelationshipEncodeObject } from '@desmoslabs/desmjs/build/modules/relationships/v1';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useAppStateValue } from '@recoil/appState';
+import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
@@ -156,26 +156,46 @@ export const useCreators = () => {
   };
 };
 
+export interface FollowCreatorsCallbacks {
+  /**
+   * Callback called once the transaction
+   * to follow the creatorors is being broadcast.
+   */
+  readonly onStartBroadcasting?: () => void;
+  /**
+   * Callback called once the transaction
+   * completes successfully.
+   */
+  readonly onSuccess?: () => void;
+  /**
+   * Callback called once the transaction
+   * completes with an error.
+   */
+  readonly onError?: (selectedCreators: string[], error: Error) => void;
+}
+
 /**
  * Hook that provides a function to broadcast
  * the `MsgCreateRelationship` messages to follow the creators.
  */
-export const useFollowCreators = (onDone: () => void) => {
+export const useFollowCreators = (callbacks?: FollowCreatorsCallbacks) => {
   const { t } = useTranslation('onboarding');
   const broadcastTx = useSignAndBroadcastTx();
   const subspaceId = useAppStateValue('subspaceId');
   const activeAccountAddress = useActiveAccountAddress()!;
+  const setFailedToFollowCreators = useSetAppStateValue('failedToFollowCreators');
+  const [broadcasting, setBroadcasting] = React.useState(false);
 
   const followCreators = React.useCallback(
-    (creators: DesmosProfile[]) => {
+    (creators: string[]) => {
       // List of MsgCreateRelationship to be broadcasted.
-      const msgs = creators.map(c => {
+      const msgs = creators.map(counterparty => {
         return {
           typeUrl: Relationships.v1.MsgCreateRelationshipTypeUrl,
           value: MsgCreateRelationship.fromPartial({
-            counterparty: c.address,
-            signer: activeAccountAddress,
+            counterparty,
             subspaceId,
+            signer: activeAccountAddress,
           }),
         } as MsgCreateRelationshipEncodeObject;
       });
@@ -186,7 +206,8 @@ export const useFollowCreators = (onDone: () => void) => {
             description: t('following creator', { count: creators.length }),
           },
           action: () => {
-            onDone();
+            setBroadcasting(true);
+            callbacks?.onStartBroadcasting?.();
           },
         },
         onSuccess: {
@@ -196,17 +217,28 @@ export const useFollowCreators = (onDone: () => void) => {
               count: creators.length,
             }),
           },
+          action: () => {
+            setBroadcasting(false);
+            callbacks?.onSuccess?.();
+          },
         },
         onError: {
           popup: {
             title: t('follow failed'),
             description: t('follow failed description', { count: creators.length }),
           },
+          action: error => {
+            setBroadcasting(false);
+            callbacks?.onError?.(creators, error);
+            // On error cache the failed to follow creators so that we can
+            // try again in the future.
+            setFailedToFollowCreators(creators);
+          },
         },
       });
     },
-    [activeAccountAddress, broadcastTx, onDone, subspaceId, t],
+    [activeAccountAddress, broadcastTx, callbacks, setFailedToFollowCreators, subspaceId, t],
   );
 
-  return followCreators;
+  return { broadcasting, followCreators };
 };

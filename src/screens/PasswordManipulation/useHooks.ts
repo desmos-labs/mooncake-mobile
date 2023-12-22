@@ -163,7 +163,7 @@ const useHooks = () => {
           storeProfile(profile.address, profile);
 
           navigate(ROUTES.FOLLOW_CREATORS, {
-            onDone: () => {
+            onStartBroadcasting: () => {
               setLoginFlowState({
                 step: LoginFlowStep.Completed,
               });
@@ -199,7 +199,7 @@ const useHooks = () => {
           accountWithWallet: account,
           onProfileSaved: async () => {
             navigate(ROUTES.FOLLOW_CREATORS, {
-              onDone: () => {
+              onStartBroadcasting: () => {
                 setSigninStatus(SignInStatus.DONE);
                 setLoginFlowState({
                   step: LoginFlowStep.Completed,
