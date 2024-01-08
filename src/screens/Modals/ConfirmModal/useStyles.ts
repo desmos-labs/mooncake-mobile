@@ -49,6 +49,13 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'center',
     paddingBottom: theme.spacing.xl,
   },
+  buttonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  inlineButton: {
+    flex: 1,
+  },
 }));
 
 export default useStyles;

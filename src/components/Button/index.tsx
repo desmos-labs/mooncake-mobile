@@ -42,6 +42,11 @@ interface Props
 }
 
 /**
+ * The button variant.
+ */
+export type ButtonVariant = Props['variant'];
+
+/**
  * A button component based on the native-base Button.
  * @constructor
  */

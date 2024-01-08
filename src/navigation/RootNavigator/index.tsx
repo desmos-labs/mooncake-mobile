@@ -23,6 +23,7 @@ import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
 import Landing from 'screens/Landing';
 import BottomSheetScreen, { BottomSheetScreenProps } from 'screens/Modals/BottomSheets';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
+import LoadingModal, { LoadingModalParams } from 'screens/Modals/LoadingModal';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SelectImageModal, { SelectImageModalParams } from 'screens/Modals/SelectImageModal';
 import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
@@ -140,6 +141,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_IMAGE_MODAL]: SelectImageModalParams;
   [ROUTES.POST_REACTIONS]: PostReactionsParams;
   [ROUTES.BOTTOM_SHEET]: BottomSheetScreenProps<any>;
+  [ROUTES.LOADING_MODAL]: LoadingModalParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -274,6 +276,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.SELECT_IMAGE_MODAL} component={SelectImageModal} />
         <Stack.Screen name={ROUTES.BOTTOM_SHEET} component={BottomSheetScreen} />
+        <Stack.Screen name={ROUTES.LOADING_MODAL} component={LoadingModal} />
       </Stack.Group>
     </Stack.Navigator>
   );

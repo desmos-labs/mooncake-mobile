@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, { ButtonVariant } from 'components/Button';
 import Spacer from 'components/Spacer';
 // dismiss button
 // import {iconCross} from 'assets/images';
@@ -21,6 +21,11 @@ import {
   View,
 } from 'react-native';
 import useStyles from './useStyles';
+
+export enum ButtonsLayout {
+  Row = 'row',
+  Column = 'column',
+}
 
 export type ConfirmModalParams = {
   /**
@@ -68,7 +73,7 @@ export type ConfirmModalParams = {
    * The mode of the primary button.
    * @default contained
    */
-  primaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
+  primaryButtonMode?: ButtonVariant;
 
   /**
    * If the primary button should be in loading state
@@ -79,12 +84,16 @@ export type ConfirmModalParams = {
    * The mode of the secondary button.
    * @default text
    */
-  secondaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
-
+  secondaryButtonMode?: ButtonVariant;
   /**
    * If the secondary button should be in loading state
    */
   secondaryButtonLoading?: boolean;
+  /**
+   * Tells how the buttons should be laid out.
+   * If undefined will default to {@link ButtonsLayout.Column}.
+   */
+  buttonsLayout?: ButtonsLayout;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -106,6 +115,7 @@ const ConfirmModal = () => {
       secondaryButtonMode = 'link',
       primaryButtonLoading,
       secondaryButtonLoading,
+      buttonsLayout = ButtonsLayout.Column,
     },
   } = useRoute<NavProps['route']>();
 
@@ -114,23 +124,72 @@ const ConfirmModal = () => {
 
   const { goBack } = useNavigation<NavProps['navigation']>();
 
-  const onPressPrimaryButton = () => {
+  const onPressPrimaryButton = React.useCallback(() => {
     if (removeModalAfterButtonPress) {
       goBack();
       onPressPrimary && setTimeout(() => onPressPrimary(), 200);
     } else {
       onPressPrimary && onPressPrimary();
     }
-  };
+  }, [goBack, onPressPrimary, removeModalAfterButtonPress]);
 
-  const onPressSecondaryButton = () => {
+  const onPressSecondaryButton = React.useCallback(() => {
     if (removeModalAfterButtonPress) {
       goBack();
       onPressSecondary && setTimeout(() => onPressSecondary(), 200);
     } else {
       onPressSecondary && onPressSecondary();
     }
-  };
+  }, [goBack, onPressSecondary, removeModalAfterButtonPress]);
+
+  const buttons = React.useMemo(() => {
+    return (
+      <View style={buttonsLayout === ButtonsLayout.Row ? styles.buttonsRow : undefined}>
+        {primaryButtonLabel && (
+          <Button
+            style={buttonsLayout === ButtonsLayout.Row ? styles.inlineButton : undefined}
+            isLoading={primaryButtonLoading ?? false}
+            size={44}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
+            alignSelf="stretch"
+            variant={primaryButtonMode as any}
+            onPress={onPressPrimaryButton}>
+            {primaryButtonLabel}
+          </Button>
+        )}
+        {secondaryButtonLabel && (
+          <>
+            {buttonsLayout === ButtonsLayout.Column && <Spacer paddingTop="m" />}
+            {buttonsLayout === ButtonsLayout.Row && <Spacer paddingRight="m" />}
+            <Button
+              style={buttonsLayout === ButtonsLayout.Row ? styles.inlineButton : undefined}
+              isLoading={secondaryButtonLoading ?? false}
+              size={44}
+              alignSelf="stretch"
+              variant={secondaryButtonMode as any}
+              onPress={onPressSecondaryButton}>
+              {secondaryButtonLabel}
+            </Button>
+          </>
+        )}
+      </View>
+    );
+  }, [
+    buttonsLayout,
+    onPressPrimaryButton,
+    onPressSecondaryButton,
+    primaryButtonLabel,
+    primaryButtonLoading,
+    primaryButtonMode,
+    secondaryButtonLabel,
+    secondaryButtonLoading,
+    secondaryButtonMode,
+    styles.buttonsRow,
+    styles.inlineButton,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+  ]);
 
   return (
     <View style={styles.container}>
@@ -141,7 +200,7 @@ const ConfirmModal = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.innerContainer}>
-        {image && <Image source={image} style={styles.imageStyle} />}
+        {image && <Image source={image} style={styles.imageStyle} resizeMode="center" />}
         <Spacer paddingBottom={16}>
           <Typography.H5 style={CommonStyles.textAlign.center}>{title}</Typography.H5>
         </Spacer>
@@ -155,33 +214,8 @@ const ConfirmModal = () => {
             subtitle
           )}
         </Typography.Body5>
-        <Spacer paddingTop={theme.spacing.xl}>
-          {primaryButtonLabel && (
-            <Button
-              isLoading={primaryButtonLoading ?? false}
-              size={44}
-              textColor={theme.colors.white}
-              backgroundColor={theme.colors.surfaceBlack}
-              alignSelf="stretch"
-              variant={primaryButtonMode as any}
-              onPress={onPressPrimaryButton}>
-              {primaryButtonLabel}
-            </Button>
-          )}
-          {secondaryButtonLabel && (
-            <Spacer paddingTop={theme.spacing.m}>
-              <Button
-                isLoading={secondaryButtonLoading ?? false}
-                size={44}
-                mb="s"
-                alignSelf="stretch"
-                variant={secondaryButtonMode as any}
-                onPress={onPressSecondaryButton}>
-                {secondaryButtonLabel}
-              </Button>
-            </Spacer>
-          )}
-        </Spacer>
+        <Spacer paddingTop={theme.spacing.xl} />
+        {buttons}
       </View>
     </View>
   );
