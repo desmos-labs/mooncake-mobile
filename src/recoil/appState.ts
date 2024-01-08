@@ -61,9 +61,7 @@ const DefaultAppState: AppState = {
   subspaceId: Constants.subspaceId,
   currentTimezone: '',
   subspaceParams: {
-    registeredReactions: [],
     reportReasons: [],
-    tipsContractConfig: undefined,
   },
   butterConfig: undefined,
   notificationsCount: 0,

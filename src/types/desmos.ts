@@ -26,17 +26,9 @@ export interface TipsContractConfig {
  */
 export interface SubspaceParams {
   /**
-   * Reactions that can be used within this subspace.
-   */
-  readonly registeredReactions: RegisteredReaction[];
-  /**
    * Reasons that can be used to report a post.
    */
   readonly reportReasons: ReportReason[];
-  /**
-   * Configuration of the smart contract allowing to tip another user.
-   */
-  readonly tipsContractConfig: TipsContractConfig | undefined;
 }
 
 /**

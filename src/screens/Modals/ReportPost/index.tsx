@@ -51,7 +51,7 @@ const ReportPost = () => {
   const { reportReasons } = subspaceParams;
   const reportingReasons = reportReasons.map(reason => {
     return {
-      label: t(reason.title),
+      label: t(reason.title.toLowerCase()),
       value: reason.id.toString(),
     } as RadioValue;
   });
@@ -95,7 +95,7 @@ const ReportPost = () => {
         <Typography.H4 style={styles.headerText}>{t('thanks for reporting')}</Typography.H4>
         <Spacer paddingBottom={theme.spacing.m} />
         <Typography.Body5 style={styles.reportSuccessText}>
-          {t('report success message')}
+          {t('the post has been reported and will be reviewed shortly')}
         </Typography.Body5>
       </View>
     );
@@ -112,10 +112,10 @@ const ReportPost = () => {
     return (
       <View style={styles.successfulReport}>
         <Image source={reportSuccessIcon} style={styles.reportIcon} />
-        <Typography.H4 style={styles.headerText}>{t('already reported')}</Typography.H4>
+        <Typography.H4 style={styles.headerText}>{t('post already reported')}</Typography.H4>
         <Spacer paddingBottom={theme.spacing.m} />
         <Typography.Body5 style={styles.reportSuccessText}>
-          {t('already reported message')}
+          {t('you have already reported this post')}
         </Typography.Body5>
       </View>
     );
@@ -149,7 +149,7 @@ const ReportPost = () => {
             onChangeText={text => setMessage(text)}
             style={styles.textInput}
             multiline
-            placeholder={t('message')}
+            placeholder={t('message', { ns: 'common' })}
           />
         </View>
         <Spacer paddingVertical={30}>
@@ -163,7 +163,7 @@ const ReportPost = () => {
               backgroundColor={theme.colors.surfaceBlack}
               textColor={theme.colors.white}
               onPress={onSubmit}>
-              {t('submit')}
+              {t('submit', { ns: 'common' })}
             </Button>
           )}
         </Spacer>

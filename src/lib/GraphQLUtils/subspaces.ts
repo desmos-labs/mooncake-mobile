@@ -1,4 +1,4 @@
-import { RegisteredReaction, ReportReason, SubspaceParams, TipsContractConfig } from 'types/desmos';
+import { ReportReason, SubspaceParams, TipsContractConfig } from 'types/desmos';
 
 const convertGraphQLTipsContractConfig = (
   subspaceId: number,
@@ -23,16 +23,8 @@ const convertGraphQLTipsContractConfig = (
  */
 // It's fine to disable the default export here because we might add other methods in the future
 // eslint-disable-next-line import/prefer-default-export
-export const convertGraphQLSubspaceParams = (subspaceId: number, params: any) => {
+export const convertGraphQLSubspaceParams = (params: any) => {
   return {
-    registeredReactions: params.registered_reactions.map(
-      (reaction: any) =>
-        ({
-          id: reaction.id,
-          displayValue: reaction.display_value,
-          shortHandCode: reaction.shorthand_code,
-        }) as RegisteredReaction,
-    ),
     reportReasons: params.report_reasons.map(
       (reason: any) =>
         ({
@@ -41,6 +33,5 @@ export const convertGraphQLSubspaceParams = (subspaceId: number, params: any) =>
           description: reason.description,
         }) as ReportReason,
     ),
-    tipsContractConfig: convertGraphQLTipsContractConfig(subspaceId, params.contracts),
   } as SubspaceParams;
 };

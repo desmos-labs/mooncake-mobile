@@ -12,17 +12,19 @@ const useSubspaceParams = () => {
   const subspaceParams = useAppStateValue('subspaceParams');
   const setSubspaceParams = useSetAppStateValue('subspaceParams');
 
+  console.log(subspaceId);
   const { data, refetch } = useQuery(GetSubspaceConfig, {
     variables: { subspaceId },
     fetchPolicy: 'no-cache',
   });
+  console.log(data);
 
   // Use the effect to react to the data update in order to update the cached value
   React.useEffect(() => {
     if (!data) {
       return;
     }
-    setSubspaceParams(convertGraphQLSubspaceParams(subspaceId, data));
+    setSubspaceParams(convertGraphQLSubspaceParams(data));
   }, [data, setSubspaceParams, subspaceId]);
 
   return {
