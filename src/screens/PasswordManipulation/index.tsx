@@ -81,10 +81,10 @@ const PasswordManipulation = () => {
       case PASSWORD_MANIPULATION_MODE.CREATE_ACCOUNT_AND_PROFILE:
       case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
         return Yup.object().shape({
-          newPassword: Yup.string().test('password', t('pwTooWeak'), value =>
+          newPassword: Yup.string().test('password', t('password too weak'), value =>
             __DEV__ ? true : zxcvbn(value!).score >= 2,
           ),
-          confirmPassword: Yup.string().oneOf([Yup.ref('newPassword')], t('pwMustMatch')),
+          confirmPassword: Yup.string().oneOf([Yup.ref('newPassword')], t('password must match')),
         });
       case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
         // TODO: Provide validation schema for reset password.

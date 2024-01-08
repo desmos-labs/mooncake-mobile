@@ -14,7 +14,7 @@ type Props = {
 };
 
 const PasswordChecksGroup = ({ passwordToCheck, mode, label }: Props) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('password');
   const theme = useTheme();
 
   const Message = useMemo(() => {
