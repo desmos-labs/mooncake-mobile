@@ -22,7 +22,5 @@
   "error": "Error",
   "field required": "This field is required.",
   "message": "Message",
-  "delete": "Delete",
-  "strong password": "Avoid using easily guessable words like \"password,\" \"123456,\" \"qwerty,\" or any other common words.",
-  "recommend password": "It's recommended to use a combination of both uppercase and lowercase letters, numbers, and special characters."
+  "delete": "Delete"
 }

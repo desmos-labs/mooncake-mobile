@@ -5,8 +5,11 @@ import {
   PROFILE_HEADER_HEIGHT_COMPACT,
   PROFILE_HEADER_HEIGHT_EXPANDED,
 } from 'screens/Profile/useStyles';
+import { useTranslation } from 'react-i18next';
 
 const useOpenPictureEditor = () => {
+  const { t } = useTranslation('pictureEditor');
+
   const editProfilePicture = useCallback(
     (
       imagePath: string,
@@ -26,7 +29,7 @@ const useOpenPictureEditor = () => {
         showCropGuidelines: false,
         showCropFrame: false,
         hideBottomControls: true,
-        cropperToolbarTitle: 'Edit your profile picture',
+        cropperToolbarTitle: t('edit your profile picture'),
         cropperRotateButtonsHidden: true,
         useCroppedDimensions: true,
       })
@@ -59,7 +62,7 @@ const useOpenPictureEditor = () => {
         hideBottomControls: true,
         width: Dimensions.get('window').width,
         height: PROFILE_HEADER_HEIGHT_COMPACT + PROFILE_HEADER_HEIGHT_EXPANDED,
-        cropperToolbarTitle: 'Edit your cover picture',
+        cropperToolbarTitle: t('edit your cover picture'),
         cropperRotateButtonsHidden: true,
         useCroppedDimensions: true,
       })
@@ -94,7 +97,7 @@ const useOpenPictureEditor = () => {
         showCropGuidelines: true,
         showCropFrame: true,
         hideBottomControls: true,
-        cropperToolbarTitle: 'Edit your memory',
+        cropperToolbarTitle: t('edit your picture'),
         cropperRotateButtonsHidden: true,
         freeStyleCropEnabled: true,
         useCroppedDimensions: true,
@@ -108,7 +111,7 @@ const useOpenPictureEditor = () => {
           onError && onError(err);
         });
     },
-    [],
+    [t],
   );
 
   return {
