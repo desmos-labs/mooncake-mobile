@@ -1,6 +1,5 @@
 import Button from 'components/Button';
 import Typography from 'components/Typography';
-import { makeStyle } from 'config/theme';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -18,6 +17,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 import useSendTip from 'hooks/tips/useSendTip';
+import useStyles from './useStyles';
 
 interface TipUserBottomSheetProps {
   /**
@@ -217,6 +217,7 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
         placeholder={t('insert amount')}
         value={textAmount}
         onChangeText={onAmountChange}
+        keyboardType="numeric"
       />
       {userBalanceComponent}
       <Spacer paddingTop="l" />
@@ -247,36 +248,3 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
 };
 
 export default TipUserBottomSheet;
-
-const useStyles = makeStyle(theme => ({
-  root: {
-    paddingHorizontal: 20,
-    paddingBottom: 56,
-  },
-  header: {
-    marginTop: theme.spacing.l,
-    alignSelf: 'center',
-  },
-  subtitle: {
-    marginTop: 20,
-  },
-  quickSelectorRow: {
-    flexDirection: 'row',
-    marginTop: 20,
-  },
-  quickSelectButton: {
-    flex: 1,
-  },
-  inputContainer: {
-    paddingHorizontal: theme.spacing.s,
-    paddingVertical: theme.spacing.m,
-  },
-  availableText: {
-    marginTop: 12,
-    color: theme.colors.accentGreen01,
-  },
-  errorText: {
-    marginTop: 12,
-    color: theme.colors.accentRed01,
-  },
-}));
