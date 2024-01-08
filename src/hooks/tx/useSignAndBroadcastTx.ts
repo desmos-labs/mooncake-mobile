@@ -7,6 +7,7 @@ import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
 import useParseErrorMessage from 'hooks/useParseErrorMessage';
+import { Wallet } from 'types/wallet';
 
 interface PopupOptions {
   /**
@@ -29,6 +30,7 @@ interface ErrorActionOptions {
 }
 
 interface SignAndBroadcastOptions {
+  readonly wallet?: Wallet;
   readonly memo?: string;
   readonly onLoading?: ActionOptions;
   readonly onSuccess?: ActionOptions;
@@ -50,7 +52,7 @@ const useSignAndBroadcastTx = () => {
   return useCallback(
     async (messages: EncodeObject[], options?: SignAndBroadcastOptions) => {
       // Get the Desmos Client and wallet
-      const result = await prepareDesmosClientAndWallet();
+      const result = await prepareDesmosClientAndWallet(options?.wallet);
       if (result.isErr()) {
         showToast({
           toastType: ToastType.error,
