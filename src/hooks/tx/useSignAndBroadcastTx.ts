@@ -9,6 +9,11 @@ import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndW
 import useParseErrorMessage from 'hooks/useParseErrorMessage';
 
 interface PopupOptions {
+  /**
+   * Tells if we should display the popup.
+   * If undefined will default to true.
+   */
+  readonly show?: boolean;
   readonly title?: string;
   readonly description?: string;
 }
@@ -80,35 +85,43 @@ const useSignAndBroadcastTx = () => {
             options.onLoading.action();
           }
 
-          showToast({
-            toastType: ToastType.loading,
-            message: options?.onLoading?.popup?.description ?? t('performing transaction'),
-          });
+          if (options?.onLoading?.popup?.show !== false) {
+            showToast({
+              toastType: ToastType.loading,
+              message: options?.onLoading?.popup?.description ?? t('performing transaction'),
+            });
+          }
         })
         .onComplete(() => {
           desmosClient.disconnect();
           if (options?.onSuccess?.action) {
             options.onSuccess.action();
           }
-          showToast({
-            toastType: ToastType.success,
-            title: options?.onSuccess?.popup?.title ?? t('success', { ns: 'common' }),
-            message: options?.onSuccess?.popup?.description ?? t('operation completed'),
-          });
+
+          if (options?.onSuccess?.popup?.show !== false) {
+            showToast({
+              toastType: ToastType.success,
+              title: options?.onSuccess?.popup?.title ?? t('success', { ns: 'common' }),
+              message: options?.onSuccess?.popup?.description ?? t('operation completed'),
+            });
+          }
         })
         .onError(({ error }) => {
           desmosClient.disconnect();
           if (options?.onError?.action) {
             options.onError.action(error);
           }
-          showToast({
-            toastType: ToastType.error,
-            title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),
-            message: options?.onError?.popup?.description ?? parseError(error.message),
-          });
+
+          if (options?.onError?.popup?.show !== false) {
+            showToast({
+              toastType: ToastType.error,
+              title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),
+              message: options?.onError?.popup?.description ?? parseError(error.message),
+            });
+          }
         });
     },
-    [prepareDesmosClientAndWallet, t, showToast],
+    [prepareDesmosClientAndWallet, t, showToast, parseError],
   );
 };
 
