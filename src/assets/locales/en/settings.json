@@ -25,9 +25,11 @@
   "account": "Account",
   "delete account data": "Delete account data",
   "delete profile": "Delete profile",
+  "we are deleting your profile": "We are deleting your profile permanently.",
   "delete data": "Delete data",
   "delete account data description": "This operation will delete all the data related to your profile including your network and posts but not your profile itself, which you can still use in other applications that supports it.\n\nIf you want to delete also the profile, please select the \"Delete Profile\" option instead",
   "delete profile description": "Are you sure you want to delete your profile?\n\nYour profile and all the data related to it will be permanently deleted.",
   "your data are going to be permanently deleted in 14 days": "Your data are going to be permanently deleted in 14 days. However, you can cancel the deletion if you log-in within 14 days.",
-  "an error occured while deleting your account": "An error occured while deleting your account",
+  "an error occured while deleting your account": "An error occured while deleting your account\n\n{{error}}",
+  "an error occured while deleting your profile": "An error occured while deleting your profile\n\n{{error}}",
 }
