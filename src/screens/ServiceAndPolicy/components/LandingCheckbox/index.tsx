@@ -30,22 +30,22 @@ const LandingCheckbox = ({ onValueChange, ...rest }: CheckboxProps) => {
         onValueChange={value => onValueChangeWithFeedbackWrapper(value)}
         {...rest}
       />
-      <Typography.Body5 style={styles.mainTextColor}>
+      <Typography.Body6 style={styles.mainTextColor}>
         <Trans
           i18nKey="tos and privacy"
           ns="legal"
           components={[
-            <Typography.Body5
+            <Typography.Body6
               onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}
               style={{ color: theme.colors.primary }}
             />,
-            <Typography.Body5
+            <Typography.Body6
               onPress={() => Linking.openURL('https://butter.social/privacy-policy')}
               style={{ color: theme.colors.primary }}
             />,
           ]}
         />
-      </Typography.Body5>
+      </Typography.Body6>
     </View>
   );
 };

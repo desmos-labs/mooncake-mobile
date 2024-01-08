@@ -1,7 +1,6 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { useSetLoginFlowState } from '@recoil/login';
 import { useStoreProfile } from '@recoil/profiles';
-import { passwordStrength } from 'check-password-strength';
 import { ToastType } from 'config/toast/toastConfig';
 import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import useUpdateAccount from 'hooks/accounts/useUpdateAccount';
@@ -18,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
-import useStyles from './useStyles';
 
 /**
  * Password manipulation mode.
@@ -60,7 +58,6 @@ enum SignInStatus {
  */
 const useHooks = () => {
   const { t } = useTranslation('password');
-  const styles = useStyles();
   const [, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
   const [loading, setLoading] = React.useState(false);
   const { navigate } = useNavigation<NavProps['navigation']>();
@@ -142,22 +139,6 @@ const useHooks = () => {
     }
   }, [mode, t]);
 
-  const mapPwStyle = React.useCallback(
-    (password: string) => {
-      const { value } = passwordStrength(password);
-
-      switch (value) {
-        case 'Medium':
-          return styles.mediumPw;
-        case 'Strong':
-          return styles.strongPw;
-        default:
-          return styles.weakPw;
-      }
-    },
-    [styles.mediumPw, styles.strongPw, styles.weakPw],
-  );
-
   /**
    * Handle form submit for the password manipulation form
    * @param formValues Form values
@@ -170,7 +151,6 @@ const useHooks = () => {
        * If mode is setup password, we need to store the
        * account and profile but not create a profile since we already have one
        */
-      console.log('SUBMITTING FORM', mode);
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT && account && profile) {
         setSigninStatus(SignInStatus.SAVING_WALLET);
         const storeAccountResult = await storeAccount(account, formValues.newPassword);
@@ -303,7 +283,6 @@ const useHooks = () => {
     pwInputLabel,
     buttonLabel,
     handleFormSubmit,
-    mapPwStyle,
     initialFormValues,
   };
 };

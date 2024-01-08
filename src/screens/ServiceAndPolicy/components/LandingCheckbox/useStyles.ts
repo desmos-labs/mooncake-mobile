@@ -5,8 +5,6 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    alignSelf: 'center',
-    paddingHorizontal: 20,
   },
   checkbox: {
     marginRight: 10,

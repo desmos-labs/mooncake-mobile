@@ -22,13 +22,14 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   border: {
     borderBottomWidth: 1,
     borderColor: theme.colors.surfaceGrey,
   },
-  bottomView: { flex: 1, alignSelf: 'center', justifyContent: 'flex-end' },
+  bottomView: { flex: 1, justifyContent: 'flex-end' },
 }));
 
 export default useStyles;

@@ -8,6 +8,7 @@ import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import { DesmosChain } from 'config/LinkableChains';
+import useTrackAcceptedLegalTerms from 'hooks/analytics/useTrackAcceptedLegalTerms';
 import useLoginWithWeb3Auth from 'hooks/web3Auth/useLoginWithWeb3Auth';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -17,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 import { Linking, TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
-import useTrackAcceptedLegalTerms from 'hooks/analytics/useTrackAcceptedLegalTerms';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -82,7 +82,7 @@ const ServiceAndPolicy = () => {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={[styles.button, styles.border]}
-          onPress={() => Linking.openURL('https://bondscape.desmos.network/terms')}>
+          onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}>
           <Typography.Body5>{t('terms of service')}</Typography.Body5>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
@@ -91,7 +91,7 @@ const ServiceAndPolicy = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => Linking.openURL('https://bondscape.desmos.network/privacy')}>
+          onPress={() => Linking.openURL('https://butter.social/privacy-policy')}>
           <Typography.Body5>{t('privacy policy')}</Typography.Body5>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
@@ -105,10 +105,12 @@ const ServiceAndPolicy = () => {
         </Spacer>
       )}
       <View style={styles.bottomView}>
-        <LandingCheckbox
-          value={conditionAndPolicyAccepted}
-          onValueChange={value => setConditionAndPolicyAccepted(value)}
-        />
+        <Spacer paddingHorizontal="s">
+          <LandingCheckbox
+            value={conditionAndPolicyAccepted}
+            onValueChange={value => setConditionAndPolicyAccepted(value)}
+          />
+        </Spacer>
         <Spacer paddingBottom="xl" />
         <Button
           bgColor={theme.colors.surfaceBlack}

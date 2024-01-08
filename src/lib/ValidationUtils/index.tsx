@@ -1,4 +1,5 @@
 import { EnglishMnemonic } from '@cosmjs/crypto';
+import zxcvbn from 'zxcvbn';
 
 export const MIN_PW_LENGTH = 6;
 
@@ -16,7 +17,9 @@ export const validateMnemonic = (mnemonic: string): boolean => {
 };
 
 export const validateMinPwLength = (value: string | undefined) => {
-  if (!value) return false;
+  if (!value) {
+    return false;
+  }
   return value.length >= MIN_PW_LENGTH;
 };
 export const validateMin1Lowercase = (value: string | undefined) => /(?=.*[a-z])/.test(value || '');
@@ -24,3 +27,17 @@ export const validateMin1Lowercase = (value: string | undefined) => /(?=.*[a-z])
 export const validateMin1Uppercase = (value: string | undefined) => /(?=.*[A-Z])/.test(value || '');
 
 export const validateMin1SpecialChar = (value: string | undefined) => /(?=.*\W)/.test(value || '');
+
+export const validatePswStrength = (value: string | undefined) => {
+  if (!value) {
+    return false;
+  }
+  return zxcvbn(value).score >= 2;
+};
+
+export const isPswMaxStrength = (value: string | undefined) => {
+  if (!value) {
+    return false;
+  }
+  return zxcvbn(value).score === 4;
+};
