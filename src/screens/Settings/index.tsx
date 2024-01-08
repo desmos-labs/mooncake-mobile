@@ -26,6 +26,8 @@ import useStyles from 'screens/Settings/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
 import {
+  useDeleteAccountData,
+  useDeleteProfile,
   useOpenNotificationsSettings,
   useSendFeedback,
   useShowAboutInfo,
@@ -71,6 +73,9 @@ const Settings = (props: NavProps) => {
   const biometrics = useSetting('biometrics');
   const enableBiometrics = useEnableBiometrics();
   const disableBiometrics = useDisableBiometrics();
+  const deleteAccountData = useDeleteAccountData();
+  const deleteProfile = useDeleteProfile();
+
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
@@ -179,6 +184,13 @@ const Settings = (props: NavProps) => {
             <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
           )}
         </Section>
+
+        {/* Acccount section */}
+        <Section style={styles.spacer} title={t('account')}>
+          <SectionButton label={t('delete account data')} onPress={deleteAccountData} />
+          <SectionButton label={t('delete profile')} onPress={deleteProfile} />
+        </Section>
+
         {/* Other section */}
         <Section style={styles.spacer} title={t('others')}>
           <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
