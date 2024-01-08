@@ -30,7 +30,7 @@ const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColor }) =>
         name="angle-left"
         style={disabled && CommonStyles.opacity['50']}
         color={iconColor || theme.colors.surfaceBlack}
-        size={32}
+        size={30}
         allowFontScaling
       />
     </TouchableOpacity>
