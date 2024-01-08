@@ -99,7 +99,6 @@ const PasswordManipulation = () => {
     pwInputLabel,
     buttonLabel,
     handleFormSubmit,
-    mapPwStyle,
     initialFormValues,
   } = useHooks();
 
