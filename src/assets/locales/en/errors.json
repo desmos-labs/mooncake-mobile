@@ -1,3 +1,4 @@
 {
-  "insufficient funds": "Sorry, you don't have enough tokens to do this. Ask someone to send you some, or get them on Osmosis"
+  "insufficient funds": "Sorry, you don't have enough tokens to do this. You need at least {{ amount }}. Ask someone to send you some, or get them on Osmosis",
+  "you are already following this user": "You are already following this user"
 }

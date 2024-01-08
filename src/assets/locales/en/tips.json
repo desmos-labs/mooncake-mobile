@@ -4,13 +4,11 @@
   "how much do you want to send": "How much do you want to send?",
   "insert amount": "Insert amount",
   "available": "Available",
-  "message for the user": "Message for the user",
   "amount too low": "The amount is too low",
   "amount too high": "The amount is too high",
   "message for the user": "Say something nice to the receiver",
   "can't get user's balance": "Can't get user's balance",
   "sending tip": "Sending tip...",
   "tip sent": "You sent {{ amount }} to {{ userDtag }}",
-  "tip failed": "The tip of {{ amount }} to {{ userDtag }} has failed",
+  "tip failed": "The tip of {{ amount }} to {{ userDtag }} has failed"
 }
-
