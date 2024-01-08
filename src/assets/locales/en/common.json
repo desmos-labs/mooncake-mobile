@@ -20,5 +20,7 @@
   "welcomeSubtitle": "Spread your wings, connect with kindred spirits, and share your vibrant stories!",
   "error": "Error",
   "field required": "This field is required.",
-  "message": "Message"
+  "message": "Message",
+  "strong password": "Avoid using easily guessable words like \"password,\" \"123456,\" \"qwerty,\" or any other common words.",
+  "recommend password": "It's recommended to use a combination of both uppercase and lowercase letters, numbers, and special characters."
 }
