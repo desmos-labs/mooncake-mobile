@@ -4,6 +4,7 @@ import { useActiveAccount } from '@recoil/accounts';
 import useRemoveAccount from 'hooks/accounts/useRemoveAccount';
 import useDeleteAuthToken from 'hooks/axios/useDeleteAuthToken';
 import useRootNavigator from 'hooks/navigation/useRootNavigator';
+import useResetToLanding from 'hooks/navigation/useResetToLanding';
 import isAccountWithPrivateKey from 'lib/AccountUtils/type';
 import sleep from 'lib/sleep';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -11,8 +12,11 @@ import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
-import { deleteData as deleteDataIcon } from 'assets/images';
+import { deleteData as deleteDataIcon, successfulOperation } from 'assets/images';
 import { ButtonsLayout } from 'screens/Modals/ConfirmModal';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import DeleteUserAccount from 'services/axios/requests/DeleteUserAccount';
+import usePerformLogout from 'hooks/user/usePerformLogout';
 
 /**
  * Hook that provides a function to reveal the current active user private key
@@ -97,13 +101,54 @@ export const useSignOut = () => {
  * Hook that provides a function to delete the user's data.
  */
 const useDeleteData = (deleteProfile: boolean) => {
-  return React.useCallback(() => {
-    if (deleteProfile) {
-      console.warn('TODO: Delete profile');
-    } else {
-      console.warn('TODO: Delete account data');
+  const { t } = useTranslation('settings');
+  const navigation = useRootNavigator();
+  const unlockWallet = useUnlockWallet();
+  const resetToLanding = useResetToLanding();
+  const performLogout = usePerformLogout();
+  const deleteAuthToken = useDeleteAuthToken();
+
+  const deleteData = React.useCallback(async () => {
+    // Request the user's password and get their wallet.
+    const wallet = await unlockWallet({
+      forceRequestPassword: true,
+    });
+
+    if (wallet.isOk()) {
+      // The user has correctly unlocked the wallet, let's delete
+      // the user's data.
+      if (deleteProfile) {
+        console.warn('TODO: Delete profile');
+      }
+
+      await performLogout({ resetToLanding: false, keepAuthToken: true });
+
+      const deleteResult = await DeleteUserAccount();
+      if (deleteResult.isErr()) {
+        navigation.navigate(ROUTES.CONFIRM_MODAL, {
+          title: t('error', { ns: 'common' }),
+          subtitle: t('an error occured while deleting your account'),
+          primaryButtonLabel: t('retry', { ns: 'common' }),
+          onPressPrimary: deleteData,
+        });
+        return;
+      }
+      // Let's delete the token after we have sent the delete user account request.
+      deleteAuthToken();
+
+      // Reset to landing and show the success modal.
+      resetToLanding();
+      navigation.navigate(ROUTES.CONFIRM_MODAL, {
+        image: successfulOperation,
+        title: t('success', { ns: 'common' }),
+        subtitle: t('your data are going to be permanently deleted in 14 days'),
+        primaryButtonLabel: t('ok', { ns: 'common' }),
+        removeModalAfterButtonPress: true,
+      });
     }
-  }, [deleteProfile]);
+  }, [deleteAuthToken, deleteProfile, navigation, performLogout, resetToLanding, t, unlockWallet]);
+
+  return deleteData;
 };
 
 /**

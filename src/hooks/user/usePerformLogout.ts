@@ -1,18 +1,29 @@
 import { useApolloClient } from '@apollo/client';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useDeleteCachedAccounts, useSetActiveAccountAddress } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
 import { useResetTourGuideState } from '@recoil/tourguide';
 import useDeleteAuthToken from 'hooks/axios/useDeleteAuthToken';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import React from 'react';
 import { LoginFlowStep } from 'types/login';
 import useToast from 'hooks/toasts/useToast';
 import { useTranslation } from 'react-i18next';
 import { ToastType } from 'config/toast/toastConfig';
 import useUnregistDeviceForNotifications from 'hooks/notifications/useUnregistDeviceForNotifications';
+import useResetToLanding from 'hooks/navigation/useResetToLanding';
+
+interface LogoutParams {
+  /**
+   * Tells if the user should be taken to the landing screen.
+   * If undefined this will default to true.
+   */
+  readonly resetToLanding?: boolean;
+  /**
+   * Tells if we should keep the auth token or if we should invalidate it and delete from the
+   * device storage.
+   * If undefined this will default to false.
+   */
+  readonly keepAuthToken?: boolean;
+}
 
 /**
  * Hook that provides a function to logout the user from the application.
@@ -22,7 +33,6 @@ import useUnregistDeviceForNotifications from 'hooks/notifications/useUnregistDe
  */
 const usePerformLogout = () => {
   const { t } = useTranslation('common');
-  const { reset } = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
 
   const client = useApolloClient();
   const unregisterDeviceForNotifications = useUnregistDeviceForNotifications();
@@ -32,55 +42,59 @@ const usePerformLogout = () => {
   const setLoginFlowState = useSetLoginFlowState();
   const resetTourGuideState = useResetTourGuideState();
   const showToast = useToast();
+  const resetNavigationToLanding = useResetToLanding();
 
-  return React.useCallback(async () => {
-    try {
-      // Clear the Apollo cache
-      await client.clearStore();
-    } catch (error: any) {
-      showToast({
-        toastType: ToastType.error,
-        title: t('error'),
-        message: error.message,
-      });
-    } finally {
-      await unregisterDeviceForNotifications();
+  return React.useCallback(
+    async ({ resetToLanding = true, keepAuthToken = false }: LogoutParams) => {
+      try {
+        // Clear the Apollo cache
+        await client.clearStore();
+      } catch (error: any) {
+        showToast({
+          toastType: ToastType.error,
+          title: t('error'),
+          message: error.message,
+        });
+      } finally {
+        await unregisterDeviceForNotifications();
 
-      // We can now navigate to the landing screen while clearing up our recoils
-      reset({
-        index: 0,
-        routes: [{ name: ROUTES.LANDING }],
-      });
+        if (resetToLanding) {
+          resetNavigationToLanding();
+        }
 
-      // Rest the login flow state.
-      setLoginFlowState({
-        step: LoginFlowStep.None,
-      });
+        // Rest the login flow state.
+        setLoginFlowState({
+          step: LoginFlowStep.None,
+        });
 
-      // Set the active account to undefined
-      setActiveAccountAddress(undefined);
+        // Set the active account to undefined
+        setActiveAccountAddress(undefined);
 
-      // Clear the cached account
-      deleteCachedAccounts();
+        // Clear the cached account
+        deleteCachedAccounts();
 
-      // Clear the tour guide
-      resetTourGuideState();
+        // Clear the tour guide
+        resetTourGuideState();
 
-      // Clear the token
-      deleteToken();
-    }
-  }, [
-    client,
-    deleteCachedAccounts,
-    deleteToken,
-    reset,
-    resetTourGuideState,
-    setActiveAccountAddress,
-    setLoginFlowState,
-    showToast,
-    t,
-    unregisterDeviceForNotifications,
-  ]);
+        // Clear the token
+        if (!keepAuthToken) {
+          deleteToken();
+        }
+      }
+    },
+    [
+      client,
+      deleteCachedAccounts,
+      deleteToken,
+      resetNavigationToLanding,
+      resetTourGuideState,
+      setActiveAccountAddress,
+      setLoginFlowState,
+      showToast,
+      t,
+      unregisterDeviceForNotifications,
+    ],
+  );
 };
 
 export default usePerformLogout;

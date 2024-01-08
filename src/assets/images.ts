@@ -88,6 +88,8 @@ export const appleLoginIcon = require ('./images/appleLoginIcon.png');
 export const profileContextButton = require ('./images/profile_context.png');
 
 export const deleteData = require('./images/deleteData.png');
+export const successfulOperation = require('./images/successufulOpearation.gif');
+
 
 // TX
 
