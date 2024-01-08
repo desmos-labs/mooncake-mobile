@@ -1,19 +1,4 @@
-import { ReportReason, SubspaceParams, TipsContractConfig } from 'types/desmos';
-
-const convertGraphQLTipsContractConfig = (
-  subspaceId: number,
-  contracts: any[],
-): TipsContractConfig | undefined => {
-  const contract = contracts.find(c => c.config.subspace_id === subspaceId.toString());
-  if (!contract) {
-    return undefined;
-  }
-
-  return {
-    address: contract.address,
-    serviceFeePercentage: contract.config.service_fee.percentage.value,
-  };
-};
+import { ReportReason, SubspaceParams } from 'types/desmos';
 
 /**
  * Format an incoming Subspace params data from the server into a format that is easier to parse by the app.

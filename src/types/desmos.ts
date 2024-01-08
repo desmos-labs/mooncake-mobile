@@ -1,24 +1,10 @@
 /**
- * Represents a reaction that is registered on the subspace and can be used.
- */
-export interface RegisteredReaction {
-  readonly id: number;
-  readonly shortHandCode: string;
-  readonly displayValue: string;
-}
-
-/**
  * Reporting reason that is registered within a subspace and can be used when reporting a post or user.
  */
 export interface ReportReason {
   readonly id: number;
   readonly title: string;
   readonly description: string;
-}
-
-export interface TipsContractConfig {
-  readonly address: string;
-  readonly serviceFeePercentage: number;
 }
 
 /**
