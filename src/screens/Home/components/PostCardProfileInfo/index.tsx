@@ -146,7 +146,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         icon: isBlocked ? unblock : block,
       },
     ],
-    [isFollowing, t, onPressFollow, onPressReport, isBlocked, onPressBlock],
+    [isFollowing, t, onPressFollow, onPressReport, onPressHide, isBlocked, onPressBlock],
   );
 
   // -------------------------------------------------------------------------------------

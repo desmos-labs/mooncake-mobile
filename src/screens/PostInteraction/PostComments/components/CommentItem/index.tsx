@@ -29,7 +29,7 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
 import {
@@ -130,7 +130,7 @@ const CommentItem = (props: CommentItemProps) => {
     }
     handleShowCommentDetailsWithFocus(comment);
   };
-  const handlePressHidePost = async () => {
+  const handlePressHidePost = useCallback(() => {
     if (isPostPending(comment)) {
       return;
     }
@@ -140,7 +140,7 @@ const CommentItem = (props: CommentItemProps) => {
       returnToRootPost();
     }
     handleHidePost(comment.id);
-  };
+  }, [comment, handleHidePost, renderedAsMainPost, returnToRootPost]);
 
   // -------------------------------------------------------------------------------------
   // --- Conditional Rendering
