@@ -19,18 +19,3 @@ export type AppSettings = {
   currentChain: ChainInfo;
   simplifyTxBroadcast: boolean;
 };
-
-/**
- * Enum that represents the supported biometrics
- * authorizations types.
- */
-export enum BiometricAuthorizations {
-  /**
-   * Use biometrics to unlock the application at the first open.
-   */
-  Login = 'BiometricsLogin',
-  /**
-   * Use biometrics to unlock the user wallet.
-   */
-  UnlockWallet = 'BiometricsUnlockWallet',
-}

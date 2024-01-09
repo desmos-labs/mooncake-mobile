@@ -52,9 +52,11 @@ export const useStoredAccounts = () => useRecoilValue(accountsAppState);
  */
 export const useDeleteCachedAccounts = () => {
   const setAccounts = useSetRecoilState(accountsAppState);
+  const accounts = useRecoilValue(accountsAppState);
   return useCallback(() => {
     setAccounts({});
-  }, [setAccounts]);
+    return Object.keys(accounts);
+  }, [accounts, setAccounts]);
 };
 
 // -------------------------------------------------------------------------------------------------------------------

@@ -1,13 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { useActiveAccount, useActiveAccountAddress } from '@recoil/accounts';
-import useRemoveAccount from 'hooks/accounts/useRemoveAccount';
 import useDeleteAuthToken from 'hooks/axios/useDeleteAuthToken';
 import useRootNavigator from 'hooks/navigation/useRootNavigator';
 import useResetToLanding from 'hooks/navigation/useResetToLanding';
 import isAccountWithPrivateKey from 'lib/AccountUtils/type';
 import sleep from 'lib/sleep';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -78,26 +74,14 @@ export const useShowAboutInfo = () => {
  */
 export const useSignOut = () => {
   const [signOutLoading, setSignOutLoading] = useState(false);
-  const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-  const activeAccount = useActiveAccount();
-  const deleteAuthToken = useDeleteAuthToken();
-  const removeAccount = useRemoveAccount();
+  const performLogout = usePerformLogout();
 
   const signOut = React.useCallback(async () => {
     setSignOutLoading(true);
     await sleep(1000);
-    deleteAuthToken();
-    await removeAccount(activeAccount?.address!);
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: ROUTES.LANDING,
-        },
-      ],
-    });
+    await performLogout();
     setSignOutLoading(false);
-  }, [activeAccount?.address, deleteAuthToken, navigation, removeAccount]);
+  }, [performLogout]);
   return {
     signOutLoading,
     signOut,
