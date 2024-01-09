@@ -1,22 +1,22 @@
+import { coin } from '@cosmjs/stargate';
+import { Coin } from '@desmoslabs/desmjs-types/cosmos/base/v1beta1/coin';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useCurrentChainInfo } from '@recoil/settings';
 import Button from 'components/Button';
+import DTextInput from 'components/DTextInput';
+import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import { ToastType } from 'config/toast/toastConfig';
+import useAccountBalance from 'hooks/balance/useAccountBalance';
+import useSendTip from 'hooks/tips/useSendTip';
+import useToast from 'hooks/toasts/useToast';
+import { formatCoin, safeParseFloat } from 'lib/FormatUtils';
+import { getThousandsSeparator, isStringNumberValid } from 'lib/NumberUtils';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import Spacer from 'components/Spacer';
-import DTextInput from 'components/DTextInput';
-import useAccountBalance from 'hooks/balance/useAccountBalance';
-import { formatCoin, safeParseFloat } from 'lib/FormatUtils';
-import { coin } from '@cosmjs/stargate';
-import { getThousandsSeparator, isStringNumberValid } from 'lib/NumberUtils';
-import { Coin } from '@desmoslabs/desmjs-types/cosmos/base/v1beta1/coin';
-import { useCurrentChainInfo } from '@recoil/settings';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import useToast from 'hooks/toasts/useToast';
-import { ToastType } from 'config/toast/toastConfig';
-import useSendTip from 'hooks/tips/useSendTip';
 import useStyles from './useStyles';
 
 interface TipUserBottomSheetProps {
@@ -72,7 +72,9 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
 
   const onAmountChange = React.useCallback(
     (text: string) => {
-      if (loadingBalance) return;
+      if (loadingBalance) {
+        return;
+      }
 
       // Sanitize the amount by removing any endingin space and the thousand
       // separators.
@@ -120,7 +122,9 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
   );
 
   const sendTip = React.useCallback(async () => {
-    if (tipCoin === undefined) return;
+    if (tipCoin === undefined) {
+      return;
+    }
 
     const result = await sendTipToUser(toTipUserAddress, [tipCoin]);
 
@@ -171,7 +175,6 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
       <Typography.Subtitle3 style={styles.subtitle}>
         {t('how much do you want to send')}
       </Typography.Subtitle3>
-
       {/* Amount selector row */}
       <View style={styles.quickSelectorRow}>
         <Button
@@ -204,7 +207,6 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
           10 DSM
         </Button>
       </View>
-
       {/* Custom amount input */}
       <Spacer paddingTop={20} />
       <DTextInput
@@ -221,7 +223,6 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
       />
       {userBalanceComponent}
       <Spacer paddingTop="l" />
-
       {/* Message to user input */}
       <Typography.Subtitle3>{t('message', { ns: 'common' })}</Typography.Subtitle3>
       <Spacer paddingTop="s" />
@@ -234,9 +235,9 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
         textAlignVertical="top"
         placeholder={t('message for the user')}
       />
-
       <Spacer paddingTop={20} />
       <Button
+        size={44}
         bgColor="black"
         textColor="white"
         disabled={interactionDisabled || tipCoin === undefined || tipCoin.amount === '0'}
