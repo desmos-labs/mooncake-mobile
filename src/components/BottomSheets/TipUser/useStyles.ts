@@ -2,8 +2,7 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   root: {
-    paddingHorizontal: 20,
-    paddingBottom: 56,
+    paddingBottom: theme.spacing.m,
   },
   header: {
     marginTop: theme.spacing.l,

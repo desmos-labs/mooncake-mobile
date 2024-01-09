@@ -1,10 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { makeStyleWithProps } from 'config/theme';
+import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
+import CommonStyles from 'config/theme/CommonStyles';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { TouchableWithoutFeedback, View } from 'react-native';
-import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 
 export interface BottomSheetScreenProps<P> {
   /**
@@ -24,41 +24,21 @@ type BottomSheetNavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES
  */
 const BottomSheetScreen: React.FC<BottomSheetNavProps> = ({ navigation, route }) => {
   const { component: Component, props } = route.params;
-  const safeAreaInsets = useSafeAreaInsets();
-  const styles = useStyles(safeAreaInsets);
 
   const onOutsidePress = React.useCallback(() => {
     navigation.goBack();
   }, [navigation]);
 
   return (
-    <View style={styles.root}>
-      <TouchableWithoutFeedback onPress={onOutsidePress}>
-        <View style={styles.outisideContent} />
-      </TouchableWithoutFeedback>
-      <View style={styles.content}>
+    <KeyboardAvoidingView
+      style={CommonStyles.flex[1]}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <BottomUpModalWrapper goBack={onOutsidePress}>
         <Component {...props} />
-      </View>
-    </View>
+      </BottomUpModalWrapper>
+    </KeyboardAvoidingView>
   );
 };
 
 export default BottomSheetScreen;
-
-const useStyles = makeStyleWithProps((props: EdgeInsets, theme) => ({
-  root: {
-    flex: 1,
-  },
-  outisideContent: {
-    flex: 1,
-  },
-  content: {
-    position: 'absolute',
-    bottom: props.bottom,
-    left: 0,
-    right: 0,
-    backgroundColor: theme.colors.white,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-  },
-}));
