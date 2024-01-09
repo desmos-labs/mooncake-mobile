@@ -249,14 +249,20 @@ export const getBiometricPassword = async () => {
 
 /**
  * Delete the password protected with biometric for the provided [BiometricAuthorizations].
+ * @param skipPasswordRequest {boolean} - If true, the biometric request will be skipped
+ * to delete the biometric authorization silently.
  */
-export const deleteBiometricAuthorization = async (): Promise<Result<void, SecureStorageError>> => {
+export const deleteBiometricAuthorization = async (
+  skipPasswordRequest?: boolean,
+): Promise<Result<void, SecureStorageError>> => {
   const key = getBiometricAuthorizationKey();
 
-  // Get the item first to force the user to authenticate before delete.
-  const result = await getItem(key, { biometrics: true });
-  if (result.isErr()) {
-    return err(result.error);
+  if (skipPasswordRequest === true) {
+    // Get the item first to force the user to authenticate before delete.
+    const result = await getItem(key, { biometrics: true });
+    if (result.isErr()) {
+      return err(result.error);
+    }
   }
 
   // Delete the item

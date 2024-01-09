@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ToastType } from 'config/toast/toastConfig';
 import useUnregistDeviceForNotifications from 'hooks/notifications/useUnregistDeviceForNotifications';
 import useResetToLanding from 'hooks/navigation/useResetToLanding';
+import { deleteBiometricAuthorization, deleteWallet } from 'lib/SecureStorage';
 
 interface LogoutParams {
   /**
@@ -72,7 +73,10 @@ const usePerformLogout = () => {
         setActiveAccountAddress(undefined);
 
         // Clear the cached account
-        deleteCachedAccounts();
+        const accountAddresses = deleteCachedAccounts();
+        // Delete the wallet of all the accounts.
+        await Promise.allSettled(accountAddresses.map(a => deleteWallet(a)));
+        await deleteBiometricAuthorization(true);
 
         // Clear the tour guide
         resetTourGuideState();
