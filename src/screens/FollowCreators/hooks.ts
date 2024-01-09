@@ -138,7 +138,7 @@ export const useCreators = () => {
       async (page: number) => {
         if (page === 0) {
           const followageCountResult = await getFollowageCount();
-          setFollowageCount(followageCountResult.followers.aggregate.count);
+          setFollowageCount(followageCountResult?.followers?.aggregate?.count ?? 0);
         }
       },
       [getFollowageCount],
