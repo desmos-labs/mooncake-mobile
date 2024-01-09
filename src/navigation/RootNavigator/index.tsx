@@ -19,6 +19,7 @@ import BlockedUsers from 'screens/BlockedUsers';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
 import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
+import FollowCreators, { FollowCreatorsParams } from 'screens/FollowCreators';
 import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
 import Landing from 'screens/Landing';
 import BottomSheetScreen, { BottomSheetScreenProps } from 'screens/Modals/BottomSheets';
@@ -60,6 +61,7 @@ export type RootNavigatorParamList = {
 
   [ROUTES.LANDING]: undefined;
   [ROUTES.ONBOARDING]: OnboardingParams;
+  [ROUTES.FOLLOW_CREATORS]: FollowCreatorsParams;
   [ROUTES.WELCOME]: undefined;
   [ROUTES.SERVICE_AND_POLICY]: ServiceAndPolicyParams;
   [ROUTES.WELCOME_PAGE]: WelcomePageParams;
@@ -198,6 +200,7 @@ const RootNavigator = () => {
       {/* ----------------------- */}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
+      <Stack.Screen name={ROUTES.FOLLOW_CREATORS} component={FollowCreators} />
       <Stack.Screen name={ROUTES.SERVICE_AND_POLICY} component={ServiceAndPolicy} />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.FEE_GRANT_WAITING_SCREEN} component={FeeGrantWaitingScreen} />

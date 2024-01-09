@@ -12,4 +12,12 @@ const GetFollowageCount = gql`
   }
 `;
 
+export interface GetFollowageCountGqlResponse {
+  followers: {
+    aggregate: {
+      count: number;
+    };
+  };
+}
+
 export default GetFollowageCount;

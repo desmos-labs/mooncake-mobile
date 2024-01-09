@@ -4,6 +4,7 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   ONBOARDING = 'ONBOARDING',
+  FOLLOW_CREATORS = 'FOLLOW_CREATORS',
   LANDING = 'LANDING',
   WELCOME = 'WELCOME',
   SERVICE_AND_POLICY = 'SERVICE_AND_POLICY',

@@ -19,6 +19,21 @@ interface PopupOptions {
   readonly description?: string;
 }
 
+interface ErrorPopupOptions extends PopupOptions {
+  /**
+   * If defined display a button in the error
+   * toast that once clicked will execute the provided
+   * function.
+   */
+  readonly retryAction?: () => void;
+  /**
+   * Label that will be displayed in the
+   * retry button.
+   * If undefined will default to "Retry".
+   */
+  readonly retryLabel?: string;
+}
+
 interface ActionOptions {
   readonly action?: () => void;
   readonly popup?: PopupOptions;
@@ -26,10 +41,14 @@ interface ActionOptions {
 
 interface ErrorActionOptions {
   readonly action?: (error: Error) => void;
-  readonly popup?: PopupOptions;
+  readonly popup?: ErrorPopupOptions;
 }
 
 interface SignAndBroadcastOptions {
+  /**
+   * Optional wallet to use to sign the transaction
+   * instead of using the current active user's wallet.
+   */
   readonly wallet?: Wallet;
   readonly memo?: string;
   readonly onLoading?: ActionOptions;
@@ -75,7 +94,7 @@ const useSignAndBroadcastTx = () => {
         },
         {
           title: options?.onLoading?.popup?.title ?? t('performing transaction'),
-          desc: options?.onLoading?.popup?.description,
+          desc: options?.onLoading?.popup?.description ?? t('performing transaction'),
           progressBar: {
             indeterminate: true,
           },
@@ -119,6 +138,8 @@ const useSignAndBroadcastTx = () => {
               toastType: ToastType.error,
               title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),
               message: options?.onError?.popup?.description ?? parseError(error.message),
+              retryLabel: options?.onError?.popup?.retryLabel,
+              retryAction: options?.onError?.popup?.retryAction,
             });
           }
         });

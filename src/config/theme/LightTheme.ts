@@ -123,6 +123,9 @@ export const lightTheme = extendTheme({
     pinkGradient: [addAlphaToHex('#F359A8', 0.24)],
     whiteGradient01: [addAlphaToHex('#FFFFFF', 0.1), '#ABC1FB'],
     blackGradient01: [addAlphaToHex('#000000', 0.4), addAlphaToHex('#FFFFFF', 0.1)],
+    neutral: {
+      100: '#EFEFEF',
+    },
   },
   components: {
     Button: {

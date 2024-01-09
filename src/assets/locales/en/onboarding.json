@@ -6,5 +6,15 @@
   "page3": "Speak Freely, \nStay Confident",
   "page3Sub": "On Mooncake, your voice stays yours - no one deletes your content",
   "page4": "Earn \nAs You Engage",
-  "page4Sub": "Receive tips from fellow users and watch your rewards grow!"
+  "page4Sub": "Receive tips from fellow users and watch your rewards grow!",
+  "build your feed": "Build your feed",
+  "follow 3 creators": "Follow 3 creators and fill your feed with  a kaleidoscope of stories!",
+  "following creator": "Following creator...",
+  "following creator_plural": "Following creators...",
+  "follow success": "Followed successfully!",
+  "you are now following the selected creator": "You are now following the selected creator. Stay connected!",
+  "you are now following the selected creator_plural": "You are now following the selected creators. Stay connected!",
+  "follow failed": "Follow failed",
+  "follow failed description": "Oops! Something went wrong while trying to follow the selected creator.",
+  "follow failed description_plural": "Oops! Something went wrong while trying to follow the selected creators.",
 }

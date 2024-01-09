@@ -31,6 +31,7 @@ enum UserBehaviour {
   ProfileSelected = 'Selected Profile',
   ProfileCreated = 'Created Profile',
   OnboardingCompleted = 'Completed Onboarding',
+  SelectedUsersToFollow = 'Selected User To Follow',
 }
 
 /**
@@ -122,4 +123,12 @@ export const captureProfileSelected = (posthog: PostHog) => {
  */
 export const captureOnboardingCompleted = (posthog: PostHog) => {
   posthog.capture(UserBehaviour.OnboardingCompleted);
+};
+
+/**
+ * Captures when the user has selected the users to follow
+ * during the onboarding process.
+ */
+export const captureSelectedUserToFollow = (posthog: PostHog) => {
+  posthog.capture(UserBehaviour.SelectedUsersToFollow);
 };

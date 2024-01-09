@@ -52,6 +52,12 @@ interface AppState {
    * Whether the user has given consent to agree to the Terms of Conditions and Privacy Policy.
    */
   readonly consentGiven: boolean;
+  /**
+   * List of account addresses that the user has selected in the
+   * FollowCreators screen during the onboarding process, but the
+   * transaction failed, and we should try to send the transaction again.
+   */
+  readonly failedToFollowCreators: string[];
 }
 
 const DefaultAppState: AppState = {
@@ -67,11 +73,21 @@ const DefaultAppState: AppState = {
   notificationsCount: 0,
   lastHomeTab: ROUTES.HOME_TAB_DISCOVER,
   consentGiven: false,
+  failedToFollowCreators: [],
 };
 
 const appState = atom<AppState>({
   key: 'appState',
-  default: getMMKV(MMKVKEYS.APP_STATE) ?? DefaultAppState,
+  default: (() => {
+    const mmkvValue = getMMKV(MMKVKEYS.APP_STATE);
+    return {
+      // Overwrite the default values with the ones stored in MMKV
+      // so that if we extend the app state the new values will
+      // default to the values declared in DefaultAppState.
+      ...DefaultAppState,
+      ...mmkvValue,
+    };
+  })(),
   effects: [
     ({ onSet }) => {
       onSet(state => {

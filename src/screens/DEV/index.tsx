@@ -27,6 +27,8 @@ const routesToRender = [
   ROUTES.BOTTOM_TABS,
   ROUTES.UNLOCK_WALLET,
   ROUTES.BOTTOM_SHEET,
+  ROUTES.LOADING_MODAL,
+  ROUTES.FOLLOW_CREATORS,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
@@ -102,6 +104,14 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
                 props: { 
                   toTipUserAddress: activeAccountAddress,
                 },
+              })
+              break;
+            case ROUTES.FOLLOW_CREATORS:
+              navigate(item, {});
+              break;
+            case ROUTES.LOADING_MODAL:
+              navigate(item, {
+                message: 'Test modal',
               })
               break;
             default:

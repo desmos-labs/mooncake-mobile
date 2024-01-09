@@ -22,5 +22,6 @@
   "error": "Error",
   "field required": "This field is required.",
   "message": "Message",
+  "skip": "Skip",
   "delete": "Delete"
 }
