@@ -17,7 +17,6 @@ const useSubspaceParams = () => {
     variables: { subspaceId },
     fetchPolicy: 'no-cache',
   });
-  console.log(data);
 
   // Use the effect to react to the data update in order to update the cached value
   React.useEffect(() => {
