@@ -146,7 +146,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         icon: isBlocked ? unblock : block,
       },
     ],
-    [isFollowing, t, onPressFollow, onPressReport, isBlocked, onPressBlock],
+    [isFollowing, t, onPressFollow, onPressReport, onPressHide, isBlocked, onPressBlock],
   );
 
   // -------------------------------------------------------------------------------------
@@ -164,7 +164,11 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   return (
     <View style={styles.profileInfoView}>
       <TouchableOpacity style={CommonStyles.flexDirection.row} onPress={onPressAuthor}>
-        <Image source={getProfilePicture(post.author)} style={styles.profilePic} />
+        <Image
+          source={getProfilePicture(post.author)}
+          style={styles.profilePic}
+          recyclingKey={post.author.address}
+        />
         <VStack>
           <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
           <HStack>

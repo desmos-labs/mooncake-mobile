@@ -29,7 +29,7 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
 import {
@@ -119,6 +119,9 @@ const CommentItem = (props: CommentItemProps) => {
     if (isPostPending(comment)) {
       return;
     }
+    if (renderedAsMainPost) {
+      return;
+    }
     handleShowCommentDetails(comment);
   };
   const handlePressCommentWithFocus = () => {
@@ -127,7 +130,7 @@ const CommentItem = (props: CommentItemProps) => {
     }
     handleShowCommentDetailsWithFocus(comment);
   };
-  const handlePressHidePost = async () => {
+  const handlePressHidePost = useCallback(() => {
     if (isPostPending(comment)) {
       return;
     }
@@ -137,7 +140,7 @@ const CommentItem = (props: CommentItemProps) => {
       returnToRootPost();
     }
     handleHidePost(comment.id);
-  };
+  }, [comment, handleHidePost, renderedAsMainPost, returnToRootPost]);
 
   // -------------------------------------------------------------------------------------
   // --- Conditional Rendering
@@ -199,7 +202,10 @@ const CommentItem = (props: CommentItemProps) => {
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image source={getProfilePicture(comment.author)} style={styles.avatar} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={handlePress} style={styles.flex}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={styles.flex}
+        activeOpacity={renderedAsMainPost ? 1 : 0.2}>
         <View style={styles.contentContainer}>
           <TouchableOpacity
             style={styles.flexRow}
