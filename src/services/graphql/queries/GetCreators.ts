@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import ProfileFields from './fragments/ProfilesFields';
 
 /**
  * GraphQL query to retrieve creators' profiles.
