@@ -21,7 +21,7 @@ const usePost = (postId: number, storedPost?: Post) => {
   // Callback to update the cached post after has been fetched.
   const onDataFethed = React.useCallback(
     async (data: any) => {
-      const fetchedPost = data?.posts.at(0);
+      const fetchedPost = data?.posts?.at(0);
       if (fetchedPost) {
         storePost(activeAddress, convertGraphQLPost(fetchedPost));
       }
