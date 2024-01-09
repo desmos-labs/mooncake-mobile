@@ -12,7 +12,6 @@ const useSubspaceParams = () => {
   const subspaceParams = useAppStateValue('subspaceParams');
   const setSubspaceParams = useSetAppStateValue('subspaceParams');
 
-  console.log(subspaceId);
   const { data, refetch } = useQuery(GetSubspaceConfig, {
     variables: { subspaceId },
     fetchPolicy: 'no-cache',
