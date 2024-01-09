@@ -15,7 +15,7 @@ import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
@@ -139,18 +139,6 @@ const PostDetails = () => {
     setFirstLoad(false);
     refreshPage();
   }, [refreshPage]);
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  // Refresh the data on the focus of the screen
-  useEffect(() => {
-    setFirstLoad(true);
-    refreshPage().finally(() => setFirstLoad(false));
-    // Suppress the warning of the next line in order to update the data only on the first render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
