@@ -113,7 +113,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
         <Animated.View style={[CommonStyles.position.absolute, animatedStyle]}>
           <HomeSearchBar
             focused={focused}
-            searchPlaceHolder={t('search something')}
+            searchPlaceHolder={t('search user')}
             handleChange={value => setListState({ ...listState, valueToSearch: value })}
             onFocus={() => {
               searchBarWidth.value = withTiming(windowWidth - 72 - 24, {
