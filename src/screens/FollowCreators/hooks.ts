@@ -56,7 +56,7 @@ const useFetchCreators = (userAddress: string) => {
       }
 
       // Handle the case where no data is returned.
-      const profiles = data?.profile || [];
+      const profiles = data?.public_users ?? [];
       // Convert the GraphQL profiles to a DesmosProfile.
       const fetchedProfiles = profiles.map(convertGraphQLProfile);
       // Query to check which of the fetched profiles are followed

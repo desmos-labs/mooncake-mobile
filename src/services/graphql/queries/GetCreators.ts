@@ -29,16 +29,21 @@ import ProfileFields from './fragments/ProfilesFields';
  * ```
  */
 const GetCreators = gql`
-  ${ProfileFields}
   query GetCreators($offset: Int = 0, $limit: Int = 20) @api(name: butter) {
-    profile(limit: $limit, offset: $offset, order_by: { dtag: asc }) {
-      ...ProfileFields
+    public_users(limit: $limit, offset: $offset, order_by: { dtag: asc }) {
+      address
+      bio
+      dtag
+      creation_time
+      cover_picture: cover_pic
+      nickname
+      profile_picture: profile_pic
     }
   }
 `;
 
 export interface GetCreatorsGqlResponse {
-  profile: any[];
+  public_users: any[];
 }
 
 export default GetCreators;
