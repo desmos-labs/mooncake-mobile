@@ -16,7 +16,7 @@ import useGetHasBlocked from 'hooks/relationships/useGetHasBlocked';
  * Hook that allows to block a user both remotely and locally.
  */
 const useBlockUser = () => {
-  const { t } = useTranslation('reportUser');
+  const { t } = useTranslation('relationships');
   const subspaceId = useAppStateValue('subspaceId');
 
   const signAndBroadcastTx = useSignAndBroadcastTx();
@@ -63,7 +63,7 @@ const useBlockUser = () => {
  * Hook that allows to unblock a user, both locally and remotely.
  */
 const useUnblockUser = () => {
-  const { t } = useTranslation('reportUser');
+  const { t } = useTranslation('relationships');
   const subspaceId = useAppStateValue('subspaceId');
 
   const promptConfirmUnblock = usePromptConfirmUnblock();
