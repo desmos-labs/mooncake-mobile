@@ -45,7 +45,8 @@ const usePerformLogout = () => {
   const resetNavigationToLanding = useResetToLanding();
 
   return React.useCallback(
-    async ({ resetToLanding = true, keepAuthToken = false }: LogoutParams) => {
+    async (logoutParams?: LogoutParams) => {
+      const { resetToLanding = true, keepAuthToken = false } = logoutParams ?? {};
       try {
         // Clear the Apollo cache
         await client.clearStore();
