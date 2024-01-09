@@ -3,12 +3,10 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
-    branches:
-      - manuel/automatic-release
 
 jobs:
   build:
-    name: Install and build
+    name: EAS Build and Submit (Internal)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
