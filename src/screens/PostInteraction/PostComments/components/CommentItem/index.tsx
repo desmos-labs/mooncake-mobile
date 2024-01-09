@@ -119,6 +119,9 @@ const CommentItem = (props: CommentItemProps) => {
     if (isPostPending(comment)) {
       return;
     }
+    if (renderedAsMainPost) {
+      return;
+    }
     handleShowCommentDetails(comment);
   };
   const handlePressCommentWithFocus = () => {
@@ -199,7 +202,10 @@ const CommentItem = (props: CommentItemProps) => {
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image source={getProfilePicture(comment.author)} style={styles.avatar} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={handlePress} style={styles.flex}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={styles.flex}
+        activeOpacity={renderedAsMainPost ? 1 : 0.2}>
         <View style={styles.contentContainer}>
           <TouchableOpacity
             style={styles.flexRow}

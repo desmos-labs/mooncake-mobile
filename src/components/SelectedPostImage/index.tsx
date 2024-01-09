@@ -38,9 +38,9 @@ const SelectedPostImage = ({ source, handlePress, dimensions }: Props) => {
         setImageHeight(dimensions.width * ratio);
         setImageWidth(dimensions.width * ratio);
       } else {
-        const ratio = (screenDimensions.width - 32) / dimensions.width;
+        const ratio = (screenDimensions.width - 48) / dimensions.width;
         setImageHeight(dimensions.height * ratio);
-        setImageWidth(screenDimensions.width - 32);
+        setImageWidth(screenDimensions.width - 48);
       }
     }
   }, [dimensions?.height, dimensions?.width, screenDimensions.height, screenDimensions.width]);
@@ -59,6 +59,7 @@ const SelectedPostImage = ({ source, handlePress, dimensions }: Props) => {
               height: imageHeight,
             }}>
             <Image
+              recyclingKey={source.uri}
               style={[
                 {
                   width: imageWidth,
@@ -66,7 +67,6 @@ const SelectedPostImage = ({ source, handlePress, dimensions }: Props) => {
                 },
                 styles.image,
               ]}
-              contentFit="contain"
               source={source}
             />
             <TouchableOpacity
@@ -90,8 +90,8 @@ const useStyles = makeStyle(theme => ({
   },
   closeButtonContainer: {
     position: 'absolute',
-    right: 8,
-    top: 8,
+    right: 10,
+    top: 10,
   },
   image: {
     backgroundColor: theme.colors.grey01,
@@ -100,7 +100,6 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     paddingVertical: theme.spacing.m,
-    borderRadius: 12,
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
   },
