@@ -1,13 +1,4 @@
 /**
- * Represents a reaction that is registered on the subspace and can be used.
- */
-export interface RegisteredReaction {
-  readonly id: number;
-  readonly shortHandCode: string;
-  readonly displayValue: string;
-}
-
-/**
  * Reporting reason that is registered within a subspace and can be used when reporting a post or user.
  */
 export interface ReportReason {
@@ -16,27 +7,14 @@ export interface ReportReason {
   readonly description: string;
 }
 
-export interface TipsContractConfig {
-  readonly address: string;
-  readonly serviceFeePercentage: number;
-}
-
 /**
  * Parameters related to the subspace currently used by the application.
  */
 export interface SubspaceParams {
   /**
-   * Reactions that can be used within this subspace.
-   */
-  readonly registeredReactions: RegisteredReaction[];
-  /**
    * Reasons that can be used to report a post.
    */
   readonly reportReasons: ReportReason[];
-  /**
-   * Configuration of the smart contract allowing to tip another user.
-   */
-  readonly tipsContractConfig: TipsContractConfig | undefined;
 }
 
 /**

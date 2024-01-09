@@ -10,18 +10,6 @@ const GetSubspaceConfig = gql`
       title
       description
     }
-    registered_reactions: subspace_registered_reaction(
-      where: { subspace_id: { _eq: $subspaceId } }
-    ) {
-      id
-      display_value
-      shorthand_code
-    }
-    contracts: contract(where: { type: { _ilike: "tips" } }) {
-      address
-      type
-      config
-    }
   }
 `;
 

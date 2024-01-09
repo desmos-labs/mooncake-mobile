@@ -7,5 +7,12 @@
   "report created title": "Report created",
   "report created body": "Your report has been submitted successfully",
   "show post actions": "Show additional post actions",
-  "hide": "Hide"
+  "hide": "Hide",
+  "spam": "Spam",
+  "harassment or bullying": "Harassment or bullying",
+  "hate speech": "Hate speech",
+  "thanks for reporting": "Thanks for reporting this post!",
+  "the post has been reported and will be reviewed shortly": "The post has been reported and will be reviewed shortly",
+  "post already reported": "Post already reported",
+  "you have already reported this post": "You have already reported this post"
 }
