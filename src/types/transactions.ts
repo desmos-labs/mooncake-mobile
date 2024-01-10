@@ -69,4 +69,10 @@ export interface PastTransactionMessage {
    * Timestamp of the block inside which the transaction that contains this message has been included.
    */
   readonly timestamp: string;
+
+  /**
+   * Address of the user that has sent the message.
+   * If undefined means that the application was unable to retrieve the sender address.
+   */
+  readonly senderAddress?: string;
 }

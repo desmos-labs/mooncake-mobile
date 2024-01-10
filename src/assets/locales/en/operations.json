@@ -8,5 +8,7 @@
   "add reaction": "Add reaction",
   "remove reaction": "Remove reaction",
   "create report": "Create report",
+  "send tip": "Send tip",
+  "receive tip": "Receive tip",
   "no operations": "No operations"
 }

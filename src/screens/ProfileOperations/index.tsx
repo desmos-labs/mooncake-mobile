@@ -1,4 +1,4 @@
-import { Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
+import { Bank, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -7,6 +7,7 @@ import {
   editProfileTxIcon,
   emptyListPlaceholder,
   sendReportTxIcon,
+  tipTxIcon,
 } from 'assets/images';
 import DView from 'components/DView';
 import OperationContentLoader from 'components/Loaders/OperationContentLoader';
@@ -110,14 +111,17 @@ const ProfileOperations = () => {
         return editProfileTxIcon;
       case Reports.v1.MsgCreateReportTypeUrl:
         return sendReportTxIcon;
+      case Bank.v1beta1.MsgSendTypeUrl:
+        return tipTxIcon;
       default:
+        console.warn(`No image found for message type ${formattedMessage}`);
         return undefined;
     }
   }, []);
 
   const getTitle = useCallback(
-    (messageType: string) => {
-      const formattedMessage = `/${messageType}`;
+    (message: PastTransactionMessage) => {
+      const formattedMessage = `/${message.type}`;
       switch (formattedMessage) {
         case Posts.v3.MsgCreatePostTypeUrl:
           return t('create comment post');
@@ -133,11 +137,19 @@ const ProfileOperations = () => {
           return t('edit profile');
         case Reports.v1.MsgCreateReportTypeUrl:
           return t('create report');
+        case Bank.v1beta1.MsgSendTypeUrl:
+          console.log('message.senderAddress', message.senderAddress, userAddress);
+          if (message.senderAddress === userAddress) {
+            return t('send tip');
+          } else {
+            return t('receive tip');
+          }
         default:
+          console.warn(`No title found for message type ${formattedMessage}`);
           return '';
       }
     },
-    [t],
+    [t, userAddress],
   );
 
   // -------------------------------------------------------------------------------------
@@ -168,16 +180,18 @@ const ProfileOperations = () => {
   // Callback used to render the items of the list
   const renderItem = React.useCallback(
     ({ item }: ListRenderItemInfo<PastTransactionMessage>) => {
+      const hideFees = item.senderAddress !== undefined && item.senderAddress !== userAddress;
       return (
         <MessageListItem
           timestamp={item.timestamp}
           fees={item.fees}
-          title={getTitle(item.type)}
+          title={getTitle(item)}
           image={getImage(item.type)}
+          hideFees={hideFees}
         />
       );
     },
-    [getImage, getTitle],
+    [getImage, getTitle, userAddress],
   );
 
   // Component used to render an empty list
