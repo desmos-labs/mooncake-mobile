@@ -64,9 +64,17 @@ const useStyles = makeStyleWithProps(
     organizedEventsText: {
       color: theme.colors.primary,
     },
+    topButtonsContainer: {
+      flex: 1,
+      flexDirection: 'row',
+    },
     topButton: {
       width: 32,
       height: 32,
+    },
+    topButtonRight: {
+      position: 'absolute',
+      right: 0,
     },
     rightButtonsContainer: {
       flexDirection: 'row',
