@@ -39,7 +39,7 @@ const useStyles = makeStyleWithProps(
       marginTop: theme.spacing.s,
       paddingHorizontal: theme.spacing.m,
       backgroundColor: theme.colors.background,
-      paddingBottom: PROFILE_HEADER_HEIGHT_COMPACT + verticalScale(50),
+      paddingBottom: PROFILE_HEADER_HEIGHT_COMPACT + verticalScale(10),
     },
     contentContainerStyle: { flexGrow: 1 },
     contentContainer: {
@@ -70,7 +70,7 @@ const useStyles = makeStyleWithProps(
     },
     rightButtonsContainer: {
       flexDirection: 'row',
-      marginTop: props.isActiveAccount ? -150 : -100,
+      marginTop: props.isActiveAccount ? -120 : -100,
     },
     rightButton: {
       width: 32,
@@ -182,6 +182,7 @@ const useStyles = makeStyleWithProps(
     },
     followUnfollowSection: {
       flexDirection: 'row',
+      marginTop: theme.spacing.s,
     },
     tipUserIcon: {
       width: 16,

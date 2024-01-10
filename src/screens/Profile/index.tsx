@@ -65,9 +65,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
+import Biography from 'screens/Profile/components/Biography';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
-import UserBio from 'screens/Profile/components/UserBio';
 import useStyles, {
   PROFILE_HEADER_HEIGHT,
   PROFILE_HEADER_HEIGHT_COMPACT,
@@ -426,7 +426,7 @@ const Profile = () => {
       {Platform.OS === 'android' && (
         <View
           style={{
-            backgroundColor: 'black',
+            backgroundColor: theme.colors.black,
             height: insets.top,
           }}
         />
@@ -484,7 +484,7 @@ const Profile = () => {
           <View style={styles.innerContainer}>
             {/* Posts, following and followers counters */}
             <View style={styles.innerTopSection}>
-              <View style={{ flex: 1 }}>
+              <View style={CommonStyles.flex['1']}>
                 {/* Profile nickname */}
                 <Typography.H5 style={styles.nickname} numberOfLines={1}>
                   {profile.nickname}
@@ -496,11 +496,6 @@ const Profile = () => {
                 {/* Profile address */}
                 <AddressCopy address={address} />
                 {/* Profile biography */}
-                {profile?.bio && (
-                  <Spacer paddingVertical={theme.spacing.m}>
-                    <UserBio content={profile.bio} />
-                  </Spacer>
-                )}
               </View>
               <View style={styles.rightButtonsContainer}>
                 {/* Posts count */}
@@ -532,12 +527,16 @@ const Profile = () => {
                 </TouchableOpacity>
               </View>
             </View>
+            {profile?.bio && (
+              <Spacer paddingVertical="s">
+                <Biography text={profile.bio} numberOfLines={3} />
+              </Spacer>
+            )}
             {/* Section to edit the profile */}
             {isActiveAccount && <EditProfileSection profile={profile} />}
             {/* Follow/Unfollow button */}
             {ProfileInteractionButton}
             <Spacer paddingVertical={theme.spacing.s} />
-            <View style={styles.divider} />
             {/* Lower section (balance, posts, NFTs, badges, etc) */}
             <View style={styles.container}>
               {/* Balance */}
