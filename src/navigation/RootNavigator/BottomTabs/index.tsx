@@ -8,7 +8,6 @@ import {
   bottomHomeIcon,
   bottomProfileIcon,
   middleButtonIcon,
-  settingsNavbarIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import { Box, useTheme } from 'native-base';
@@ -20,7 +19,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Activities from 'screens/Activities';
 import Profile from 'screens/Profile';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
-import Settings from 'screens/Settings';
 import useStyles from './useStyles';
 
 interface Props extends BottomTabBarProps {}
@@ -30,7 +28,6 @@ interface Props extends BottomTabBarProps {}
  */
 export type BottomTabsParamList = {
   [ROUTES.HOME_TABS]: HomeTabsParams | undefined;
-  [ROUTES.SETTINGS]: undefined;
   /* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */
   // [ROUTES.COMMUNITIES]: undefined;
   [ROUTES.ACTIVITIES]: undefined;
@@ -56,8 +53,6 @@ const getCorrectImage = (routeName: string) => {
       return bottomProfileIcon;
     case ROUTES.ACTIVITIES:
       return bottomActivitiesIcon;
-    case ROUTES.SETTINGS:
-      return settingsNavbarIcon;
     /* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */
     // case ROUTES.COMMUNITIES:
     //   return bottomCommunitiesIcon;
@@ -196,7 +191,6 @@ const BottomTabsNavigator = () => {
         <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
         <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
-        <Tab.Screen name={ROUTES.SETTINGS} component={Settings} />
       </Tab.Navigator>
     </Box>
   );

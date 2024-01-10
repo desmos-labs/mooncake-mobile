@@ -7,6 +7,7 @@ import {
   profileBack,
   profileContextButton,
   reportIcon,
+  settingsButton,
   tipUserIcon,
   unblock,
 } from 'assets/images';
@@ -164,6 +165,15 @@ const Profile = () => {
     image: {} as ImageSource,
     isVisible: false,
   });
+
+  // -------------------------------------------------------------------------------------
+  // --- useCallback(
+  // -------------------------------------------------------------------------------------
+
+  const openSettings = useCallback(() => {
+    navigation.navigate(ROUTES.SETTINGS);
+  }, [navigation]);
+
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
@@ -432,13 +442,21 @@ const Profile = () => {
         />
       )}
       <AnimatedView style={[styles.topBarView, animatedStyle]}>
-        <View style={CommonStyles.flex['1']}>
+        <View style={styles.topButtonsContainer}>
           {!isActiveAccount && (
             <ProfileHeaderButton
               image={profileBack}
               style={styles.topButton}
               containerStyle={styles.topButton}
               onPress={goBack}
+            />
+          )}
+          {isActiveAccount && (
+            <ProfileHeaderButton
+              image={settingsButton}
+              style={styles.topButton}
+              containerStyle={styles.topButtonRight}
+              onPress={openSettings}
             />
           )}
         </View>
