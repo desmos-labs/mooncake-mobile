@@ -37,12 +37,11 @@ const useFetchNotifications = () => {
 /**
  * Hook that allows to get the notifications history of the current application user.
  */
-const useNotificationsHistory = (_notificationsPerPage: number = 20) => {
+const useNotificationsHistory = (notificationsPerPage: number = 20) => {
   const fetchNotifications = useFetchNotifications();
-  const [lastFetchTimestamp, setLastFetchTimestamp] = React.useState(new Date());
   const { data, loading, updateFilter, ...otherFields } = usePaginatedData(fetchNotifications, {
-    itemsPerPage: 20,
-    initialFilter: lastFetchTimestamp,
+    itemsPerPage: notificationsPerPage,
+    initialFilter: new Date(),
     autoFetchFirstPage: true,
   });
 
@@ -50,9 +49,7 @@ const useNotificationsHistory = (_notificationsPerPage: number = 20) => {
     // Since here we use a filter to define the start date from which
     // the notification will be fetched, we use the update filter fucntion
     // to trigger a refetch.
-    const newDate = new Date();
-    setLastFetchTimestamp(newDate);
-    updateFilter(newDate, true);
+    updateFilter(new Date(), true);
   }, [updateFilter]);
 
   return {

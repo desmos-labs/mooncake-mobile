@@ -33,7 +33,7 @@ const Activities = () => {
     notifications,
     loading,
     fetchMore,
-    refresh: refreshNotifications,
+    refetch: refreshNotifications,
     refreshing,
   } = useNotificationsHistory();
 
