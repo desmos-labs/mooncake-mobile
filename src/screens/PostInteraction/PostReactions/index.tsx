@@ -1,7 +1,6 @@
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
-import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
@@ -58,16 +57,6 @@ const PostReactions = () => {
     await refetchReactions().then(() => refetchCount());
   }, [refetchCount, refetchReactions]);
 
-  useFocusEffect(
-    useCallback(() => {
-      const timeout = setTimeout(async () => {
-        await refetch();
-      }, 500);
-
-      return () => clearTimeout(timeout);
-    }, [refetch]),
-  );
-
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
@@ -93,7 +82,7 @@ const PostReactions = () => {
           </Typography.Body6>
         )}
         <FlashList
-          refreshing={refreshing}
+          refreshing={!loading && refreshing}
           onRefresh={refetch}
           keyExtractor={(item, index) => `${item.author.address}-${index}`}
           data={reactions}
