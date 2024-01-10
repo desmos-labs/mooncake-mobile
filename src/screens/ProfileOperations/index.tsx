@@ -111,6 +111,7 @@ const ProfileOperations = () => {
         return addReactionTxIcon;
       case Reactions.v1.MsgRemoveReactionTypeUrl:
         return addReactionTxIcon;
+      case Profiles.v3.MsgDeleteProfileTypeUrl:
       case Profiles.v3.MsgSaveProfileTypeUrl:
         return editProfileTxIcon;
       case Reports.v1.MsgCreateReportTypeUrl:
@@ -143,6 +144,8 @@ const ProfileOperations = () => {
           return t('remove reaction');
         case Profiles.v3.MsgSaveProfileTypeUrl:
           return t('edit profile');
+        case Profiles.v3.MsgDeleteProfileTypeUrl:
+          return t('delete profile');
         case Reports.v1.MsgCreateReportTypeUrl:
           return t('create report');
         case Bank.v1beta1.MsgSendTypeUrl:
