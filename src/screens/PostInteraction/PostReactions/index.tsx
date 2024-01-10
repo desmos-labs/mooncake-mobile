@@ -82,7 +82,7 @@ const PostReactions = () => {
           </Typography.Body6>
         )}
         <FlashList
-          refreshing={!loading && refreshing}
+          refreshing={refreshing}
           onRefresh={refetch}
           keyExtractor={(item, index) => `${item.author.address}-${index}`}
           data={reactions}
