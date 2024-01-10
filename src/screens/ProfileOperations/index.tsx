@@ -105,6 +105,8 @@ const ProfileOperations = () => {
         return editProfileTxIcon;
       case Relationships.v1.MsgBlockUserTypeUrl:
         return editProfileTxIcon;
+      case Relationships.v1.MsgUnblockUserTypeUrl:
+        return editProfileTxIcon;
       case Reactions.v1.MsgAddReactionTypeUrl:
         return addReactionTxIcon;
       case Reactions.v1.MsgRemoveReactionTypeUrl:
@@ -133,6 +135,8 @@ const ProfileOperations = () => {
           return t('unfollow user');
         case Relationships.v1.MsgBlockUserTypeUrl:
           return t('block user');
+        case Relationships.v1.MsgUnblockUserTypeUrl:
+          return t('unblock user');
         case Reactions.v1.MsgAddReactionTypeUrl:
           return t('add reaction');
         case Reactions.v1.MsgRemoveReactionTypeUrl:
