@@ -426,7 +426,7 @@ const Profile = () => {
       {Platform.OS === 'android' && (
         <View
           style={{
-            backgroundColor: 'black',
+            backgroundColor: theme.colors.black,
             height: insets.top,
           }}
         />
@@ -484,7 +484,7 @@ const Profile = () => {
           <View style={styles.innerContainer}>
             {/* Posts, following and followers counters */}
             <View style={styles.innerTopSection}>
-              <View style={{ flex: 1 }}>
+              <View style={CommonStyles.flex['1']}>
                 {/* Profile nickname */}
                 <Typography.H5 style={styles.nickname} numberOfLines={1}>
                   {profile.nickname}
