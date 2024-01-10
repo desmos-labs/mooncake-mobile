@@ -45,6 +45,7 @@ const useFetchCreators = (userAddress: string) => {
         query: GetCreators,
         fetchPolicy: 'no-cache',
         variables: {
+          userAddress,
           offset,
           limit,
         },

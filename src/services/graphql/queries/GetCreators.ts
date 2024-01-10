@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 /**
  * GraphQL query to retrieve creators' profiles.
  *
+ * @param {string} $userAddress - The address of the user that will be filtered out.
  * @param {number} $offset - The offset for paginating through the results (default is 0).
  * @param {number} $limit - The limit for the number of profiles to retrieve (default is 20).
  *
@@ -13,6 +14,7 @@ import { gql } from '@apollo/client';
  * @example
  * ```typescript
  * const variables = {
+ *   userAddress: 'desmos1...',
  *   offset: 10,
  *   limit: 5,
  * };
@@ -28,8 +30,13 @@ import { gql } from '@apollo/client';
  * ```
  */
 const GetCreators = gql`
-  query GetCreators($offset: Int = 0, $limit: Int = 20) @api(name: butter) {
-    public_users(limit: $limit, offset: $offset, order_by: { dtag: asc }) {
+  query GetCreators($userAddress: String, $offset: Int = 0, $limit: Int = 20) @api(name: butter) {
+    public_users(
+      where: { address: { _neq: $userAddress } }
+      limit: $limit
+      offset: $offset
+      order_by: { dtag: asc }
+    ) {
       address
       bio
       dtag
