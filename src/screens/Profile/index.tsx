@@ -540,14 +540,18 @@ const Profile = () => {
             <View style={styles.divider} />
             {/* Lower section (balance, posts, NFTs, badges, etc) */}
             <View style={styles.container}>
-              {/* Balance */}
-              <BalanceSection
-                address={address}
-                balance={balance}
-                isLoading={isBalanceLoading}
-                handlePressBalanceInfo={handlePressBalanceInfo}
-              />
-              <View style={styles.divider} />
+              {/* Balance, visibile only if displaing the current active account's profile */}
+              {isActiveAccount && (
+                <>
+                  <BalanceSection
+                    address={address}
+                    balance={balance}
+                    isLoading={isBalanceLoading}
+                    handlePressBalanceInfo={handlePressBalanceInfo}
+                  />
+                  <View style={styles.divider} />
+                </>
+              )}
               {/* Posts */}
               <PostsSection
                 address={address}
