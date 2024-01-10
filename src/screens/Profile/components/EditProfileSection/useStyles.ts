@@ -1,7 +1,11 @@
 import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
-  container: { flexDirection: 'row', justifyContent: 'space-between' },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing.m,
+  },
   editButton: {
     backgroundColor: theme.colors.surfaceGrey,
     height: 35,

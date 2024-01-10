@@ -3,6 +3,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { infoIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import Typography from 'components/Typography';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
@@ -85,6 +86,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
                 onPress={handlePressBalanceInfo}
               />
             </HStack>
+            <Spacer paddingBottom="s" />
             <Typography.H3
               style={{
                 color: theme.colors.surfaceBlack,
@@ -96,7 +98,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
           {isFiatAmountLoading ? (
             <StyledSpinner />
           ) : (
-            <Typography.Body6 style={{ color: theme.colors.midGrey }}>
+            <Typography.Body6 style={{ color: theme.colors.midGrey, paddingTop: theme.spacing.xs }}>
               {currencySymbol}
               {formatCurrencyAmount(fiatAmount)}
             </Typography.Body6>
