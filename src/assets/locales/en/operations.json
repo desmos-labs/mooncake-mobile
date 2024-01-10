@@ -4,9 +4,14 @@
   "create comment post": "Create, edit, comment a post",
   "follow user": "Follow an user",
   "unfollow user": "Unfollow an user",
+  "block user": "Block user",
+  "unblock user": "Unblock user",
   "edit profile": "Edit profile",
+  "delete profile": "Delete profile",
   "add reaction": "Add reaction",
   "remove reaction": "Remove reaction",
   "create report": "Create report",
+  "send tip": "Send tip",
+  "receive tip": "Receive tip",
   "no operations": "No operations"
 }

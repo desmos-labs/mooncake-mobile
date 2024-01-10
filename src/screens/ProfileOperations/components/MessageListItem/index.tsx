@@ -25,6 +25,10 @@ interface MessageListItemProps {
    * Timestamp associated with the transaction.
    */
   readonly timestamp: string;
+  /**
+   * Flag that indicates if the fees should be hidden.
+   */
+  readonly hideFees: boolean;
 }
 
 /**
@@ -36,7 +40,7 @@ interface MessageListItemProps {
 const MessageListItem = (props: MessageListItemProps) => {
   const styles = useStyles();
 
-  const { image, title, fees, timestamp } = props;
+  const { image, title, fees, timestamp, hideFees } = props;
 
   const formatDate = useFormatTimeForPostDetails();
   const formattedDate = formatDate(timestamp);
@@ -49,9 +53,11 @@ const MessageListItem = (props: MessageListItemProps) => {
           <Typography.Subtitle3>{title}</Typography.Subtitle3>
           <Typography.Body7 style={styles.formattedDate}>{formattedDate}</Typography.Body7>
         </View>
-        <Typography.Subtitle3 numberOfLines={1} style={styles.feesText}>
-          -{formatCoins(fees, ', ')}
-        </Typography.Subtitle3>
+        {!hideFees && (
+          <Typography.Subtitle3 numberOfLines={1} style={styles.feesText}>
+            -{formatCoins(fees, ', ')}
+          </Typography.Subtitle3>
+        )}
       </HStack>
     </View>
   );
