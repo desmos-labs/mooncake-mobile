@@ -42,7 +42,9 @@ const useAddOrRemoveLike = (post: Post) => {
       let error: Error | undefined;
 
       // We are going to perform a network request
-      // lets create a new AbortController to cancel the request if needed.
+      // Let's create a new AbortController to cancel the request.
+      // This will be used to cancel the request if the user
+      // performs another interaction to avoid unnecessary requests.
       abortControllerRef.current = new AbortController();
       if (!newLikeStatus) {
         // Post already liked, unlike it.
@@ -83,14 +85,14 @@ const useAddOrRemoveLike = (post: Post) => {
   // but then debounces the actual call to the server to avoid spamming it
   const addOrRemoveLike = useCallback(
     (p: Post) => {
-      setLiked(!liked);
-      setLikesCount(value => value + (liked ? -1 : 1));
-
       // If there is a previous request in progress, abort it.
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
         abortControllerRef.current = undefined;
       }
+
+      setLiked(!liked);
+      setLikesCount(value => value + (liked ? -1 : 1));
       likeUnlikePostDebounced(p, !liked);
     },
     [likeUnlikePostDebounced, liked],
