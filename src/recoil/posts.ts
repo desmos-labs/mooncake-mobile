@@ -83,7 +83,7 @@ export const usePostCommentsToSync = (user: string, subspaceId: number, postId: 
   return React.useMemo(() => {
     const userPosts = posts[user] ?? [];
     return userPosts.filter(p => isCommentTo(p, postId) && p.status !== PostStatus.DELETED_LOCALLY);
-  }, [posts, user, subspaceId, postId]);
+  }, [posts, user, postId]);
 };
 /**
  * Hook that allows to store a given post.
@@ -241,5 +241,16 @@ export const useRemovePostsByAuthor = () => {
       });
     },
     [setPosts],
+  );
+};
+
+/**
+ * Hook that provides a cached post by its ID.
+ */
+export const useCachedPostById = (userAddress: string, postID: number) => {
+  const posts = useRecoilValue(postsState);
+  return React.useMemo(
+    () => posts[userAddress]?.find(post => post.id === postID),
+    [posts, userAddress, postID],
   );
 };
