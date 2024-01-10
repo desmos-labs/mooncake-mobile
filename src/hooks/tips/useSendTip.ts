@@ -48,9 +48,6 @@ const useSendTip = () => {
 
       // Send the transaction
       await signAndBroadcastTx([msgSend], {
-        // The memo for this transaction must always contains the "Sent using Mooncake" text to
-        // allow the backend logic to know that this is a tip.
-        memo: 'Sent using Mooncake',
         onLoading: {
           popup: {
             description: t('sending tip'),

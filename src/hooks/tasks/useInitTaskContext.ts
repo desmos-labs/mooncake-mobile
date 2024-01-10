@@ -49,7 +49,9 @@ const useInitTaskContext = () => {
       // Broadcast the messages.
       return signAndBroadcastWithGranter(postHog!, client, signer, msgs, {
         feeGranter,
-        memo: memo ?? 'Broadcast using Mooncake',
+        // The memo of the transactions must always contains the "Sent using Mooncake" text to
+        // allow the backend logic to know that a transaction has been sent from the app.
+        memo: memo ? `${memo} - Sent using Mooncake` : 'Sent using Mooncake',
       }).then(unwrapResult);
     },
     [apolloClient, chainInfo, postHog],
