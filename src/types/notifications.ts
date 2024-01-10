@@ -93,6 +93,11 @@ interface BaseNotificationData {
 
 interface PostCreatedNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.PostCreated;
+  /**
+   * This is potentially undefined to support previously received notifications that
+   * did not include this field.
+   */
+  readonly post_id?: string;
 }
 
 interface PostRepostNotificationData extends BaseNotificationData {
@@ -207,6 +212,11 @@ interface ProfileSavedNotificationData extends BaseNotificationData {
 
 interface RelationshipCreatedNotificationData extends BaseNotificationData {
   readonly notification_type: NotificationType.RelationshipCreated;
+  /**
+   * This is potentially undefined to support previously received notifications that
+   * did not include this field.
+   */
+  readonly counterparty_address?: string;
 }
 
 interface NewFollowerNotificationData extends BaseNotificationData {
