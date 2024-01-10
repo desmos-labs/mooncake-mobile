@@ -13,42 +13,57 @@ const useHandleNotificationNavigation = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
 
   return React.useCallback(
-    (notficationData: NotificationData) => {
-      console.log('[Notification-Navigation]', notficationData.notification_type);
-      switch (notficationData.notification_type) {
+    (notificationData: NotificationData) => {
+      switch (notificationData.notification_type) {
+        case NotificationType.PostCreated:
+          if (notificationData.post_id) {
+            navigation.navigate(ROUTES.POST_DETAILS, {
+              postId: parseInt(notificationData.post_id, 10),
+            });
+          }
+          break;
+
         case NotificationType.PostRepost:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: parseInt(notficationData.repost_id, 10),
+            postId: parseInt(notificationData.repost_id, 10),
           });
           break;
         case NotificationType.PostQuote:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: parseInt(notficationData.quote_id, 10),
+            postId: parseInt(notificationData.quote_id, 10),
           });
           break;
 
         case NotificationType.PostComment:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: parseInt(notficationData.post_id, 10),
-            focusPostId: parseInt(notficationData.comment_id, 10),
+            postId: parseInt(notificationData.post_id, 10),
+            focusPostId: parseInt(notificationData.comment_id, 10),
           });
           break;
 
         case NotificationType.PostMention:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: parseInt(notficationData.mention_id, 10),
+            postId: parseInt(notificationData.mention_id, 10),
           });
           break;
 
         case NotificationType.PostLike:
           navigation.navigate(ROUTES.POST_DETAILS, {
-            postId: parseInt(notficationData.post_id, 10),
+            postId: parseInt(notificationData.post_id, 10),
           });
+          break;
+
+        case NotificationType.RelationshipCreated:
+          if (notificationData.counterparty_address) {
+            navigation.navigate(ROUTES.GUEST_PROFILE, {
+              address: notificationData.counterparty_address,
+            });
+          }
           break;
 
         case NotificationType.NewFollower:
           navigation.navigate(ROUTES.GUEST_PROFILE, {
-            address: notficationData.follower_address,
+            address: notificationData.follower_address,
           });
           break;
       }
