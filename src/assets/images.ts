@@ -37,8 +37,6 @@ export const editProfilePic = require ('./images/editProfilePic.png');
 
 export const backButton = require ('./images/backButton.png');
 
-export const landingBG = require ('./images/landingBG.png');
-
 export const magnifyingGlass = require ('./images/magnifyingGlass.png');
 
 export const commentLiked = require ('./images/commentLiked.png');
@@ -67,8 +65,6 @@ export const infoIcon = require ('assets/images/infoIcon.png');
 
 export const eyeOpen = require ('./images/eyeOpen.png');
 
-export const mooncakeWithTextLogo = require ('./images/mooncakeWithTextLogo.png');
-
 export const emptyPostsIcon = require ('./images/emptyPosts.png');
 
 export const accountCreatedBg = require ('./images/accountCreatedBg.png');
@@ -89,6 +85,7 @@ export const profileContextButton = require ('./images/profile_context.png');
 export const deleteData = require('./images/deleteData.png');
 export const successfulOperation = require('./images/successufulOpearation.gif');
 
+export const mooncakeTextYellow = require('./images/mooncakeTextYellow.png');
 
 // TX
 
