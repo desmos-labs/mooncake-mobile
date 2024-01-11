@@ -1,23 +1,25 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { appleLoginIcon, googleLoginIcon, landingBG, mooncakeWithTextLogo } from 'assets/images';
+import { appleLoginIcon, googleLoginIcon, mooncakeTextYellow } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
-import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import { Box, Text, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Platform, View } from 'react-native';
+import { Platform, View } from 'react-native';
 import {
   LoginMethod,
   LoginMethodPrivateKey,
   LoginMethodWeb3AuthApple,
   LoginMethodWeb3AuthGoogle,
 } from 'types/login';
+import ThemedLottieView from 'components/ThemedLottieView';
+import { landingPageAnimation } from 'assets/animations';
+import { Image } from 'expo-image';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -53,42 +55,52 @@ const Landing = () => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>
+    <DView style={styles.container}>
       <View style={styles.innerView}>
-        <Image source={mooncakeWithTextLogo} style={styles.dummyAvatar} />
-        <Text style={styles.subtitle} allowFontScaling>
-          {t('butter slogan')}
-        </Text>
+        {/* Butter animation with text */}
+        <ThemedLottieView style={styles.animation} source={landingPageAnimation} autoPlay loop />
+        <Spacer paddingTop={20} />
+        <Image style={styles.mooncakeText} source={mooncakeTextYellow} />
+
+        <Spacer paddingTop={40} />
+        <Typography.Regular16 allowFontScaling>{t('mooncake slogan')}</Typography.Regular16>
         <Spacer paddingTop={theme.spacing.m} />
-        <Box alignSelf="stretch">
-          <Button
-            backgroundColor="rgba(255, 255, 255, 0.7)"
-            onPress={() => onSignUp(LoginMethodPrivateKey)}>
-            {t('login with private key')}
-          </Button>
-        </Box>
-        <Spacer paddingTop={theme.spacing.xl} />
-        <View style={styles.loginWithContainer}>
-          <View style={styles.loginDivider} />
-          <Spacer paddingHorizontal={8} />
-          <Typography.Body5 style={styles.loginWithLabel}>{t('or sign in with')}</Typography.Body5>
-          <Spacer paddingHorizontal={8} />
-          <View style={styles.loginDivider} />
-        </View>
-        <View style={styles.bottomIcons}>
-          {Platform.OS === 'ios' && (
-            <ImageButton
-              image={appleLoginIcon}
-              style={styles.loginLogo}
-              onPress={() => onSignUp(LoginMethodWeb3AuthApple)}
-            />
-          )}
-          <ImageButton
-            image={googleLoginIcon}
-            style={styles.loginLogo}
-            onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}
-          />
-        </View>
+
+        <Spacer paddingTop={40} />
+        {/* Login buttons */}
+        <Button
+          variant="outline"
+          style={styles.loginButton}
+          onPress={() => onSignUp(LoginMethodPrivateKey)}>
+          <Typography.Semibold16>{t('login with private key')}</Typography.Semibold16>
+        </Button>
+
+        <Button
+          variant="outline"
+          style={styles.loginButton}
+          height={52}
+          onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}>
+          <View style={styles.loginTextWithLogoContainer}>
+            <Image style={styles.loginLogo} source={googleLoginIcon} />
+            <Typography.Semibold16>{t('continue with google')}</Typography.Semibold16>
+          </View>
+        </Button>
+
+        {Platform.OS === 'ios' && (
+          <>
+            <Spacer paddingTop="m" />
+            <Button
+              variant="outline"
+              style={styles.loginButton}
+              height={52}
+              onPress={() => onSignUp(LoginMethodWeb3AuthApple)}>
+              <View style={styles.loginTextWithLogoContainer}>
+                <Image style={styles.loginLogo} source={appleLoginIcon} />
+                <Typography.Semibold16>{t('continue with apple')}</Typography.Semibold16>
+              </View>
+            </Button>
+          </>
+        )}
       </View>
     </DView>
   );
