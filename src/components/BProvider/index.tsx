@@ -6,6 +6,7 @@ import lightTheme from 'config/theme/LightTheme';
 import toastConfig from 'config/toast/toastConfig';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import useFetchAppFeatureFlags from 'hooks/featureflags/useFetchAppFeatureFlags';
 import { NativeBaseProvider } from 'native-base';
 import RootNavigator from 'navigation/RootNavigator';
 import React, { useEffect, useState } from 'react';
@@ -20,9 +21,21 @@ SplashScreen.preventAutoHideAsync().catch(console.warn); // it's good to explici
 
 const BProvider = () => {
   const [isUiReady, setIsUiReady] = useState(false);
+  const [areFeatureFlagsReady, setAreFeatureFlagsReady] = useState(false);
   const client = useClient();
   const styles = useStyles();
   const insets = useSafeAreaInsets();
+  const fetchFeatureFlags = useFetchAppFeatureFlags();
+
+  // Effect to initialize the feature flags.
+  useEffect(() => {
+    fetchFeatureFlags()
+      .then(ready => setAreFeatureFlagsReady(ready))
+      .catch(err => {
+        console.warn(err);
+        setAreFeatureFlagsReady(true);
+      });
+  }, [fetchFeatureFlags]);
 
   // Effect to initialize the UI.
   useEffect(() => {
@@ -39,10 +52,10 @@ const BProvider = () => {
 
   // Effect to hide the splash screen once the app is ready.
   useEffect(() => {
-    if (isUiReady) {
+    if (isUiReady && areFeatureFlagsReady) {
       SplashScreen.hideAsync();
     }
-  }, [isUiReady]);
+  }, [areFeatureFlagsReady, isUiReady]);
 
   if (!isUiReady) {
     return null;
