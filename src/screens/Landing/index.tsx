@@ -21,6 +21,7 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import { landingPageAnimation } from 'assets/animations';
 import { Image } from 'expo-image';
 import useStyles from './useStyles';
+import { useIsLoginWithPrivateKeyEnabled } from './hooks';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 
@@ -35,6 +36,11 @@ const Landing = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('landing');
   const styles = useStyles();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+  const loginWithPrivateKeyEnabled = useIsLoginWithPrivateKeyEnabled();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -68,37 +74,42 @@ const Landing = () => {
 
         <Spacer paddingTop={40} />
         {/* Login buttons */}
-        <Button
-          variant="outline"
-          style={styles.loginButton}
-          onPress={() => onSignUp(LoginMethodPrivateKey)}>
-          <Typography.Semibold16>{t('login with private key')}</Typography.Semibold16>
-        </Button>
-
-        <Button
-          variant="outline"
-          style={styles.loginButton}
-          height={52}
-          onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}>
-          <View style={styles.loginTextWithLogoContainer}>
-            <Image style={styles.loginLogo} source={googleLoginIcon} />
-            <Typography.Semibold16>{t('continue with google')}</Typography.Semibold16>
-          </View>
-        </Button>
-
-        {Platform.OS === 'ios' && (
+        {loginWithPrivateKeyEnabled ? (
+          <Button
+            variant="outline"
+            style={styles.loginButton}
+            onPress={() => onSignUp(LoginMethodPrivateKey)}>
+            <Typography.Semibold16>{t('login with private key')}</Typography.Semibold16>
+          </Button>
+        ) : (
+          // Login buttons displayed when the login with private key is disabled.
           <>
-            <Spacer paddingTop="m" />
             <Button
               variant="outline"
               style={styles.loginButton}
               height={52}
-              onPress={() => onSignUp(LoginMethodWeb3AuthApple)}>
+              onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}>
               <View style={styles.loginTextWithLogoContainer}>
-                <Image style={styles.loginLogo} source={appleLoginIcon} />
-                <Typography.Semibold16>{t('continue with apple')}</Typography.Semibold16>
+                <Image style={styles.loginLogo} source={googleLoginIcon} />
+                <Typography.Semibold16>{t('continue with google')}</Typography.Semibold16>
               </View>
             </Button>
+
+            {Platform.OS === 'ios' && (
+              <>
+                <Spacer paddingTop="m" />
+                <Button
+                  variant="outline"
+                  style={styles.loginButton}
+                  height={52}
+                  onPress={() => onSignUp(LoginMethodWeb3AuthApple)}>
+                  <View style={styles.loginTextWithLogoContainer}>
+                    <Image style={styles.loginLogo} source={appleLoginIcon} />
+                    <Typography.Semibold16>{t('continue with apple')}</Typography.Semibold16>
+                  </View>
+                </Button>
+              </>
+            )}
           </>
         )}
       </View>
