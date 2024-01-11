@@ -6,7 +6,7 @@ import * as Application from 'expo-application';
  * Hook that tells if the application should allow only login with the
  * private key.
  */
-// Ignore it becouse in the future we might add more hooks.
+// Ignore it because in the future we might add more hooks.
 // eslint-disable-next-line import/prefer-default-export
 export const useIsLoginWithPrivateKeyEnabled = () => {
   const { loginWithPrivateKeyOnVersion } = useAppFeatureFlags();
