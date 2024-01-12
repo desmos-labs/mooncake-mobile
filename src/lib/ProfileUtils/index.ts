@@ -63,7 +63,7 @@ export const getCoverPicture = (profile: DesmosProfile | undefined) => {
  * Function that, given a {@link DesmosProfile}, returns its display DTag.
  * @param profile {DesmosProfile} - Profile for which to display the DTag.
  */
-const getProfileDisplayDTag = (profile: ProfileTextFields): string => {
+export const getProfileDisplayDTag = (profile: ProfileTextFields): string => {
   if (profile.dTag && profile.dTag.length > 0) {
     return `@${profile.dTag}`;
   }

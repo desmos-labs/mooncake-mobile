@@ -9,6 +9,7 @@ import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import { promiseToResult } from 'lib/NeverThrowUtils';
 import { formatCoins } from 'lib/FormatUtils';
 import { MsgSend } from '@desmoslabs/desmjs-types/cosmos/bank/v1beta1/tx';
+import { getProfileDisplayDTag } from 'lib/ProfileUtils';
 
 /**
  * Hook that allows to send the tip to any of the supported targets.
@@ -33,7 +34,7 @@ const useSendTip = () => {
         return err(receiverProfileResult.error);
       }
       const receiverProfile = receiverProfileResult.value;
-      const userDtag = receiverProfile ? `@${receiverProfile.dTag}` : user;
+      const userDtag = receiverProfile ? getProfileDisplayDTag(receiverProfile) : user;
       const formattedAmount = formatCoins(amount);
 
       // Build the message
