@@ -60,6 +60,8 @@ enum ROUTES {
   SETTINGS_ENABLE_BIOMETRICS = 'SETTINGS_ENABLE_BIOMETRICS',
   UNLOCK_WALLET = 'UNLOCK_WALLET',
   BLOCKED_USERS = 'BLOCKED_USERS',
+  ABOUT = 'ABOUT',
+  ABOUT_DETAILS = 'ABOUT_DETAILS',
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
