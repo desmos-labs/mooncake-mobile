@@ -14,6 +14,8 @@ import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { Dimensions, Platform } from 'react-native';
+import About from 'screens/About';
+import AboutDetails, { AboutDetailsParams } from 'screens/AboutDetails';
 import Activities from 'screens/Activities';
 import BlockedUsers from 'screens/BlockedUsers';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
@@ -109,6 +111,8 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
   [ROUTES.BLOCKED_USERS]: undefined;
+  [ROUTES.ABOUT]: undefined;
+  [ROUTES.ABOUT_DETAILS]: AboutDetailsParams;
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
@@ -234,6 +238,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
+      <Stack.Screen name={ROUTES.ABOUT} component={About} />
+      <Stack.Screen name={ROUTES.ABOUT_DETAILS} component={AboutDetails} />
       {/* ----------------------- */}
       {/* --- PROFILE SCREENS --- */}
       {/* ----------------------- */}

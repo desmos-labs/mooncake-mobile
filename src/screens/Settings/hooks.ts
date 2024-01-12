@@ -63,10 +63,11 @@ export const useSendFeedback = () => {
 };
 
 export const useShowAboutInfo = () => {
+  const navigation = useRootNavigator();
+
   return React.useCallback(() => {
-    // TODO: Implement this.
-    console.warn('Implement show about info');
-  }, []);
+    navigation.navigate(ROUTES.ABOUT);
+  }, [navigation]);
 };
 
 /**
