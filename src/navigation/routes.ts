@@ -13,6 +13,7 @@ enum ROUTES {
 
   // Development
   DEV_SCREEN = 'DEV_SCREEN',
+  DEV_COMPONENTS = 'DEV_COMPONENTS',
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS

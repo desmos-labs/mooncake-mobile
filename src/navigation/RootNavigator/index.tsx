@@ -18,6 +18,7 @@ import Activities from 'screens/Activities';
 import BlockedUsers from 'screens/BlockedUsers';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
+import DevComponents from 'screens/DEVComponents';
 import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeGrantWaitingScreen';
 import FollowCreators, { FollowCreatorsParams } from 'screens/FollowCreators';
 import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
@@ -54,6 +55,7 @@ export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
 
   [ROUTES.DEV_SCREEN]: undefined;
+  [ROUTES.DEV_COMPONENTS]: undefined;
 
   // -------------------------------------------------------------------------------------
   // --- INITIAL SCREENS
@@ -195,6 +197,7 @@ const RootNavigator = () => {
       {/* --- DEV SCREENS --- */}
       {/* ------------------- */}
       {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
+      {__DEV__ && <Stack.Screen name={ROUTES.DEV_COMPONENTS} component={DevComponents} />}
       {/* ----------------------- */}
       {/* --- INITIAL SCREENS --- */}
       {/* ----------------------- */}

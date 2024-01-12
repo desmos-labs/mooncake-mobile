@@ -18,6 +18,7 @@ import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHook
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.DEV_COMPONENTS,
   ROUTES.LANDING,
   ROUTES.ONBOARDING,
   ROUTES.PROFILE,
