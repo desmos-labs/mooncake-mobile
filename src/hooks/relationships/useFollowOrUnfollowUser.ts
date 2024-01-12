@@ -6,7 +6,7 @@ import Long from 'long';
 import { DesmosProfile } from 'types/desmos';
 import { useTranslation } from 'react-i18next';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
-import { getProfileDisplayName } from 'lib/ProfileUtils';
+import { getProfileDisplayDTag } from 'lib/ProfileUtils';
 import useGetIsFollowing from 'hooks/relationships/useGetIsFollowing';
 
 /**
@@ -40,7 +40,7 @@ const useFollowUser = () => {
           popup: {
             title: t('relationship created title'),
             description: t('relationship created body', {
-              user: getProfileDisplayName(counterparty),
+              user: getProfileDisplayDTag(counterparty),
             }),
           },
         },
@@ -82,7 +82,7 @@ const useUnfollowUser = () => {
           popup: {
             title: t('relationship deleted title'),
             description: t('relationship deleted body', {
-              user: getProfileDisplayName(counterparty),
+              user: getProfileDisplayDTag(counterparty),
             }),
           },
         },

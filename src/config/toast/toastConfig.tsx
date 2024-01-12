@@ -1,13 +1,6 @@
-import { squaresAnimation } from 'assets/animations';
-import Button from 'components/Button';
-import ThemedLottieView from 'components/ThemedLottieView';
-import Typography from 'components/Typography';
-import { makeStyle } from 'config/theme';
-import CommonStyles from 'config/theme/CommonStyles';
-import { CustomThemeType, lightTheme } from 'config/theme/LightTheme';
-import { ImageStyle } from 'expo-image';
+import Toasts from 'components/Toasts';
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 export enum ToastType {
@@ -58,181 +51,59 @@ export type ToastProps =
   | OneButtonToastProps
   | InfoToastProps;
 
-type ThemedToastProps<T> = T & {
-  theme?: CustomThemeType;
+/**
+ * Utility function to wrap an action in a function that hides the toast
+ * before executing the action.
+ */
+const wrapActionWitHide = (action?: () => void) => {
+  if (action) {
+    return () => {
+      Toast.hide();
+      action();
+    };
+  } else {
+    return undefined;
+  }
 };
+
+const toastStyles = StyleSheet.create({
+  root: {
+    width: '90%',
+  },
+});
 
 const toastConfig = {
-  success: ({ props }: { props: ThemedToastProps<SimpleToastProps> }) => {
-    const styles = makeStyles();
+  [ToastType.success]: ({ props }: { props: SimpleToastProps }) => {
+    return <Toasts.Success style={toastStyles.root} title={props.title} message={props.message} />;
+  },
+  [ToastType.error]: ({ props }: { props: ErrorToastProps }) => {
     return (
-      <View style={styles.success}>
-        <Typography.Subtitle3 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-          {props.title || 'Success'}
-        </Typography.Subtitle3>
-        <Typography.Body7 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-          {props.message}
-        </Typography.Body7>
-      </View>
+      <Toasts.Error
+        style={toastStyles.root}
+        title={props.title}
+        message={props.message}
+        action={wrapActionWitHide(props.retryAction)}
+        actionLabel={props.retryAction ? props.retryLabel ?? 'Retry' : undefined}
+      />
     );
   },
-  error: ({ props }: { props: ThemedToastProps<ErrorToastProps> }) => {
-    const styles = makeStyles();
+  [ToastType.loading]: ({ props }: { props: LoadingToastProps }) => {
+    return <Toasts.Success style={toastStyles.root} message={props.message} showLoadingAnimation />;
+  },
+  [ToastType.oneButton]: ({ props }: { props: OneButtonToastProps }) => {
     return (
-      <View style={styles.error}>
-        <View style={styles.errorContent}>
-          <Typography.Subtitle3 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-            {props.title || 'Error'}
-          </Typography.Subtitle3>
-          <Typography.Body7 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-            {props.message}
-          </Typography.Body7>
-        </View>
-        {props.retryAction && (
-          <>
-            <View style={CommonStyles.flex['1']} />
-            <Button
-              variant="text"
-              onPress={() => {
-                Toast.hide();
-                props.retryAction();
-              }}>
-              <Typography.Button1 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-                {props.retryLabel ?? 'Retry'}
-              </Typography.Button1>
-            </Button>
-          </>
-        )}
-      </View>
+      <Toasts.Success
+        style={toastStyles.root}
+        title={props.title}
+        message={props.message}
+        actionLabel={props.buttonLabel}
+        action={wrapActionWitHide(props.buttonAction)}
+      />
     );
   },
-
-  loading: ({ props }: { props: ThemedToastProps<LoadingToastProps> }) => {
-    const styles = makeStyles();
-    return (
-      <View style={styles.loading}>
-        <Typography.Subtitle3 style={styles.loadingText}>{props.message}</Typography.Subtitle3>
-        <ThemedLottieView
-          autoSize
-          loop
-          autoPlay
-          source={squaresAnimation}
-          style={styles.loadingImage as ImageStyle}
-        />
-      </View>
-    );
-  },
-  oneButton: ({ props }: { props: ThemedToastProps<OneButtonToastProps> }) => {
-    const styles = makeStyles();
-    return (
-      <View style={[styles.info, styles.infoInline]}>
-        <View style={styles.onButtonContent}>
-          {props.title && (
-            <Typography.H6 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-              {props.title}
-            </Typography.H6>
-          )}
-          <Typography.Body1 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-            {props.message}
-          </Typography.Body1>
-        </View>
-        <View style={CommonStyles.flex['1']} />
-        <Button
-          variant="text"
-          onPress={() => {
-            Toast.hide();
-            props.buttonAction();
-          }}>
-          <Typography.Button1 style={{ color: (props.theme ?? lightTheme).colors.black }}>
-            {props.buttonLabel}
-          </Typography.Button1>
-        </Button>
-      </View>
-    );
-  },
-  [ToastType.info]: ({ props }: { props: ThemedToastProps<InfoToastProps> }) => {
-    const styles = makeStyles();
-    return (
-      <View style={styles.info}>
-        {props.title && <Typography.H6 style={styles.infoText}>{props.title}</Typography.H6>}
-        <Typography.Body1 style={styles.infoText}>{props.message}</Typography.Body1>
-      </View>
-    );
+  [ToastType.info]: ({ props }: { props: InfoToastProps }) => {
+    return <Toasts.Success style={toastStyles.root} title={props.title} message={props.message} />;
   },
 };
-
-const makeStyles = makeStyle(theme => ({
-  success: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: theme.colors.toast.successBackground,
-    minHeight: 45,
-    width: '90%',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.toast.successBorder,
-    justifyContent: 'center',
-  },
-  error: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: theme.colors.toast.errorBackground,
-    minHeight: 45,
-    width: '90%',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.toast.errorBorder,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  errorContent: {
-    flexShrink: 1,
-  },
-  info: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: theme.colors.white,
-    minHeight: 45,
-    width: '90%',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.butterOrange01,
-    justifyContent: 'center',
-  },
-  infoInline: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  loading: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: theme.colors.toast.successBackground,
-    minHeight: 45,
-    width: '90%',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.toast.successBorder,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  flex: {
-    flex: 1,
-  },
-  loadingText: {
-    color: theme.colors.black,
-    maxWidth: '75%',
-  },
-  infoText: {
-    color: theme.colors.black,
-  },
-  loadingImage: {
-    width: 32,
-    height: 32,
-  },
-  onButtonContent: {
-    flexShrink: 1,
-  },
-}));
 
 export default toastConfig;
