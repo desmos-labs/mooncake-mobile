@@ -15,6 +15,10 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  animation: {
+    width: 100,
+    height: 100,
+  },
 }));
 
 export default useStyles;

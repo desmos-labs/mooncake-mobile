@@ -4,9 +4,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveProfile } from '@recoil/profiles';
 import { FlashList } from '@shopify/flash-list';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
+import { landingPageAnimation } from 'assets/animations';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
-import StyledSpinner from 'components/StyledSpinner';
+import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
@@ -17,7 +18,6 @@ import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
@@ -159,10 +159,13 @@ const PostDetails = () => {
     // If the post is loading, show the loading screen
     if (isPostLoading) {
       return (
-        <SafeAreaView style={styles.emptyView}>
-          <Typography.H1>The post is being loaded</Typography.H1>
-          <StyledSpinner />
-        </SafeAreaView>
+        <DView
+          disableHideKeyboardTouchable={true}
+          backgroundColor={theme.colors.white}
+          edges={['top']}
+          style={styles.emptyView}>
+          <ThemedLottieView style={styles.animation} source={landingPageAnimation} autoPlay loop />
+        </DView>
       );
     }
   }
@@ -170,9 +173,13 @@ const PostDetails = () => {
   if (!post) {
     if (!isPostLoading) {
       return (
-        <SafeAreaView style={styles.emptyView}>
-          <Typography.H1>Something went wrong when loading the post</Typography.H1>
-        </SafeAreaView>
+        <DView
+          disableHideKeyboardTouchable={true}
+          backgroundColor={theme.colors.white}
+          edges={['top']}
+          style={styles.emptyView}>
+          <Typography.Body5>Something went wrong when loading the post</Typography.Body5>
+        </DView>
       );
     }
 
