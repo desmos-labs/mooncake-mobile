@@ -9,6 +9,7 @@ import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useTrackUser from 'hooks/analytics/useTrackUser';
+import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -33,6 +34,7 @@ const WelcomePage = () => {
   const theme = useTheme();
   const trackUser = useTrackUser();
   const activeAddress = useActiveAccountAddress();
+  const requestNotificationsPermissions = useRequestNotificationsPermission();
 
   // Hook to prevent the user to go back, just allow it in debug if we need
   // to go back.
@@ -51,6 +53,8 @@ const WelcomePage = () => {
       await trackUser(activeAddress);
     }
 
+    await requestNotificationsPermissions();
+
     navigation.reset({
       index: 0,
       routes: [
@@ -59,7 +63,7 @@ const WelcomePage = () => {
         },
       ],
     });
-  }, [activeAddress, navigation, trackUser]);
+  }, [activeAddress, navigation, requestNotificationsPermissions, trackUser]);
 
   return (
     <DView style={styles.root} backgroundImage={accountCreatedBg} backgroundFillScreen={true}>

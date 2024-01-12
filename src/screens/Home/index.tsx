@@ -8,7 +8,6 @@ import HomePostListContentLoader from 'components/Loaders/HomePostListContentLoa
 import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
 import Typography from 'components/Typography';
-import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import { useTheme } from 'native-base';
 import ROUTES from 'navigation/routes';
@@ -39,13 +38,6 @@ const Home = () => {
   const postListRef = useRef<any>(null);
   const postsListState = usePostsListState();
   const setPostsListState = useSetPostsListState();
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  // Ask the user the permission to access the device notification
-  useRequestNotificationsPermission();
 
   // -------------------------------------------------------------------------------------
   // --- Data queries

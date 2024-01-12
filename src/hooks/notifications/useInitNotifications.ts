@@ -1,9 +1,9 @@
+import { firebase } from '@react-native-firebase/messaging';
 import React from 'react';
 import { AppState } from 'react-native';
-import { firebase } from '@react-native-firebase/messaging';
 import useParseNotificationAndNavigate from './useParseNotificationAndNavigate';
 
-let backgroundNotification: string | undefined;
+let backgroundNotification: string | object | undefined;
 
 const useInitNotificationsLogic = () => {
   const navigateToCorrectScreen = useParseNotificationAndNavigate();

@@ -1,24 +1,24 @@
-import { ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useAppStateValue } from '@recoil/appState';
+import { useSetLoginFlowState } from '@recoil/login';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
+import Button from 'components/Button';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useTrackSelectedUsersToFollow from 'hooks/analytics/useTrackSelectedUsersToFollow';
+import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import Spacer from 'components/Spacer';
 import { useTranslation } from 'react-i18next';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
+import { ActivityIndicator } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
-import Button from 'components/Button';
-import { useTheme } from 'native-base';
-import { useSetLoginFlowState } from '@recoil/login';
 import { LoginFlowStep } from 'types/login';
-import { useAppStateValue } from '@recoil/appState';
-import useTrackSelectedUsersToFollow from 'hooks/analytics/useTrackSelectedUsersToFollow';
-import useStyles from './useStyles';
-import { FollowCreatorsCallbacks, FollowedProfile, useCreators, useFollowCreators } from './hooks';
 import CreatorListItem from './components/CreatorListItem';
+import { FollowCreatorsCallbacks, FollowedProfile, useCreators, useFollowCreators } from './hooks';
+import useStyles from './useStyles';
 
 export interface FollowCreatorsParams extends FollowCreatorsCallbacks {
   /**
@@ -139,9 +139,7 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
       <Typography.Semibold24>{t('build your feed')}</Typography.Semibold24>
       <Spacer paddingTop="m" />
       <Typography.Body5>{t('follow 3 creators')}</Typography.Body5>
-
       <Spacer paddingTop="l" />
-
       <FlashList
         data={creators}
         renderItem={renderItem}
@@ -152,17 +150,15 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
         extraData={selectedAccounts}
         ListFooterComponent={<ActivityIndicator hidesWhenStopped animating={loading} />}
       />
-
       <Spacer paddingTop="l" />
       <Button
+        size={44}
         disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT || broadcasting}
         bgColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={onNextPressed}>
         {t('next', { ns: 'common' })}
       </Button>
-
-      <Spacer paddingBottom={58} />
     </DView>
   );
 };
