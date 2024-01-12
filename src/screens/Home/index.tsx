@@ -15,7 +15,6 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
-import SearchViewComponent from 'screens/Home/components/SearchViewComponent';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
@@ -143,35 +142,30 @@ const Home = () => {
   }
 
   return (
-    <>
-      <View style={styles.homeView} testID="homeView">
-        <FlashList
-          keyExtractor={(item, index) => `${index}item+${item.id}`}
-          ref={postListRef}
-          data={posts}
-          refreshControl={
-            <RefreshControl
-              tintColor={theme.colors.surfaceBlack}
-              enabled
-              onRefresh={onRefresh}
-              refreshing={refreshing}
-              progressViewOffset={Platform.OS === 'android' ? 30 : 0}
-            />
-          }
-          renderItem={renderPost}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={footerComponent}
-          ListEmptyComponent={emptyComponent}
-          estimatedItemSize={180}
-          ItemSeparatorComponent={HomeItemSeparatorComponent}
-          onEndReached={fetchMorePosts}
-          getItemType={getPostType}
-        />
-      </View>
-      {postsListState.searchBarFocused && (
-        <SearchViewComponent valueToSearch={postsListState.valueToSearch} />
-      )}
-    </>
+    <View style={styles.homeView} testID="homeView">
+      <FlashList
+        keyExtractor={(item, index) => `${index}item+${item.id}`}
+        ref={postListRef}
+        data={posts}
+        refreshControl={
+          <RefreshControl
+            tintColor={theme.colors.surfaceBlack}
+            enabled
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+            progressViewOffset={Platform.OS === 'android' ? 30 : 0}
+          />
+        }
+        renderItem={renderPost}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={footerComponent}
+        ListEmptyComponent={emptyComponent}
+        estimatedItemSize={180}
+        ItemSeparatorComponent={HomeItemSeparatorComponent}
+        onEndReached={fetchMorePosts}
+        getItemType={getPostType}
+      />
+    </View>
   );
 };
 

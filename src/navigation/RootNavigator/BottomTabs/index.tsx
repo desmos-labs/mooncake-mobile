@@ -1,15 +1,18 @@
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
+import { useActiveProfile } from '@recoil/profiles';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useSetPostsListState } from '@recoil/screens/postsListState';
 import {
   bottomActivitiesIcon,
   bottomHomeIcon,
   bottomProfileIcon,
+  bottomSearchIcon,
   middleButtonIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import { Box, useTheme } from 'native-base';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
@@ -19,6 +22,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Activities from 'screens/Activities';
 import Profile from 'screens/Profile';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
+import Search from 'screens/Search';
 import useStyles from './useStyles';
 
 interface Props extends BottomTabBarProps {}
@@ -30,8 +34,9 @@ export type BottomTabsParamList = {
   [ROUTES.HOME_TABS]: HomeTabsParams | undefined;
   /* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */
   // [ROUTES.COMMUNITIES]: undefined;
-  [ROUTES.ACTIVITIES]: undefined;
+  [ROUTES.SEARCH]: undefined;
   [ROUTES.CREATE_BUTTON]: undefined;
+  [ROUTES.ACTIVITIES]: undefined;
   [ROUTES.PROFILE]: undefined;
 };
 
@@ -49,6 +54,8 @@ const getCorrectImage = (routeName: string) => {
   switch (routeName) {
     case ROUTES.HOME_TABS:
       return bottomHomeIcon;
+    case ROUTES.SEARCH:
+      return bottomSearchIcon;
     case ROUTES.PROFILE:
       return bottomProfileIcon;
     case ROUTES.ACTIVITIES:
@@ -75,6 +82,7 @@ const BottomTabBar = (props: Props) => {
   // -------------------------------------------------------------------------------------
 
   const activeAddress = useActiveAccountAddress();
+  const activeProfile = useActiveProfile();
   const notificationsCount = useAppStateValue('notificationsCount');
   const setNotificationsCount = useSetAppStateValue('notificationsCount');
   const setPostsListState = useSetPostsListState();
@@ -143,6 +151,19 @@ const BottomTabBar = (props: Props) => {
           }
         };
 
+        if (activeProfile?.profilePicture !== undefined && route.name === ROUTES.PROFILE) {
+          return (
+            <View key={route.key} style={styles.buttonView}>
+              <ImageButton
+                onPress={onPress}
+                image={getProfilePicture(activeProfile)}
+                // @ts-ignore
+                style={[styles.profile, isFocused ? styles.profileFocused : undefined]}
+              />
+            </View>
+          );
+        }
+
         if (route.name === ROUTES.CREATE_BUTTON) {
           return (
             <View key={route.key} style={styles.middleButtonView}>
@@ -159,7 +180,6 @@ const BottomTabBar = (props: Props) => {
           <View key={route.key} style={styles.buttonView}>
             <ImageButton
               overlayComponent={route.name === ROUTES.ACTIVITIES && OverlayComponent}
-              overlayPosition={styles.imageButtonOverlay}
               onPress={onPress}
               tintColor={isFocused ? theme.colors.butterOrange01 : theme.colors.lightGrey02}
               image={getCorrectImage(route.name)}
@@ -188,8 +208,9 @@ const BottomTabsNavigator = () => {
         <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
         {/* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */}
         {/* <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} /> */}
-        <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
+        <Tab.Screen name={ROUTES.SEARCH} component={Search} />
         <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
+        <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
       </Tab.Navigator>
     </Box>

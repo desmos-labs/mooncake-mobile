@@ -73,7 +73,7 @@ const ImageButton = (props: Props) => {
 
   return (
     <TouchableOpacity style={[styles.baseButtonStyle, buttonStyle]} hitSlop={hitSlop} {...rest}>
-      <Image contentFit="cover" style={style} source={imageSource} tintColor={tintColor} />
+      <Image style={style} source={imageSource} tintColor={tintColor} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, { ...overlayPosition }]}>
           {overlayComponent}
