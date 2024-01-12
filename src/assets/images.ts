@@ -82,10 +82,10 @@ export const appleLoginIcon = require ('./images/appleLoginIcon.png');
 
 export const profileContextButton = require ('./images/profile_context.png');
 
-export const deleteData = require('./images/deleteData.png');
-export const successfulOperation = require('./images/successufulOpearation.gif');
+export const deleteData = require ('./images/deleteData.png');
+export const successfulOperation = require ('./images/successufulOpearation.gif');
 
-export const mooncakeTextYellow = require('./images/mooncakeTextYellow.png');
+export const mooncakeTextYellow = require ('./images/mooncakeTextYellow.png');
 
 // TX
 
@@ -102,6 +102,7 @@ export const hidePost = require ('./images/hidePost.png');
 export const bottomActivitiesIcon = require ('./images/bottomBarIcons/bottomActivities.png');
 export const bottomHomeIcon = require ('./images/bottomBarIcons/bottomHome.png');
 export const bottomProfileIcon = require ('./images/bottomBarIcons/bottomProfile.png');
+export const bottomSearchIcon = require ('./images/bottomBarIcons/bottomSearch.png');
 export const middleButtonIcon = require ('./images/bottomBarIcons/middleButton.png');
 
 // Post icons

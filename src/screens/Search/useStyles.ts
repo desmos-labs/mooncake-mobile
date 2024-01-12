@@ -1,23 +1,16 @@
 import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
-  butterflyImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    resizeMode: 'cover',
-    marginRight: theme.spacing.xs,
-  },
-  butterFlyImageContainer: { position: 'absolute', left: 0, right: 'auto' },
   inviteIconContainer: { position: 'absolute', left: 'auto', right: 0 },
   cancelIconContainer: {
     marginLeft: theme.spacing.m,
     position: 'absolute',
     left: 'auto',
-    right: 0,
+    right: 14,
   },
   container: {
     marginTop: theme.spacing.xs,
+    paddingBottom: theme.spacing.s,
     paddingHorizontal: 12,
     backgroundColor: theme.colors.white,
   },

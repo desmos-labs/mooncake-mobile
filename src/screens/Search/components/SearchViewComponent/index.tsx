@@ -1,17 +1,18 @@
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
-import Typography from 'components/Typography';
-import React, { useCallback, useEffect } from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import SearchResultComponent from 'screens/Home/components/SearchResultComponent';
-import { DesmosProfile } from 'types/desmos';
-import { Box, Center } from 'native-base';
+import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
-import { useTranslation } from 'react-i18next';
+import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
+import { Box, Center } from 'native-base';
+import React, { useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
-import useStyles from './useStyles';
+import SearchResultComponent from 'screens/Search/components/SearchResultComponent';
+import { DesmosProfile } from 'types/desmos';
 import useSearch from './hooks';
+import useStyles from './useStyles';
 
 interface Props {
   valueToSearch: string;
@@ -36,7 +37,7 @@ const SearchViewComponent = ({ valueToSearch }: Props) => {
   }, []);
 
   return (
-    <Animated.View style={styles.absoluteView} entering={FadeInDown}>
+    <Animated.View style={styles.absoluteView}>
       <View style={styles.wrapperView}>
         <KeyboardAvoidingView
           style={CommonStyles.flex['1']}
@@ -62,7 +63,14 @@ const SearchViewComponent = ({ valueToSearch }: Props) => {
                 data={profiles}
                 renderItem={renderItem}
                 estimatedItemSize={55}
-                ListEmptyComponent={<EmptyListComponent label={t('no results')} />}
+                ListEmptyComponent={
+                  valueToSearch !== '' ? (
+                    <>
+                      <Spacer paddingTop={120} />
+                      <EmptyListComponent label={t('no results')} />
+                    </>
+                  ) : null
+                }
                 onEndReached={fetchMoreProfiles}
               />
             </>

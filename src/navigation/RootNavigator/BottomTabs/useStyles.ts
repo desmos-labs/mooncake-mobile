@@ -1,5 +1,6 @@
 import { makeStyle } from 'config/theme';
 import { Platform } from 'react-native';
+import { scale } from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -29,18 +30,24 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     alignSelf: 'center',
   },
+  profile: {
+    alignSelf: 'center',
+    width: scale(22),
+    height: scale(22),
+    borderRadius: scale(22 / 2),
+  },
+  profileFocused: {
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+  },
   imageButton: {
-    height: 32,
-    width: 32,
+    height: 26,
+    width: 26,
     alignSelf: 'center',
   },
-  imageButtonOverlay: {
-    left: 18,
-    top: 2,
-  },
   middleButtonImage: {
-    height: 41,
-    width: 41,
+    height: 45,
+    width: 45,
     alignSelf: 'center',
   },
 }));
