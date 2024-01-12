@@ -14,7 +14,7 @@ import Button from 'components/Button';
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.DEV_COMPONENTS>;
 
 /**
- * Screen that display a set of component to see how thei render.
+ * Screen that display a set of component to see how they render.
  */
 const DevComponents: React.FC<NavProps> = () => {
   const styles = useStyles();

@@ -18,7 +18,7 @@ export interface ToastProps {
    */
   readonly title?: string;
   /**
-   * Tells the loading animation should be shown.
+   * Tells if the loading animation should be shown.
    * If undefined will default to false.
    */
   readonly showLoadingAnimation?: boolean;
@@ -41,7 +41,13 @@ export interface ToastProps {
  * The configurations to create a toast component.
  */
 interface ToastConfig {
+  /**
+   * Toast background color.
+   */
   readonly backgroundColor: string;
+  /**
+   * Toast border color.
+   */
   readonly borderColor: string;
 }
 
