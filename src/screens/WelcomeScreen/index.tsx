@@ -63,7 +63,7 @@ const WelcomePage = () => {
         },
       ],
     });
-  }, [activeAddress, navigation, trackUser]);
+  }, [activeAddress, navigation, requestNotificationsPermissions, trackUser]);
 
   return (
     <DView style={styles.root} backgroundImage={accountCreatedBg} backgroundFillScreen={true}>
