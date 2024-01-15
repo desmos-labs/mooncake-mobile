@@ -5,13 +5,17 @@ import { useActiveProfile } from '@recoil/profiles';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useSetPostsListState } from '@recoil/screens/postsListState';
 import {
+  bottomActivitiesFilledIcon,
   bottomActivitiesIcon,
+  bottomHomeFilledIcon,
   bottomHomeIcon,
   bottomProfileIcon,
+  bottomSearchFilledIcon,
   bottomSearchIcon,
   middleButtonIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import Typography from 'components/Typography';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Box, useTheme } from 'native-base';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
@@ -60,9 +64,35 @@ const getCorrectImage = (routeName: string) => {
       return bottomProfileIcon;
     case ROUTES.ACTIVITIES:
       return bottomActivitiesIcon;
-    /* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */
-    // case ROUTES.COMMUNITIES:
-    //   return bottomCommunitiesIcon;
+  }
+};
+
+/**
+ * Returns the correct button image filled to be used based on the given {@param routeName}.
+ */
+const getCorrectFilledImage = (routeName: string) => {
+  switch (routeName) {
+    case ROUTES.HOME_TABS:
+      return bottomHomeFilledIcon;
+    case ROUTES.SEARCH:
+      return bottomSearchFilledIcon;
+    case ROUTES.PROFILE:
+      return bottomProfileIcon;
+    case ROUTES.ACTIVITIES:
+      return bottomActivitiesFilledIcon;
+  }
+};
+
+const getBottomText = (routeName: string) => {
+  switch (routeName) {
+    case ROUTES.HOME_TABS:
+      return 'Discover';
+    case ROUTES.SEARCH:
+      return 'Search';
+    case ROUTES.PROFILE:
+      return 'You';
+    case ROUTES.ACTIVITIES:
+      return 'Notifications';
   }
 };
 
@@ -160,6 +190,16 @@ const BottomTabBar = (props: Props) => {
                 // @ts-ignore
                 style={[styles.profile, isFocused ? styles.profileFocused : undefined]}
               />
+              {isFocused ? (
+                <Typography.Body8 style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+                  {getBottomText(route.name)}
+                </Typography.Body8>
+              ) : (
+                <Typography.Caption3
+                  style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+                  {getBottomText(route.name)}
+                </Typography.Caption3>
+              )}
             </View>
           );
         }
@@ -182,9 +222,19 @@ const BottomTabBar = (props: Props) => {
               overlayComponent={route.name === ROUTES.ACTIVITIES && OverlayComponent}
               onPress={onPress}
               tintColor={isFocused ? theme.colors.butterOrange01 : theme.colors.lightGrey02}
-              image={getCorrectImage(route.name)}
+              image={isFocused ? getCorrectFilledImage(route.name) : getCorrectImage(route.name)}
               style={styles.imageButton}
             />
+            {isFocused ? (
+              <Typography.Body8 style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+                {getBottomText(route.name)}
+              </Typography.Body8>
+            ) : (
+              <Typography.Caption3
+                style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+                {getBottomText(route.name)}
+              </Typography.Caption3>
+            )}
           </View>
         );
       })}

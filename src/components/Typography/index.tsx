@@ -183,6 +183,14 @@ export const TypographyStyles: { [index: string]: StyleProp<TextStyle> } = {
     lineHeight: 16,
     textAlign: 'left',
   },
+  Body8: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 10,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 15,
+    textAlign: 'left',
+  },
   Regular14: {
     fontFamily: 'Poppins_400Regular',
     fontSize: 14,
@@ -290,6 +298,7 @@ const Typography = {
   Body5: createTextComponent(() => TypographyStyles.Body5),
   Body6: createTextComponent(() => TypographyStyles.Body6),
   Body7: createTextComponent(() => TypographyStyles.Body7),
+  Body8: createTextComponent(() => TypographyStyles.Body8),
   Regular16: createTextComponent(() => TypographyStyles.Regular16),
   Regular14: createTextComponent(() => TypographyStyles.Regular14),
   Semibold16: createTextComponent(() => TypographyStyles.Semibold16),
