@@ -1,10 +1,11 @@
 import { makeStyle } from 'config/theme';
+import { scale } from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   avatar: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
+    height: scale(42),
+    width: scale(42),
+    borderRadius: scale(21),
     backgroundColor: theme.colors.backgroundGrey,
     marginRight: theme.spacing.s,
   },

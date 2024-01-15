@@ -2,13 +2,13 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   wrapperView: { height: '100%', width: '100%' },
-  absoluteView: {
+  view: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.m,
+    paddingHorizontal: theme.spacing.m,
+    paddingTop: theme.spacing.m,
     backgroundColor: theme.colors.white,
-    zIndex: 2,
   },
   searchView: { flex: 1, zIndex: 2 },
 }));

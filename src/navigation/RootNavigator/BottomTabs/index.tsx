@@ -15,6 +15,7 @@ import ImageButton from 'components/ImageButton';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Box, useTheme } from 'native-base';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
+import SearchTabs, { SearchTabsParams } from 'navigation/RootNavigator/SearchTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
@@ -22,7 +23,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Activities from 'screens/Activities';
 import Profile from 'screens/Profile';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
-import Search from 'screens/Search';
 import useStyles from './useStyles';
 
 interface Props extends BottomTabBarProps {}
@@ -34,7 +34,7 @@ export type BottomTabsParamList = {
   [ROUTES.HOME_TABS]: HomeTabsParams | undefined;
   /* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */
   // [ROUTES.COMMUNITIES]: undefined;
-  [ROUTES.SEARCH]: undefined;
+  [ROUTES.SEARCH_TABS]: SearchTabsParams | undefined;
   [ROUTES.CREATE_BUTTON]: undefined;
   [ROUTES.ACTIVITIES]: undefined;
   [ROUTES.PROFILE]: undefined;
@@ -54,7 +54,7 @@ const getCorrectImage = (routeName: string) => {
   switch (routeName) {
     case ROUTES.HOME_TABS:
       return bottomHomeIcon;
-    case ROUTES.SEARCH:
+    case ROUTES.SEARCH_TABS:
       return bottomSearchIcon;
     case ROUTES.PROFILE:
       return bottomProfileIcon;
@@ -208,7 +208,7 @@ const BottomTabsNavigator = () => {
         <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
         {/* Disabled as per [DFP-1184](https://forbole.atlassian.net/browse/DFP-1184), may be re-enabled in the future. */}
         {/* <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} /> */}
-        <Tab.Screen name={ROUTES.SEARCH} component={Search} />
+        <Tab.Screen name={ROUTES.SEARCH_TABS} component={SearchTabs} />
         <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
         <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />

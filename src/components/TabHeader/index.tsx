@@ -1,9 +1,7 @@
-import React, { useCallback } from 'react';
-import { Animated, TouchableOpacity, View } from 'react-native';
-import Typography from 'components/Typography';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
-import Routes from 'navigation/routes';
+import Typography from 'components/Typography';
+import React from 'react';
+import { Animated, TouchableOpacity, View } from 'react-native';
 import useStyles from './useStyles';
 
 type Props = {
@@ -11,23 +9,19 @@ type Props = {
   position: Animated.AnimatedInterpolation<any>;
   navigation: any;
   disableButtons: boolean;
+  getTabName: (routeName: string) => string | undefined;
+  spaceBetween?: boolean;
 };
 
-const PostTypeTab = ({ state, position, navigation, disableButtons }: Props) => {
+const TabHeader = ({
+  state,
+  position,
+  navigation,
+  disableButtons,
+  getTabName,
+  spaceBetween,
+}: Props) => {
   const styles = useStyles();
-  const { t } = useTranslation('home');
-
-  const getTabName = useCallback(
-    (routeName: string) => {
-      switch (routeName) {
-        case Routes.HOME_TAB_DISCOVER:
-          return t('discover');
-        case Routes.HOME_TAB_FOLLOWING:
-          return t('following');
-      }
-    },
-    [t],
-  );
 
   return (
     <View style={styles.container}>
@@ -56,13 +50,18 @@ const PostTypeTab = ({ state, position, navigation, disableButtons }: Props) => 
         };
 
         return (
-          <TouchableOpacity key={route.key} onPress={onPress} style={styles.tabButton}>
+          <TouchableOpacity
+            key={route.key}
+            onPress={onPress}
+            style={[
+              styles.tabButton,
+              spaceBetween ? { marginHorizontal: 72 } : { marginHorizontal: 8 },
+            ]}>
             <Typography.Button2
               numberOfLines={1}
               style={[styles.buttonText, isFocused ? styles.selected : styles.unselected]}>
               {getTabName(route.name)}
             </Typography.Button2>
-
             {isFocused && <Animated.View style={[styles.selectedIndicator, { opacity }]} />}
           </TouchableOpacity>
         );
@@ -71,4 +70,4 @@ const PostTypeTab = ({ state, position, navigation, disableButtons }: Props) => 
   );
 };
 
-export default PostTypeTab;
+export default TabHeader;

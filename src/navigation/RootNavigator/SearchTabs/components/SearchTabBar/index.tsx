@@ -2,32 +2,27 @@ import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/
 import TabHeader from 'components/TabHeader';
 import Routes from 'navigation/routes';
 import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import Animated from 'react-native-reanimated';
 import useStyles from './useStyles';
 
 /**
- * Tab bar that is present inside the home page of the application.
+ * Tab bar that is present inside the search page of the application.
  * @constructor
  */
-const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => {
+const SearchTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => {
   const styles = useStyles();
-  const { t } = useTranslation('home');
   // -------------------------------------------------------------------------------------
   // --- Render
   // -------------------------------------------------------------------------------------
 
-  const getTabName = useCallback(
-    (routeName: string) => {
-      switch (routeName) {
-        case Routes.HOME_TAB_DISCOVER:
-          return t('discover');
-        case Routes.HOME_TAB_FOLLOWING:
-          return t('following');
-      }
-    },
-    [t],
-  );
+  const getTabName = useCallback((routeName: string) => {
+    switch (routeName) {
+      case Routes.SEARCH_TAB_USERS:
+        return 'People';
+      case Routes.SEARCH_TAB_POSTS:
+        return 'Posts';
+    }
+  }, []);
 
   return (
     <Animated.View style={styles.container}>
@@ -38,10 +33,11 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
           position={position}
           navigation={navigation}
           getTabName={getTabName}
+          spaceBetween={true}
         />
       </Animated.View>
     </Animated.View>
   );
 };
 
-export default HomeTabBar;
+export default SearchTabBar;

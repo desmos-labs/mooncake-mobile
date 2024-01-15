@@ -18,7 +18,7 @@ interface Props {
  * @param profile The profile to render.
  * @constructor
  */
-const SearchResultComponent = ({ profile }: Props) => {
+const SearchUsersResult = ({ profile }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const activeAddress = useActiveAccountAddress();
@@ -41,4 +41,4 @@ const SearchResultComponent = ({ profile }: Props) => {
   );
 };
 
-export default SearchResultComponent;
+export default SearchUsersResult;
