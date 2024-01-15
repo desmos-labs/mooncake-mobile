@@ -122,6 +122,7 @@ const Profile = () => {
 
   const {
     profile,
+    profileError,
     loading: isProfileLoading,
     refetch: refreshProfile,
   } = useProfileGivenAddress(address);
@@ -159,7 +160,6 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
 
   const [pageRefreshing, setPageRefreshing] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
   // Fullscreen image
   const [fullscreenImage, setFullscreenImage] = useState({
     image: {} as ImageSource,
@@ -201,15 +201,6 @@ const Profile = () => {
     refreshPostsCount,
     refreshProfile,
   ]);
-
-  // Refresh the data on the focus of the screen
-  useEffect(() => {
-    setInitialLoading(true);
-    refreshPage().finally(() => setInitialLoading(false));
-
-    // Suppress the warning of the next line in order to update the data only on the first render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Refresh the data when using pull to refresh gesture. Please note, this trick is needed because
   // we need to manage animations in a smooth way.
@@ -408,16 +399,10 @@ const Profile = () => {
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
-  if (initialLoading) {
-    return (
-      <SafeAreaView style={styles.flexCenter}>
-        <StyledSpinner />
-      </SafeAreaView>
-    );
-  }
-
   if (!profile) {
-    if (isProfileLoading) {
+    // We also check the profileError field because the profile becomes
+    // defined after the isProfileLoading becomes false.
+    if (isProfileLoading || profileError === undefined) {
       return (
         <SafeAreaView style={styles.flexCenter}>
           <StyledSpinner />
