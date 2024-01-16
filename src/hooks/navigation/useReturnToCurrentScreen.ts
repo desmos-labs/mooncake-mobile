@@ -18,6 +18,8 @@ export interface ReturnToCurrentScreenParams {
 }
 
 const useReturnToCurrentScreen = (params?: ReturnToCurrentScreenParams) => {
+  // We need the root navigator instance to save the current navigator state
+  // othewise we may navigate to the wrong screen.
   const navigator = useRootNavigator();
   const resetToHomeScreen = useResetToHome();
 
