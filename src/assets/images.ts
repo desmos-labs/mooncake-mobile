@@ -100,9 +100,12 @@ export const hidePost = require ('./images/hidePost.png');
 // Bottom tabs bar
 
 export const bottomActivitiesIcon = require ('./images/bottomBarIcons/bottomActivities.png');
+export const bottomActivitiesFilledIcon = require ('./images/bottomBarIcons/bottomActivitiesFilled.png');
 export const bottomHomeIcon = require ('./images/bottomBarIcons/bottomHome.png');
+export const bottomHomeFilledIcon = require ('./images/bottomBarIcons/bottomHomeFilled.png');
 export const bottomProfileIcon = require ('./images/bottomBarIcons/bottomProfile.png');
 export const bottomSearchIcon = require ('./images/bottomBarIcons/bottomSearch.png');
+export const bottomSearchFilledIcon = require ('./images/bottomBarIcons/bottomSearchFilled.png');
 export const middleButtonIcon = require ('./images/bottomBarIcons/middleButton.png');
 
 // Post icons
