@@ -74,7 +74,7 @@ const getCorrectFilledImage = (routeName: string) => {
   switch (routeName) {
     case ROUTES.HOME_TABS:
       return bottomHomeFilledIcon;
-    case ROUTES.SEARCH:
+    case ROUTES.SEARCH_TABS:
       return bottomSearchFilledIcon;
     case ROUTES.PROFILE:
       return bottomProfileIcon;
@@ -87,7 +87,7 @@ const getBottomText = (routeName: string) => {
   switch (routeName) {
     case ROUTES.HOME_TABS:
       return 'Discover';
-    case ROUTES.SEARCH:
+    case ROUTES.SEARCH_TABS:
       return 'Search';
     case ROUTES.PROFILE:
       return 'You';

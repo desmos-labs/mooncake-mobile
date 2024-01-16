@@ -1,4 +1,6 @@
+import { usePostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import CommonStyles from 'config/theme/CommonStyles';
@@ -8,31 +10,28 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
-import SearchResultComponent from 'screens/Search/components/SearchUsersResult';
-import { DesmosProfile } from 'types/desmos';
+import { Post } from 'types/posts';
 import useSearch from './hooks';
 import useStyles from './useStyles';
 
-interface Props {
-  valueToSearch: string;
-}
-
 /**
  * Component that renders the search view.
- * @param valueToSearch The value used inside the search bar
  * @constructor
  */
-const SearchViewComponent = ({ valueToSearch }: Props) => {
+const SearchPosts = () => {
+  const listState = usePostsListState();
   const styles = useStyles();
   const { t } = useTranslation('search');
-  const { isSearching, profiles, getProfileForDTag, fetchMoreProfiles } = useSearch(valueToSearch);
+  const { isSearching, posts, getPostsFromSearchValue, fetchMorePosts } = useSearch(
+    listState.valueToSearch,
+  );
 
   useEffect(() => {
-    getProfileForDTag();
-  }, [getProfileForDTag]);
+    getPostsFromSearchValue();
+  }, [getPostsFromSearchValue]);
 
-  const renderItem = useCallback(({ item }: ListRenderItemInfo<DesmosProfile>) => {
-    return <SearchResultComponent profile={item} />;
+  const renderItem = useCallback(({ item }: ListRenderItemInfo<Post>) => {
+    return <PostCard post={item} />;
   }, []);
 
   return (
@@ -51,18 +50,18 @@ const SearchViewComponent = ({ valueToSearch }: Props) => {
           ) : (
             <FlashList
               keyboardDismissMode="on-drag"
-              data={profiles}
+              data={posts}
               renderItem={renderItem}
               estimatedItemSize={55}
               ListEmptyComponent={
-                valueToSearch !== '' ? (
+                listState.valueToSearch !== '' ? (
                   <>
                     <Spacer paddingTop={120} />
                     <EmptyListComponent label={t('no results')} />
                   </>
                 ) : null
               }
-              onEndReached={fetchMoreProfiles}
+              onEndReached={fetchMorePosts}
             />
           )}
         </KeyboardAvoidingView>
@@ -71,4 +70,4 @@ const SearchViewComponent = ({ valueToSearch }: Props) => {
   );
 };
 
-export default SearchViewComponent;
+export default SearchPosts;

@@ -22,8 +22,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Home from 'screens/Home';
-import SearchUsers from 'screens/Search';
+import SearchPosts from 'screens/SearchPosts';
+import SearchUsers from 'screens/SearchUsers';
 import useStyles from './useStyles';
 
 const ANIMATION_DURATION = 200;
@@ -154,10 +154,10 @@ const SearchTabs = () => {
       </Animated.View>
       <Tab.Navigator
         tabBar={renderTabBar}
-        screenOptions={{ swipeEnabled: false }}
+        screenOptions={{ swipeEnabled: false, lazy: true }}
         initialRouteName={initialRouteName}>
         <Tab.Screen name={ROUTES.SEARCH_TAB_USERS} component={SearchUsers} />
-        <Tab.Screen name={ROUTES.SEARCH_TAB_POSTS} component={Home} />
+        <Tab.Screen name={ROUTES.SEARCH_TAB_POSTS} component={SearchPosts} />
       </Tab.Navigator>
     </Box>
   );
