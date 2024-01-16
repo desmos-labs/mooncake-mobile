@@ -15,7 +15,7 @@ const useIsFollowing = (counterparty: string) => {
     );
   }
 
-  const { data, refetch } = useQuery(GetRelationshipForAddress, {
+  const { data, refetch, loading } = useQuery(GetRelationshipForAddress, {
     variables: {
       subspaceId,
       userAddress: activeAddress,
@@ -25,6 +25,7 @@ const useIsFollowing = (counterparty: string) => {
 
   return {
     isFollowing: data?.relationships?.length > 0,
+    loading,
     refetch,
   };
 };
