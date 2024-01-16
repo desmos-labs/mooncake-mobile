@@ -81,6 +81,7 @@ const lightTheme = extendTheme({
     surfaceGrey: '#EFEFEF',
     lightGrey01: '#DDDDDD',
     lightGrey02: '#C2C2C2',
+    lightGrey03: '#B3B3B3',
     iconGrey: '#AFAFAF',
     grey01: '#9D9D9D',
     grey02: '#878787',

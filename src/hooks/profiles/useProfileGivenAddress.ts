@@ -32,7 +32,7 @@ const useProfileGivenAddress = (address?: string) => {
     [fetchedProfile, isForActiveUser, storedProfiles, userAddress],
   );
 
-  const { data, loading, refetch } = useQuery(GetProfileForAddress, {
+  const { data, error, loading, refetch } = useQuery(GetProfileForAddress, {
     variables: { address: userAddress },
     fetchPolicy: 'cache-and-network',
   });
@@ -61,6 +61,7 @@ const useProfileGivenAddress = (address?: string) => {
 
   return {
     profile: userProfile,
+    profileError: error,
     loading,
     refetch,
   };
