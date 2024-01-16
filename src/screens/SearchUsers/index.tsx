@@ -1,9 +1,11 @@
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import Spacer from 'components/Spacer';
 import CommonStyles from 'config/theme/CommonStyles';
 import { usePaginatedData } from 'hooks/usePaginatedData';
+import { Center } from 'native-base';
 import { SearchTabsParamList } from 'navigation/RootNavigator/SearchTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect } from 'react';
@@ -27,17 +29,15 @@ const SearchUsersTab = () => {
   const styles = useStyles();
   const { t } = useTranslation('search');
   const searchUsers = useSearchUsers();
-  const { data, loading, refreshing, filter, fetchMore, updateFilter } = usePaginatedData(
-    searchUsers,
-    {
+  const { data, loading, refreshing, filter, fetchMore, updateFilter, updatingFilter } =
+    usePaginatedData(searchUsers, {
       itemsPerPage: 20,
       updateFilterDebounceTimeMs: 500,
       initialFilter: {
         value: '',
       },
       extraDelay: 250,
-    },
-  );
+    });
 
   useEffect(() => {
     const callback = (value: string) => {
@@ -57,13 +57,26 @@ const SearchUsersTab = () => {
   }, []);
 
   const renderEmptyComponent = useCallback(() => {
-    return filter?.value !== '' && !refreshing && !loading ? (
+    if (filter?.value === '') {
+      return null;
+    }
+    if (updatingFilter) {
+      return (
+        <View style={CommonStyles.flex['1']}>
+          <Spacer paddingTop={120} />
+          <Center>
+            <MooncakeLoader speed={3} />
+          </Center>
+        </View>
+      );
+    }
+    return !refreshing && !loading ? (
       <>
         <Spacer paddingTop={120} />
         <EmptyListComponent label={t('no results')} />
       </>
     ) : null;
-  }, [filter?.value, refreshing, loading, t]);
+  }, [filter?.value, refreshing, loading, t, updatingFilter]);
 
   return (
     <Animated.View style={styles.view}>
@@ -74,7 +87,7 @@ const SearchUsersTab = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <FlashList
             keyboardDismissMode="on-drag"
-            data={data}
+            data={updatingFilter ? [] : data}
             renderItem={renderItem}
             estimatedItemSize={55}
             ListEmptyComponent={renderEmptyComponent}

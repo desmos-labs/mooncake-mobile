@@ -51,7 +51,7 @@ const SearchPostsTab = () => {
     return () => {
       params.eventEmitter.removeListener('valueChange', callback);
     };
-  }, [params.eventEmitter]);
+  }, [params.eventEmitter, updateFilter]);
 
   const renderEmptyComponent = useCallback(() => {
     return filter?.value !== '' && !refreshing && !loading ? (
