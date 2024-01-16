@@ -30,13 +30,13 @@ const useIsFollowing = (counterparty: string) => {
   );
 
   const { refetch, loading } = useQuery(GetRelationshipForAddress, {
+    fetchPolicy: 'network-only',
+    onCompleted: onDataFetched,
     variables: {
       subspaceId,
       userAddress: activeAddress,
       counterpartyAddress: counterparty,
     },
-    fetchPolicy: 'network-only',
-    onCompleted: onDataFetched,
   });
 
   const wrappedRefetch = React.useCallback(async () => {
