@@ -18,7 +18,7 @@ import useSearchUsers from 'screens/SearchUsers/hooks';
 import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_USERS>;
+type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_USERS>;
 
 /**
  * Component that renders the search view users tab.

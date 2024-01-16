@@ -18,7 +18,7 @@ import useSearchPosts from 'screens/SearchPosts/hooks';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_POSTS>;
+type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_POSTS>;
 
 /**
  * Component that renders the search view posts tab.

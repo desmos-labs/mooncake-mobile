@@ -20,7 +20,7 @@ const MooncakeLoader = ({ speed }: Props) => {
   );
 };
 
-const useStyles = makeStyle(theme => ({
+const useStyles = makeStyle(() => ({
   animation: {
     width: 88,
     height: 88,
