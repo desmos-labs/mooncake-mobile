@@ -30,7 +30,7 @@ const useFollowUser = () => {
         },
       };
 
-      await signAndBroadcastTx([messageCreateRelationship], {
+      return signAndBroadcastTx([messageCreateRelationship], {
         onLoading: {
           popup: {
             title: t('creating relationship title'),
@@ -72,7 +72,7 @@ const useUnfollowUser = () => {
       };
 
       // Broadcasts the transaction
-      await signAndBroadcastTx([messageDeleteRelationship], {
+      return signAndBroadcastTx([messageDeleteRelationship], {
         onLoading: {
           popup: {
             title: t('deleting relationship title'),
@@ -111,9 +111,9 @@ const useFollowOrUnfollowUser = () => {
 
       const isUserFollowingCounterparty = await isFollowing(activeAddress, counterparty.address);
       if (isUserFollowingCounterparty) {
-        await unfollowUser(activeAddress, counterparty);
+        return unfollowUser(activeAddress, counterparty);
       } else {
-        await followUser(activeAddress, counterparty);
+        return followUser(activeAddress, counterparty);
       }
     },
     [activeAddress, isFollowing, unfollowUser, followUser],
