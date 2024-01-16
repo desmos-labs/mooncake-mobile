@@ -8,6 +8,9 @@ import { ToastType } from 'config/toast/toastConfig';
 import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
 import useParseErrorMessage from 'hooks/useParseErrorMessage';
 import { Wallet } from 'types/wallet';
+import { failedTask } from 'lib/BackgroundTaskUtils/scheduler';
+
+const BROADCAST_TX_TASK_NAME = 'Broadcast Transaction';
 
 interface PopupOptions {
   /**
@@ -78,13 +81,13 @@ const useSignAndBroadcastTx = () => {
           title: t('error', { ns: 'common' }),
           message: result.error.message,
         });
-        return;
+        return failedTask(BROADCAST_TX_TASK_NAME, result.error);
       }
       const { wallet, desmosClient } = result.value;
 
       // Start the task to sign and broadcast the transaction
       const taskReference = await scheduleTask(
-        'Broadcast Transaction',
+        BROADCAST_TX_TASK_NAME,
         SignAndBroadcastTxTask,
         {
           desmosClient,
@@ -143,6 +146,8 @@ const useSignAndBroadcastTx = () => {
             });
           }
         });
+
+      return taskReference;
     },
     [prepareDesmosClientAndWallet, t, showToast, parseError],
   );
