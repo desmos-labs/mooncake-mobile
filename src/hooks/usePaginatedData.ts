@@ -250,7 +250,7 @@ export function usePaginatedData<T, F extends Object>(
 
   // Function to update the current filter.
   const setFilter = React.useCallback(
-    (newFilter: React.SetStateAction<F | undefined>) => {
+    async (newFilter: React.SetStateAction<F | undefined>) => {
       setFilterState(newFilter);
       if (typeof newFilter === 'function') {
         filter.current = newFilter(filter.current);
@@ -259,10 +259,9 @@ export function usePaginatedData<T, F extends Object>(
       }
       setLoading(true);
       setUpdatingFilter(true);
-      fetchDataFunction(true).finally(() => {
-        setLoading(false);
-        setUpdatingFilter(false);
-      });
+      await fetchDataFunction(true);
+      setUpdatingFilter(false);
+      setLoading(false);
     },
     [fetchDataFunction],
   );
@@ -277,6 +276,7 @@ export function usePaginatedData<T, F extends Object>(
   const updateFilter = React.useCallback(
     (newFilter?: F | React.SetStateAction<F | undefined>, noDebounce?: boolean) => {
       if (!noDebounce) {
+        setUpdatingFilter(true);
         debouncedSetFilter(newFilter);
       } else {
         // Cancel a possible debounced execution.
