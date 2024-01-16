@@ -33,12 +33,16 @@ enum ROUTES {
   BOTTOM_TABS = 'BOTTOM_TABS',
   CREATE_BUTTON = 'CREATE_BUTTON',
   ACTIVITIES = 'ACTIVITIES',
-  SEARCH = 'SEARCH',
+  SEARCH_TABS = 'SEARCH_TABS',
 
   // Home pages
   HOME_TABS = 'HOME_TABS',
   HOME_TAB_DISCOVER = 'HOME_TAB_DISCOVER',
   HOME_TAB_FOLLOWING = 'HOME_TAB_FOLLOWING',
+
+  // Search tabs
+  SEARCH_TAB_USERS = 'SEARCH_TAB_USERS',
+  SEARCH_TAB_POSTS = 'SEARCH_TAB_POSTS',
 
   // -------------------------------------------------------------------------------------
   // --- POST SCREENS
@@ -49,7 +53,6 @@ enum ROUTES {
   POST_REPORT = 'POST_REPORT',
 
   // Post interactions
-  POST_INTERACTION = 'POST_INTERACTION',
   POST_REACTIONS = 'POST_REACTIONS',
 
   // -------------------------------------------------------------------------------------

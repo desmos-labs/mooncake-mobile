@@ -4,10 +4,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveProfile } from '@recoil/profiles';
 import { FlashList } from '@shopify/flash-list';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
-import { landingPageAnimation } from 'assets/animations';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
-import ThemedLottieView from 'components/ThemedLottieView';
+import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import Typography from 'components/Typography';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
@@ -164,7 +163,7 @@ const PostDetails = () => {
           backgroundColor={theme.colors.white}
           edges={['top']}
           style={styles.emptyView}>
-          <ThemedLottieView style={styles.animation} source={landingPageAnimation} autoPlay loop />
+          <MooncakeLoader speed={3} />
         </DView>
       );
     }

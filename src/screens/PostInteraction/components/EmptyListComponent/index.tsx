@@ -43,10 +43,10 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   imageStyle: {
-    width: 72,
-    height: 72,
+    width: 120,
+    height: 120,
     resizeMode: 'contain',
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacing.m,
   },
   buttonStyle: {
     marginTop: theme.spacing.l,

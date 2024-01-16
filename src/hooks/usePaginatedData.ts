@@ -55,6 +55,12 @@ interface PaginatedDataConfig<T, F extends Object> {
    */
   readonly initialFilter?: F;
   /**
+   * If true the `updatingFilter` filed will be set to true
+   * as soon the updateFilter function is called instead of waiting
+   * for the debounce time to expire.
+   */
+  readonly notifyUpdateFilterDuringDebounce?: boolean;
+  /**
    * Optional action that will be executed before
    * fetching a page.
    */
@@ -104,6 +110,7 @@ export function usePaginatedData<T, F extends Object>(
     extraDelay,
     updateFilterDebounceTimeMs,
     initialFilter,
+    notifyUpdateFilterDuringDebounce,
     onPreFetchPage,
     onDataChanged,
     preRefetchAction,
@@ -133,6 +140,7 @@ export function usePaginatedData<T, F extends Object>(
   const [filterState, setFilterState] = React.useState(initialFilter);
   const [loading, setLoading] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [updatingFilter, setUpdatingFilter] = React.useState(false);
   const [error, setError] = React.useState<Error>();
   const [totalItemsCount, setTotalItemsCount] = React.useState(0);
 
@@ -154,7 +162,6 @@ export function usePaginatedData<T, F extends Object>(
         return;
       }
 
-      reset !== true ? setLoading(true) : setRefreshing(true);
       fetchingOffset.current = fetchOffset;
 
       // Get the total items at the first fetch.
@@ -221,44 +228,49 @@ export function usePaginatedData<T, F extends Object>(
       } else if (fetchError !== undefined) {
         setError(fetchError);
       }
-
-      reset !== true ? setLoading(false) : setRefreshing(false);
     },
     [extraDelay, fetchFunction, itemsPerPage],
   );
 
   const fetchMore = React.useCallback(async () => {
+    setLoading(true);
     await fetchDataFunction();
+    setLoading(false);
   }, [fetchDataFunction]);
 
   // Function to refresh the data, all the items fetched will be
   // cleared and the `fetchDataFunction` function will start to fetch the items
   // from the items with index 0.
   const refresh = React.useCallback(async () => {
+    setRefreshing(true);
     setError(undefined);
     try {
       if (preRefetchActionRef.current !== undefined) {
-        setRefreshing(true);
         await preRefetchActionRef.current();
       }
       await fetchDataFunction(true);
     } catch (e) {
       setError(e as Error);
     }
+    setRefreshing(false);
   }, [fetchDataFunction]);
 
   // Function to update the current filter.
   const setFilter = React.useCallback(
-    (newFilter: React.SetStateAction<F | undefined>) => {
+    async (newFilter: React.SetStateAction<F | undefined>) => {
       setFilterState(newFilter);
       if (typeof newFilter === 'function') {
         filter.current = newFilter(filter.current);
       } else {
         filter.current = newFilter;
       }
-      refresh();
+      setLoading(true);
+      setUpdatingFilter(true);
+      await fetchDataFunction(true);
+      setUpdatingFilter(false);
+      setLoading(false);
     },
-    [refresh],
+    [fetchDataFunction],
   );
 
   // Debounced version of setFilter.
@@ -271,6 +283,10 @@ export function usePaginatedData<T, F extends Object>(
   const updateFilter = React.useCallback(
     (newFilter?: F | React.SetStateAction<F | undefined>, noDebounce?: boolean) => {
       if (!noDebounce) {
+        if (notifyUpdateFilterDuringDebounce) {
+          setUpdatingFilter(true);
+        }
+
         debouncedSetFilter(newFilter);
       } else {
         // Cancel a possible debounced execution.
@@ -279,7 +295,7 @@ export function usePaginatedData<T, F extends Object>(
         setFilter(newFilter);
       }
     },
-    [setFilter, debouncedSetFilter],
+    [notifyUpdateFilterDuringDebounce, debouncedSetFilter, setFilter],
   );
 
   // -------- EFFECTS --------
@@ -340,6 +356,7 @@ export function usePaginatedData<T, F extends Object>(
     fetchMore,
     refresh,
     loading,
+    updatingFilter,
     initialLoading: false,
     refreshing,
     updateFilter,

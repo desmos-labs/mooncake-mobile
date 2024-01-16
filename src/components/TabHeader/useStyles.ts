@@ -19,8 +19,6 @@ const useStyles = makeStyle(theme => ({
     overflow: 'hidden',
   },
   tabButton: {
-    // flex: 1,
-    marginHorizontal: 8,
     height: '100%',
     padding: 10,
   },
@@ -38,12 +36,12 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   selectedIndicator: {
-    top: theme.spacing.s,
-    width: 4,
-    height: 4,
+    top: theme.spacing.xs,
+    width: 24,
+    height: 2,
     alignSelf: 'center',
     borderRadius: 4,
-    backgroundColor: theme.colors.butterOrange01,
+    backgroundColor: theme.colors.surfaceBlack,
   },
 }));
 

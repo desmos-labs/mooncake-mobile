@@ -1,13 +1,3 @@
-import Typography from 'components/Typography';
-import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
-import React, { useMemo } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'native-base';
-import { isPostPending, Post } from 'types/posts';
-import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
-import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import {
   useHandlePressBlock,
   useHandlePressComments,
@@ -15,6 +5,16 @@ import {
   useHandlePressHidePost,
   useHandlePressReport,
 } from 'components/PostCard/hooks';
+import Typography from 'components/Typography';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
+import { useTheme } from 'native-base';
+import React, { useMemo } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
+import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
+import { isPostPending, Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -52,7 +52,9 @@ const PostCard = (props: PostCardProps) => {
   // --- Actions
   // -------------------------------------------------------------------------------------
   const onPressAuthor = React.useCallback(() => {
-    if (isPostPending(post)) return;
+    if (isPostPending(post)) {
+      return;
+    }
     navigateToProfile(post.author.address);
   }, [navigateToProfile, post]);
 
@@ -61,7 +63,9 @@ const PostCard = (props: PostCardProps) => {
   }, [followOrUnfollowUser, post]);
 
   const onPressDetails = React.useCallback(() => {
-    if (isPostPending(post)) return;
+    if (isPostPending(post)) {
+      return;
+    }
     handlePressDetails(post);
   }, [handlePressDetails, post]);
 
@@ -74,7 +78,9 @@ const PostCard = (props: PostCardProps) => {
   }, [handlePressHidePost, post.id]);
 
   const onPressComment = React.useCallback(() => {
-    if (isPostPending(post)) return;
+    if (isPostPending(post)) {
+      return;
+    }
     handlePressComments(post);
   }, [handlePressComments, post]);
 
@@ -95,7 +101,7 @@ const PostCard = (props: PostCardProps) => {
   const { MediaAttachment } = useRenderMediaAttachment(post.attachments, {
     useAutoSize: true,
     horizontalPaddingWithAutoSize: 32,
-    imageStyle: { borderRadius: 10, backgroundColor: theme.colors.background },
+    imageStyle: { borderRadius: 10, backgroundColor: theme.colors.lightGrey01 },
     resizeMode: 'contain',
   });
 
@@ -110,15 +116,12 @@ const PostCard = (props: PostCardProps) => {
         onPressHide={onPressHide}
         onPressBlock={onPressBlock}
       />
-
       {/* Post text */}
       {post.text && (
         <Typography.Body6 style={{ marginTop: theme.spacing.m }}>{post.text}</Typography.Body6>
       )}
-
       {/* Media view */}
       {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
-
       {/* Post bottom bar */}
       {!isPending && <PostCardBottomBar post={post} onPressComment={onPressComment} />}
     </TouchableOpacity>
