@@ -17,6 +17,8 @@ const followersState = atom<Record<string, string[]>>({
  * NOTE: The list will be erased when the application closes.
  * @param user - The user address.
  */
+// Ignore ts-prune error since we may need this in the future.
+// ts-prune-ignore-next
 export const useCachedUserFollowers = (user: string) => {
   const followers = useRecoilValue(followersState);
   return React.useMemo(() => followers[user] ?? [], [followers, user]);
@@ -26,6 +28,8 @@ export const useCachedUserFollowers = (user: string) => {
  * Hook that provides a function to update an user's followers.
  * NOTE: The list of followers will be erased when the application closes.
  */
+// Ignore ts-prune error since we may need this in the future.
+// ts-prune-ignore-next
 export const useSetCachedUserFollowers = () => {
   const setCahcedFollowers = useSetRecoilState(followersState);
 
