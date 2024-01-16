@@ -13,7 +13,7 @@ interface Filter {
  * Hook that provides a function that can be used from usePaginatedData
  * to fetch the validators.
  */
-export const useSearchPosts = () => {
+const useSearchPosts = () => {
   const [searchPosts] = useLazyQuery(SearchPosts);
 
   return React.useCallback<FetchDataFunction<Post, Filter>>(
@@ -46,3 +46,5 @@ export const useSearchPosts = () => {
     [searchPosts],
   );
 };
+
+export default useSearchPosts;

@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
-import { useSearchPosts } from 'screens/SearchPosts/hooks';
+import useSearchPosts from 'screens/SearchPosts/hooks';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 

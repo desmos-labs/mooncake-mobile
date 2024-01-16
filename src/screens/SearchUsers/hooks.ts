@@ -13,7 +13,7 @@ interface Filter {
  * Hook that provides a function that can be used from usePaginatedData
  * to fetch the validators.
  */
-export const useSearchUsers = () => {
+const useSearchUsers = () => {
   const [searchUsers] = useLazyQuery(SearchProfiles);
 
   return React.useCallback<FetchDataFunction<DesmosProfile, Filter>>(
@@ -48,3 +48,5 @@ export const useSearchUsers = () => {
     [searchUsers],
   );
 };
+
+export default useSearchUsers;

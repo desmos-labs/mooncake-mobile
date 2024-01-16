@@ -13,7 +13,7 @@ import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import SearchUsersResult from 'screens/SearchUsers/components/SearchUsersResult';
-import { useSearchUsers } from 'screens/SearchUsers/hooks';
+import useSearchUsers from 'screens/SearchUsers/hooks';
 import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
