@@ -11,7 +11,7 @@ interface Filter {
 
 /**
  * Hook that provides a function that can be used from usePaginatedData
- * to fetch the validators.
+ * to search for users.
  */
 const useSearchUsers = () => {
   const [searchUsers] = useLazyQuery(SearchProfiles);
