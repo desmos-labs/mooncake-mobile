@@ -1,6 +1,5 @@
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { usePostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
@@ -25,7 +24,6 @@ export type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_P
  */
 const SearchPostsTab = () => {
   const { params } = useRoute<NavProps['route']>();
-  const listState = usePostsListState();
   const styles = useStyles();
   const { t } = useTranslation('search');
   const searchPost = useSearchPosts();
@@ -62,7 +60,7 @@ const SearchPostsTab = () => {
         <EmptyListComponent label={t('no results')} />
       </>
     ) : null;
-  }, [refreshing, loading, listState.valueToSearch]);
+  }, [filter?.value, refreshing, loading, t]);
 
   const renderItem = useCallback(({ item }: ListRenderItemInfo<Post>) => {
     return <PostCard post={item} />;

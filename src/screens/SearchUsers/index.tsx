@@ -1,6 +1,5 @@
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { usePostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import Spacer from 'components/Spacer';
 import CommonStyles from 'config/theme/CommonStyles';
@@ -25,7 +24,6 @@ export type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_U
  */
 const SearchUsersTab = () => {
   const { params } = useRoute<NavProps['route']>();
-  const listState = usePostsListState();
   const styles = useStyles();
   const { t } = useTranslation('search');
   const searchUsers = useSearchUsers();
@@ -65,7 +63,7 @@ const SearchUsersTab = () => {
         <EmptyListComponent label={t('no results')} />
       </>
     ) : null;
-  }, [refreshing, loading, listState.valueToSearch]);
+  }, [filter?.value, refreshing, loading, t]);
 
   return (
     <Animated.View style={styles.view}>
