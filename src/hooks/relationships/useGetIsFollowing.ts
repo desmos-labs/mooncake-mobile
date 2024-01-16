@@ -16,6 +16,7 @@ const useGetIsFollowing = () => {
   return React.useCallback(
     async (userAddress: string, counterpartyAddress: string) => {
       const { data, error } = await getIsFollowing({
+        fetchPolicy: 'network-only',
         variables: {
           subspaceId,
           userAddress,
