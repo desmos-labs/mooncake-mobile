@@ -7,12 +7,13 @@ import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsLi
 import HomeSearchBar from 'components/HomeSearchBar';
 import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
+import { EventEmitter } from 'events';
 import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import SearchTabBar from 'navigation/RootNavigator/SearchTabs/components/SearchTabBar';
 import ROUTES from 'navigation/routes';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, StatusBar, TouchableOpacity } from 'react-native';
 import Animated, {
@@ -22,8 +23,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import SearchPosts from 'screens/SearchPosts';
-import SearchUsers from 'screens/SearchUsers';
+import SearchPostsTab from 'screens/SearchPosts';
+import SearchUsersTab from 'screens/SearchUsers';
 import useStyles from './useStyles';
 
 const ANIMATION_DURATION = 200;
@@ -47,6 +48,15 @@ export interface SearchTabsParams {
   readonly initialRouteName?: ROUTES.SEARCH_TAB_USERS | ROUTES.SEARCH_TAB_POSTS;
 }
 
+export type SearchTabsParamList = {
+  [ROUTES.SEARCH_TAB_USERS]: {
+    eventEmitter: EventEmitter;
+  };
+  [ROUTES.SEARCH_TAB_POSTS]: {
+    eventEmitter: EventEmitter;
+  };
+};
+
 type NavProps = CompositeScreenProps<
   BottomTabScreenProps<BottomTabsParamList, ROUTES.SEARCH_TABS>,
   StackScreenProps<RootNavigatorParamList>
@@ -68,6 +78,7 @@ const SearchTabs = () => {
   const styles = useStyles();
   const setListState = useSetPostsListState();
   const listState = usePostsListState();
+  const eventEmitter = useRef(new EventEmitter());
 
   // Animations
   const searchBarWidth = useSharedValue(windowWidth - 32);
@@ -131,7 +142,7 @@ const SearchTabs = () => {
           <HomeSearchBar
             focused={focused}
             searchPlaceHolder={t('search user')}
-            handleChange={value => setListState({ ...listState, valueToSearch: value })}
+            handleChange={value => eventEmitter.current.emit('valueChange', value)}
             onFocus={() => {
               searchBarWidth.value = withTiming(windowWidth - 72 - 24, {
                 duration: ANIMATION_DURATION,
@@ -156,8 +167,20 @@ const SearchTabs = () => {
         tabBar={renderTabBar}
         screenOptions={{ swipeEnabled: false, lazy: true }}
         initialRouteName={initialRouteName}>
-        <Tab.Screen name={ROUTES.SEARCH_TAB_USERS} component={SearchUsers} />
-        <Tab.Screen name={ROUTES.SEARCH_TAB_POSTS} component={SearchPosts} />
+        <Tab.Screen
+          name={ROUTES.SEARCH_TAB_USERS}
+          component={SearchUsersTab}
+          initialParams={{
+            eventEmitter: eventEmitter.current,
+          }}
+        />
+        <Tab.Screen
+          name={ROUTES.SEARCH_TAB_POSTS}
+          component={SearchPostsTab}
+          initialParams={{
+            eventEmitter: eventEmitter.current,
+          }}
+        />
       </Tab.Navigator>
     </Box>
   );

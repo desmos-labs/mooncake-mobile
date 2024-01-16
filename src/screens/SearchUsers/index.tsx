@@ -1,8 +1,10 @@
 import { usePostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import Spacer from 'components/Spacer';
-import StyledSpinner from 'components/StyledSpinner';
 import CommonStyles from 'config/theme/CommonStyles';
+import useSearchData from 'hooks/useSearchData';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import { Box, Center } from 'native-base';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,25 +12,27 @@ import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import SearchUsersResult from 'screens/SearchUsers/components/SearchUsersResult';
+import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { DesmosProfile } from 'types/desmos';
-import useSearch from './hooks';
 import useStyles from './useStyles';
 
 /**
  * Component that renders the search view.
  * @constructor
  */
-const SearchUsers = () => {
+const SearchUsersTab = () => {
   const listState = usePostsListState();
   const styles = useStyles();
   const { t } = useTranslation('search');
-  const { isSearching, profiles, getProfileForDTag, fetchMoreProfiles } = useSearch(
-    listState.valueToSearch,
-  );
+  const { isSearching, getItemsFromSearchValue, items, fetchMoreItems } = useSearchData({
+    valueToSearch: listState.valueToSearch,
+    query: SearchProfiles,
+    conversionCallback: convertGraphQLProfile,
+  });
 
   useEffect(() => {
-    getProfileForDTag();
-  }, [getProfileForDTag]);
+    getItemsFromSearchValue();
+  }, [getItemsFromSearchValue]);
 
   const renderItem = useCallback(({ item }: ListRenderItemInfo<DesmosProfile>) => {
     return <SearchUsersResult profile={item} />;
@@ -44,24 +48,24 @@ const SearchUsers = () => {
           {isSearching ? (
             <Box flexGrow={1}>
               <Center flex={1}>
-                <StyledSpinner />
+                <MooncakeLoader />
               </Center>
             </Box>
           ) : (
             <FlashList
               keyboardDismissMode="on-drag"
-              data={profiles}
+              data={items}
               renderItem={renderItem}
               estimatedItemSize={55}
               ListEmptyComponent={
-                listState.valueToSearch !== '' ? (
+                listState.valueToSearch !== '' && !isSearching && items.length === 0 ? (
                   <>
                     <Spacer paddingTop={120} />
                     <EmptyListComponent label={t('no results')} />
                   </>
                 ) : null
               }
-              onEndReached={fetchMoreProfiles}
+              onEndReached={fetchMoreItems}
             />
           )}
         </KeyboardAvoidingView>
@@ -70,4 +74,4 @@ const SearchUsers = () => {
   );
 };
 
-export default SearchUsers;
+export default SearchUsersTab;

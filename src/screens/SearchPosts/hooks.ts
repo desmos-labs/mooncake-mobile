@@ -1,60 +1,45 @@
-import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import { useLazyQuery } from '@apollo/client';
+import { FetchDataFunction } from 'hooks/usePaginatedData';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
-import sleep from 'lib/sleep';
-import { useCallback, useState } from 'react';
+import React from 'react';
 import SearchPosts from 'services/graphql/queries/SearchPosts';
 import { Post } from 'types/posts';
 
+interface Filter {
+  value: string;
+}
+
 /**
- * Hook that contains all the logic for the search view component
- * @param valueToSearch The value to search for inside the search bar
- * @param resultsPerPage The number of results to show per page
+ * Hook that provides a function that can be used from usePaginatedData
+ * to fetch the validators.
  */
-const useSearch = (valueToSearch: string, resultsPerPage: number = 20) => {
-  const [getLazyData, { fetchMore }] = useCustomLazyQuery(SearchPosts, {
-    variables: {
-      search: `%${valueToSearch}%`,
-      limit: resultsPerPage,
-      offset: 0,
-    },
-  });
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+export const useSearchPosts = () => {
+  const [searchPosts] = useLazyQuery(SearchPosts);
 
-  const searchPostsOnChain = useCallback(async () => {
-    const results = await getLazyData();
-    return ((results && results?.posts) || []).map((post: any) => convertGraphQLPost(post));
-  }, [getLazyData]);
-
-  /**
-   * Gets the profile for the given DTag
-   */
-  const getPostsFromSearchValue = useCallback(async () => {
-    setIsSearching(true);
-    const convertedPosts = valueToSearch === '' ? [] : await searchPostsOnChain();
-    setPosts(convertedPosts);
-    await sleep(500);
-    setIsSearching(false);
-  }, [searchPostsOnChain, valueToSearch]);
-
-  const fetchMorePosts = useCallback(async () => {
-    const results = await fetchMore({
-      variables: { offset: posts.length },
+  return React.useCallback<FetchDataFunction<Post, Filter>>(async (offset, limit, filter) => {
+    if (filter?.value === '') {
+      return {
+        data: [],
+        endReached: true,
+      };
+    }
+    const { data, error } = await searchPosts({
+      variables: {
+        search: `%${filter?.value}%`,
+        offset,
+        limit,
+      },
     });
 
-    const convertedProfiles =
-      valueToSearch === ''
-        ? []
-        : ((results && results?.data.posts) || []).map((post: any) => convertGraphQLPost(post));
-    setPosts(prev => [...prev, ...convertedProfiles]);
-  }, [fetchMore, posts.length, valueToSearch]);
+    if (error) {
+      throw error;
+    }
 
-  return {
-    getPostsFromSearchValue,
-    posts,
-    isSearching,
-    fetchMorePosts,
-  };
+    const posts = data?.posts?.map((post: any) => convertGraphQLPost(post)) ?? ([] as Post[]);
+
+    return {
+      data: posts,
+      endReached: posts.length < limit,
+    };
+  }, []);
 };
-
-export default useSearch;

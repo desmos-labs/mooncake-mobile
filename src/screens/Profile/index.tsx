@@ -14,6 +14,7 @@ import {
 import AnimatedCoverPicture from 'components/AnimatedCoverPicture';
 import TipUserBottomSheet from 'components/BottomSheets/TipUser';
 import Button from 'components/Button';
+import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import PopupMenu from 'components/PopupMenu';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
@@ -405,7 +406,7 @@ const Profile = () => {
     if (isProfileLoading || profileError === undefined) {
       return (
         <SafeAreaView style={styles.flexCenter}>
-          <StyledSpinner />
+          <MooncakeLoader speed={3} />
         </SafeAreaView>
       );
     }
