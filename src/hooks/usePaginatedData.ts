@@ -55,6 +55,12 @@ interface PaginatedDataConfig<T, F extends Object> {
    */
   readonly initialFilter?: F;
   /**
+   * If true the `updatingFilter` filed will be set to true
+   * as soon the updateFilter function is called instead of waiting
+   * for the debounce time to expire.
+   */
+  readonly notifyUpdateFilterDuringDebounce?: boolean;
+  /**
    * Optional action that will be executed before
    * fetching a page.
    */
@@ -104,6 +110,7 @@ export function usePaginatedData<T, F extends Object>(
     extraDelay,
     updateFilterDebounceTimeMs,
     initialFilter,
+    notifyUpdateFilterDuringDebounce,
     onPreFetchPage,
     onDataChanged,
     preRefetchAction,
@@ -276,7 +283,10 @@ export function usePaginatedData<T, F extends Object>(
   const updateFilter = React.useCallback(
     (newFilter?: F | React.SetStateAction<F | undefined>, noDebounce?: boolean) => {
       if (!noDebounce) {
-        setUpdatingFilter(true);
+        if (notifyUpdateFilterDuringDebounce) {
+          setUpdatingFilter(true);
+        }
+
         debouncedSetFilter(newFilter);
       } else {
         // Cancel a possible debounced execution.
@@ -285,7 +295,7 @@ export function usePaginatedData<T, F extends Object>(
         setFilter(newFilter);
       }
     },
-    [setFilter, debouncedSetFilter],
+    [notifyUpdateFilterDuringDebounce, debouncedSetFilter, setFilter],
   );
 
   // -------- EFFECTS --------
