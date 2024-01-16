@@ -16,30 +16,33 @@ interface Filter {
 export const useSearchPosts = () => {
   const [searchPosts] = useLazyQuery(SearchPosts);
 
-  return React.useCallback<FetchDataFunction<Post, Filter>>(async (offset, limit, filter) => {
-    if (filter?.value === '') {
+  return React.useCallback<FetchDataFunction<Post, Filter>>(
+    async (offset, limit, filter) => {
+      if (filter?.value === '') {
+        return {
+          data: [],
+          endReached: true,
+        };
+      }
+      const { data, error } = await searchPosts({
+        variables: {
+          search: `%${filter?.value}%`,
+          offset,
+          limit,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      const posts = data?.posts?.map((post: any) => convertGraphQLPost(post)) ?? ([] as Post[]);
+
       return {
-        data: [],
-        endReached: true,
+        data: posts,
+        endReached: posts.length < limit,
       };
-    }
-    const { data, error } = await searchPosts({
-      variables: {
-        search: `%${filter?.value}%`,
-        offset,
-        limit,
-      },
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    const posts = data?.posts?.map((post: any) => convertGraphQLPost(post)) ?? ([] as Post[]);
-
-    return {
-      data: posts,
-      endReached: posts.length < limit,
-    };
-  }, []);
+    },
+    [searchPosts],
+  );
 };

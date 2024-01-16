@@ -45,6 +45,6 @@ export const useSearchUsers = () => {
         endReached: profiles.length < limit,
       };
     },
-    [],
+    [searchUsers],
   );
 };
