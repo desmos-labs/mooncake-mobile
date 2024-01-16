@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { getProfileDisplayDTag } from 'lib/ProfileUtils';
 import useGetIsFollowing from 'hooks/relationships/useGetIsFollowing';
+import { useUpdateUserFollowersCache } from '@recoil/followers';
 
 /**
  * Hook that allows to follow a user both remotely and locally.
@@ -17,6 +18,7 @@ const useFollowUser = () => {
   const subspaceId = useAppStateValue('subspaceId');
 
   const signAndBroadcastTx = useSignAndBroadcastTx();
+  const updateCachedFollowers = useUpdateUserFollowersCache();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
@@ -43,10 +45,13 @@ const useFollowUser = () => {
               user: getProfileDisplayDTag(counterparty),
             }),
           },
+          action: () => {
+            updateCachedFollowers(user, counterparty.address, true);
+          },
         },
       });
     },
-    [signAndBroadcastTx, subspaceId, t],
+    [signAndBroadcastTx, subspaceId, t, updateCachedFollowers],
   );
 };
 
@@ -58,6 +63,7 @@ const useUnfollowUser = () => {
   const subspaceId = useAppStateValue('subspaceId');
 
   const signAndBroadcastTx = useSignAndBroadcastTx();
+  const updateCachedFollowers = useUpdateUserFollowersCache();
 
   return React.useCallback(
     async (user: string, counterparty: DesmosProfile) => {
@@ -85,10 +91,13 @@ const useUnfollowUser = () => {
               user: getProfileDisplayDTag(counterparty),
             }),
           },
+          action: () => {
+            updateCachedFollowers(user, counterparty.address, false);
+          },
         },
       });
     },
-    [subspaceId, signAndBroadcastTx, t],
+    [subspaceId, signAndBroadcastTx, t, updateCachedFollowers],
   );
 };
 

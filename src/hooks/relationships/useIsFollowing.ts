@@ -2,6 +2,8 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { useQuery } from '@apollo/client';
 import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import { useAppStateValue } from '@recoil/appState';
+import React from 'react';
+import { useCachedIsFollowingUser, useUpdateUserFollowersCache } from '@recoil/followers';
 
 /**
  * Hook that allows to know if the current user is following a given user or not.
@@ -9,24 +11,44 @@ import { useAppStateValue } from '@recoil/appState';
 const useIsFollowing = (counterparty: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const activeAddress = useActiveAccountAddress();
+
   if (!activeAddress) {
     throw new Error(
       'Trying to know if the user is following another user, without an active account',
     );
   }
 
-  const { data, refetch, loading } = useQuery(GetRelationshipForAddress, {
+  const updateUserFollowers = useUpdateUserFollowersCache();
+  const followingCounterparty = useCachedIsFollowingUser(activeAddress, counterparty);
+
+  const onDataFetched = React.useCallback(
+    (data: any) => {
+      const isFollowing = data?.relationships?.length > 0;
+      updateUserFollowers(activeAddress, counterparty, isFollowing);
+    },
+    [activeAddress, counterparty, updateUserFollowers],
+  );
+
+  const { refetch, loading } = useQuery(GetRelationshipForAddress, {
     variables: {
       subspaceId,
       userAddress: activeAddress,
       counterpartyAddress: counterparty,
     },
+    fetchPolicy: 'network-only',
+    onCompleted: onDataFetched,
   });
 
+  const wrappedRefetch = React.useCallback(async () => {
+    const result = await refetch();
+    onDataFetched(result.data);
+    return result;
+  }, [onDataFetched, refetch]);
+
   return {
-    isFollowing: data?.relationships?.length > 0,
+    isFollowing: followingCounterparty,
     loading,
-    refetch,
+    refetch: wrappedRefetch,
   };
 };
 
