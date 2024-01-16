@@ -26,10 +26,19 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
 
   const buttonContent = React.useMemo(() => {
     if (fetchingFollowState || updatingFollow) {
-      return <ActivityIndicator color={theme.colors.white} />;
+      return (
+        <ActivityIndicator color={following ? theme.colors.surfaceBlack : theme.colors.white} />
+      );
     }
     return following ? t('unfollow') : t('follow');
-  }, [fetchingFollowState, following, t, theme.colors.white, updatingFollow]);
+  }, [
+    fetchingFollowState,
+    following,
+    t,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+    updatingFollow,
+  ]);
 
   return (
     <View style={styles.buttonView}>
