@@ -21,7 +21,7 @@ import useStyles from './useStyles';
 export type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_USERS>;
 
 /**
- * Component that renders the search view.
+ * Component that renders the search view users tab.
  * @constructor
  */
 const SearchUsersTab = () => {
@@ -29,6 +29,7 @@ const SearchUsersTab = () => {
   const styles = useStyles();
   const { t } = useTranslation('search');
   const searchUsers = useSearchUsers();
+
   const { data, loading, refreshing, filter, fetchMore, updateFilter, updatingFilter } =
     usePaginatedData(searchUsers, {
       itemsPerPage: 20,
@@ -37,6 +38,7 @@ const SearchUsersTab = () => {
         value: '',
       },
       extraDelay: 250,
+      notifyUpdateFilterDuringDebounce: true,
     });
 
   useEffect(() => {
@@ -50,7 +52,7 @@ const SearchUsersTab = () => {
     return () => {
       params.eventEmitter.removeListener('valueChange', callback);
     };
-  }, [params.eventEmitter]);
+  }, [params.eventEmitter, updateFilter]);
 
   const renderItem = useCallback(({ item }: ListRenderItemInfo<DesmosProfile>) => {
     return <SearchUsersResult profile={item} />;
@@ -59,6 +61,7 @@ const SearchUsersTab = () => {
   const renderEmptyComponent = useCallback(() => {
     if (filter?.value === '') {
       return null;
+      // TODO: Add suggestions screen here
     }
     if (updatingFilter) {
       return (
@@ -83,7 +86,6 @@ const SearchUsersTab = () => {
       <View style={styles.wrapperView}>
         <KeyboardAvoidingView
           style={CommonStyles.flex['1']}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <FlashList
             keyboardDismissMode="on-drag"

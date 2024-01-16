@@ -1,10 +1,12 @@
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
 import CommonStyles from 'config/theme/CommonStyles';
 import { usePaginatedData } from 'hooks/usePaginatedData';
+import { Center } from 'native-base';
 import { SearchTabsParamList } from 'navigation/RootNavigator/SearchTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect } from 'react';
@@ -19,7 +21,7 @@ import useStyles from './useStyles';
 export type NavProps = StackScreenProps<SearchTabsParamList, ROUTES.SEARCH_TAB_POSTS>;
 
 /**
- * Component that renders the search view.
+ * Component that renders the search view posts tab.
  * @constructor
  */
 const SearchPostsTab = () => {
@@ -28,17 +30,16 @@ const SearchPostsTab = () => {
   const { t } = useTranslation('search');
   const searchPost = useSearchPosts();
 
-  const { data, loading, refreshing, filter, fetchMore, updateFilter } = usePaginatedData(
-    searchPost,
-    {
+  const { data, loading, refreshing, filter, fetchMore, updateFilter, updatingFilter } =
+    usePaginatedData(searchPost, {
       itemsPerPage: 20,
       updateFilterDebounceTimeMs: 500,
       initialFilter: {
         value: '',
       },
       extraDelay: 250,
-    },
-  );
+      notifyUpdateFilterDuringDebounce: true,
+    });
 
   useEffect(() => {
     const callback = (value: string) => {
@@ -54,13 +55,27 @@ const SearchPostsTab = () => {
   }, [params.eventEmitter, updateFilter]);
 
   const renderEmptyComponent = useCallback(() => {
-    return filter?.value !== '' && !refreshing && !loading ? (
+    if (filter?.value === '') {
+      return null;
+      // TODO: Add suggestions screen here
+    }
+    if (updatingFilter) {
+      return (
+        <View style={CommonStyles.flex['1']}>
+          <Spacer paddingTop={120} />
+          <Center>
+            <MooncakeLoader speed={3} />
+          </Center>
+        </View>
+      );
+    }
+    return !refreshing && !loading ? (
       <>
         <Spacer paddingTop={120} />
         <EmptyListComponent label={t('no results')} />
       </>
     ) : null;
-  }, [filter?.value, refreshing, loading, t]);
+  }, [filter?.value, refreshing, loading, t, updatingFilter]);
 
   const renderItem = useCallback(({ item }: ListRenderItemInfo<Post>) => {
     return <PostCard post={item} />;
@@ -71,11 +86,10 @@ const SearchPostsTab = () => {
       <View style={styles.wrapperView}>
         <KeyboardAvoidingView
           style={CommonStyles.flex['1']}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <FlashList
             keyboardDismissMode="on-drag"
-            data={data}
+            data={updatingFilter ? [] : data}
             renderItem={renderItem}
             estimatedItemSize={200}
             ListEmptyComponent={renderEmptyComponent}
