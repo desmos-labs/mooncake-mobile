@@ -5,7 +5,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { dotsAnimation } from 'assets/animations';
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Center } from 'native-base';
 import Spacer from 'components/Spacer';
 import { makeStyle } from 'config/theme';
@@ -53,7 +53,7 @@ const LoadingScreen: React.FC<NavProps> = ({
         <Spacer paddingTop={20} />
         <Typography.H4>{title}</Typography.H4>
         <Spacer paddingTop="s" />
-        <Typography.Body6>{message}</Typography.Body6>
+        <Typography.Regular16>{message}</Typography.Regular16>
       </Center>
     </DView>
   );

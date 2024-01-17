@@ -9,7 +9,6 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
 import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
 import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
 import { getSaveProfileAllowance } from 'lib/grantsUtils';
