@@ -1,5 +1,5 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { err } from 'neverthrow';
+import { err, ok } from 'neverthrow';
 import React from 'react';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
@@ -99,8 +99,9 @@ const useSaveProfile = () => {
             message: error.message,
           });
         });
+      return ok(taskReference);
     },
-    [activeAccountAddress],
+    [activeAccountAddress, prepareDesmosClientAndWallet, showToast, t],
   );
 };
 

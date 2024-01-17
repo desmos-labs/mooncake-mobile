@@ -166,7 +166,7 @@ export const useSubmitForm = (
         onCompleteOrError,
       });
 
-      if (saveProfileResult && saveProfileResult.isErr()) {
+      if (saveProfileResult.isErr()) {
         return err(saveProfileResult.error);
       } else {
         storeProfile(profileAddress, profileToSaveLocally);
