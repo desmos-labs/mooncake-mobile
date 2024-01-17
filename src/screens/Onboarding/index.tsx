@@ -70,6 +70,7 @@ const Onboarding = () => {
   // --- Local state
   // -------------------------------------------------------------------------------------
 
+  const [requestingFeeGrant, setRequestingFeeGrant] = useState(false);
   const [hasFeeGrant, setHasFeeGrant] = useState(requestFeeGrant !== true);
   const [feeGrantRequestFailed, setFeeGrantRequestFailed] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -118,6 +119,31 @@ const Onboarding = () => {
   // --- Actions
   // -------------------------------------------------------------------------------------
 
+  const onPressButton = useCallback(() => {
+    if (currentIndex < 3) {
+      slidesRef?.current?.scrollToIndex({ index: currentIndex + 1 });
+    } else {
+      if (hasFeeGrant) {
+        trackOnboardingCompleted();
+        setTourGuideStep({ login: LoginOnboardingStep.Completed });
+        navigate(ROUTES.PASSWORD_MANIPULATION, {
+          mode: params.passwordManipulationMode,
+          account: params.account,
+          profile: params.profile,
+        });
+      }
+    }
+  }, [
+    currentIndex,
+    hasFeeGrant,
+    navigate,
+    params.account,
+    params.passwordManipulationMode,
+    params.profile,
+    setTourGuideStep,
+    trackOnboardingCompleted,
+  ]);
+
   /**
    * Sign up the user and request the fee grant
    */
@@ -147,6 +173,7 @@ const Onboarding = () => {
   }, [account, getAuthorizationInformation]);
 
   const requestGrant = useCallback(async () => {
+    setRequestingFeeGrant(true);
     setHasFeeGrant(false);
     setFeeGrantRequestFailed(false);
     const signUpResult = await signUp();
@@ -162,36 +189,8 @@ const Onboarding = () => {
     } else {
       setHasFeeGrant(true);
     }
+    setRequestingFeeGrant(false);
   }, [showErrorModal, signUp, t]);
-
-  const onPressButton = useCallback(() => {
-    if (currentIndex < 3) {
-      slidesRef?.current?.scrollToIndex({ index: currentIndex + 1 });
-    } else {
-      if (hasFeeGrant) {
-        trackOnboardingCompleted();
-        setTourGuideStep({ login: LoginOnboardingStep.Completed });
-        navigate(ROUTES.PASSWORD_MANIPULATION, {
-          mode: params.passwordManipulationMode,
-          account: params.account,
-          profile: params.profile,
-        });
-      } else if (feeGrantRequestFailed) {
-        requestGrant();
-      }
-    }
-  }, [
-    currentIndex,
-    feeGrantRequestFailed,
-    hasFeeGrant,
-    navigate,
-    params.account,
-    params.passwordManipulationMode,
-    params.profile,
-    requestGrant,
-    setTourGuideStep,
-    trackOnboardingCompleted,
-  ]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -206,6 +205,56 @@ const Onboarding = () => {
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
+
+  const nextButton = React.useMemo(() => {
+    if (currentIndex === slides.length) {
+      if (requestingFeeGrant) {
+        return (
+          <Button
+            size={44}
+            backgroundColor={theme.colors.surfaceBlack}
+            textColor={theme.colors.white}
+            disabled
+            style={styles.button}>
+            {t('requesting grant')}
+          </Button>
+        );
+      } else if (feeGrantRequestFailed) {
+        return (
+          <Button
+            size={44}
+            backgroundColor={theme.colors.surfaceBlack}
+            textColor={theme.colors.white}
+            onPress={requestGrant}
+            style={styles.button}>
+            {t('request grant')}
+          </Button>
+        );
+      }
+    }
+
+    return (
+      <Button
+        size={44}
+        backgroundColor={theme.colors.surfaceBlack}
+        textColor={theme.colors.white}
+        onPress={onPressButton}
+        style={styles.button}>
+        {t('next', { ns: 'common' })}
+      </Button>
+    );
+  }, [
+    currentIndex,
+    feeGrantRequestFailed,
+    onPressButton,
+    requestGrant,
+    requestingFeeGrant,
+    slides.length,
+    styles.button,
+    t,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+  ]);
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<any>) => {
@@ -252,14 +301,7 @@ const Onboarding = () => {
           <PaginationDots pages={slides} scrollX={scrollX} width={fixedWidth} />
         </View>
         <Spacer paddingBottom="xl" />
-        <Button
-          size={44}
-          backgroundColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          onPress={onPressButton}
-          style={styles.button}>
-          {feeGrantRequestFailed ? t('request grant') : t('next', { ns: 'common' })}
-        </Button>
+        {nextButton}
         <Spacer paddingBottom="xl" />
       </View>
     </DView>
