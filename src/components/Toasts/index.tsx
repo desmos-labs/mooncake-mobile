@@ -1,11 +1,11 @@
-import React from 'react';
-import Typography from 'components/Typography';
-import { StyleProp, View, ViewStyle } from 'react-native';
-import lightTheme from 'config/theme/LightTheme';
-import { makeStyleWithProps } from 'config/theme';
-import ThemedLottieView from 'components/ThemedLottieView';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { squaresAnimation } from 'assets/animations';
 import Button from 'components/Button';
+import ThemedLottieView from 'components/ThemedLottieView';
+import { makeStyleWithProps } from 'config/theme';
+import lightTheme from 'config/theme/LightTheme';
+import React from 'react';
+import { StyleProp, View, ViewStyle } from 'react-native';
 
 export interface ToastProps {
   /**
@@ -77,7 +77,7 @@ const makeToastComponent: (config: ToastConfig) => React.FC<ToastProps> = config
           )}
           {actionLabel && action && (
             <Button variant="text" onPress={action}>
-              <Typography.Button1>{actionLabel}</Typography.Button1>
+              <Typography.Semibold14>{actionLabel}</Typography.Semibold14>
             </Button>
           )}
         </View>

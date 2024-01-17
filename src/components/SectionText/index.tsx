@@ -1,6 +1,6 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import React from 'react';
 import { View } from 'react-native';
-import Typography from '../Typography';
 import useStyles from './useStyles';
 
 type Props = {
@@ -21,8 +21,8 @@ const SectionText: React.FC<Props> = props => {
 
   return (
     <View style={styles.root}>
-      <Typography.Button1 style={styles.label}>{leftText}</Typography.Button1>
-      <Typography.Button1 style={styles.value}>{rightText}</Typography.Button1>
+      <Typography.Regular16 style={styles.label}>{leftText}</Typography.Regular16>
+      <Typography.Regular16 style={styles.value}>{rightText}</Typography.Regular16>
     </View>
   );
 };

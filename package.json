@@ -33,6 +33,7 @@
     "@cosmjs/encoding": "^0.31.0",
     "@cosmjs/ledger-amino": "^0.31.0",
     "@cosmjs/stargate": "^0.31.0",
+    "@desmoslabs/desmos-kit-ui": "^1.0.1",
     "@desmoslabs/desmjs": "^6.0.1",
     "@desmoslabs/desmjs-types": "^6.0.1",
     "@desmoslabs/desmjs-web3auth-mobile": "^6.0.1",

@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -5,7 +6,6 @@ import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useTrackUser from 'hooks/analytics/useTrackUser';
@@ -71,11 +71,11 @@ const WelcomePage = () => {
         <Image contentFit="cover" source={accountCreatedIcon} style={styles.image} />
         <Spacer paddingTop={100} />
         <Box alignItems="center">
-          <Typography.H4>{t('welcomeTitle')}</Typography.H4>
+          <Typography.H6>{t('welcomeTitle')}</Typography.H6>
           <Spacer paddingTop={theme.spacing.s} />
-          <Typography.Body6 style={CommonStyles.textAlign.center}>
+          <Typography.Regular14 style={CommonStyles.textAlign.center}>
             {t('welcomeSubtitle')}
-          </Typography.Body6>
+          </Typography.Regular14>
         </Box>
         <Spacer paddingTop={60} />
         <Button

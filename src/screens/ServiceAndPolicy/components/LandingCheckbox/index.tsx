@@ -1,5 +1,5 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import BCheckbox from 'components/BCheckbox';
-import Typography from 'components/Typography';
 import { CheckboxProps } from 'expo-checkbox/src/Checkbox.types';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from 'native-base';
@@ -30,22 +30,22 @@ const LandingCheckbox = ({ onValueChange, ...rest }: CheckboxProps) => {
         onValueChange={value => onValueChangeWithFeedbackWrapper(value)}
         {...rest}
       />
-      <Typography.Body6 style={styles.mainTextColor}>
+      <Typography.Regular14 style={styles.mainTextColor}>
         <Trans
           i18nKey="tos and privacy"
           ns="legal"
           components={[
-            <Typography.Body6
+            <Typography.Regular14
               onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}
               style={{ color: theme.colors.primary }}
             />,
-            <Typography.Body6
+            <Typography.Regular14
               onPress={() => Linking.openURL('https://butter.social/privacy-policy')}
               style={{ color: theme.colors.primary }}
             />,
           ]}
         />
-      </Typography.Body6>
+      </Typography.Regular14>
     </View>
   );
 };

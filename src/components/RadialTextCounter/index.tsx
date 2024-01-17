@@ -1,4 +1,4 @@
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import React from 'react';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { useTheme } from 'native-base';

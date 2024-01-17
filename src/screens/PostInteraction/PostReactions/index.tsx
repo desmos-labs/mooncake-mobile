@@ -1,9 +1,9 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import StyledSpinner from 'components/StyledSpinner';
-import Typography from 'components/Typography';
 import usePostReactions from 'hooks/reactions/usePostReactions';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import { formatNumShorthand } from 'lib/FormatUtils';
@@ -77,9 +77,9 @@ const PostReactions = () => {
       <View style={styles.container}>
         <Typography.H6 style={styles.header}>{t('likes')}</Typography.H6>
         {count > 0 && (
-          <Typography.Body6 style={styles.countText}>
+          <Typography.Regular14 style={styles.countText}>
             {t('likes counter', { likesCounter: formatNumShorthand(count) })}
-          </Typography.Body6>
+          </Typography.Regular14>
         )}
         <FlashList
           refreshing={refreshing}

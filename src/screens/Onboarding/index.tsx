@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { bgonboarding, onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
@@ -6,9 +7,9 @@ import DView from 'components/DView';
 import PaginationDots from 'components/PaginationDots';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
+import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
 import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
 import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
 import { getSaveProfileAllowance } from 'lib/grantsUtils';
@@ -23,7 +24,6 @@ import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import { LoginOnboardingStep } from 'types/tourguide';
-import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
 import useStyles, { fixedWidth } from './useStyles';
 
 export interface OnboardingParams {
@@ -178,9 +178,13 @@ const Onboarding = () => {
           <Image source={item.image} style={styles.imageStyle} contentFit="cover" />
           <View style={styles.textView}>
             <Spacer paddingBottom="m" />
-            <Typography.H3 style={CommonStyles.textAlign.center}>{item.title}</Typography.H3>
+            <Typography.Semibold24 style={CommonStyles.textAlign.center}>
+              {item.title}
+            </Typography.Semibold24>
             <Spacer paddingBottom="s" />
-            <Typography.Body6 style={CommonStyles.textAlign.center}>{item.body}</Typography.Body6>
+            <Typography.Regular14 style={CommonStyles.textAlign.center}>
+              {item.body}
+            </Typography.Regular14>
           </View>
         </View>
       );

@@ -1,9 +1,9 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
 import { useTheme } from 'native-base';
@@ -47,9 +47,9 @@ const ImportAccountPrivateKey = () => {
                 keyboardShouldPersistTaps="handled"
                 keyboardDismissMode="on-drag">
                 <View style={styles.labelGroup}>
-                  <Typography.Body6>
+                  <Typography.Regular14>
                     Please enter your private key here to restore your account
-                  </Typography.Body6>
+                  </Typography.Regular14>
                 </View>
                 <Spacer paddingTop="m" />
                 <Typography.Subtitle2>Private Key</Typography.Subtitle2>

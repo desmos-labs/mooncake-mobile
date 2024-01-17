@@ -1,6 +1,6 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Typography from 'components/Typography';
 import { Image, ImageSource } from 'expo-image';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -39,8 +39,8 @@ const TextOnlyModal = () => {
       <TouchableOpacity onPress={goBack} activeOpacity={1} style={StyleSheet.absoluteFillObject} />
       <View style={styles.innerContainer}>
         {image && <Image source={image} style={styles.image} />}
-        <Typography.H5 style={bodyStyle}>{title}</Typography.H5>
-        <Typography.Body6 style={[styles.subtitleText, bodyStyle]}>{body}</Typography.Body6>
+        <Typography.Semibold18 style={bodyStyle}>{title}</Typography.Semibold18>
+        <Typography.Regular14 style={[styles.subtitleText, bodyStyle]}>{body}</Typography.Regular14>
       </View>
     </View>
   );

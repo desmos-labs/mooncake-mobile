@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -15,7 +16,6 @@ import SelectedPostImage from 'components/SelectedPostImage';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { ToastType } from 'config/toast/toastConfig';
 import useCreatePost from 'hooks/posts/useCreatePost';
@@ -171,12 +171,12 @@ const CreatePost = () => {
       return undefined;
     }
     return (
-      <Typography.Body7
+      <Typography.Regular12
         numberOfLines={1}
         ellipsizeMode="tail"
         style={CommonStyles.textAlign.center}>
         {t('reply to', { name: `@${parent?.author.dTag}` })}
-      </Typography.Body7>
+      </Typography.Regular12>
     );
   }, [parent, t]);
 

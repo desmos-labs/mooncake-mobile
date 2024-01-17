@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { squaresAnimation } from 'assets/animations';
 import {
   block,
@@ -18,7 +19,6 @@ import {
   useHandlePressReport,
 } from 'components/PostCard/hooks';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
@@ -211,12 +211,12 @@ const CommentItem = (props: CommentItemProps) => {
             style={styles.flexRow}
             onPress={() => handleNavigateToProfile(comment.author.address)}>
             <View>
-              <Typography.Subtitle3 style={styles.textStyle}>
+              <Typography.Semibold14 style={styles.textStyle}>
                 {comment.author.nickname ? comment.author.nickname : t('no nickname')}
-              </Typography.Subtitle3>
-              <Typography.Body7 style={styles.subTextStyle}>
+              </Typography.Semibold14>
+              <Typography.Regular12 style={styles.subTextStyle}>
                 @{comment.author.dTag}
-              </Typography.Body7>
+              </Typography.Regular12>
             </View>
           </TouchableOpacity>
           {isPostPending(comment) ? (
@@ -226,12 +226,12 @@ const CommentItem = (props: CommentItemProps) => {
           )}
         </View>
         {MediaAttachment}
-        <Typography.Body6 style={styles.contentText}>{comment.text}</Typography.Body6>
+        <Typography.Regular14 style={styles.contentText}>{comment.text}</Typography.Regular14>
         <View style={styles.bottomGroup}>
           <View>
-            <Typography.Body7 style={styles.subTextStyle}>
+            <Typography.Regular12 style={styles.subTextStyle}>
               {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : formattedDate}
-            </Typography.Body7>
+            </Typography.Regular12>
           </View>
           <View style={styles.interactionButtonGroup}>
             {!disableInnerComment && (
@@ -239,9 +239,9 @@ const CommentItem = (props: CommentItemProps) => {
                 onPress={handlePressCommentWithFocus}
                 style={styles.interactionButton}>
                 <Image source={commentIcon} style={[styles.buttonImage, styles.interactionImage]} />
-                <Typography.Subtitle3 style={styles.textStyle}>
+                <Typography.Semibold14 style={styles.textStyle}>
                   {formatNumShorthand(commentsCount)}
-                </Typography.Subtitle3>
+                </Typography.Semibold14>
               </TouchableOpacity>
             )}
             <TouchableOpacity onPress={handlePressLike} style={styles.interactionButton}>
@@ -253,9 +253,9 @@ const CommentItem = (props: CommentItemProps) => {
                   styles.interactionImage,
                 ]}
               />
-              <Typography.Subtitle3 style={liked ? styles.orangeIconAndText : styles.textStyle}>
+              <Typography.Semibold14 style={liked ? styles.orangeIconAndText : styles.textStyle}>
                 {formatNumShorthand(likesCount)}
-              </Typography.Subtitle3>
+              </Typography.Semibold14>
             </TouchableOpacity>
           </View>
         </View>

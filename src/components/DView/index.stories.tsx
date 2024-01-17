@@ -1,8 +1,8 @@
-import React from 'react';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { storiesOf } from '@storybook/react-native';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import Typography from '../Typography';
 import DView from './index';
 
 type CompProps = React.ComponentProps<typeof DView>;

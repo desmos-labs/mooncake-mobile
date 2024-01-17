@@ -1,5 +1,5 @@
 import { Coin } from '@cosmjs/stargate';
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Image, ImageSource } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatCoins } from 'lib/FormatUtils';
@@ -50,13 +50,13 @@ const MessageListItem = (props: MessageListItemProps) => {
       <HStack alignItems="center">
         <Image style={styles.avatar} source={image} />
         <View style={styles.profileView}>
-          <Typography.Subtitle3>{title}</Typography.Subtitle3>
-          <Typography.Body7 style={styles.formattedDate}>{formattedDate}</Typography.Body7>
+          <Typography.Semibold14>{title}</Typography.Semibold14>
+          <Typography.Regular12 style={styles.formattedDate}>{formattedDate}</Typography.Regular12>
         </View>
         {!hideFees && (
-          <Typography.Subtitle3 numberOfLines={1} style={styles.feesText}>
+          <Typography.Semibold14 numberOfLines={1} style={styles.feesText}>
             -{formatCoins(fees, ', ')}
-          </Typography.Subtitle3>
+          </Typography.Semibold14>
         )}
       </HStack>
     </View>

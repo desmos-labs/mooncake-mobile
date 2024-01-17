@@ -1,4 +1,5 @@
 import { SigningMode } from '@desmoslabs/desmjs';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSetting } from '@recoil/settings';
@@ -6,7 +7,6 @@ import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
@@ -208,9 +208,9 @@ const UnlockWallet = () => {
 
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>
-      <Typography.H3 style={styles.headerText}>
+      <Typography.Semibold24 style={styles.headerText}>
         {titleLabelOverride || t('unlock wallet')}
-      </Typography.H3>
+      </Typography.Semibold24>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -221,18 +221,18 @@ const UnlockWallet = () => {
           validationSchema={validationSchema}>
           {({ handleSubmit, errors, setValues, values }) => (
             <View style={styles.formContainer}>
-              <Typography.Subtitle2 style={styles.inputLabel}>
+              <Typography.Semibold16 style={styles.inputLabel}>
                 {subtitleLabelOverride || t('password')}
-              </Typography.Subtitle2>
+              </Typography.Semibold16>
               {optionalBodyText && (
                 <>
-                  <Typography.Body6 style={styles.optionalBody}>
+                  <Typography.Regular14 style={styles.optionalBody}>
                     {optionalBodyText}
-                  </Typography.Body6>
+                  </Typography.Regular14>
                   {subtitleLabelOverride && (
-                    <Typography.Subtitle2 style={styles.inputLabel}>
+                    <Typography.Semibold16 style={styles.inputLabel}>
                       {t('password')}
-                    </Typography.Subtitle2>
+                    </Typography.Semibold16>
                   )}
                 </>
               )}
@@ -247,9 +247,9 @@ const UnlockWallet = () => {
                 error={!!errors.password}
               />
               {errors.password && (
-                <Typography.Caption1 style={styles.errorText}>
+                <Typography.Regular12 style={styles.errorText}>
                   {errors.password}
-                </Typography.Caption1>
+                </Typography.Regular12>
               )}
               <View style={styles.buttonGroup}>
                 <Button
@@ -262,7 +262,7 @@ const UnlockWallet = () => {
                   {t('next', { ns: 'common' })}
                 </Button>
                 <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>
-                  <Typography.Button2>{t('forgot password')}</Typography.Button2>
+                  <Typography.Semibold14>{t('forgot password')}</Typography.Semibold14>
                 </TouchableOpacity>
               </View>
             </View>

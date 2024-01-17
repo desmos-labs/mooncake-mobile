@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAppStateValue } from '@recoil/appState';
 import { useSetLoginFlowState } from '@recoil/login';
@@ -6,7 +7,6 @@ import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import useTrackSelectedUsersToFollow from 'hooks/analytics/useTrackSelectedUsersToFollow';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -138,7 +138,7 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
     <DView style={styles.root} topBar={<TopBar />} disableHideKeyboardTouchable>
       <Typography.Semibold24>{t('build your feed')}</Typography.Semibold24>
       <Spacer paddingTop="m" />
-      <Typography.Body5>{t('follow 3 creators')}</Typography.Body5>
+      <Typography.Regular14>{t('follow 3 creators')}</Typography.Regular14>
       <Spacer paddingTop="l" />
       <FlashList
         data={creators}

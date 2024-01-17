@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
@@ -5,7 +6,6 @@ import { CompositeScreenProps, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import HomeSearchBar from 'components/HomeSearchBar';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { EventEmitter } from 'events';
 import { Box, useTheme } from 'native-base';
@@ -159,7 +159,7 @@ const SearchTabs = () => {
               setListState({ ...listState, searchBarFocused: false });
               setFocused(false);
             }}>
-            <Typography.Body6>Cancel</Typography.Body6>
+            <Typography.Regular14>Cancel</Typography.Regular14>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>

@@ -1,11 +1,11 @@
 import { Coin } from '@cosmjs/stargate';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { FontAwesome } from '@expo/vector-icons';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { infoIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
-import Typography from 'components/Typography';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfileOperations';
 import { formatCoins, formatCurrencyAmount } from 'lib/FormatUtils';
@@ -79,7 +79,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
         <View style={styles.container}>
           <VStack>
             <HStack>
-              <Typography.Body6>{t('balance')}</Typography.Body6>
+              <Typography.Regular14>{t('balance')}</Typography.Regular14>
               <ImageButton
                 style={styles.infoButtonIcon}
                 image={infoIcon}
@@ -87,21 +87,22 @@ const BalanceSection = (props: BalanceSectionProps) => {
               />
             </HStack>
             <Spacer paddingBottom="s" />
-            <Typography.H3
+            <Typography.Semibold24
               style={{
                 color: theme.colors.surfaceBlack,
               }}>
               {formatCoins(balance, ', ')}
-            </Typography.H3>
+            </Typography.Semibold24>
           </VStack>
           {/* Fiat amount (USD, EUR, etc) */}
           {isFiatAmountLoading ? (
             <StyledSpinner />
           ) : (
-            <Typography.Body6 style={{ color: theme.colors.midGrey, paddingTop: theme.spacing.xs }}>
+            <Typography.Regular14
+              style={{ color: theme.colors.midGrey, paddingTop: theme.spacing.xs }}>
               {currencySymbol}
               {formatCurrencyAmount(fiatAmount)}
-            </Typography.Body6>
+            </Typography.Regular14>
           )}
           {/* Personal data - Only displayed if not guest */}
           {!isGuestProfile && (
@@ -109,13 +110,13 @@ const BalanceSection = (props: BalanceSectionProps) => {
               <Divider style={styles.divider} />
               {/* Operations button */}
               <TouchableOpacity style={styles.button} onPress={handlePressOperations}>
-                <Typography.Body6
+                <Typography.Regular14
                   style={{
                     marginRight: theme.spacing.s,
                     color: theme.colors.butterOrange01,
                   }}>
                   {t('operations')}
-                </Typography.Body6>
+                </Typography.Regular14>
                 <FontAwesome
                   name="angle-right"
                   color={theme.colors.butterOrange01}

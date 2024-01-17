@@ -1,10 +1,10 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSetAppStateValue } from '@recoil/appState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
 import StyledSpinner from 'components/StyledSpinner';
-import Typography from 'components/Typography';
 import useHandleNotificationNavigation from 'hooks/notifications/useHandleNotificationNavigation';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { Divider, useTheme } from 'native-base';
@@ -83,7 +83,7 @@ const Activities = () => {
     return (
       <View style={styles.emptyView}>
         <Image source={emptyListPlaceholder} style={styles.errorImage} />
-        <Typography.Body6>{t('no activities')}</Typography.Body6>
+        <Typography.Regular14>{t('no activities')}</Typography.Regular14>
       </View>
     );
   }, [loading, notifications.length, styles.emptyView, styles.errorImage, t]);
@@ -105,7 +105,7 @@ const Activities = () => {
         // Render a section header
         return (
           <View style={styles.sectionHeader}>
-            <Typography.Button2>{t(item as any)}</Typography.Button2>
+            <Typography.Semibold14>{t(item as any)}</Typography.Semibold14>
           </View>
         );
       }

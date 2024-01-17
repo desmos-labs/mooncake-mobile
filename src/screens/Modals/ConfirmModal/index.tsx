@@ -1,10 +1,10 @@
+// dismiss button
+// import {iconCross} from 'assets/images';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Button, { ButtonVariant } from 'components/Button';
 import Spacer from 'components/Spacer';
-// dismiss button
-// import {iconCross} from 'assets/images';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -202,18 +202,20 @@ const ConfirmModal = () => {
       <View style={styles.innerContainer}>
         {image && <Image source={image} style={styles.imageStyle} resizeMode="center" />}
         <Spacer paddingBottom={16}>
-          <Typography.H5 style={CommonStyles.textAlign.center}>{title}</Typography.H5>
+          <Typography.Semibold18 style={CommonStyles.textAlign.center}>
+            {title}
+          </Typography.Semibold18>
         </Spacer>
-        <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
+        <Typography.Regular16 style={[styles.subtitleText, subtitleStyle]}>
           {typeof subtitle === 'string' ? (
             <Trans
               i18nKey={subtitle as any}
-              components={[<Typography.Subtitle2 style={subtitleStyle} />]}
+              components={[<Typography.Semibold16 style={subtitleStyle} />]}
             />
           ) : (
             subtitle
           )}
-        </Typography.Body5>
+        </Typography.Regular16>
         <Spacer paddingTop={theme.spacing.xl} />
         {buttons}
       </View>

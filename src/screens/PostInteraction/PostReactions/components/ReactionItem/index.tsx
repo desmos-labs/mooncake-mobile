@@ -1,5 +1,5 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { commentLiked } from 'assets/images';
-import Typography from 'components/Typography';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,10 +27,9 @@ const ReactionItem = ({ author }: Props) => {
           <Typography.Subtitle3 style={styles.textStyle}>
             {author.nickname ? author.nickname : t('no nickname', { ns: 'common' })}
           </Typography.Subtitle3>
-          <Typography.Body7 style={styles.subTextStyle}>@{author.dTag}</Typography.Body7>
+          <Typography.Regular12 style={styles.subTextStyle}>@{author.dTag}</Typography.Regular12>
         </View>
       </View>
-
       <Image source={commentLiked} style={styles.likedIcon} />
     </View>
   );

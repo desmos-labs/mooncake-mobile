@@ -7,7 +7,7 @@ import Toasts, { ToastProps } from 'components/Toasts';
 import TopBar from 'components/TopBar';
 import { makeStyle } from 'config/theme';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { View } from 'react-native';
 import Button from 'components/Button';
 

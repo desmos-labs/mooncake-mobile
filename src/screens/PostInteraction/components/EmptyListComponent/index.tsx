@@ -1,6 +1,6 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { emptyListPlaceholder } from 'assets/images';
 import Button from 'components/Button';
-import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import React from 'react';
 import { Image, View } from 'react-native';
@@ -19,7 +19,7 @@ const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton
     <View style={styles.container} onStartShouldSetResponder={() => true}>
       <View style={styles.contentContainer}>
         <Image source={emptyListPlaceholder} style={styles.imageStyle} />
-        <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
+        <Typography.Regular14 style={styles.textStyle}>{label}</Typography.Regular14>
       </View>
       {additionalButton && handleButton && (
         <Button size={44} textColor="white" onPress={handleButton} mt="xl" mx="80px">

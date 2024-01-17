@@ -1,5 +1,5 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
-import Typography from 'components/Typography';
 import React from 'react';
 import { Animated, TouchableOpacity, View } from 'react-native';
 import useStyles from './useStyles';
@@ -57,11 +57,11 @@ const TabHeader = ({
               styles.tabButton,
               spaceBetween ? { marginHorizontal: 72 } : { marginHorizontal: 8 },
             ]}>
-            <Typography.Button2
+            <Typography.Semibold16
               numberOfLines={1}
               style={[styles.buttonText, isFocused ? styles.selected : styles.unselected]}>
               {getTabName(route.name)}
-            </Typography.Button2>
+            </Typography.Semibold16>
             {isFocused && <Animated.View style={[styles.selectedIndicator, { opacity }]} />}
           </TouchableOpacity>
         );

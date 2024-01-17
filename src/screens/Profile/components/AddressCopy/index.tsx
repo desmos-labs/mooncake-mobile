@@ -1,8 +1,8 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { copyIcon } from 'assets/images';
 import React from 'react';
 import { Image, TouchableOpacity } from 'react-native';
-import Typography from 'components/Typography';
-import { copyIcon } from 'assets/images';
-import Clipboard from '@react-native-clipboard/clipboard';
 import useStyles from './useStyles';
 
 interface AddressCopyProps {
@@ -34,7 +34,9 @@ const AddressCopy = (props: AddressCopyProps) => {
 
   const handlePress = React.useCallback(() => {
     Clipboard.setString(address);
-    if (externalCallback) externalCallback();
+    if (externalCallback) {
+      externalCallback();
+    }
   }, [address, externalCallback]);
 
   // -------------------------------------------------------------------------------------
@@ -44,10 +46,9 @@ const AddressCopy = (props: AddressCopyProps) => {
   // This is a simple component, so styles are left inline
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
-      <Typography.Body7 numberOfLines={1} ellipsizeMode="middle" style={styles.addressText}>
+      <Typography.Regular12 numberOfLines={1} ellipsizeMode="middle" style={styles.addressText}>
         {address}
-      </Typography.Body7>
-
+      </Typography.Regular12>
       <Image source={copyIcon} style={styles.copyIcon} />
     </TouchableOpacity>
   );

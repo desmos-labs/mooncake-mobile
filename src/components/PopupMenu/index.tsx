@@ -1,10 +1,10 @@
-import React from 'react';
-import Typography from 'components/Typography';
-import { Image, ImageSourcePropType } from 'react-native';
-import { Box, Divider, HStack, Menu, Pressable } from 'native-base';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { moreBlackIcon } from 'assets/images';
+import { Divider, HStack, Menu, Pressable } from 'native-base';
 import { InterfaceMenuProps } from 'native-base/src/components/composites/Menu/types';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Image, ImageSourcePropType, View } from 'react-native';
 import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import { ImageStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 import useStyles from './useStyles';
@@ -61,7 +61,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen, menuIcon, menuIconS
         return null;
       }
       return (
-        <Box id={item.label} key={item.label}>
+        <View key={item.label}>
           <Menu.Item
             _pressed={{
               opacity: 0.5,
@@ -72,11 +72,11 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen, menuIcon, menuIconS
             onPress={item.onPress}>
             <HStack alignItems="center">
               <Image source={item.icon} style={styles.icon} />
-              <Typography.Subtitle4>{item.label}</Typography.Subtitle4>
+              <Typography.Regular14>{item.label}</Typography.Regular14>
             </HStack>
           </Menu.Item>
           {idx !== menuItems.length - 1 && <Divider />}
-        </Box>
+        </View>
       );
     });
   }, [menuItems, styles.icon]);

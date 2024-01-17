@@ -1,7 +1,7 @@
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { HStack, useTheme } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
-import { HStack, useTheme } from 'native-base';
 import { RadioButtonInput } from 'react-native-simple-radio-button';
 
 /**
@@ -59,9 +59,9 @@ const CustomRadioGroup = (props: Props) => {
                 selectedValue === index ? theme.colors.butterOrange01 : theme.colors.surfaceBlack
               }
             />
-            <Typography.Body6 style={{ marginLeft: theme.spacing.m }}>
+            <Typography.Regular16 style={{ marginLeft: theme.spacing.m }}>
               {value.label}
-            </Typography.Body6>
+            </Typography.Regular16>
           </HStack>
         );
       })}

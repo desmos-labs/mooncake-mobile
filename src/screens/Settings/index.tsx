@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveAccount, useActiveAccountAddress, useStoredAccounts } from '@recoil/accounts';
 import { useActiveProfile } from '@recoil/profiles';
@@ -8,7 +9,7 @@ import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
+import TopBar from 'components/TopBar';
 import useDisableBiometrics from 'hooks/biometrics/useDisableBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
@@ -89,7 +90,7 @@ const Settings = (props: NavProps) => {
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('sign out'),
-        subtitle: <Typography.Body5>{t('sign out private key warning')}</Typography.Body5>,
+        subtitle: <Typography.Regular16>{t('sign out private key warning')}</Typography.Regular16>,
         primaryButtonLabel: t('sign out'),
         onPressPrimary: signOut,
         removeModalAfterButtonPress: true,
@@ -161,10 +162,11 @@ const Settings = (props: NavProps) => {
   return (
     <DView
       style={styles.root}
+      topBar={<TopBar />}
       showLoadingOverlay={signOutLoading}
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.backgroundGrey}>
-      <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
+      <Typography.Semibold24 style={styles.title}>{t('settings')}</Typography.Semibold24>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Security section */}
         <Section style={styles.spacer} title={t('security')}>
@@ -184,13 +186,11 @@ const Settings = (props: NavProps) => {
             <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
           )}
         </Section>
-
         {/* Acccount section */}
         <Section style={styles.spacer} title={t('account')}>
           <SectionButton label={t('delete account data')} onPress={deleteAccountData} />
           <SectionButton label={t('delete profile')} onPress={deleteProfile} />
         </Section>
-
         {/* Other section */}
         <Section style={styles.spacer} title={t('others')}>
           <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
@@ -201,17 +201,20 @@ const Settings = (props: NavProps) => {
         <Button size={44} variant="outline" onPress={openConfirmSignOutModal}>
           {t('sign out')}
         </Button>
-        <Typography.Body7 style={styles.bottomText}>
+        <Typography.Regular12 style={styles.bottomText}>
           <Trans
             i18nKey="joined butter"
             ns="settings"
             values={{ formattedDate: formattedAccountCreationDate }}
-            components={[<Typography.Subtitle4 />]}
+            components={[<Typography.Semibold12 />]}
           />
-        </Typography.Body7>
-        <Typography.Body7 style={styles.bottomText}>Version {getVersion()}</Typography.Body7>
-        <Spacer paddingBottom="l" />
+        </Typography.Regular12>
+        <Typography.Regular12 style={styles.bottomText}>
+          Version {getVersion()}
+        </Typography.Regular12>
+        <Spacer paddingBottom="xl" />
       </ScrollView>
+      <Spacer paddingBottom="xl" />
     </DView>
   );
 };

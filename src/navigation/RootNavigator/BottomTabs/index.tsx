@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
@@ -15,7 +16,6 @@ import {
   middleButtonIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
-import Typography from 'components/Typography';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Box, useTheme } from 'native-base';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
@@ -191,19 +191,19 @@ const BottomTabBar = (props: Props) => {
                 style={[styles.profile, isFocused ? styles.profileFocused : undefined]}
               />
               {isFocused ? (
-                <Typography.Body8
+                <Typography.Semibold10
                   style={[styles.text, isFocused ? styles.textFocused : undefined]}
                   numberOfLines={1}
                   ellipsizeMode="middle">
                   {getBottomText(route.name)}
-                </Typography.Body8>
+                </Typography.Semibold10>
               ) : (
-                <Typography.Caption3
+                <Typography.Regular10
                   style={[styles.text, isFocused ? styles.textFocused : undefined]}
                   numberOfLines={1}
                   ellipsizeMode="middle">
                   {getBottomText(route.name)}
-                </Typography.Caption3>
+                </Typography.Regular10>
               )}
             </View>
           );
@@ -231,19 +231,19 @@ const BottomTabBar = (props: Props) => {
               style={styles.imageButton}
             />
             {isFocused ? (
-              <Typography.Body8
+              <Typography.Semibold10
                 style={[styles.text, isFocused ? styles.textFocused : undefined]}
                 numberOfLines={1}
                 ellipsizeMode="middle">
                 {getBottomText(route.name)}
-              </Typography.Body8>
+              </Typography.Semibold10>
             ) : (
-              <Typography.Caption3
+              <Typography.Regular10
                 style={[styles.text, isFocused ? styles.textFocused : undefined]}
                 numberOfLines={1}
                 ellipsizeMode="middle">
                 {getBottomText(route.name)}
-              </Typography.Caption3>
+              </Typography.Regular10>
             )}
           </View>
         );

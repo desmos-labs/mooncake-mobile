@@ -4,7 +4,7 @@ import { appleLoginIcon, googleLoginIcon, mooncakeTextYellow } from 'assets/imag
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -67,11 +67,9 @@ const Landing = () => {
         <ThemedLottieView style={styles.animation} source={landingPageAnimation} autoPlay loop />
         <Spacer paddingTop={20} />
         <Image style={styles.mooncakeText} source={mooncakeTextYellow} />
-
         <Spacer paddingTop={40} />
         <Typography.Regular16 allowFontScaling>{t('mooncake slogan')}</Typography.Regular16>
         <Spacer paddingTop={theme.spacing.m} />
-
         <Spacer paddingTop={40} />
         {/* Login buttons */}
         {loginWithPrivateKeyEnabled ? (
@@ -94,7 +92,6 @@ const Landing = () => {
                 <Typography.Semibold16>{t('continue with google')}</Typography.Semibold16>
               </View>
             </Button>
-
             {Platform.OS === 'ios' && (
               <>
                 <Spacer paddingTop="m" />

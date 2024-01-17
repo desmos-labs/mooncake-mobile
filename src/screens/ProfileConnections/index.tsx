@@ -7,7 +7,7 @@ import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import { formatNumShorthand } from 'lib/FormatUtils';

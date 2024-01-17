@@ -29,10 +29,10 @@ const Biography = ({ text, numberOfLines }: Props) => {
 
   const Style: TextStyle = {
     fontFamily: 'Poppins_400Regular',
-    fontSize: 12,
+    fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 16,
+    lineHeight: 21,
     textAlign: 'left',
   };
 

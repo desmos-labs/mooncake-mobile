@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import {
   useHandlePressBlock,
   useHandlePressComments,
@@ -5,7 +6,6 @@ import {
   useHandlePressHidePost,
   useHandlePressReport,
 } from 'components/PostCard/hooks';
-import Typography from 'components/Typography';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
@@ -118,7 +118,9 @@ const PostCard = (props: PostCardProps) => {
       />
       {/* Post text */}
       {post.text && (
-        <Typography.Body6 style={{ marginTop: theme.spacing.m }}>{post.text}</Typography.Body6>
+        <Typography.Regular16 style={{ marginTop: theme.spacing.m }}>
+          {post.text}
+        </Typography.Regular16>
       )}
       {/* Media view */}
       {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
