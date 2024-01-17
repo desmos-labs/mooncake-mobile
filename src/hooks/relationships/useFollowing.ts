@@ -18,7 +18,10 @@ const useFetchUserFollowing = (address: string | undefined) => {
   return React.useCallback<FetchDataFunction<DesmosProfile>>(
     async (offset: number, limit: number) => {
       if (!address) {
-        throw new Error('Cannot get the following list without an address.');
+        return {
+          data: [],
+          endReached: true,
+        };
       }
 
       const { data, error } = await fetchFollowing({

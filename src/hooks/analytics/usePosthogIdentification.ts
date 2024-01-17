@@ -10,7 +10,9 @@ const usePosthogIdentification = () => {
   const trackUser = useTrackUser();
 
   useEffect(() => {
-    trackUser(activeAddress!);
+    if (activeAddress) {
+      trackUser(activeAddress);
+    }
   }, [activeAddress, trackUser]);
 };
 

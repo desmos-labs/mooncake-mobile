@@ -10,9 +10,6 @@ import { Post } from 'types/posts';
 
 const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage: number = 50) => {
   const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Active user required for post comments');
-  }
 
   const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);

@@ -12,17 +12,14 @@ const useIsFollowing = (counterparty: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const activeAddress = useActiveAccountAddress();
 
-  if (!activeAddress) {
-    throw new Error(
-      'Trying to know if the user is following another user, without an active account',
-    );
-  }
-
   const updateUserFollowers = useUpdateUserFollowersCache();
   const followingCounterparty = useCachedIsFollowingUser(activeAddress, counterparty);
 
   const onDataFetched = React.useCallback(
     (data: any) => {
+      if (!activeAddress) {
+        return;
+      }
       const isFollowing = data?.relationships?.length > 0;
       updateUserFollowers(activeAddress, counterparty, isFollowing);
     },

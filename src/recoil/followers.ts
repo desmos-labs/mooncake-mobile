@@ -15,13 +15,19 @@ const followersState = atom<Record<string, string[]>>({
 /**
  * Hook that provides the list of addresses that the user is following.
  * NOTE: The list will be erased when the application closes.
- * @param user - The user address.
+ * @param user - The user address, if undefined this hook will always return an empty list.
  */
 // Ignore ts-prune error since we may need this in the future.
 // ts-prune-ignore-next
-export const useCachedUserFollowers = (user: string) => {
+export const useCachedUserFollowers = (user: string | undefined) => {
   const followers = useRecoilValue(followersState);
-  return React.useMemo(() => followers[user] ?? [], [followers, user]);
+  return React.useMemo(() => {
+    if (user === undefined) {
+      return [];
+    }
+
+    return followers[user] ?? [];
+  }, [followers, user]);
 };
 
 /**
@@ -59,10 +65,14 @@ export const useSetCachedUserFollowers = () => {
 
 /**
  * Hook that allows to know if the current user is following a given user or not.
+ * If the provided user is undefined, the hook will always return false.
  */
-export const useCachedIsFollowingUser = (user: string, counterparty: string) => {
+export const useCachedIsFollowingUser = (user: string | undefined, counterparty: string) => {
   const followers = useCachedUserFollowers(user);
-  return React.useMemo(() => followers.includes(counterparty), [followers, counterparty]);
+  return React.useMemo(
+    () => (user ? followers.includes(counterparty) : false),
+    [user, followers, counterparty],
+  );
 };
 
 /**

@@ -47,10 +47,10 @@ export const usePostsToSync = (user: string) => {
  *
  * This difference can be used to show an updated comments count compared to the current values on the server.
  */
-export const useGetPostCommentsDifference = (user: string) => {
+export const useGetPostCommentsDifference = () => {
   const posts = useRecoilValue(postsState);
   return React.useCallback(
-    (subspaceId: number, postId: number) => {
+    (user: string, subspaceId: number, postId: number) => {
       const userPosts = posts[user] ?? [];
       return userPosts
         .filter(p => p.subspaceId === subspaceId && isCommentTo(p, postId))
@@ -67,7 +67,7 @@ export const useGetPostCommentsDifference = (user: string) => {
         })
         .reduce((sum: number, value: number) => sum + value, 0);
     },
-    [posts, user],
+    [posts],
   );
 };
 
@@ -77,10 +77,18 @@ export const useGetPostCommentsDifference = (user: string) => {
  * @param subspaceId {number} - Subspace id of the post.
  * @param postId {number} - ID of the post for which to get the comments.
  */
-export const usePostCommentsToSync = (user: string, subspaceId: number, postId: number): Post[] => {
+export const usePostCommentsToSync = (
+  user: string | undefined,
+  subspaceId: number,
+  postId: number,
+): Post[] => {
   const posts = useRecoilValue(postsState);
 
   return React.useMemo(() => {
+    if (!user) {
+      return [];
+    }
+
     const userPosts = posts[user] ?? [];
     return userPosts.filter(p => isCommentTo(p, postId) && p.status !== PostStatus.DELETED_LOCALLY);
   }, [posts, user, postId]);
@@ -195,13 +203,13 @@ export const useRemoveStoredPendingPost = () => {
 };
 
 /**
- * A hook that allows removal of cached timeline posts of the active user via the postID.
+ * A hook that allows removal of cached timeline posts of an user via the postID.
  */
-export const useRemovePostByID = (user: string) => {
+export const useRemovePostByID = () => {
   const setPosts = useSetRecoilState(postsState);
 
   return React.useCallback(
-    (postID: number) => {
+    (user: string, postID: number) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -214,7 +222,7 @@ export const useRemovePostByID = (user: string) => {
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
 
