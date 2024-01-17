@@ -1,5 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import { Image } from 'expo-image';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { getProfilePicture } from 'lib/ProfileUtils';
@@ -39,6 +40,7 @@ const SearchUsersResult = ({ profile }: Props) => {
           @{profile.dTag}
         </Typography.Regular12>
       </View>
+      <ToggleFollowageButton user={profile} />
     </TouchableOpacity>
   );
 };
