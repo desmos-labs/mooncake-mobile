@@ -70,9 +70,9 @@ const UserListItem = (props: UserListItemProps) => {
       <Image source={getProfilePicture(user)} style={styles.pic} />
       {/* Profile DTag and nickname */}
       <View style={styles.names}>
-        <Typography.Subtitle3 numberOfLines={1} ellipsizeMode="tail">
+        <Typography.Semibold14 numberOfLines={1} ellipsizeMode="tail">
           {user.nickname}
-        </Typography.Subtitle3>
+        </Typography.Semibold14>
         <Typography.Regular12 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
           @{user.dTag}
         </Typography.Regular12>

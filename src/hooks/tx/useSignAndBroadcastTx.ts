@@ -1,14 +1,14 @@
-import { useCallback } from 'react';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { scheduleTask } from 'lib/BackgroundTaskUtils';
-import SignAndBroadcastTxTask from 'services/tasks/SignAndBroadcastTx';
-import { useTranslation } from 'react-i18next';
-import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
+import useToast from 'hooks/toasts/useToast';
 import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
 import useParseErrorMessage from 'hooks/useParseErrorMessage';
-import { Wallet } from 'types/wallet';
+import { scheduleTask } from 'lib/BackgroundTaskUtils';
 import { failedTask } from 'lib/BackgroundTaskUtils/scheduler';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import SignAndBroadcastTxTask from 'services/tasks/SignAndBroadcastTx';
+import { Wallet } from 'types/wallet';
 
 const BROADCAST_TX_TASK_NAME = 'Broadcast Transaction';
 
@@ -140,7 +140,8 @@ const useSignAndBroadcastTx = () => {
             showToast({
               toastType: ToastType.error,
               title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),
-              message: options?.onError?.popup?.description ?? parseError(error.message),
+              message:
+                (options?.onError?.popup?.description as string) ?? parseError(error.message),
               retryLabel: options?.onError?.popup?.retryLabel,
               retryAction: options?.onError?.popup?.retryAction,
             });

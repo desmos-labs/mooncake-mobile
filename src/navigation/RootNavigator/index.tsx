@@ -9,9 +9,9 @@ import usePosthogIdentification from 'hooks/analytics/usePosthogIdentification';
 import useInitNotificationsLogic from 'hooks/notifications/useInitNotifications';
 import useInitTourGuidesState from 'hooks/tourguide/useInitTourGuidesState';
 import useInitializeAppData from 'hooks/useInitializeAppData';
+import NAVIGATORS from 'navigation/navigators';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
-import NAVIGATORS from 'navigation/navigators';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { Dimensions, Platform } from 'react-native';
@@ -46,7 +46,6 @@ import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/Pr
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import ServiceAndPolicy, { ServiceAndPolicyParams } from 'screens/ServiceAndPolicy';
 import Settings from 'screens/Settings';
-import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomePage, { WelcomePageParams } from 'screens/WelcomeScreen';
@@ -240,7 +239,6 @@ const RootNavigator = () => {
       {/* ------------------------ */}
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.SETTINGS_SHOW_PRIVATE_KEY} component={ShowPrivateKey} />
-      <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
       <Stack.Screen name={ROUTES.ABOUT} component={About} />

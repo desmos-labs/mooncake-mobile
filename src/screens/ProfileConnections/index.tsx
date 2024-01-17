@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabNavigationOptions,
@@ -7,7 +8,6 @@ import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import { formatNumShorthand } from 'lib/FormatUtils';
@@ -137,7 +137,7 @@ const ProfileConnections = () => {
   };
 
   const CenterElement = useMemo(() => {
-    return <Typography.Subtitle3>{profile?.nickname || 'no-nickname'}</Typography.Subtitle3>;
+    return <Typography.Semibold14>{profile?.nickname || 'no-nickname'}</Typography.Semibold14>;
   }, [profile?.nickname]);
 
   return (

@@ -35,11 +35,6 @@ const TypographyPlaceholder = (
     <Typography.H1>H1</Typography.H1>
     <Typography.H2>H2</Typography.H2>
     <Typography.H4>H4</Typography.H4>
-    <Typography.Display1>Title</Typography.Display1>
-    <Typography.Subtitle1>Subtitle</Typography.Subtitle1>
-    <Typography.Subtitle2>Subtitle2</Typography.Subtitle2>
-    <Typography.Body1>Body</Typography.Body1>
-    <Typography.Body1>Body1</Typography.Body1>
   </>
 );
 

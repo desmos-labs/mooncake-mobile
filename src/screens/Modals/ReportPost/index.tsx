@@ -12,7 +12,6 @@ import StyledSpinner from 'components/StyledSpinner';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useReportPost from 'hooks/reports/useReportPost';
-import useToast from 'hooks/toasts/useToast';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -40,7 +39,6 @@ const ReportPost = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { post } = params;
-  const showToast = useToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -86,7 +84,7 @@ const ReportPost = () => {
     }
 
     setSuccessfulReport(true);
-  }, [reportPost, message, selectedReport.value, showToast, t]);
+  }, [reportPost, message, selectedReport.value]);
 
   const successfulReportComponent = useMemo(() => {
     return (

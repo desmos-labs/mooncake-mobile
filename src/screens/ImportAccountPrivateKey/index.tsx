@@ -52,7 +52,7 @@ const ImportAccountPrivateKey = () => {
                   </Typography.Regular14>
                 </View>
                 <Spacer paddingTop="m" />
-                <Typography.Subtitle2>Private Key</Typography.Subtitle2>
+                <Typography.Semibold14>Private Key</Typography.Semibold14>
                 <Spacer paddingBottom="s" />
                 <DTextInput
                   autoCapitalize="none"

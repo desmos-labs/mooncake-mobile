@@ -196,7 +196,7 @@ const SaveProfile = (props: NavProps) => {
         goBack();
       });
     },
-    [coverPic, profilePic, submitForm],
+    [coverPic, goBack, profilePic, submitForm],
   );
 
   // -------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { useTheme } from 'native-base';
 
 type Props = {
   /**
@@ -74,12 +74,12 @@ const RadialTextCounter = ({
       backgroundColor={emptyColor}>
       {() => {
         return (
-          <Typography.Subtitle4
+          <Typography.Semibold12
             style={{
               color: showWarning ? theme.colors.pink01 : theme.colors.iconGrey,
             }}>
             {remainingChars < 10 ? remainingChars : ''}
-          </Typography.Subtitle4>
+          </Typography.Semibold12>
         );
       }}
     </AnimatedCircularProgress>

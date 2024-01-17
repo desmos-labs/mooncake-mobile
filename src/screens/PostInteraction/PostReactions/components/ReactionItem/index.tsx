@@ -24,9 +24,9 @@ const ReactionItem = ({ author }: Props) => {
       <Image source={getProfilePicture(author)} style={styles.avatarStyle} />
       <View style={styles.textGroup}>
         <View>
-          <Typography.Subtitle3 style={styles.textStyle}>
+          <Typography.Semibold14 style={styles.textStyle}>
             {author.nickname ? author.nickname : t('no nickname', { ns: 'common' })}
-          </Typography.Subtitle3>
+          </Typography.Semibold14>
           <Typography.Regular12 style={styles.subTextStyle}>@{author.dTag}</Typography.Regular12>
         </View>
       </View>

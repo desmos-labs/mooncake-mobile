@@ -1,10 +1,10 @@
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
+import usePostsCreatedByAddress from 'hooks/posts/usePostsCreatedByAddress';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import usePostsCreatedByAddress from 'hooks/posts/usePostsCreatedByAddress';
 import UserPostsList from 'screens/ProfilePosts/UserPostsList';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS_POSTS>;
@@ -27,7 +27,6 @@ const UserPostsTab = () => {
     posts,
     loading: arePostsLoading,
     fetchMore,
-    fetchingMore,
     refetch: refreshPosts,
     refreshing,
   } = usePostsCreatedByAddress(userAddress);
@@ -53,7 +52,6 @@ const UserPostsTab = () => {
       posts={posts}
       isLoading={arePostsLoading}
       fetchMore={fetchMore}
-      fetchingMore={fetchingMore}
       refreshPosts={refreshPosts}
       refreshing={refreshing}
       emptyListText={t('noUserPosts')}
