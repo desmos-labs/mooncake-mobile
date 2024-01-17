@@ -83,12 +83,12 @@ const useSaveProfile = () => {
               title: header,
               message: body,
             });
+          } else {
+            showToast({
+              toastType: ToastType.loading,
+              message: body,
+            });
           }
-
-          showToast({
-            toastType: ToastType.loading,
-            message: body,
-          });
         })
         .onComplete(() => {
           if (options?.showLoadingScreen) {
