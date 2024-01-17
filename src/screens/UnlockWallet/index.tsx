@@ -23,6 +23,7 @@ import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-na
 import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
 import { Wallet } from 'types/wallet';
 import * as Yup from 'yup';
+import Spacer from 'components/Spacer';
 import useStyles from './useStyles';
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;
@@ -96,7 +97,7 @@ const UnlockWallet = () => {
   // --- Local state
   // -------------------------------------------------------------------------------------
 
-  const [biometricsPsw, setBiometricPsw] = useState('');
+  const [biometricsPsw, setBiometricPsw] = useState<string>();
   const [loading, setLoading] = useState(false);
 
   // -------------------------------------------------------------------------------------
@@ -162,6 +163,7 @@ const UnlockWallet = () => {
     // User cancel the biometric unlock procedure.
     if (biometricPassword === undefined) {
       setLoading(false);
+      setBiometricPsw(undefined);
       return;
     }
     setBiometricPsw(biometricPassword);
@@ -213,7 +215,7 @@ const UnlockWallet = () => {
       </Typography.Semibold24>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={CommonStyles.flex['1']}>
         <Formik
           initialValues={initialFormValues}
@@ -240,7 +242,7 @@ const UnlockWallet = () => {
                 style={styles.textInput}
                 autoFocus={!unlockWalletWithBiometrics}
                 placeholder={t('enter password')}
-                value={unlockWithBiometrics ? biometricsPsw : values.password}
+                value={biometricsPsw ?? values.password}
                 onChangeText={(text: string) => {
                   setValues({ password: text }, true);
                 }}
@@ -261,6 +263,7 @@ const UnlockWallet = () => {
                   size={44}>
                   {t('next', { ns: 'common' })}
                 </Button>
+                <Spacer paddingTop="s" />
                 <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>
                   <Typography.Semibold14>{t('forgot password')}</Typography.Semibold14>
                 </TouchableOpacity>
