@@ -12,7 +12,6 @@ import StyledSpinner from 'components/StyledSpinner';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useReportPost from 'hooks/reports/useReportPost';
-import useToast from 'hooks/toasts/useToast';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
