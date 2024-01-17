@@ -1,6 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { defaultProfilePic } from 'assets/images';
 import AvatarImage from 'components/AvatarImage';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import { ToastType } from 'config/toast/toastConfig';
 import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
@@ -12,7 +13,6 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import PostAttachmentsPreview from 'screens/Activities/components/PostAttachmentsPreview';
-import ToggleFollowageButton from 'screens/Activities/components/ToggleFollowageButton';
 import { DesmosProfile } from 'types/desmos';
 import { Notification, NotificationType } from 'types/notifications';
 import useStyles from './useStyles';
