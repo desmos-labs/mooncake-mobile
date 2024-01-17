@@ -198,6 +198,7 @@ const useHooks = () => {
         });
         saveProfile({
           accountWithWallet: account,
+          isOnboarding: true,
           onProfileSaved: async () => {
             navigate(ROUTES.FOLLOW_CREATORS, {
               isOnboarding: true,

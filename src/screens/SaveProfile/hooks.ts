@@ -170,7 +170,7 @@ export const useSubmitForm = (
         return err(saveProfileResult.error);
       } else {
         storeProfile(profileAddress, profileToSaveLocally);
-        return ok(undefined);
+        return ok(saveProfileResult.value);
       }
     },
     [
