@@ -259,10 +259,7 @@ const useHooks = () => {
             title: t('success', { ns: 'common' }),
             subtitle: t('you changed your password'),
             primaryButtonLabel: t('go back'),
-            onPressPrimary: () =>
-              navigate(ROUTES.BOTTOM_TABS, {
-                screen: ROUTES.SETTINGS,
-              }),
+            onPressPrimary: () => navigate(ROUTES.SETTINGS),
           });
         }
       }
