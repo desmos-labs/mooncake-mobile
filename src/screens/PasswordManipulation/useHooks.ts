@@ -198,6 +198,7 @@ const useHooks = () => {
         });
         saveProfile({
           accountWithWallet: account,
+          isOnboarding: true,
           onProfileSaved: async () => {
             navigate(ROUTES.FOLLOW_CREATORS, {
               isOnboarding: true,
@@ -259,10 +260,7 @@ const useHooks = () => {
             title: t('success', { ns: 'common' }),
             subtitle: t('you changed your password'),
             primaryButtonLabel: t('go back'),
-            onPressPrimary: () =>
-              navigate(ROUTES.BOTTOM_TABS, {
-                screen: ROUTES.SETTINGS,
-              }),
+            onPressPrimary: () => navigate(ROUTES.SETTINGS),
           });
         }
       }

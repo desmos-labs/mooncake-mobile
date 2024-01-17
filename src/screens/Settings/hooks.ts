@@ -20,6 +20,7 @@ import { Result, err, ok } from 'neverthrow';
 import useLoadingModal from 'hooks/modals/useLoadingModal';
 import { LoadingAnimation } from 'screens/Modals/LoadingModal';
 import { Wallet } from 'types/wallet';
+import useErrorModal from 'hooks/modals/useErrorModal';
 
 /**
  * Hook that provides a function to reveal the current active user private key
@@ -156,18 +157,7 @@ const useDeleteData = (deleteProfile: boolean) => {
   const deleteUserProfile = useBroadcastDeleteProfile();
   const profileDeletedRef = React.useRef(false);
   const { show: showLoadingModal, hide: hideLoadingModal } = useLoadingModal();
-
-  const showErrorMessage = React.useCallback(
-    (message: string, retryAction: () => void) => {
-      navigation.navigate(ROUTES.CONFIRM_MODAL, {
-        title: t('error', { ns: 'common' }),
-        subtitle: message,
-        primaryButtonLabel: t('retry', { ns: 'common' }),
-        onPressPrimary: retryAction,
-      });
-    },
-    [navigation, t],
-  );
+  const showErrorMessage = useErrorModal();
 
   const deleteData = React.useCallback(async () => {
     // Request the user's password and get their wallet.

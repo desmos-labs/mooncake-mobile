@@ -38,7 +38,7 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
   const handleSaveProfile = useCallback(() => {
     saveProfile({
       profile,
-      onSuccess: returnToCurrentScreen,
+      onProfileSaved: returnToCurrentScreen,
     });
   }, [profile, returnToCurrentScreen, saveProfile]);
 

@@ -99,6 +99,11 @@ enum ROUTES {
   SELECT_IMAGE_MODAL = 'SELECT_IMAGE_MODAL',
   BOTTOM_SHEET = 'BOTTOM_SHEET',
   LOADING_MODAL = 'LOADING_MODAL',
+
+  // -------------------------------------------------------------------------------------
+  // --- MISC
+  // -------------------------------------------------------------------------------------
+  LOADING_SCREEN = 'LOADING_SCREEN',
 }
 
 export default ROUTES;

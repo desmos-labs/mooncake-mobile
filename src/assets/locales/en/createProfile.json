@@ -10,6 +10,8 @@
   "created": "Your Desmos Profile has been created",
   "saving profile": "Saving profile",
   "saving profile body": "We are saving up your amazing profile...",
+  "creating profile": "Creating profile",
+  "creating profile body": "We are setting up your amazing profile...",
   "profile saved": "Your profile has been saved",
   "invalid dtag": "Invalid DTag value",
   "max bio length exceeded": "The bio must be at most {{numChars}} characters long",

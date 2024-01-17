@@ -1,5 +1,5 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { err } from 'neverthrow';
+import { err, ok } from 'neverthrow';
 import React from 'react';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
@@ -9,10 +9,17 @@ import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndW
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
 import { useTranslation } from 'react-i18next';
+import useRootNavigator from 'hooks/navigation/useRootNavigator';
+import ROUTES from 'navigation/routes';
 
 interface SaveProfileOptions {
   readonly customHeader?: string;
   readonly customBody?: string;
+  /**
+   * If true will show a loading screen that will be visble
+   * until the transaction completes.
+   */
+  readonly showLoadingScreen?: boolean;
   readonly onProfileSaved?: () => void;
   readonly onCompleteOrError?: () => void;
 }
@@ -25,6 +32,7 @@ interface SaveProfileOptions {
 const useSaveProfile = () => {
   const { t } = useTranslation('createProfile');
   const showToast = useToast();
+  const navigation = useRootNavigator();
 
   const activeAccountAddress = useActiveAccountAddress()!;
   const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
@@ -49,6 +57,8 @@ const useSaveProfile = () => {
 
       const { desmosClient } = clientAndWalletResult.value;
 
+      const header = options?.customHeader ?? t('saving profile');
+      const body = options?.customBody ?? t('saving profile body');
       const taskReference = await scheduleTask(
         'Broadcast Save Profile',
         SaveProfileTask,
@@ -58,8 +68,8 @@ const useSaveProfile = () => {
           signer: addressToUse,
         },
         {
-          title: options?.customHeader ?? t('saving profile'),
-          desc: options?.customBody ?? t('saving profile body'),
+          title: header,
+          desc: body,
           progressBar: {
             indeterminate: true,
           },
@@ -68,12 +78,23 @@ const useSaveProfile = () => {
 
       taskReference
         .onStart(() => {
-          showToast({
-            toastType: ToastType.loading,
-            message: options?.customBody ?? t('saving profile body'),
-          });
+          if (options?.showLoadingScreen) {
+            navigation.navigate(ROUTES.LOADING_SCREEN, {
+              title: header,
+              message: body,
+            });
+          } else {
+            showToast({
+              toastType: ToastType.loading,
+              message: body,
+            });
+          }
         })
         .onComplete(() => {
+          if (options?.showLoadingScreen) {
+            navigation.pop();
+          }
+
           if (options?.onProfileSaved) {
             options.onProfileSaved();
           }
@@ -89,6 +110,10 @@ const useSaveProfile = () => {
           });
         })
         .onError(({ error }) => {
+          if (options?.showLoadingScreen) {
+            navigation.pop();
+          }
+
           if (options?.onCompleteOrError) {
             options.onCompleteOrError();
           }
@@ -99,8 +124,9 @@ const useSaveProfile = () => {
             message: error.message,
           });
         });
+      return ok(taskReference);
     },
-    [activeAccountAddress],
+    [activeAccountAddress, navigation, prepareDesmosClientAndWallet, showToast, t],
   );
 };
 

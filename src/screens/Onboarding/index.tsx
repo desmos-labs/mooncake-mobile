@@ -9,7 +9,6 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
 import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
 import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
 import { getSaveProfileAllowance } from 'lib/grantsUtils';
@@ -24,6 +23,11 @@ import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import { LoginOnboardingStep } from 'types/tourguide';
+import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
+import { promiseToResult } from 'lib/NeverThrowUtils';
+import { err, ok } from 'neverthrow';
+import useErrorModal from 'hooks/modals/useErrorModal';
+import * as Sentry from 'sentry-expo';
 import useStyles, { fixedWidth } from './useStyles';
 
 export interface OnboardingParams {
@@ -66,7 +70,9 @@ const Onboarding = () => {
   // --- Local state
   // -------------------------------------------------------------------------------------
 
-  const [loading, setLoading] = useState(false);
+  const [requestingFeeGrant, setRequestingFeeGrant] = useState(false);
+  const [hasFeeGrant, setHasFeeGrant] = useState(requestFeeGrant !== true);
+  const [feeGrantRequestFailed, setFeeGrantRequestFailed] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const slidesRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -107,6 +113,7 @@ const Onboarding = () => {
   const getAuthorizationInformation = useGetLazyAuthorizationInformation();
   const setTourGuideStep = useSetTourGuideStep();
   const trackOnboardingCompleted = useTrackOnboardingCompleted();
+  const showErrorModal = useErrorModal();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -116,7 +123,7 @@ const Onboarding = () => {
     if (currentIndex < 3) {
       slidesRef?.current?.scrollToIndex({ index: currentIndex + 1 });
     } else {
-      if (!loading) {
+      if (hasFeeGrant) {
         trackOnboardingCompleted();
         setTourGuideStep({ login: LoginOnboardingStep.Completed });
         navigate(ROUTES.PASSWORD_MANIPULATION, {
@@ -128,7 +135,7 @@ const Onboarding = () => {
     }
   }, [
     currentIndex,
-    loading,
+    hasFeeGrant,
     navigate,
     params.account,
     params.passwordManipulationMode,
@@ -142,17 +149,48 @@ const Onboarding = () => {
    */
   const signUp = useCallback(async () => {
     if (account) {
-      const { feeGrants } = await getAuthorizationInformation(account.wallet.address);
+      const getAuthorizationResult = await promiseToResult(
+        getAuthorizationInformation(account.wallet.address),
+        'Unknown error while getting authorization information',
+      );
+      if (getAuthorizationResult.isErr()) {
+        return err(getAuthorizationResult.error);
+      }
+      const { feeGrants } = getAuthorizationResult.value;
       const saveProfileAllowance = getSaveProfileAllowance(feeGrants);
       // If has the save profile allowance
       if (saveProfileAllowance === undefined) {
         __DEV__ && console.log('[SignUp] Logged in and requested fee grant');
-        await GetFeeGrant();
+        const getFeegranteResult = await GetFeeGrant();
+        if (getFeegranteResult.isErr()) {
+          return err(getFeegranteResult.error);
+        }
       } else {
         __DEV__ && console.log('[SignUp] Logged in, fee grant already requested and granted');
       }
     }
+    return ok(undefined);
   }, [account, getAuthorizationInformation]);
+
+  const requestGrant = useCallback(async () => {
+    setRequestingFeeGrant(true);
+    setHasFeeGrant(false);
+    setFeeGrantRequestFailed(false);
+    const signUpResult = await signUp();
+    if (signUpResult.isErr()) {
+      setFeeGrantRequestFailed(true);
+      Sentry.Native.captureException(signUpResult.error);
+      showErrorModal(
+        t('an error occured while requesting the fee grant', {
+          error: signUpResult.error.message,
+        }),
+        requestGrant,
+      );
+    } else {
+      setHasFeeGrant(true);
+    }
+    setRequestingFeeGrant(false);
+  }, [showErrorModal, signUp, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -160,16 +198,63 @@ const Onboarding = () => {
 
   useEffect(() => {
     if (requestFeeGrant) {
-      setLoading(true);
-      signUp().then(() => {
-        setLoading(false);
-      });
+      requestGrant();
     }
-  }, [account, params.requestFeeGrant, requestFeeGrant, signUp]);
+  }, [requestFeeGrant, requestGrant]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
+
+  const nextButton = React.useMemo(() => {
+    if (currentIndex === slides.length) {
+      if (requestingFeeGrant) {
+        return (
+          <Button
+            size={44}
+            backgroundColor={theme.colors.surfaceBlack}
+            textColor={theme.colors.white}
+            disabled
+            style={styles.button}>
+            {t('requesting grant')}
+          </Button>
+        );
+      } else if (feeGrantRequestFailed) {
+        return (
+          <Button
+            size={44}
+            backgroundColor={theme.colors.surfaceBlack}
+            textColor={theme.colors.white}
+            onPress={requestGrant}
+            style={styles.button}>
+            {t('request grant')}
+          </Button>
+        );
+      }
+    }
+
+    return (
+      <Button
+        size={44}
+        backgroundColor={theme.colors.surfaceBlack}
+        textColor={theme.colors.white}
+        onPress={onPressButton}
+        style={styles.button}>
+        {t('next', { ns: 'common' })}
+      </Button>
+    );
+  }, [
+    currentIndex,
+    feeGrantRequestFailed,
+    onPressButton,
+    requestGrant,
+    requestingFeeGrant,
+    slides.length,
+    styles.button,
+    t,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+  ]);
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<any>) => {
@@ -216,14 +301,7 @@ const Onboarding = () => {
           <PaginationDots pages={slides} scrollX={scrollX} width={fixedWidth} />
         </View>
         <Spacer paddingBottom="xl" />
-        <Button
-          size={44}
-          backgroundColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          onPress={onPressButton}
-          style={styles.button}>
-          {t('next', { ns: 'common' })}
-        </Button>
+        {nextButton}
         <Spacer paddingBottom="xl" />
       </View>
     </DView>

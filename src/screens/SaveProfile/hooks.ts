@@ -2,7 +2,7 @@ import { useActiveAccount } from '@recoil/accounts';
 import { useStoreProfile } from '@recoil/profiles';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
-import { err, ok, Result } from 'neverthrow';
+import { err, ok } from 'neverthrow';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccountWithWallet } from 'types/account';
@@ -116,7 +116,9 @@ export const useSubmitForm = (
   onCompleteOrError: () => void,
   customHeader?: string,
   customBody?: string,
+  isOnboarding?: boolean,
 ) => {
+  const { t } = useTranslation('createProfile');
   const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
   const activeAccount = useActiveAccount();
@@ -128,7 +130,7 @@ export const useSubmitForm = (
       values: SaveProfileFormState,
       profilePic: string | undefined,
       coverPic: string | undefined,
-    ): Promise<Result<void, Error>> => {
+    ) => {
       // Get the address of the profile based on the given params
       const profileAddress = accountWithWallet?.account.address ?? activeAccount?.address;
       if (!profileAddress) {
@@ -160,17 +162,18 @@ export const useSubmitForm = (
       };
 
       const saveProfileResult = await saveProfile(profileToSaveOnChain, accountWithWallet, {
+        showLoadingScreen: isOnboarding,
         onProfileSaved,
-        customHeader,
-        customBody,
+        customHeader: isOnboarding ? t('creating profile') : customHeader,
+        customBody: isOnboarding ? t('creating profile body') : customBody,
         onCompleteOrError,
       });
 
-      if (saveProfileResult && saveProfileResult.isErr()) {
+      if (saveProfileResult.isErr()) {
         return err(saveProfileResult.error);
       } else {
         storeProfile(profileAddress, profileToSaveLocally);
-        return ok(undefined);
+        return ok(saveProfileResult.value);
       }
     },
     [
@@ -179,6 +182,7 @@ export const useSubmitForm = (
       customBody,
       customHeader,
       getOnChainProfile,
+      isOnboarding,
       onCompleteOrError,
       onProfileSaved,
       profile?.bio,
@@ -189,6 +193,7 @@ export const useSubmitForm = (
       profile?.profilePicture,
       saveProfile,
       storeProfile,
+      t,
     ],
   );
 };

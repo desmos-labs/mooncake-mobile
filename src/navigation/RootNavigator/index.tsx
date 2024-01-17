@@ -26,6 +26,7 @@ import FeeGrantWaitingScreen, { FeeGrantWaitingScreenParams } from 'screens/FeeG
 import FollowCreators, { FollowCreatorsParams } from 'screens/FollowCreators';
 import ImportAccountPrivateKey from 'screens/ImportAccountPrivateKey';
 import Landing from 'screens/Landing';
+import LoadingScreen, { LoadingScreenParams } from 'screens/LoadingScreen';
 import BottomSheetScreen, { BottomSheetScreenProps } from 'screens/Modals/BottomSheets';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 import LoadingModal, { LoadingModalParams } from 'screens/Modals/LoadingModal';
@@ -150,6 +151,11 @@ export type RootNavigatorParamList = {
   [ROUTES.POST_REACTIONS]: PostReactionsParams;
   [ROUTES.BOTTOM_SHEET]: BottomSheetScreenProps<any>;
   [ROUTES.LOADING_MODAL]: LoadingModalParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- MISC
+  // -------------------------------------------------------------------------------------
+  [ROUTES.LOADING_SCREEN]: LoadingScreenParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -290,6 +296,11 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.BOTTOM_SHEET} component={BottomSheetScreen} />
         <Stack.Screen name={ROUTES.LOADING_MODAL} component={LoadingModal} />
       </Stack.Group>
+
+      {/* -------------------- */}
+      {/* --- MISC SCREENS --- */}
+      {/* -------------------- */}
+      <Stack.Screen name={ROUTES.LOADING_SCREEN} component={LoadingScreen} />
     </Stack.Navigator>
   );
 };

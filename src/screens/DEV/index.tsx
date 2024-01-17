@@ -30,6 +30,7 @@ const routesToRender = [
   ROUTES.BOTTOM_SHEET,
   ROUTES.LOADING_MODAL,
   ROUTES.FOLLOW_CREATORS,
+  ROUTES.LOADING_SCREEN,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
@@ -114,6 +115,12 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               navigate(item, {
                 message: 'Test modal',
               })
+              break;
+              case ROUTES.LOADING_SCREEN:
+                navigate(item, {
+                  title: 'Test Loading Screen',
+                  message: 'Test Loading Screen',
+                });
               break;
             default:
               navigate(item);

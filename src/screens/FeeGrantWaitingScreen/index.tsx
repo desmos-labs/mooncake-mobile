@@ -61,6 +61,7 @@ const FeeGrantWaitingScreen = () => {
     // If there are no errors, navigate to the save profile screen
     saveProfile({
       blockBackAction: true,
+      isOnboarding: true,
       onProfileSaved: async () => {
         navigation.navigate(ROUTES.FOLLOW_CREATORS, {
           isOnboarding: true,
