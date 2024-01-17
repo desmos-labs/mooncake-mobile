@@ -191,12 +191,17 @@ const BottomTabBar = (props: Props) => {
                 style={[styles.profile, isFocused ? styles.profileFocused : undefined]}
               />
               {isFocused ? (
-                <Typography.Body8 style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+                <Typography.Body8
+                  style={[styles.text, isFocused ? styles.textFocused : undefined]}
+                  numberOfLines={1}
+                  ellipsizeMode="middle">
                   {getBottomText(route.name)}
                 </Typography.Body8>
               ) : (
                 <Typography.Caption3
-                  style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+                  style={[styles.text, isFocused ? styles.textFocused : undefined]}
+                  numberOfLines={1}
+                  ellipsizeMode="middle">
                   {getBottomText(route.name)}
                 </Typography.Caption3>
               )}
@@ -226,12 +231,17 @@ const BottomTabBar = (props: Props) => {
               style={styles.imageButton}
             />
             {isFocused ? (
-              <Typography.Body8 style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+              <Typography.Body8
+                style={[styles.text, isFocused ? styles.textFocused : undefined]}
+                numberOfLines={1}
+                ellipsizeMode="middle">
                 {getBottomText(route.name)}
               </Typography.Body8>
             ) : (
               <Typography.Caption3
-                style={[styles.text, isFocused ? styles.textFocused : undefined]}>
+                style={[styles.text, isFocused ? styles.textFocused : undefined]}
+                numberOfLines={1}
+                ellipsizeMode="middle">
                 {getBottomText(route.name)}
               </Typography.Caption3>
             )}
