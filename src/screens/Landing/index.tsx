@@ -60,6 +60,17 @@ const Landing = () => {
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
+  const loginWithProvateKeyButton = React.useMemo(() => {
+    return (
+      <Button
+        variant="outline"
+        style={styles.loginButton}
+        onPress={() => onSignUp(LoginMethodPrivateKey)}>
+        <Typography.Semibold16>{t('login with private key')}</Typography.Semibold16>
+      </Button>
+    );
+  }, [onSignUp, styles.loginButton, t]);
+
   return (
     <DView style={styles.container}>
       <View style={styles.innerView}>
@@ -73,12 +84,7 @@ const Landing = () => {
         <Spacer paddingTop={40} />
         {/* Login buttons */}
         {loginWithPrivateKeyEnabled ? (
-          <Button
-            variant="outline"
-            style={styles.loginButton}
-            onPress={() => onSignUp(LoginMethodPrivateKey)}>
-            <Typography.Semibold16>{t('login with private key')}</Typography.Semibold16>
-          </Button>
+          loginWithProvateKeyButton
         ) : (
           // Login buttons displayed when the login with private key is disabled.
           <>
@@ -105,6 +111,12 @@ const Landing = () => {
                     <Typography.Semibold16>{t('continue with apple')}</Typography.Semibold16>
                   </View>
                 </Button>
+              </>
+            )}
+            {__DEV__ && (
+              <>
+                <Spacer paddingTop="m" />
+                {loginWithProvateKeyButton}
               </>
             )}
           </>
