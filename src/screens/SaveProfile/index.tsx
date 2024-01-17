@@ -191,6 +191,7 @@ const SaveProfile = (props: NavProps) => {
     onCompleteOrError,
     customTransactionHeader,
     customTransactionBody,
+    isOnboarding,
   );
 
   // Callback used when the user presses the Save button.
