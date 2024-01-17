@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import BackgroundService from 'react-native-background-actions';
+import { Result, err, ok } from 'neverthrow';
 import {
   AndroidTaskNotificationConfig,
   BackgroundTaskEvent,
@@ -8,6 +9,7 @@ import {
   StartedTaskEvent,
   TaskJob,
   TaskStatus,
+  TaskState,
 } from './types';
 
 /**
@@ -59,20 +61,30 @@ class TaskReference<R> {
 
   private readonly _name: string;
 
-  constructor(taskId: number, name: string, queued: boolean) {
+  private _state: TaskState<R>;
+
+  /**
+   * Create an object that represents a task.
+   * @param taskId - ID of the task.
+   * @param name - Name of the task.
+   * @param initialState - Initial state of the task.
+   * @param monitorState - Flag that indicates if the state
+   * of the task should be monitored.
+   */
+  constructor(taskId: number, name: string, initialState: TaskState<R>, monitorState: boolean) {
     this._taskId = taskId;
     this._name = name;
-    this._status = queued ? TaskStatus.Queued : TaskStatus.Running;
-    this.observeTaskStatus();
+    this._state = initialState;
+    if (monitorState) {
+      this.observeTaskStatus();
+    }
   }
-
-  private _status: TaskStatus;
 
   /**
    * Gets the task status.
    */
   get status(): TaskStatus {
-    return this._status;
+    return this._state.status;
   }
 
   /**
@@ -87,7 +99,7 @@ class TaskReference<R> {
    * after the creation and `false` otherwise.
    */
   get queued(): boolean {
-    return this._status === TaskStatus.Queued;
+    return this._state.status === TaskStatus.Queued;
   }
 
   /**
@@ -120,7 +132,16 @@ class TaskReference<R> {
    * @param callback - The callback function to execute when the task completes.
    */
   onComplete(callback: (event: CompletedTaskEvent<R>) => void): this {
-    onTaskCompleted(this.taskId, callback, true);
+    if (this._state.status === TaskStatus.Completed) {
+      callback({
+        taskId: this.taskId,
+        taskName: this.name,
+        result: this._state.result,
+      });
+    } else if (this._state.status !== TaskStatus.Failed) {
+      // If the task is not failed subscribe to the on task completed event.
+      onTaskCompleted(this.taskId, callback, true);
+    }
     return this;
   }
 
@@ -130,8 +151,39 @@ class TaskReference<R> {
    * @param callback - The callback function to execute if the task fails.
    */
   onError(callback: (event: FailedTaskEvent) => void): this {
-    onTaskFailed(this.taskId, callback, true);
+    if (this._state.status === TaskStatus.Failed) {
+      callback({
+        taskId: this.taskId,
+        taskName: this.name,
+        error: this._state.error,
+      });
+    } else if (this._state.status !== TaskStatus.Completed) {
+      // If the task is not completed subscribe to the on task failed event.
+      onTaskFailed(this.taskId, callback, true);
+    }
     return this;
+  }
+
+  /**
+   * Gets the task result.
+   * If the task has not completed yet this function will wait for the
+   * task to complete.
+   */
+  async getTaskResult(): Promise<Result<R, Error>> {
+    switch (this._state.status) {
+      case TaskStatus.Completed:
+        return Promise.resolve(ok(this._state.result));
+      case TaskStatus.Failed:
+        return Promise.resolve(err(this._state.error));
+      default:
+        return new Promise(resolve => {
+          this.onComplete(event => {
+            resolve(ok(event.result));
+          }).onError(event => {
+            resolve(err(event.error));
+          });
+        });
+    }
   }
 
   /**
@@ -141,13 +193,21 @@ class TaskReference<R> {
    */
   private observeTaskStatus() {
     this.onStart(() => {
-      this._status = TaskStatus.Running;
+      this._state = {
+        status: TaskStatus.Running,
+      };
     })
-      .onComplete(() => {
-        this._status = TaskStatus.Completed;
+      .onComplete(event => {
+        this._state = {
+          status: TaskStatus.Completed,
+          result: event.result,
+        };
       })
-      .onError(() => {
-        this._status = TaskStatus.Failed;
+      .onError(event => {
+        this._state = {
+          status: TaskStatus.Failed,
+          error: event.error,
+        };
       });
   }
 }
@@ -253,53 +313,6 @@ const taskExecutor = async (task?: Task) => {
 };
 
 /**
- * Schedule a task to be executed.
- * @param taskName - Name of the task.
- * @param taskJob - Function that will be executed.
- * @param params - Parameters that will be passed to the `taskJob`.
- * @param notificationsParams - Notification config that will be used on Android
- * to display a notification while the task is running.
- */
-// It's fine to disable the eslint rule here because we might want to add more functions in the future
-// eslint-disable-next-line import/prefer-default-export
-export async function scheduleTask<T, R>(
-  taskName: string,
-  taskJob: TaskJob<T, R>,
-  params: T,
-  notificationsParams?: Partial<AndroidTaskNotificationConfig>,
-): Promise<TaskReference<R>> {
-  // We use Date to generate a "random" id that identify the newly created task.
-  const taskId = new Date().getTime();
-  const androidNotificationConfig = {
-    ...defaultNotificationsConfig(taskName),
-    ...notificationsParams,
-  };
-
-  // Create the new task object.
-  const task: Task = {
-    id: taskId,
-    name: taskName,
-    taskJob,
-    params,
-    androidNotificationConfig,
-  };
-  const queued = isTaskExecutorRunning;
-
-  if (!queued) {
-    // The task queue is empty, start the task immediately.
-    await BackgroundService.start(taskExecutor, {
-      ...androidNotificationConfigToBackgroundActionConfig(taskName, androidNotificationConfig),
-      parameters: task,
-    });
-  } else {
-    // Another task is running, enqueue the new one.
-    TaskQueue.push(task);
-  }
-
-  return new TaskReference(taskId, taskName, queued);
-}
-
-/**
  * Function to subscribe to an event emitted from the task executor.
  * @param eventName - Event name.
  * @param callback - Callback function that will be called when the event occurs.
@@ -363,3 +376,73 @@ function onTaskFailed(
 ): () => void {
   return subscribeToEvent(`${BackgroundTaskEvent.TaskFailed}-${taskId}`, callback, once);
 }
+
+/**
+ * Schedule a task to be executed.
+ * @param taskName - Name of the task.
+ * @param taskJob - Function that will be executed.
+ * @param params - Parameters that will be passed to the `taskJob`.
+ * @param notificationsParams - Notification config that will be used on Android
+ * to display a notification while the task is running.
+ */
+export async function scheduleTask<T, R>(
+  taskName: string,
+  taskJob: TaskJob<T, R>,
+  params: T,
+  notificationsParams?: Partial<AndroidTaskNotificationConfig>,
+): Promise<TaskReference<R>> {
+  // We use Date to generate a "random" id that identify the newly created task.
+  const taskId = new Date().getTime();
+  const androidNotificationConfig = {
+    ...defaultNotificationsConfig(taskName),
+    ...notificationsParams,
+  };
+
+  // Create the new task object.
+  const task: Task = {
+    id: taskId,
+    name: taskName,
+    taskJob,
+    params,
+    androidNotificationConfig,
+  };
+  const queued = isTaskExecutorRunning;
+
+  if (!queued) {
+    // The task queue is empty, start the task immediately.
+    await BackgroundService.start(taskExecutor, {
+      ...androidNotificationConfigToBackgroundActionConfig(taskName, androidNotificationConfig),
+      parameters: task,
+    });
+  } else {
+    // Another task is running, enqueue the new one.
+    TaskQueue.push(task);
+  }
+
+  return new TaskReference(
+    taskId,
+    taskName,
+    {
+      status: queued ? TaskStatus.Queued : TaskStatus.Running,
+    },
+    true,
+  );
+}
+
+/**
+ * Create a failed task reference, this can be used to have a consistent return type
+ * if the function that schedule a task can throw an error before starting the task.
+ * @param taskName - Name of the task.
+ * @param error - Error that caused the task to fail.
+ */
+export const failedTask = (taskName: string, error: Error): TaskReference<never> => {
+  return new TaskReference(
+    new Date().getTime(),
+    taskName,
+    {
+      status: TaskStatus.Failed,
+      error,
+    },
+    false,
+  );
+};

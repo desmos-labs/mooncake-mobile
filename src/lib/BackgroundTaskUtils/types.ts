@@ -132,3 +132,42 @@ export enum TaskStatus {
    */
   Failed = 'Failed',
 }
+
+/**
+ * Interface that represents the state of a queued task.
+ */
+interface TaskStateQueued {
+  readonly status: TaskStatus.Queued;
+}
+
+/**
+ * Interface that represents the state of a running task.
+ */
+interface TaskStateRunning {
+  readonly status: TaskStatus.Running;
+}
+
+/**
+ * Interface that represents the state of a completed task.
+ */
+interface TaskStateCompleted<R> {
+  readonly status: TaskStatus.Completed;
+  readonly result: R;
+}
+
+/**
+ * Interface that represents the state of a failed task.
+ */
+interface TaskStateFailed {
+  readonly status: TaskStatus.Failed;
+  readonly error: Error;
+}
+
+/**
+ * Interface that represents the state of a task.
+ */
+export type TaskState<R> =
+  | TaskStateQueued
+  | TaskStateRunning
+  | TaskStateCompleted<R>
+  | TaskStateFailed;

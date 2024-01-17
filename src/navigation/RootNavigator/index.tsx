@@ -11,6 +11,7 @@ import useInitTourGuidesState from 'hooks/tourguide/useInitTourGuidesState';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
+import NAVIGATORS from 'navigation/navigators';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { Dimensions, Platform } from 'react-native';
@@ -193,6 +194,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator
+      id={NAVIGATORS.ROOT}
       initialRouteName={initialRoute}
       screenOptions={{
         headerShown: false,

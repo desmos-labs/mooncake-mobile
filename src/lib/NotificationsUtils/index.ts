@@ -36,6 +36,8 @@ export const getNotificationOriginator = (notification: Notification): string | 
       return notification.additionalData.reply_author_address;
     case NotificationType.PostRepost:
       return notification.additionalData.repost_author_address;
+    case NotificationType.RelationshipCreated:
+      return notification.additionalData.counterparty_address;
     default:
       return undefined;
   }

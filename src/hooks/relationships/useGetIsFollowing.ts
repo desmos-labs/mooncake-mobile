@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useLazyQuery } from '@apollo/client';
 import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import { useAppStateValue } from '@recoil/appState';
+import { useUpdateUserFollowersCache } from '@recoil/followers';
 
 /**
  * Hook that returns a function that allows to get whether the current
@@ -10,10 +11,12 @@ import { useAppStateValue } from '@recoil/appState';
 const useGetIsFollowing = () => {
   const subspaceId = useAppStateValue('subspaceId');
   const [getIsFollowing] = useLazyQuery(GetRelationshipForAddress);
+  const updateUserFollowrs = useUpdateUserFollowersCache();
 
   return React.useCallback(
     async (userAddress: string, counterpartyAddress: string) => {
       const { data, error } = await getIsFollowing({
+        fetchPolicy: 'network-only',
         variables: {
           subspaceId,
           userAddress,
@@ -25,9 +28,11 @@ const useGetIsFollowing = () => {
         throw error;
       }
 
-      return data?.relationships?.length > 0;
+      const isFollowing = data?.relationships?.length > 0;
+      updateUserFollowrs(userAddress, counterpartyAddress, isFollowing);
+      return isFollowing;
     },
-    [getIsFollowing, subspaceId],
+    [getIsFollowing, subspaceId, updateUserFollowrs],
   );
 };
 

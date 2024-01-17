@@ -1,8 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useResetToHome from 'hooks/navigation/useResetToHome';
+import useRootNavigator from './useRootNavigator';
 
 export interface ReturnToCurrentScreenParams {
   /**
@@ -20,7 +18,9 @@ export interface ReturnToCurrentScreenParams {
 }
 
 const useReturnToCurrentScreen = (params?: ReturnToCurrentScreenParams) => {
-  const navigator = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
+  // We need the root navigator instance to save the current navigator state
+  // othewise we may navigate to the wrong screen.
+  const navigator = useRootNavigator();
   const resetToHomeScreen = useResetToHome();
 
   const startingScreenNavigateParams = useMemo(() => {

@@ -1,12 +1,11 @@
 import Button from 'components/Button';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useTheme } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useStyles from './useStyles';
+import { useToggleFollowage } from './hooks';
 
 interface NotificationButtonProps {
   readonly user: DesmosProfile;
@@ -23,24 +22,35 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const { t } = useTranslation('relationships');
 
   const { user } = props;
+  const { toggleFollow, following, fetchingFollowState, updatingFollow } = useToggleFollowage(user);
 
-  const { isFollowing } = useIsFollowing(user.address);
-  const navigateToProfile = useNavigateToProfile();
-
-  const handleButtonPress = useCallback(() => {
-    navigateToProfile(user.address);
-  }, [navigateToProfile, user.address]);
+  const buttonContent = React.useMemo(() => {
+    if (fetchingFollowState || updatingFollow) {
+      return (
+        <ActivityIndicator color={following ? theme.colors.surfaceBlack : theme.colors.white} />
+      );
+    }
+    return following ? t('unfollow') : t('follow');
+  }, [
+    fetchingFollowState,
+    following,
+    t,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+    updatingFollow,
+  ]);
 
   return (
     <View style={styles.buttonView}>
       <Button
-        textColor={isFollowing ? theme.colors.surfaceBlack : theme.colors.white}
-        onPress={handleButtonPress}
+        textColor={following ? theme.colors.surfaceBlack : theme.colors.white}
+        onPress={toggleFollow}
         size={32}
-        variant={isFollowing ? 'outline' : 'solid'}
-        backgroundColor={isFollowing ? theme.colors.white : theme.colors.surfaceBlack}
-        style={styles.button}>
-        {t(isFollowing ? 'unfollow' : 'follow')}
+        variant={following ? 'outline' : 'solid'}
+        backgroundColor={following ? theme.colors.white : theme.colors.surfaceBlack}
+        style={styles.button}
+        disabled={fetchingFollowState || updatingFollow}>
+        {buttonContent}
       </Button>
     </View>
   );
