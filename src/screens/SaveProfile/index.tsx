@@ -193,7 +193,6 @@ const SaveProfile = (props: NavProps) => {
     async (values: SaveProfileFormState) => {
       InteractionManager.runAfterInteractions(async () => {
         await submitForm(values, profilePic, coverPic);
-        goBack();
       });
     },
     [coverPic, goBack, profilePic, submitForm],
