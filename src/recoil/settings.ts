@@ -77,7 +77,7 @@ export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
     (setting: AppSettings[K] | ((value: AppSettings[K]) => AppSettings[K]), address?: string) => {
       setSettings(currentSettings => {
         if (!activeAccountAddress && !address) {
-          throw new Error('Cannot set settings without active account');
+          return currentSettings;
         }
 
         // Get the settings only for the active address, or the default ones if not valid

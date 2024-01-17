@@ -14,11 +14,10 @@ import { convertGraphQLProfile } from 'lib/GraphQLUtils';
  */
 const useProfileGivenAddress = (address?: string) => {
   const activeAccountAddress = useActiveAccountAddress();
-  const userAddress = address || activeAccountAddress;
+  // TODO: Improve the handling of the address when we will implement
+  // the guest visualization.
+  const userAddress = address ?? activeAccountAddress ?? '';
   const isForActiveUser = activeAccountAddress === userAddress;
-  if (!userAddress) {
-    throw new Error('Cannot get profile for undefined address');
-  }
 
   const [fetchedProfile, setFetchedProfile] = useState<DesmosProfile | undefined>();
 

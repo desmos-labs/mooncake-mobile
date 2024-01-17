@@ -11,9 +11,6 @@ import { useGetPostCommentsDifference } from '@recoil/posts';
  * */
 const usePostCommentsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   const address = useActiveAccountAddress();
-  if (!address) {
-    throw new Error("Trying to get a post's comments count, without an active address");
-  }
 
   // Get the comments count from the server
   const { data, loading, refetch } = useQuery(GetPostCommentsCount, {
@@ -24,10 +21,10 @@ const usePostCommentsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   const serverCommentsCount = useMemo(() => data?.comments?.aggregate?.count ?? 0, [data]);
 
   // Get the comments difference that is stored locally
-  const getCommentsDifference = useGetPostCommentsDifference(address);
+  const getCommentsDifference = useGetPostCommentsDifference();
   const commentsDifference = useMemo(
-    () => getCommentsDifference(post.subspaceId, post.id),
-    [getCommentsDifference, post],
+    () => (address ? getCommentsDifference(address, post.subspaceId, post.id) : 0),
+    [address, getCommentsDifference, post.id, post.subspaceId],
   );
 
   // Compute the overall comments count by adding to the server count the local difference

@@ -71,10 +71,7 @@ const defaultQueryMapper = (data: any | undefined): PostQueryResult => ({
  */
 const usePostsDataByAddress = (options: PostsDataByAddressOptions) => {
   const activeUserAddress = useActiveAccountAddress();
-  const userAddress = options.address || activeUserAddress;
-  if (!userAddress) {
-    throw new Error('No address provided and no active user address found!');
-  }
+  const userAddress = options.address ?? activeUserAddress ?? '';
 
   const subspaceId = useAppStateValue('subspaceId');
 

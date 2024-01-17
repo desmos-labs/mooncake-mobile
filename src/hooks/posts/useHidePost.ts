@@ -14,18 +14,17 @@ interface SuccessfulHidePost {
 
 const useHidePost = () => {
   const activeAccountAddress = useActiveAccountAddress();
-
-  if (!activeAccountAddress) {
-    throw new Error('Trying to hide a post, without an active account');
-  }
-
   const showToast = useToast();
   const { t } = useTranslation('postOperations');
-  const removePostByID = useRemovePostByID(activeAccountAddress);
+  const removePostByID = useRemovePostByID();
   const addPostToHidden = useAddPostToHiddenPosts();
 
   return React.useCallback(
     async (postID: number): Promise<Result<SuccessfulHidePost, Error>> => {
+      if (activeAccountAddress === undefined) {
+        return err(new Error('No active account'));
+      }
+
       const hidePostResult = await HidePost(postID);
 
       if (hidePostResult.isErr()) {
@@ -38,7 +37,7 @@ const useHidePost = () => {
       }
 
       // Remove the hidden post from stored posts
-      removePostByID(postID);
+      removePostByID(activeAccountAddress, postID);
 
       // Add postID to local hidden posts
       addPostToHidden(postID);
@@ -53,7 +52,7 @@ const useHidePost = () => {
         postID,
       });
     },
-    [addPostToHidden, removePostByID, showToast, t],
+    [activeAccountAddress, addPostToHidden, removePostByID, showToast, t],
   );
 };
 

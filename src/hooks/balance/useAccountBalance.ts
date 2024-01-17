@@ -12,17 +12,18 @@ import { filterCoins } from 'lib/ChainsUtils';
  */
 const useAccountBalance = (address?: string) => {
   const activeAddress = useActiveAccountAddress();
-  const userAddress = address || activeAddress;
-  if (!userAddress) {
-    throw new Error('Cannot get account balance of undefined address');
-  }
+  const userAddress = address ?? activeAddress;
 
   const [balance, setBalance] = useState<Coin[]>([]);
   const [error, setError] = useState<Error>();
   const { refetch, loading } = useQuery(GetAccountBalance, {
     fetchPolicy: 'network-only',
-    variables: { address: userAddress },
+    variables: { address: userAddress ?? '' },
     onCompleted(data) {
+      if (userAddress !== activeAddress) {
+        setBalance([]);
+      }
+
       const { balance: onChainBalance } = data;
       setBalance(onChainBalance.coins);
     },

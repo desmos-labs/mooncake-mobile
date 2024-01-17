@@ -8,13 +8,14 @@ import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
  */
 const useHasReportedPost = () => {
   const activeAddress = useActiveAccountAddress();
-  if (!activeAddress) {
-    throw new Error('Trying to check if a post has been reported without an active account');
-  }
 
   const [getLazyData] = useCustomLazyQuery(GetReportsByUser);
   return React.useCallback(
     async (subspaceId: number, postId: number) => {
+      if (!activeAddress) {
+        return false;
+      }
+
       const data = await getLazyData({
         variables: {
           subspaceId,
