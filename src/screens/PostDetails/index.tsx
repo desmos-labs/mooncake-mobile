@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -7,7 +8,6 @@ import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import MooncakeLoader from 'components/Loaders/MooncakeLoader';
-import Typography from 'components/Typography';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
@@ -177,7 +177,7 @@ const PostDetails = () => {
           backgroundColor={theme.colors.white}
           edges={['top']}
           style={styles.emptyView}>
-          <Typography.Body5>Something went wrong when loading the post</Typography.Body5>
+          <Typography.Regular16>Something went wrong when loading the post</Typography.Regular16>
         </DView>
       );
     }

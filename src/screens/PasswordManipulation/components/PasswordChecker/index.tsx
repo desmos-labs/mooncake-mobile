@@ -1,4 +1,4 @@
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { makeStyle } from 'config/theme';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
@@ -78,7 +78,7 @@ const PasswordChecker = ({ strengthLevel }: Props) => {
       <View style={[styles.dot, firstDotColor]} />
       <View style={[styles.dot, secondDotColor]} />
       <View style={[styles.dot, styles.extraMargin, thirdDotColor]} />
-      <Typography.Body5 style={textColor}>{text}</Typography.Body5>
+      <Typography.Regular14 style={textColor}>{text}</Typography.Regular14>
     </View>
   );
 };

@@ -1,6 +1,6 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { postLikedIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
-import Typography from 'components/Typography';
 import { Image } from 'expo-image';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
@@ -65,11 +65,10 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
           image={liked ? postLikedIcon : postToLikeIcon}
           style={styles.bottomBarIcon}
         />
-        <Typography.Subtitle3
+        <Typography.Regular16
           style={liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }}>
           {likesCount}
-        </Typography.Subtitle3>
-
+        </Typography.Regular16>
         {/* I have completely removed the logic that changed the color of the button based on whether */}
         {/* the user comment the post or not. This has been done for the following reasons: */}
         {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
@@ -81,9 +80,9 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
             source={postToCommentIcon}
             style={styles.bottomBarIcon}
           />
-          <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
+          <Typography.Regular16 style={{ color: theme.colors.grey02 }}>
             {commentsCount}
-          </Typography.Subtitle3>
+          </Typography.Regular16>
         </TouchableOpacity>
       </View>
     </View>

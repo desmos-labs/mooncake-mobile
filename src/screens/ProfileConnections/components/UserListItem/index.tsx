@@ -1,6 +1,6 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import FollowUnfollowButton from 'components/FollowUnfollowButton';
-import Typography from 'components/Typography';
 import { Image } from 'expo-image';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
@@ -68,17 +68,15 @@ const UserListItem = (props: UserListItemProps) => {
     <TouchableOpacity onPress={onPress} style={styles.container}>
       {/* Profile picture */}
       <Image source={getProfilePicture(user)} style={styles.pic} />
-
       {/* Profile DTag and nickname */}
       <View style={styles.names}>
-        <Typography.Subtitle3 numberOfLines={1} ellipsizeMode="tail">
+        <Typography.Semibold14 numberOfLines={1} ellipsizeMode="tail">
           {user.nickname}
-        </Typography.Subtitle3>
-        <Typography.Body7 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
+        </Typography.Semibold14>
+        <Typography.Regular12 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
           @{user.dTag}
-        </Typography.Body7>
+        </Typography.Regular12>
       </View>
-
       {/* Button to follow or unfollow a user */}
       {!isActiveAccount && (
         <FollowUnfollowButton

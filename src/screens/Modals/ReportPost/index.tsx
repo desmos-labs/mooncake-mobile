@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useAppStateValue } from '@recoil/appState';
@@ -8,7 +9,6 @@ import CustomRadioGroup, { RadioValue } from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useReportPost from 'hooks/reports/useReportPost';
@@ -20,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { isPostAlreadyReportedError } from 'types/error';
 import { Post } from 'types/posts';
-import useToast from 'hooks/toasts/useToast';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -40,7 +39,6 @@ const ReportPost = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { post } = params;
-  const showToast = useToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -51,7 +49,7 @@ const ReportPost = () => {
   const { reportReasons } = subspaceParams;
   const reportingReasons = reportReasons.map(reason => {
     return {
-      label: t(reason.title.toLowerCase()),
+      label: t(reason.title.toLowerCase() as any),
       value: reason.id.toString(),
     } as RadioValue;
   });
@@ -86,7 +84,7 @@ const ReportPost = () => {
     }
 
     setSuccessfulReport(true);
-  }, [reportPost, message, selectedReport.value, showToast, t]);
+  }, [reportPost, message, selectedReport.value]);
 
   const successfulReportComponent = useMemo(() => {
     return (
@@ -94,9 +92,9 @@ const ReportPost = () => {
         <Image source={reportSuccessIcon} style={styles.reportIcon} />
         <Typography.H4 style={styles.headerText}>{t('thanks for reporting')}</Typography.H4>
         <Spacer paddingBottom={theme.spacing.m} />
-        <Typography.Body5 style={styles.reportSuccessText}>
+        <Typography.Regular16 style={styles.reportSuccessText}>
           {t('the post has been reported and will be reviewed shortly')}
-        </Typography.Body5>
+        </Typography.Regular16>
       </View>
     );
   }, [
@@ -114,9 +112,9 @@ const ReportPost = () => {
         <Image source={reportSuccessIcon} style={styles.reportIcon} />
         <Typography.H4 style={styles.headerText}>{t('post already reported')}</Typography.H4>
         <Spacer paddingBottom={theme.spacing.m} />
-        <Typography.Body5 style={styles.reportSuccessText}>
+        <Typography.Regular16 style={styles.reportSuccessText}>
           {t('you have already reported this post')}
-        </Typography.Body5>
+        </Typography.Regular16>
       </View>
     );
   }, [
@@ -131,16 +129,14 @@ const ReportPost = () => {
   const standardComponent = useMemo(() => {
     return (
       <>
-        <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
+        <Typography.H6 style={styles.headerText}>{t('header')}</Typography.H6>
         <Spacer paddingBottom={10} />
-
         <View>
           <CustomRadioGroup
             values={reportingReasons}
             selectedValue={selectedReport.index}
             onSelect={(index, value) => setSelectedReport({ value: parseInt(value, 10), index })}
           />
-
           <Spacer paddingBottom={theme.spacing.s} />
           <DTextInput
             editable={true}

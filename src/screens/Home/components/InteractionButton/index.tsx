@@ -1,4 +1,4 @@
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import React from 'react';
 import { Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
@@ -27,9 +27,9 @@ const InteractionButton = ({ onPress, interactionCount, icon }: Props) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={icon} style={styles.icon} />
-      <Typography.Subtitle3 style={styles.countText}>
+      <Typography.Semibold14 style={styles.countText}>
         {formatNumShorthand(interactionCount)}
-      </Typography.Subtitle3>
+      </Typography.Semibold14>
     </TouchableOpacity>
   );
 };

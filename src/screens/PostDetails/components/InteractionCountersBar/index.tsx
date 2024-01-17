@@ -1,4 +1,4 @@
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Image } from 'expo-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Box, Skeleton } from 'native-base';
@@ -54,9 +54,9 @@ const InteractionCountersBar = (props: Props) => {
             })}
           </Box>
         )}
-        <Typography.Button2 style={styles.text}>
+        <Typography.Regular14 style={styles.text}>
           {t('likes counter', { likesCounter })}
-        </Typography.Button2>
+        </Typography.Regular14>
       </TouchableOpacity>
     </View>
   );

@@ -1,5 +1,5 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import Button from 'components/Button';
-import Typography from 'components/Typography';
 import { Image } from 'expo-image';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
@@ -57,15 +57,14 @@ const BlockedUserItem = ({ profile }: Props) => {
           <Image source={getProfilePicture(profile)} style={styles.pic} />
           {/* Profile DTag and nickname */}
           <VStack ml="s">
-            <Typography.Subtitle3 numberOfLines={1} ellipsizeMode="tail">
+            <Typography.Semibold14 numberOfLines={1} ellipsizeMode="tail">
               {profile.nickname}
-            </Typography.Subtitle3>
-            <Typography.Body7 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
+            </Typography.Semibold14>
+            <Typography.Regular12 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
               @{profile.dTag}
-            </Typography.Body7>
+            </Typography.Regular12>
           </VStack>
         </HStack>
-
         {BlockOrUnblockButton}
       </HStack>
     </TouchableOpacity>

@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-export enum SecureStorageErrorType {
+enum SecureStorageErrorType {
   CorruptedData,
   WrongPassword,
   WalletNotFound,

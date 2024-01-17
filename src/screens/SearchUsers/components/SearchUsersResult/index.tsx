@@ -1,5 +1,5 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import Typography from 'components/Typography';
 import { Image } from 'expo-image';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { getProfilePicture } from 'lib/ProfileUtils';
@@ -34,8 +34,10 @@ const SearchUsersResult = ({ profile }: Props) => {
       onPress={() => navigateToProfile(isActiveAddress ? undefined : profile.address)}>
       <Image source={getProfilePicture(profile)} contentFit="cover" style={styles.avatar} />
       <View style={styles.textContainer}>
-        <Typography.Subtitle3>{profile.nickname || 'no-nickname'}</Typography.Subtitle3>
-        <Typography.Body7 style={{ color: theme.colors.midGrey }}>@{profile.dTag}</Typography.Body7>
+        <Typography.Semibold14>{profile.nickname || 'no-nickname'}</Typography.Semibold14>
+        <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
+          @{profile.dTag}
+        </Typography.Regular12>
       </View>
     </TouchableOpacity>
   );

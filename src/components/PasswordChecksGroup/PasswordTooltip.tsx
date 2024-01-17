@@ -1,5 +1,5 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { AntDesign } from '@expo/vector-icons';
-import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import { useTheme } from 'native-base';
 import React from 'react';
@@ -21,7 +21,7 @@ const PasswordTooltip = ({ label }: Props) => {
         color={theme.colors.pink01}
         style={styles.icon}
       />
-      <Typography.Body5 style={[styles.tooltipText]}>{label}</Typography.Body5>
+      <Typography.Regular14 style={[styles.tooltipText]}>{label}</Typography.Regular14>
     </View>
   );
 };

@@ -1,10 +1,10 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { storiesOf } from '@storybook/react-native';
 import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
 import SectionText from 'components/SectionText';
 import React from 'react';
-import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import Typography from '../Typography';
 import Section from './index';
 
 type CompProps = React.ComponentProps<typeof Section>;

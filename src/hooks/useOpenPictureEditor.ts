@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dimensions } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {
   PROFILE_HEADER_HEIGHT_COMPACT,
   PROFILE_HEADER_HEIGHT_EXPANDED,
 } from 'screens/Profile/useStyles';
-import { useTranslation } from 'react-i18next';
 
 const useOpenPictureEditor = () => {
   const { t } = useTranslation('pictureEditor');
@@ -40,7 +40,7 @@ const useOpenPictureEditor = () => {
           onError && onError(err);
         });
     },
-    [],
+    [t],
   );
 
   const editCoverPicture = useCallback(
@@ -73,7 +73,7 @@ const useOpenPictureEditor = () => {
           onError && onError(err);
         });
     },
-    [],
+    [t],
   );
 
   const editPostPicture = useCallback(

@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import BackButton from 'components/BackButton';
@@ -6,7 +7,6 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import { DesmosChain } from 'config/LinkableChains';
 import useTrackAcceptedLegalTerms from 'hooks/analytics/useTrackAcceptedLegalTerms';
 import useLoginWithWeb3Auth from 'hooks/web3Auth/useLoginWithWeb3Auth';
@@ -75,15 +75,15 @@ const ServiceAndPolicy = () => {
   return (
     <DView topBar={<TopBar />} style={styles.container} disableHideKeyboardTouchable={true}>
       <Spacer paddingBottom="m" />
-      <Typography.H3>{t('legal')}</Typography.H3>
+      <Typography.H6>{t('legal')}</Typography.H6>
       <Spacer paddingBottom="m" />
-      <Typography.Body5>{t('please review')}</Typography.Body5>
+      <Typography.Regular16>{t('please review')}</Typography.Regular16>
       <Spacer paddingBottom="l" />
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={[styles.button, styles.border]}
           onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}>
-          <Typography.Body5>{t('terms of service')}</Typography.Body5>
+          <Typography.Regular16>{t('terms of service')}</Typography.Regular16>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
             iconColor={theme.colors.surfaceBlack}
@@ -92,7 +92,7 @@ const ServiceAndPolicy = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => Linking.openURL('https://butter.social/privacy-policy')}>
-          <Typography.Body5>{t('privacy policy')}</Typography.Body5>
+          <Typography.Regular16>{t('privacy policy')}</Typography.Regular16>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
             iconColor={theme.colors.surfaceBlack}

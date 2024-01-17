@@ -1,13 +1,13 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { dotsAnimation, squaresAnimation } from 'assets/animations';
+import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { View } from 'react-native';
-import { dotsAnimation, squaresAnimation } from 'assets/animations';
-import Spacer from 'components/Spacer';
 
 export enum LoadingAnimation {
   Squares = 'squares',
@@ -79,7 +79,7 @@ const LoadingModal: React.FC<NavProps> = ({
         />
         <Spacer paddingTop="m" />
         {title && <Typography.H6 style={styles.message}>{title}</Typography.H6>}
-        <Typography.Body5 style={styles.message}>{message}</Typography.Body5>
+        <Typography.Regular16 style={styles.message}>{message}</Typography.Regular16>
       </View>
     </View>
   );

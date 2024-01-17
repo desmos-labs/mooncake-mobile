@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { squaresAnimation } from 'assets/animations';
 import {
@@ -10,7 +11,6 @@ import {
 } from 'assets/images';
 import PopupMenu from 'components/PopupMenu';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { parseISO } from 'date-fns';
 import { Image } from 'expo-image';
@@ -170,18 +170,18 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
           recyclingKey={post.author.address}
         />
         <VStack>
-          <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
+          <Typography.Semibold14>{post.author.nickname}</Typography.Semibold14>
           <HStack>
-            <Typography.Body6 style={{ color: theme.colors.midGrey }}>
+            <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
               @{post.author.dTag}
-            </Typography.Body6>
-            <Typography.Body6
+            </Typography.Regular12>
+            <Typography.Regular12
               style={{
                 color: theme.colors.midGrey,
                 marginLeft: theme.spacing.xs,
               }}>
               {!isPending && `· ${calculatedCreationDate}`}
-            </Typography.Body6>
+            </Typography.Regular12>
           </HStack>
         </VStack>
       </TouchableOpacity>

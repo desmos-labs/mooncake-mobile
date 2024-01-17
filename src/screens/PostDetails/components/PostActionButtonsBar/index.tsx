@@ -1,10 +1,10 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { commentIcon, commentLiked, commentLikeEmptyIcon } from 'assets/images';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
+import { Divider } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
-import { Divider } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {
@@ -32,17 +32,17 @@ const PostActionButtonsBar = (props: Props) => {
             source={postLiked ? commentLiked : commentLikeEmptyIcon}
             style={[styles.icon, postLiked && styles.orangeIconAndText]}
           />
-          <Typography.Subtitle3
+          <Typography.Semibold14
             numberOfLines={1}
             style={[styles.text, postLiked && styles.orangeText]}>
             {t('like')}
-          </Typography.Subtitle3>
+          </Typography.Semibold14>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCommentPress} style={styles.button}>
           <Image source={commentIcon} style={styles.icon} />
-          <Typography.Subtitle3 numberOfLines={1} style={styles.text}>
+          <Typography.Semibold14 numberOfLines={1} style={styles.text}>
             {t('comment')}
-          </Typography.Subtitle3>
+          </Typography.Semibold14>
         </TouchableOpacity>
       </View>
       <Divider style={styles.divider} />

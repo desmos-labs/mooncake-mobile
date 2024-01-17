@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabNavigationOptions,
@@ -6,7 +7,6 @@ import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -85,7 +85,7 @@ const ProfilePosts = () => {
       onStartShouldSetPanResponderCapture: enableParentSwipeLeft,
       onMoveShouldSetPanResponderCapture: enableParentSwipeLeft,
     });
-  }, [route]);
+  }, [route, initialTabRouteName]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
@@ -108,7 +108,7 @@ const ProfilePosts = () => {
       style={styles.container}
       {...panResponder.panHandlers}
       onTouchStart={disableParentSwipeLeft}>
-      <Typography.H3>{t('posts')}</Typography.H3>
+      <Typography.Semibold24>{t('posts')}</Typography.Semibold24>
       <Tab.Navigator screenOptions={screenOptions} initialRouteName={ROUTES.PROFILE_POSTS_POSTS}>
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_POSTS}

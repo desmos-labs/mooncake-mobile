@@ -1,11 +1,11 @@
-import React from 'react';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 
 import { action } from '@storybook/addon-actions';
-import { tipIcon } from 'assets/images';
 import { storiesOf } from '@storybook/react-native';
-import SbContainer from 'storybook/decorators/SbContainer';
+import { tipIcon } from 'assets/images';
+import React from 'react';
 import { View } from 'react-native';
-import Typography from 'components/Typography';
+import SbContainer from 'storybook/decorators/SbContainer';
 import InteractionButton from './index';
 
 type CompProps = React.ComponentProps<typeof InteractionButton>;
@@ -38,15 +38,12 @@ storiesOf('components/InteractionButton', module)
   ))
   .add('Default', () => (
     <View style={{ alignItems: 'center' }}>
-      <Typography.Body1>Less than 1000</Typography.Body1>
+      <Typography.Regular10>Less than 1000</Typography.Regular10>
       <InteractionButton {...LessThan1000} />
-
-      <Typography.Body1 style={{ marginTop: 24 }}>1000 - 999999</Typography.Body1>
+      <Typography.Regular10 style={{ marginTop: 24 }}>1000 - 999999</Typography.Regular10>
       <InteractionButton {...LessThan1000000} interactionCount={2560} />
-
       <InteractionButton {...LessThan1000000} />
-
-      <Typography.Body1 style={{ marginTop: 24 }}>{'>1000000'}</Typography.Body1>
+      <Typography.Regular10 style={{ marginTop: 24 }}>{'>1000000'}</Typography.Regular10>
       <InteractionButton {...If1000000AndMore} />
     </View>
   ));

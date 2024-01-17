@@ -1,7 +1,7 @@
-import BCheckbox from 'components/BCheckbox';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import AvatarImage from 'components/AvatarImage';
+import BCheckbox from 'components/BCheckbox';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
@@ -46,12 +46,12 @@ const CreatorListItem: React.FC<CreatorListItemProps> = ({
         <AvatarImage imageSource={profile} size={40} disabled={disabled} />
         <Spacer paddingLeft={12} />
         <View style={styles.profileInfo}>
-          <Typography.Subtitle2 style={disabled ? styles.disabledText : undefined}>
+          <Typography.Semibold16 style={disabled ? styles.disabledText : undefined}>
             {profile.nickname}
-          </Typography.Subtitle2>
-          <Typography.Body6 style={disabled ? styles.disabledText : undefined}>
+          </Typography.Semibold16>
+          <Typography.Regular14 style={disabled ? styles.disabledText : undefined}>
             @{profile.dTag}
-          </Typography.Body6>
+          </Typography.Regular14>
         </View>
         <BCheckbox value={selected} disabled={disabled} />
       </View>

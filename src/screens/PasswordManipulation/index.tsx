@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -8,7 +9,6 @@ import PasswordChecksGroup from 'components/PasswordChecksGroup';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
 import _ from 'lodash';
@@ -105,10 +105,10 @@ const PasswordManipulation = () => {
   return (
     <DView style={styles.container} topBar={<TopBar />} backgroundColor={theme.colors.white}>
       <Spacer paddingBottom="s" />
-      <Typography.H3 style={styles.headerText}>{headerText}</Typography.H3>
+      <Typography.H6 style={styles.headerText}>{headerText}</Typography.H6>
       {descriptionText && (
         <Spacer paddingBottom={32}>
-          <Typography.Body6>{descriptionText}</Typography.Body6>
+          <Typography.Regular14>{descriptionText}</Typography.Regular14>
         </Spacer>
       )}
       {/* nested ternary to fix next button behavior on small screen devices
@@ -130,7 +130,7 @@ const PasswordManipulation = () => {
                   ref={scrollViewRef}
                   keyboardDismissMode="on-drag">
                   <View style={styles.labelGroup}>
-                    <Typography.Subtitle2>{t(pwInputLabel as any)}</Typography.Subtitle2>
+                    <Typography.Regular16>{t(pwInputLabel as any)}</Typography.Regular16>
                     {!isUserTyping && values.newPassword.length > 0 && (
                       <PasswordChecker strengthLevel={zxcvbn(values.newPassword).score} />
                     )}
@@ -154,9 +154,9 @@ const PasswordManipulation = () => {
                     <PasswordChecksGroup passwordToCheck={values.newPassword} mode="password" />
                   )}
                   <Spacer paddingBottom="m" />
-                  <Typography.Subtitle2 style={styles.bottomLabel}>
+                  <Typography.Regular16 style={styles.bottomLabel}>
                     {t('confirm password')}
-                  </Typography.Subtitle2>
+                  </Typography.Regular16>
                   <DSecureTextInput
                     error={errors.confirmPassword !== undefined}
                     testID="confirmPasswordField"

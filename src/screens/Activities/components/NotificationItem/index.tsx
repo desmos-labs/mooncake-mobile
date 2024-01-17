@@ -1,6 +1,6 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { defaultProfilePic } from 'assets/images';
 import AvatarImage from 'components/AvatarImage';
-import Typography from 'components/Typography';
 import { ToastType } from 'config/toast/toastConfig';
 import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
@@ -139,8 +139,8 @@ const NotificationItem = (props: NotificationComponentProps) => {
         )}
         {/* Notification texts */}
         <TouchableOpacity style={styles.profileView} onPress={onNotificationPressed}>
-          <Typography.Body6>{notification.title}</Typography.Body6>
-          <Typography.Body7 style={styles.date}>{formattedDate}</Typography.Body7>
+          <Typography.Regular14>{notification.title}</Typography.Regular14>
+          <Typography.Regular12 style={styles.date}>{formattedDate}</Typography.Regular12>
         </TouchableOpacity>
         {/* Right element, if any */}
         {RightElement}

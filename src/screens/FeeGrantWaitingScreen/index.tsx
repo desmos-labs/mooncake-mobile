@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
@@ -8,7 +9,6 @@ import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
@@ -148,7 +148,7 @@ const FeeGrantWaitingScreen = () => {
         <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>
         <Spacer paddingBottom={theme.spacing.l} />
-        <Typography.Body5 style={styles.subtitle}>{subtitle}</Typography.Body5>
+        <Typography.Regular14 style={styles.subtitle}>{subtitle}</Typography.Regular14>
         <Spacer paddingBottom={theme.spacing.xl} />
         <Button
           backgroundColor={theme.colors.surfaceBlack}

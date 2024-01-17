@@ -1,10 +1,10 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { FontAwesome } from '@expo/vector-icons';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { emptyPostsIcon } from 'assets/images';
 import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
-import Typography from 'components/Typography';
 import { Image } from 'expo-image';
 import { Center, useTheme } from 'native-base';
 import React, { useMemo } from 'react';
@@ -51,9 +51,9 @@ const PostsSection = (props: PostsSectionProps) => {
       return (
         <Center flex={1}>
           <Image contentFit="contain" source={emptyPostsIcon} style={styles.emptyImage} />
-          <Typography.Body7 style={{ color: theme.colors.midGrey }}>
+          <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
             {t('no posts')}
-          </Typography.Body7>
+          </Typography.Regular12>
         </Center>
       );
     }
@@ -67,17 +67,15 @@ const PostsSection = (props: PostsSectionProps) => {
 
   return (
     <View style={styles.container}>
-      <Typography.Subtitle2>{t('posts')}</Typography.Subtitle2>
-
+      <Typography.Semibold16>{t('posts')}</Typography.Semibold16>
       <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
         {/* Subtitle of the section */}
         {posts.length !== 0 && !isLoading && !isGuestProfile && (
-          <Typography.Body7 style={{ color: theme.colors.midGrey }}>
+          <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
             {t('created liked tipped')}
-          </Typography.Body7>
+          </Typography.Regular12>
         )}
       </Spacer>
-
       {/* Posts list, or loading indicator */}
       {!isLoading ? (
         Content
@@ -86,17 +84,16 @@ const PostsSection = (props: PostsSectionProps) => {
           <StyledSpinner />
         </View>
       )}
-
       {/* See more button */}
       {!isLoading && posts.length > 0 && (
         <TouchableOpacity style={styles.button} onPress={onPress}>
-          <Typography.Body6
+          <Typography.Regular14
             style={{
               marginRight: theme.spacing.s,
               color: theme.colors.butterOrange01,
             }}>
             {t('see more')}
-          </Typography.Body6>
+          </Typography.Regular14>
           <FontAwesome
             name="angle-right"
             color={theme.colors.butterOrange01}

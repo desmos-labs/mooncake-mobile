@@ -1,4 +1,5 @@
 import { Bank, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -15,7 +16,6 @@ import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
@@ -180,7 +180,7 @@ const ProfileOperations = () => {
             <Divider style={styles.divider} />
           )}
           <View style={styles.sectionHeader}>
-            <Typography.Button2>{header}</Typography.Button2>
+            <Typography.Semibold14>{header}</Typography.Semibold14>
           </View>
         </>
       );
@@ -214,7 +214,7 @@ const ProfileOperations = () => {
     return (
       <Center flex={1}>
         <Image contentFit="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
-        <Typography.Body5>{t('no operations')}</Typography.Body5>
+        <Typography.Regular14>{t('no operations')}</Typography.Regular14>
       </Center>
     );
   }, [isDataLoading, styles.emptyIcon, t]);
@@ -253,16 +253,16 @@ const ProfileOperations = () => {
       {/* Balance section title */}
       <View>
         <Spacer paddingTop="s" />
-        <Typography.Body5>{t('balance')}</Typography.Body5>
+        <Typography.Regular16>{t('balance')}</Typography.Regular16>
         {/* Balance amount (in coins) */}
         {/* TODO: Show something if the balance is still loading */}
-        <Typography.H2>{formatCoins(balance, ', ')}</Typography.H2>
+        <Typography.Semibold30>{formatCoins(balance, ', ')}</Typography.Semibold30>
         {/* Balance amount (in fiat) */}
         {/* TODO: Show something if the balance is still loading */}
-        <Typography.H3>
+        <Typography.Semibold30>
           {symbol}
           {formatCurrencyAmount(fiatAmount)}
-        </Typography.H3>
+        </Typography.Semibold30>
         <Spacer paddingVertical={theme.spacing.m} />
         {/* Past operations section title */}
         <Typography.H5 style={styles.subtitle}>{t('operations')}</Typography.H5>

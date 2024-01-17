@@ -1,6 +1,6 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import React from 'react';
 import { View } from 'react-native';
-import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
 type Props = {
@@ -17,8 +17,7 @@ const TextBullet = ({ textArr }: Props) => {
       {textArr.map(x => (
         <View key={x} style={styles.innerContainer}>
           <View style={styles.bullet} />
-
-          <Typography.Body5>{x}</Typography.Body5>
+          <Typography.Regular16>{x}</Typography.Regular16>
         </View>
       ))}
     </View>

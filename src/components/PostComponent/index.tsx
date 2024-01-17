@@ -1,4 +1,4 @@
-import Typography from 'components/Typography';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import { useTheme } from 'native-base';
@@ -38,7 +38,7 @@ const PostComponent = (props: Props) => {
     if (post.text && post.attachments?.length === 0) {
       return (
         <View style={styles.textContainer}>
-          <Typography.Body5>{post.text}</Typography.Body5>
+          <Typography.Regular16>{post.text}</Typography.Regular16>
         </View>
       );
     } else if (!post.text && post.attachments?.length !== 0) {
@@ -46,7 +46,9 @@ const PostComponent = (props: Props) => {
     } else {
       return (
         <View>
-          <Typography.Body5 style={{ margin: theme.spacing.m }}>{post.text}</Typography.Body5>
+          <Typography.Regular16 style={{ margin: theme.spacing.m }}>
+            {post.text}
+          </Typography.Regular16>
           {MediaAttachment}
         </View>
       );

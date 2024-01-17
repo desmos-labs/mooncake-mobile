@@ -1,4 +1,8 @@
-import { TypographyStyles } from 'components/Typography';
+import {
+  TypographyConfigSemibold12,
+  TypographyConfigSemibold14,
+  TypographyConfigSemibold16,
+} from '@desmoslabs/desmos-kit-ui/components/Typography/config';
 import _ from 'lodash';
 import { Button as NBButton, useTheme, useToken } from 'native-base';
 import { ColorType } from 'native-base/lib/typescript/components/types';
@@ -83,12 +87,12 @@ const Button = ({
 
   const buttonTypography = React.useMemo(() => {
     const sizeToTypographyMap: { [index: number]: StyleProp<TextStyle> } = {
-      56: TypographyStyles.Subtitle2,
-      44: TypographyStyles.Button2,
-      32: TypographyStyles.Button3,
-      30: TypographyStyles.Button3,
-      28: TypographyStyles.Button3,
-      26: TypographyStyles.Button3,
+      56: TypographyConfigSemibold16,
+      44: TypographyConfigSemibold16,
+      32: TypographyConfigSemibold14,
+      30: TypographyConfigSemibold14,
+      28: TypographyConfigSemibold14,
+      26: TypographyConfigSemibold12,
     };
 
     const typographyStyle = sizeToTypographyMap[size as number];

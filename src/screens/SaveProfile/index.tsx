@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { backButton, defaultBanner, defaultProfilePic, editProfilePic } from 'assets/images';
@@ -6,7 +7,6 @@ import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
-import Typography from 'components/Typography';
 import { CameraType } from 'expo-image-picker';
 import { Formik } from 'formik';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
@@ -196,7 +196,7 @@ const SaveProfile = (props: NavProps) => {
         goBack();
       });
     },
-    [coverPic, profilePic, submitForm],
+    [coverPic, goBack, profilePic, submitForm],
   );
 
   // -------------------------------------------------------------------------------------
@@ -231,9 +231,9 @@ const SaveProfile = (props: NavProps) => {
                 style={styles.scrollView}
                 contentContainerStyle={styles.card}>
                 <View style={styles.scrollContainer} onStartShouldSetResponder={() => true}>
-                  <Typography.Subtitle2 style={styles.inputLabel}>
+                  <Typography.Semibold16 style={styles.inputLabel}>
                     {t('nickname')}
-                  </Typography.Subtitle2>
+                  </Typography.Semibold16>
                   <DTextInput
                     style={styles.inputStyle}
                     inputRef={nicknameInputRef}
@@ -245,9 +245,9 @@ const SaveProfile = (props: NavProps) => {
                     error={!!errors.nickname}
                   />
                   {errors.nickname && (
-                    <Typography.Caption1 style={styles.errorText}>
+                    <Typography.Regular12 style={styles.errorText}>
                       {errors.nickname}
-                    </Typography.Caption1>
+                    </Typography.Regular12>
                   )}
                   {nicknameInputRef.current && (
                     <View style={styles.nickname}>
@@ -258,9 +258,9 @@ const SaveProfile = (props: NavProps) => {
                     </View>
                   )}
                   <>
-                    <Typography.Subtitle2 style={styles.inputLabel}>
+                    <Typography.Semibold16 style={styles.inputLabel}>
                       {t('dtag')}
-                    </Typography.Subtitle2>
+                    </Typography.Semibold16>
                     <DTextInput
                       style={styles.inputStyle}
                       value={values.dTag}
@@ -274,9 +274,9 @@ const SaveProfile = (props: NavProps) => {
                     />
                   </>
                   {errors.dTag && (
-                    <Typography.Caption1 style={styles.errorText}>
+                    <Typography.Regular12 style={styles.errorText}>
                       {errors.dTag}
-                    </Typography.Caption1>
+                    </Typography.Regular12>
                   )}
                   {dTagInputRef.current && (
                     <View style={styles.dTag}>
@@ -286,7 +286,9 @@ const SaveProfile = (props: NavProps) => {
                       />
                     </View>
                   )}
-                  <Typography.Subtitle2 style={styles.inputLabel}>{t('bio')}</Typography.Subtitle2>
+                  <Typography.Semibold16 style={styles.inputLabel}>
+                    {t('bio')}
+                  </Typography.Semibold16>
                   <DTextInput
                     onFocus={() => {
                       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 500);
@@ -304,7 +306,9 @@ const SaveProfile = (props: NavProps) => {
                     style={styles.bioDTextInput}
                   />
                   {errors.bio && (
-                    <Typography.Caption1 style={styles.errorText}>{errors.bio}</Typography.Caption1>
+                    <Typography.Regular12 style={styles.errorText}>
+                      {errors.bio}
+                    </Typography.Regular12>
                   )}
                   {bioInputRef.current && (
                     <View style={styles.bio}>

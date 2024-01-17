@@ -5,7 +5,6 @@ import { makeStyle } from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   root: {
-    paddingTop: theme.spacing.m,
     paddingHorizontal: theme.spacing.m,
   },
   title: {

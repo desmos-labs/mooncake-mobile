@@ -1,9 +1,9 @@
-import GetPostsLikedByUser from 'services/graphql/queries/GetPostsLikedByUser';
-import React from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
-import { Post } from 'types/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
+import React from 'react';
+import GetPostsLikedByUser from 'services/graphql/queries/GetPostsLikedByUser';
+import { Post } from 'types/posts';
 
 /**
  * Hook that provides a function that can be used inside the usePaginatedData
@@ -34,7 +34,7 @@ const useFetchLikedPosts = (user: string) => {
         endReached: posts.length < limit,
       };
     },
-    [fetchLikedPosts],
+    [fetchLikedPosts, user],
   );
 };
 

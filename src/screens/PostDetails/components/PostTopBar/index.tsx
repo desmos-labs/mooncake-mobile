@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import {
   block,
   followBlackIcon,
@@ -12,7 +13,6 @@ import { useHandlePressReport } from 'components/PostCard/hooks';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
@@ -150,9 +150,9 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         style={styles.topBar}
         centerElement={
           <View style={styles.rightContainer}>
-            <Typography.Subtitle3 numberOfLines={1}>
+            <Typography.Semibold16 numberOfLines={1}>
               {commentsCount} {t('replies')}
-            </Typography.Subtitle3>
+            </Typography.Semibold16>
           </View>
         }
       />
@@ -170,12 +170,12 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
             onPress={() => handleNavigateToProfile(post!.author.address)}
           />
           <View style={styles.middleTextContainer}>
-            <Typography.Subtitle3 numberOfLines={1}>
+            <Typography.Semibold14 numberOfLines={1}>
               {getProfileDisplayName(post!.author)}
-            </Typography.Subtitle3>
-            <Typography.Body7 style={styles.subtitle}>
+            </Typography.Semibold14>
+            <Typography.Regular12 style={styles.subtitle}>
               {formatDate(post!.creationDate)}
-            </Typography.Body7>
+            </Typography.Regular12>
           </View>
         </View>
       </View>

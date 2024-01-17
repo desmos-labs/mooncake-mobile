@@ -1,7 +1,7 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import React, { useMemo } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
-import Typography from '../Typography';
 
 type Props = {
   /**
@@ -28,7 +28,7 @@ const Section: React.FC<Props> = props => {
   return (
     <View style={[style, styles.container]}>
       <View style={styles.innerContainer}>
-        {title ? <Typography.Subtitle3 style={styles.title}>{title}</Typography.Subtitle3> : null}
+        {title ? <Typography.Semibold14 style={styles.title}>{title}</Typography.Semibold14> : null}
         <View>{wrapped}</View>
       </View>
     </View>

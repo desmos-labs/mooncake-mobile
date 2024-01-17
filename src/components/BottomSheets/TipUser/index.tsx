@@ -1,12 +1,12 @@
 import { coin } from '@cosmjs/stargate';
 import { Coin } from '@desmoslabs/desmjs-types/cosmos/base/v1beta1/coin';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCurrentChainInfo } from '@recoil/settings';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
 import { ToastType } from 'config/toast/toastConfig';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useSendTip from 'hooks/tips/useSendTip';
@@ -143,22 +143,26 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
 
   const userBalanceComponent = React.useMemo(() => {
     if (loadingBalance) {
-      return <Typography.Body7 style={styles.availableText}>{t('available')} ...</Typography.Body7>;
+      return (
+        <Typography.Regular16 style={styles.availableText}>
+          {t('available')} ...
+        </Typography.Regular16>
+      );
     }
 
     if (fetchBalanceError) {
       return (
-        <Typography.Body7 style={styles.errorText}>
+        <Typography.Regular16 style={styles.errorText}>
           {`${t("can't get user's balance")}:\n`}
           {fetchBalanceError.message}
-        </Typography.Body7>
+        </Typography.Regular16>
       );
     }
 
     return (
-      <Typography.Body7 style={styles.availableText}>
+      <Typography.Regular16 style={styles.availableText}>
         {t('available')} {formatCoin(spendableAmount)}
-      </Typography.Body7>
+      </Typography.Regular16>
     );
   }, [
     fetchBalanceError,
@@ -171,10 +175,10 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
 
   return (
     <View style={styles.root}>
-      <Typography.Semibold22 style={styles.header}>{t('tip')}</Typography.Semibold22>
-      <Typography.Subtitle3 style={styles.subtitle}>
+      <Typography.Semibold20 style={styles.header}>{t('tip')}</Typography.Semibold20>
+      <Typography.Semibold14 style={styles.subtitle}>
         {t('how much do you want to send')}
-      </Typography.Subtitle3>
+      </Typography.Semibold14>
       {/* Amount selector row */}
       <View style={styles.quickSelectorRow}>
         <Button
@@ -214,7 +218,7 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
         showBorder
         error={tipCoin === undefined && textAmount !== ''}
         editable={!interactionDisabled}
-        rightElement={<Typography.Subtitle3>DSM</Typography.Subtitle3>}
+        rightElement={<Typography.Semibold14>DSM</Typography.Semibold14>}
         numberOfLines={1}
         placeholder={t('insert amount')}
         value={textAmount}
@@ -224,7 +228,7 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
       {userBalanceComponent}
       <Spacer paddingTop="l" />
       {/* Message to user input */}
-      <Typography.Subtitle3>{t('message', { ns: 'common' })}</Typography.Subtitle3>
+      <Typography.H7>{t('message', { ns: 'common' })}</Typography.H7>
       <Spacer paddingTop="s" />
       <DTextInput
         style={styles.inputContainer}

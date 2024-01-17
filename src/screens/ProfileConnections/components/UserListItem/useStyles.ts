@@ -13,7 +13,6 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 20,
     width: 40,
     height: 40,
-    resizeMode: 'contain',
     backgroundColor: theme.colors.background,
   },
   names: {

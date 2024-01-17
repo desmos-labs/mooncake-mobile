@@ -1,3 +1,4 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -19,7 +20,6 @@ import PopupMenu from 'components/PopupMenu';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
-import Typography from 'components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
 import { ImageSource } from 'expo-image';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
@@ -290,7 +290,7 @@ const Profile = () => {
       title: t('DSM', { ns: 'common' }),
       // Subtitle needs to be passed as a component, as Trans component in the default implementation will cause
       // unwanted interpolation of the less than (<) character in the string
-      subtitle: <Typography.Body5>{t('balanceInfo')}</Typography.Body5>,
+      subtitle: <Typography.Regular16>{t('balanceInfo')}</Typography.Regular16>,
       subtitleStyle: { textAlign: 'left' },
       primaryButtonLabel: t('learnMore'),
       onPressPrimary: () => {
@@ -490,13 +490,13 @@ const Profile = () => {
             <View style={styles.innerTopSection}>
               <View style={CommonStyles.flex['1']}>
                 {/* Profile nickname */}
-                <Typography.H5 style={styles.nickname} numberOfLines={1}>
+                <Typography.Semibold20 style={styles.nickname} numberOfLines={1}>
                   {profile.nickname}
-                </Typography.H5>
+                </Typography.Semibold20>
                 {/* Profile Dtag */}
-                <Typography.Body7 style={styles.profileDtag} numberOfLines={1}>
+                <Typography.Regular12 style={styles.profileDtag} numberOfLines={1}>
                   @{profile.dTag}
-                </Typography.Body7>
+                </Typography.Regular12>
                 {/* Profile address */}
                 <AddressCopy address={address} />
                 {/* Profile biography */}
@@ -504,8 +504,8 @@ const Profile = () => {
               <View style={styles.rightButtonsContainer}>
                 {/* Posts count */}
                 <TouchableOpacity style={styles.postCount} onPress={handlePostsSectionPressed}>
-                  <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
-                  <Typography.Caption1>{t('posts')}</Typography.Caption1>
+                  <Typography.Semibold14>{postsCount}</Typography.Semibold14>
+                  <Typography.Regular12>{t('posts')}</Typography.Regular12>
                 </TouchableOpacity>
                 {/* Followage count */}
                 <TouchableOpacity
@@ -514,9 +514,9 @@ const Profile = () => {
                   {isFollowageCountLoading ? (
                     <StyledSpinner size={21} />
                   ) : (
-                    <Typography.Subtitle3>{followageCount}</Typography.Subtitle3>
+                    <Typography.Semibold14>{followageCount}</Typography.Semibold14>
                   )}
-                  <Typography.Caption1>{t('following')}</Typography.Caption1>
+                  <Typography.Regular12>{t('following')}</Typography.Regular12>
                 </TouchableOpacity>
                 {/* Followers count */}
                 <TouchableOpacity
@@ -525,9 +525,9 @@ const Profile = () => {
                   {isFollowersCountLoading ? (
                     <StyledSpinner size={21} />
                   ) : (
-                    <Typography.Subtitle3>{followersCount}</Typography.Subtitle3>
+                    <Typography.Semibold14>{followersCount}</Typography.Semibold14>
                   )}
-                  <Typography.Caption1>{t('followers')}</Typography.Caption1>
+                  <Typography.Regular12>{t('followers')}</Typography.Regular12>
                 </TouchableOpacity>
               </View>
             </View>

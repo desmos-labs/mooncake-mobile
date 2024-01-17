@@ -1,12 +1,12 @@
-import React from 'react';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
+import { makeStyle } from 'config/theme';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import { makeStyle } from 'config/theme';
-import Spacer from 'components/Spacer';
+import React from 'react';
 
 export interface AboutDetailsParams {
   readonly title: string;

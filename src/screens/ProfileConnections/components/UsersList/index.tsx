@@ -1,13 +1,13 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { emptyListPlaceholder } from 'assets/images';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import React, { ReactNode, useCallback, useMemo } from 'react';
 import { FlatList, Image, ListRenderItemInfo, View } from 'react-native';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { DesmosProfile } from 'types/desmos';
-import { emptyListPlaceholder } from 'assets/images';
-import Typography from 'components/Typography';
 import ItemSeparator from '../../../UsersList/components/ItemSeparator';
+import Loading from '../Loading';
 import UserListItem from '../UserListItem';
 import useStyles from './useStyles';
-import Loading from '../Loading';
 
 interface UsersListProps {
   /**
@@ -96,7 +96,7 @@ const UsersList = (props: UsersListProps) => {
     return (
       <View style={styles.emptyListView}>
         <Image style={styles.emptyListImage} source={emptyListPlaceholder} />
-        <Typography.Body5 style={styles.emptyListText}>{emptyText}</Typography.Body5>
+        <Typography.Regular16 style={styles.emptyListText}>{emptyText}</Typography.Regular16>
       </View>
     );
   }, [emptyText, styles.emptyListImage, styles.emptyListText, styles.emptyListView]);

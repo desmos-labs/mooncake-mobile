@@ -1,17 +1,16 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import HomePostListContentLoader from 'components/Loaders/HomePostListContentLoader';
 import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
-import Typography from 'components/Typography';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import { useTheme } from 'native-base';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -35,8 +34,6 @@ const Home = () => {
 
   // Reference and state of the post list, to be able to scroll to the top of it
   const postListRef = useRef<any>(null);
-  const postsListState = usePostsListState();
-  const setPostsListState = useSetPostsListState();
 
   // -------------------------------------------------------------------------------------
   // --- Data queries
@@ -102,14 +99,6 @@ const Home = () => {
     await refreshPosts();
   }, [refreshPosts]);
 
-  // Little trick to scroll to top from a parent component, the HomeTabBar in this case
-  useEffect(() => {
-    if (postsListState.scrollToTop) {
-      postListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-      setPostsListState(value => ({ ...value, scrollToTop: false }));
-    }
-  }, [postsListState, postListRef, setPostsListState]);
-
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
       return (
@@ -126,7 +115,7 @@ const Home = () => {
     return (
       <View style={styles.emptyView}>
         <Image source={emptyListPlaceholder} style={styles.emptyImage} />
-        <Typography.Body6>{t('no posts to display')}</Typography.Body6>
+        <Typography.Regular14>{t('no posts to display')}</Typography.Regular14>
       </View>
     );
   }, [styles, t]);

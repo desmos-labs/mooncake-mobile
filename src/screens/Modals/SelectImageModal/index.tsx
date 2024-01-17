@@ -1,8 +1,8 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { cameraIcon, galleryIcon } from 'assets/images';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
 import { Image } from 'expo-image';
 import { Divider } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -44,14 +44,14 @@ const SelectImageModal = () => {
       <View style={styles.contentView}>
         <TouchableOpacity onPress={onPressTakePhotoWrapper} style={styles.pressable}>
           <Image source={cameraIcon} style={styles.image} />
-          <Typography.Body5>{t('take a photo')}</Typography.Body5>
+          <Typography.Regular16>{t('take a photo')}</Typography.Regular16>
         </TouchableOpacity>
         <Spacer paddingVertical="l">
           <Divider />
         </Spacer>
         <TouchableOpacity onPress={onPressSelectImageWrapper} style={styles.pressable}>
           <Image source={galleryIcon} style={styles.image} />
-          <Typography.Body5>{t('choose from gallery')}</Typography.Body5>
+          <Typography.Regular16>{t('choose from gallery')}</Typography.Regular16>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>

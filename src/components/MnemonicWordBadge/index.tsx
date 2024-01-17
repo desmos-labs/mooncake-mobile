@@ -1,7 +1,7 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import React from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
-import Typography from '../Typography';
 
 type Props = {
   /**
@@ -33,7 +33,7 @@ const MnemonicWordBadge: React.FC<Props> = props => {
             }
           : undefined
       }>
-      <Typography.Body6>{value}</Typography.Body6>
+      <Typography.Regular14>{value}</Typography.Regular14>
       <Text style={styles.index}>{index}</Text>
     </TouchableOpacity>
   );
