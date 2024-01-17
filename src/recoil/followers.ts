@@ -68,11 +68,12 @@ export const useCachedIsFollowingUser = (user: string, counterparty: string) => 
 /**
  * Hook that provides a function to add or remove a user from the list
  * of users that the provided user is following.
- * @param user - The user address.
  */
 export const useUpdateUserFollowersCache = () => {
   const setCachedFollowers = useSetCachedUserFollowers();
   /**
+   * Adds or removes a follower from the provided user's follower list.
+   * @param user - The user address.
    * @param counterparty - The follower address.
    * @param add - Whether to add or remove the follower from the list
    * of followers.
