@@ -30,8 +30,8 @@ import { useTranslation } from 'react-i18next';
 import { ListRenderItemInfo, SafeAreaView, SectionList, SectionListData, View } from 'react-native';
 import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
-import useHooks from './useHooks';
 import useStyles from './useStyles';
+import { usePastActionsSections } from './useHooks';
 
 export interface ProfileOperationsParams {
   /**
@@ -64,7 +64,6 @@ const ProfileOperations = () => {
     loading: balanceLoading,
   } = useAccountBalance(userAddress);
   const { symbol, amount: fiatAmount, refetch: refreshFiatAmount } = useBalanceFiatAmount(balance);
-  const { usePastActionsSections } = useHooks();
 
   const {
     sections,

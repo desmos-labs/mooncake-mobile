@@ -1,10 +1,43 @@
-import { useQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import { useUserPendingTransactions } from '@recoil/transactions';
+import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLTransactionMessage } from 'lib/GraphQLUtils/transactions';
-import sleep from 'lib/sleep';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
 import { PastTransactionMessage, PendingTransaction } from 'types/transactions';
+
+const useFetchPastTransactions = (userAddress: string) => {
+  // Here we use the useApolloClient hook instead of the useLazyQuery hook because
+  // that hook dont behaves correctly if in the future we may want to implement
+  // the possibility to switch between mainnet and testnet.
+  const apollo = useApolloClient();
+
+  return React.useCallback<FetchDataFunction<PastTransactionMessage>>(
+    async (offset, limit) => {
+      const { data, error } = await apollo.query({
+        query: GetTransactionsByAddress,
+        variables: {
+          address: `{${userAddress}}`,
+          types: '{}',
+          limit,
+          offset,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      const fetchedData = data?.messages ?? [];
+      const converted = fetchedData.map(convertGraphQLTransactionMessage);
+      return {
+        data: converted,
+        endReached: fetchedData.length < limit,
+      };
+    },
+    [apollo, userAddress],
+  );
+};
 
 /**
  * Function that converts a {@link PendingTransaction} into a list of {@link PastTransactionMessage}
@@ -55,83 +88,30 @@ const mergeTransactions = (
  */
 const usePastTransactions = (address: string, transactionsPerPage: number = 20) => {
   const pendingTransactions = useUserPendingTransactions(address);
-  const [loading, setLoading] = useState(true);
-  const [fetchingMore, setFetchingMore] = React.useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
 
   const pendingMessages = useMemo(() => {
     return pendingTransactions.flatMap(convertPendingTransaction);
   }, [pendingTransactions]);
 
-  // Query the past tx from the server
-  const { data, fetchMore, refetch } = useQuery(GetTransactionsByAddress, {
-    variables: {
-      address: `{${address}}`,
-      limit: transactionsPerPage,
-      offset: 0,
-      types: '{}',
+  const { data, loading, initialLoading, fetchMore, refresh, refreshing, error } = usePaginatedData(
+    useFetchPastTransactions(address),
+    {
+      itemsPerPage: transactionsPerPage,
+      extraDelay: 500,
     },
-  });
+  );
 
   // Merge the pending tx with the tx from the chain
   const transactions = React.useMemo(() => {
-    if (!data) {
-      return [];
-    }
-    const onChainMessages = (data.messages as any[]).map(convertGraphQLTransactionMessage);
-    setLoading(false);
-    setFetchingMore(false);
-    setRefreshing(false);
-    return mergeTransactions(onChainMessages, pendingMessages);
+    return mergeTransactions(data, pendingMessages);
   }, [data, pendingMessages]);
-
-  // Callback to fetch more tx
-  const fetchMoreTransactions = React.useCallback(async () => {
-    if (fetchingMore) {
-      return;
-    }
-    setFetchingMore(true);
-    try {
-      await fetchMore({
-        variables: { offset: transactions.length },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || fetchMoreResult.messages.length === 0) {
-            return prev;
-          }
-
-          return {
-            messages: [...prev.messages, ...fetchMoreResult.messages],
-          };
-        },
-      });
-    } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      await sleep(500).then(() => setFetchingMore(false));
-    }
-  }, [fetchMore, fetchingMore, transactions.length]);
-
-  // Callback to be called when the tx list is refreshed
-  const refetchTransactions = React.useCallback(async () => {
-    try {
-      setError(undefined);
-      setRefreshing(true);
-      // Get the new data by resetting the fetch offset to restart post fetching
-      await refetch({ offset: 0 });
-    } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      setRefreshing(false);
-    }
-  }, [refetch]);
 
   return {
     transactions,
-    loading,
-    fetchMore: fetchMoreTransactions,
-    fetchingMore,
-    refetch: refetchTransactions,
+    loading: initialLoading,
+    fetchMore,
+    fetchingMore: loading,
+    refetch: refresh,
     refreshing,
     error,
   };

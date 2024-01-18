@@ -40,30 +40,23 @@ const groupMessagesByDate = (messages: PastTransactionMessage[]) => {
 /**
  * Hook that returns the list of past actions of a user, grouped by date.
  */
-
-const useHooks = () => {
-  const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
-    const {
-      transactions,
-      loading,
-      fetchMore: fetchMoreTransactions,
-      fetchingMore,
-      refetch: refetchTransactions,
-      refreshing,
-    } = usePastTransactions(address, transactionsPerPage);
-
-    return {
-      sections: groupMessagesByDate(transactions),
-      loading,
-      fetchMore: fetchMoreTransactions,
-      fetchingMore,
-      refetch: refetchTransactions,
-      refreshing,
-    };
-  };
+// eslint-disable-next-line import/prefer-default-export
+export const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
+  const {
+    transactions,
+    loading,
+    fetchMore: fetchMoreTransactions,
+    fetchingMore,
+    refetch: refetchTransactions,
+    refreshing,
+  } = usePastTransactions(address, transactionsPerPage);
 
   return {
-    usePastActionsSections,
+    sections: groupMessagesByDate(transactions),
+    loading,
+    fetchMore: fetchMoreTransactions,
+    fetchingMore,
+    refetch: refetchTransactions,
+    refreshing,
   };
 };
-export default useHooks;
