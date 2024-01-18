@@ -38,7 +38,11 @@ export const useSetCachedUserFollowing = () => {
   const setCahcedFollowers = useSetRecoilState(followersState);
 
   return React.useCallback(
-    (user: string, setOrUpdater: string[] | ((prev: string[]) => string[])) => {
+    (user: string | undefined, setOrUpdater: string[] | ((prev: string[]) => string[])) => {
+      if (!user) {
+        return;
+      }
+
       setCahcedFollowers(currentFollowers => {
         // Get the current user's follower.
         const userFollowers = currentFollowers[user] ?? [];
