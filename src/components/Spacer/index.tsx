@@ -39,6 +39,7 @@ const Spacer = ({ children, ...rest }: Props) => {
     return copy;
   }, [theme, rest]);
 
+  // @ts-ignore
   return <View style={style}>{children}</View>;
 };
 

@@ -1,4 +1,5 @@
 import { Algo } from '@cosmjs/amino';
+import { LoginOnboardingStep } from 'types/tourguide';
 import { Wallet, WalletType } from 'types/wallet';
 
 export enum AccountSerializationVersion {
@@ -76,3 +77,15 @@ export interface AccountWithWallet {
 }
 
 export type SerializableAccount = SerializableWeb3AuthAccount | SerializablePrivateKeyAccount;
+
+/**
+ * Interface representing the account information that can be requested from
+ * the server.
+ */
+export interface AccountInfo {
+  readonly loginTourLastStep: LoginOnboardingStep;
+  readonly creationTime: string;
+  readonly desmosAddress: string;
+  readonly lastLogin?: string;
+  readonly userDeepLink: string;
+}

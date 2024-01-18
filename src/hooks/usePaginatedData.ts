@@ -35,7 +35,7 @@ export type FetchDataFunction<T, F extends Object = {}> = (
  * Interface that represents the configurations that can be provided to the
  * usePaginatedData hook.
  */
-interface PaginatedDataConfig<T, F extends Object> {
+interface PaginatedDataConfig<T, F extends Object, M = T> {
   /**
    * Number of items that should be fetched per page.
    */
@@ -71,7 +71,7 @@ interface PaginatedDataConfig<T, F extends Object> {
    * updating a state that is outside of this hook and use this
    * ones in a list instead of the items returned by this hook.
    */
-  readonly onDataChanged?: (data: T[]) => any;
+  readonly onDataChanged?: (data: M[]) => any;
   /**
    * Optional action to exec before executing the refetch action.
    * This can be usefull if you need to perform an action before
@@ -90,6 +90,12 @@ interface PaginatedDataConfig<T, F extends Object> {
    * fetched.
    */
   readonly getTotalItemsCount?: () => Promise<number>;
+  /**
+   * Optional function to convert the whole list of data.
+   * This can be used to convert all the fetched items or if we
+   * need to merge the fetched data with some cached data.
+   */
+  readonly mapData?: (data: T[]) => M[];
 }
 
 /**
@@ -100,9 +106,9 @@ interface PaginatedDataConfig<T, F extends Object> {
  * @typeParam T - Type of the fetched data.
  * @typeParam F - Type of the filter.
  */
-export function usePaginatedData<T, F extends Object>(
+export function usePaginatedData<T, F extends Object, M = T>(
   fetchFunction: FetchDataFunction<T, F>,
-  config: PaginatedDataConfig<T, F>,
+  config: PaginatedDataConfig<T, F, M>,
 ) {
   // Hook configs
   const {
@@ -114,6 +120,7 @@ export function usePaginatedData<T, F extends Object>(
     onPreFetchPage,
     onDataChanged,
     preRefetchAction,
+    mapData,
     autoFetchFirstPage,
     getTotalItemsCount,
   } = config;
@@ -129,6 +136,7 @@ export function usePaginatedData<T, F extends Object>(
   const preFetchPageRef = React.useRef(onPreFetchPage);
   const preRefetchActionRef = React.useRef(preRefetchAction);
   const getTotalItemsCountRef = React.useRef(getTotalItemsCount);
+  const mapDataRef = React.useRef(mapData);
 
   // Keep this ref that we update with an effect
   // to prevent the recreation of the `fetchMore` function
@@ -136,7 +144,7 @@ export function usePaginatedData<T, F extends Object>(
   const onDataChangedRef = React.useRef(onDataChanged);
 
   // -------- STATES --------
-  const [data, setData] = React.useState<T[]>([]);
+  const [data, setData] = React.useState<M[]>([]);
   const [filterState, setFilterState] = React.useState(initialFilter);
   const [loading, setLoading] = React.useState(!!autoFetchFirstPage);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -148,7 +156,7 @@ export function usePaginatedData<T, F extends Object>(
 
   // Function to fetch the next `itemsPerPage` items.
   const fetchDataFunction = React.useCallback(
-    async (reset?: boolean) => {
+    async (reset?: boolean, isRefresh?: boolean) => {
       if (endReachedRef.current && reset !== true) {
         // Nothing more to fetch.
         return;
@@ -161,6 +169,7 @@ export function usePaginatedData<T, F extends Object>(
       if (reset !== true && fetchingOffset.current === fetchOffset) {
         return;
       }
+
       setLoading(true);
       fetchingOffset.current = fetchOffset;
 
@@ -218,12 +227,22 @@ export function usePaginatedData<T, F extends Object>(
       if (extraDelay !== undefined && extraDelay > 0) {
         await sleep(extraDelay);
       }
-
+      if (isRefresh) {
+        setRefreshing(false);
+        // This has been added to prevent the refresh control animation to flicker while the list is being updated
+        await sleep(500);
+      }
       if (fetchedItems.length >= 0) {
         dataRef.current = reset ? fetchedItems : [...dataRef.current, ...fetchedItems];
-        setData(dataRef.current);
+        // Safe to cast to M[], if the dataMapFunction is not defined, M will be equal to T.
+        // Otherwise, if dataMapFunction is defined, M can be different from T, and in this case, the
+        // data will be an array of M.
+        const newData = (
+          mapDataRef.current ? mapDataRef.current(dataRef.current) : dataRef.current
+        ) as M[];
+        setData(newData);
         if (fetchError === undefined) {
-          onDataChangedRef.current?.(dataRef.current);
+          onDataChangedRef.current?.(newData);
         }
       } else if (fetchError !== undefined) {
         setError(fetchError);
@@ -243,15 +262,18 @@ export function usePaginatedData<T, F extends Object>(
   const refresh = React.useCallback(async () => {
     setRefreshing(true);
     setError(undefined);
-    try {
-      if (preRefetchActionRef.current !== undefined) {
-        await preRefetchActionRef.current();
+    // This set timeout is used to allow the refresh control animation to complete
+    // and prevents any animation flickering
+    setTimeout(async () => {
+      try {
+        if (preRefetchActionRef.current !== undefined) {
+          await preRefetchActionRef.current();
+        }
+        await fetchDataFunction(true, true);
+      } catch (e) {
+        setError(e as Error);
       }
-      await fetchDataFunction(true);
-    } catch (e) {
-      setError(e as Error);
-    }
-    setRefreshing(false);
+    }, 500);
   }, [fetchDataFunction]);
 
   // Function to update the current filter.
@@ -324,6 +346,19 @@ export function usePaginatedData<T, F extends Object>(
   React.useEffect(() => {
     getTotalItemsCountRef.current = getTotalItemsCount;
   }, [getTotalItemsCount]);
+
+  // Hook to update the getTotalItemsCount ref.
+  React.useEffect(() => {
+    mapDataRef.current = mapData;
+    if (mapData !== undefined && !loading) {
+      setData(mapData(dataRef.current));
+    }
+    // Safe to ignore the loading deps.
+    // We want to update the mapDataRef each time the
+    // orignal functio changes and if we are not loading we also
+    // update the data.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapData]);
 
   // Effect to trigger the refresh function when `fetchFunction` or
   // the `itemsPerPage` changes.

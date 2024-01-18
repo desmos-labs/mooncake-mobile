@@ -1,6 +1,6 @@
-import { useTranslation } from 'react-i18next';
-import React from 'react';
 import { getCoinDenomByMinimalDenom } from 'lib/ChainsUtils';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const tokensAmountRegex = /.*\s(\d+)([a-z]+).*/;
 
@@ -28,6 +28,7 @@ const useParseErrorMessage = () => {
         // Generic error: return the error capitalizing the first letter
         return error.charAt(0).toUpperCase() + error.slice(1);
       }
+      return error;
     },
     [t],
   );

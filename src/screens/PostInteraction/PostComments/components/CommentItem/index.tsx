@@ -254,11 +254,11 @@ const CommentItem = (props: CommentItemProps) => {
                 source={liked ? commentLiked : commentLikeEmptyIcon}
                 style={[
                   styles.buttonImage,
-                  liked ? styles.orangeIconAndText : {},
+                  liked ? styles.orangeIcon : {},
                   styles.interactionImage,
                 ]}
               />
-              <Typography.Semibold14 style={liked ? styles.orangeIconAndText : styles.textStyle}>
+              <Typography.Semibold14 style={liked ? styles.orangeText : styles.textStyle}>
                 {formatNumShorthand(likesCount)}
               </Typography.Semibold14>
             </TouchableOpacity>

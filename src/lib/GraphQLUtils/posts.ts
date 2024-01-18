@@ -1,3 +1,6 @@
+import { Posts } from '@desmoslabs/desmjs';
+import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils/profiles';
 import { PostsParams } from 'types/desmos';
 import {
   Post,
@@ -11,9 +14,6 @@ import {
   PostStatus,
   PostTransaction,
 } from 'types/posts';
-import { convertGraphQLProfile } from 'lib/GraphQLUtils/profiles';
-import { Posts } from '@desmoslabs/desmjs';
-import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 
 /**
  * Format an incoming posts params data from the server into a format that is easier to parse by the app.

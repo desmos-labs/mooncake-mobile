@@ -74,9 +74,11 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     width: 24,
     height: 24,
   },
-  orangeIconAndText: {
-    tintColor: theme.colors.butterOrange01,
+  orangeText: {
     color: theme.colors.butterOrange01,
+  },
+  orangeIcon: {
+    tintColor: theme.colors.butterOrange01,
   },
 }));
 
