@@ -40,7 +40,7 @@ interface BaseWallet {
 /**
  * Interface that represents a generic wallet with a private key.
  */
-interface WalletWithPrivateKey extends BaseWallet {
+export interface WalletWithPrivateKey extends BaseWallet {
   /**
    * Secp256k1 private key obtained from Web3Auth.
    */
