@@ -12,13 +12,7 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import GetPostByID from 'services/graphql/queries/GetPostByID';
-import {
-  GeneralActionUri,
-  PostsActionUri,
-  UriAction,
-  UriActions,
-  UriContexts,
-} from 'types/uriActions';
+import { PostsActionUri, UriAction, UriActions, UriContexts } from 'types/uriActions';
 
 /**
  * Hook that provides a function to handle the UriActions that are related to an event.
@@ -94,6 +88,7 @@ const useHandlePostActions = () => {
  */
 const useHandleGeneralAction = () => {
   // TODO: implement this
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return (action: any) => undefined;
 };
 

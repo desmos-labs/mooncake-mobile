@@ -272,6 +272,7 @@ const BottomTabsNavigator = () => {
       handleUriAction(uriAction);
     }
   }, [handleUriAction, setUriAction, uriAction]);
+
   return (
     <Box flex={1} backgroundColor="white">
       <Tab.Navigator

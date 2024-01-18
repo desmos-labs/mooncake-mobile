@@ -27,7 +27,7 @@ export enum UriActions {
 /**
  * Actions that represents a request to see a post.
  */
-export interface ShowPostActionUri {
+interface ShowPostActionUri {
   readonly context: UriContexts.Posts;
   readonly action: UriActions.Show;
   readonly postId: string;
@@ -42,7 +42,7 @@ export type PostsActionUri = ShowPostActionUri;
  * Action representing a generic operation
  * where the user will be prompted to see another user's profile
  */
-export interface GeneralActionUri {
+interface GeneralActionUri {
   readonly context: UriContexts.General;
   readonly userAddress: string;
 }
