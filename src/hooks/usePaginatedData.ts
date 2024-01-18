@@ -138,7 +138,7 @@ export function usePaginatedData<T, F extends Object>(
   // -------- STATES --------
   const [data, setData] = React.useState<T[]>([]);
   const [filterState, setFilterState] = React.useState(initialFilter);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(!!autoFetchFirstPage);
   const [refreshing, setRefreshing] = React.useState(false);
   const [updatingFilter, setUpdatingFilter] = React.useState(false);
   const [error, setError] = React.useState<Error>();
@@ -161,7 +161,7 @@ export function usePaginatedData<T, F extends Object>(
       if (reset !== true && fetchingOffset.current === fetchOffset) {
         return;
       }
-
+      setLoading(true);
       fetchingOffset.current = fetchOffset;
 
       // Get the total items at the first fetch.
@@ -228,14 +228,13 @@ export function usePaginatedData<T, F extends Object>(
       } else if (fetchError !== undefined) {
         setError(fetchError);
       }
+      setLoading(false);
     },
     [extraDelay, fetchFunction, itemsPerPage],
   );
 
   const fetchMore = React.useCallback(async () => {
-    setLoading(true);
     await fetchDataFunction();
-    setLoading(false);
   }, [fetchDataFunction]);
 
   // Function to refresh the data, all the items fetched will be
@@ -264,11 +263,9 @@ export function usePaginatedData<T, F extends Object>(
       } else {
         filter.current = newFilter;
       }
-      setLoading(true);
       setUpdatingFilter(true);
       await fetchDataFunction(true);
       setUpdatingFilter(false);
-      setLoading(false);
     },
     [fetchDataFunction],
   );
@@ -343,7 +340,7 @@ export function usePaginatedData<T, F extends Object>(
 
   React.useEffect(() => {
     if (autoFetchFirstPage) {
-      fetchDataFunction();
+      fetchMore();
     }
     // Safe to disable we want to execute this effect only when
     // the autoFetchFirstPage flag changes.

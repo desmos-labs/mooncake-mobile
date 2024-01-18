@@ -53,7 +53,6 @@ const useFetchPostReactions = (postId: number) => {
 const usePostReactions = (postId: number) => {
   const paginatedDataFields = usePaginatedData(useFetchPostReactions(postId), {
     itemsPerPage: 20,
-    // Logic to always fetch the first page even if we already have cached data.
     autoFetchFirstPage: true,
   });
 

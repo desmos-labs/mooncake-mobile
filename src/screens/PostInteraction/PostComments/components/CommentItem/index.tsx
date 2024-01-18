@@ -19,6 +19,7 @@ import {
   useHandlePressReport,
 } from 'components/PostCard/hooks';
 import ThemedLottieView from 'components/ThemedLottieView';
+import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
@@ -31,7 +32,7 @@ import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import {
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
@@ -200,7 +201,11 @@ const CommentItem = (props: CommentItemProps) => {
   return (
     <View style={[styles.container, styles.flexRow]}>
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
-        <Image source={getProfilePicture(comment.author)} style={styles.avatar} />
+        <Image
+          source={getProfilePicture(comment.author)}
+          style={styles.avatar}
+          recyclingKey={comment.author.address}
+        />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handlePress}
