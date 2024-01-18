@@ -206,7 +206,7 @@ export const useGetOperationTitle = (userAddress: string) => {
 export const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
   const {
     transactions,
-    loading,
+    initialLoading,
     fetchMore: fetchMoreTransactions,
     fetchingMore,
     refetch: refetchTransactions,
@@ -215,7 +215,7 @@ export const usePastActionsSections = (address: string, transactionsPerPage: num
 
   return {
     sections: groupMessagesByDate(transactions),
-    loading,
+    loading: initialLoading && !refreshing,
     fetchMore: fetchMoreTransactions,
     fetchingMore,
     refetch: refetchTransactions,

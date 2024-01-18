@@ -108,7 +108,7 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 20) 
 
   return {
     transactions,
-    loading: initialLoading,
+    initialLoading,
     fetchMore,
     fetchingMore: loading,
     refetch: refresh,
