@@ -148,7 +148,6 @@ const ProfileOperations = () => {
         case Reports.v1.MsgCreateReportTypeUrl:
           return t('create report');
         case Bank.v1beta1.MsgSendTypeUrl:
-          console.log('message.senderAddress', message.senderAddress, userAddress);
           if (message.senderAddress === userAddress) {
             return t('send tip');
           } else {
