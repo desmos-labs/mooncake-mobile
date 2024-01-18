@@ -10,7 +10,11 @@ const GetAccountFollowing = gql`
     $offset: Int!
   ) @api(name: desmos) {
     following: user_relationship(
-      where: { subspace_id: { _eq: $subspaceId }, creator_address: { _eq: $userAddress } }
+      where: {
+        counterparty: { dtag: { _is_null: false } }
+        subspace_id: { _eq: $subspaceId }
+        creator_address: { _eq: $userAddress }
+      }
       offset: $offset
       limit: $limit
     ) {
