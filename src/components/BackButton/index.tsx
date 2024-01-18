@@ -22,7 +22,7 @@ const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColor }) =>
   return (
     <TouchableOpacity
       accessibilityLabel="back-button"
-      hitSlop={{ top: 50, bottom: 50, right: 50, left: 50 }}
+      hitSlop={{ top: 5, bottom: 5, right: 5, left: 5 }}
       onPress={onPress}
       disabled={disabled}
       style={[styles.button, style]}>
