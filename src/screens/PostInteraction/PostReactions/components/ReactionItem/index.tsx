@@ -1,9 +1,10 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { commentLiked } from 'assets/images';
+import { Image } from 'expo-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
@@ -21,7 +22,11 @@ const ReactionItem = ({ author }: Props) => {
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <Image source={getProfilePicture(author)} style={styles.avatarStyle} />
+      <Image
+        source={getProfilePicture(author)}
+        style={styles.avatarStyle}
+        recyclingKey={author.address}
+      />
       <View style={styles.textGroup}>
         <View>
           <Typography.Semibold14 style={styles.textStyle}>

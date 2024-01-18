@@ -64,13 +64,19 @@ const PostReactions = () => {
     return <ReactionItem author={item.author} />;
   }, []);
 
-  if (loading) {
-    return (
-      <Center>
-        <StyledSpinner />
-      </Center>
-    );
-  }
+  const renderEmptyComponent = React.useCallback(() => {
+    return loading ? null : <EmptyListComponent label={t('no likes')} />;
+  }, [loading, t]);
+
+  const renderFooterComponent = React.useCallback(() => {
+    if (loading) {
+      return (
+        <Center>
+          <StyledSpinner />
+        </Center>
+      );
+    }
+  }, [loading]);
 
   return (
     <BottomUpModalWrapper goBack={goBack} paddingHorizontal={0.1}>
@@ -88,8 +94,9 @@ const PostReactions = () => {
           data={reactions}
           renderItem={renderItem}
           ItemSeparatorComponent={ItemSeparatorComponent}
-          ListEmptyComponent={<EmptyListComponent label={t('no likes')} />}
+          ListEmptyComponent={renderEmptyComponent}
           onEndReached={fetchMore}
+          ListFooterComponent={renderFooterComponent}
           estimatedItemSize={63}
         />
       </View>

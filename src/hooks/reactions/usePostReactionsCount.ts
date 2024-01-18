@@ -13,6 +13,7 @@ const usePostReactionsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
       subspaceId: post.subspaceId,
       postId: post.id,
     },
+    fetchPolicy: 'no-cache',
   });
 
   return {
