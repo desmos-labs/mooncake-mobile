@@ -8,7 +8,7 @@ import './src/assets/locales/i18n';
 import branch from 'react-native-branch';
 import { parseBranchParams, setCachedUriAction } from 'lib/BranchUtils';
 
-// Init branch.
+// Init branch
 branch.subscribe(({ params, error }) => {
   if (error === null) {
     const parsedAction = parseBranchParams(params);
@@ -25,7 +25,7 @@ branch.subscribe(({ params, error }) => {
   }
 });
 
-// Init backgroud norification logic
+// Init background notification logic
 messaging().setBackgroundMessageHandler(handleBackcroundNotifications);
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
