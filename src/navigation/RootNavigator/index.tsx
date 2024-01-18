@@ -44,6 +44,7 @@ import ProfileConnections, {
 } from 'screens/ProfileConnections';
 import ProfileOperations, { ProfileOperationsParams } from 'screens/ProfileOperations';
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
+import RevealPrivateKey from 'screens/RevealPrivateKey';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import ServiceAndPolicy, { ServiceAndPolicyParams } from 'screens/ServiceAndPolicy';
 import Settings from 'screens/Settings';
@@ -111,11 +112,11 @@ export type RootNavigatorParamList = {
 
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.SETTINGS_SHOW_PRIVATE_KEY]: ShowPrivateKeyScreenParams;
-  [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
   [ROUTES.BLOCKED_USERS]: undefined;
   [ROUTES.ABOUT]: undefined;
   [ROUTES.ABOUT_DETAILS]: AboutDetailsParams;
+  [ROUTES.REVEAL_PRIVATE_KEY]: undefined;
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
@@ -249,6 +250,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.BLOCKED_USERS} component={BlockedUsers} />
       <Stack.Screen name={ROUTES.ABOUT} component={About} />
       <Stack.Screen name={ROUTES.ABOUT_DETAILS} component={AboutDetails} />
+      <Stack.Screen name={ROUTES.REVEAL_PRIVATE_KEY} component={RevealPrivateKey} />
       {/* ----------------------- */}
       {/* --- PROFILE SCREENS --- */}
       {/* ----------------------- */}

@@ -28,16 +28,17 @@ import useErrorModal from 'hooks/modals/useErrorModal';
  */
 export const useShowPrivateKey = () => {
   const activeAccount = useActiveAccount();
+  const navigation = useRootNavigator();
 
   const canShowPrivateKey = React.useMemo(() => {
     return activeAccount !== undefined && isAccountWithPrivateKey(activeAccount);
   }, [activeAccount]);
 
   const showPrivateKey = React.useCallback(async () => {
-    if (activeAccount === undefined) {
-      // TODO: Implement this.
+    if (canShowPrivateKey) {
+      navigation.navigate(ROUTES.REVEAL_PRIVATE_KEY);
     }
-  }, [activeAccount]);
+  }, [canShowPrivateKey, navigation]);
 
   return {
     canShowPrivateKey,
