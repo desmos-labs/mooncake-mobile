@@ -25,11 +25,10 @@ export default {
       bundleIdentifier: 'mobile.mooncake.app',
       infoPlist: {
         NSFaceIDUsageDescription: 'Allow $(PRODUCT_NAME) to use Face ID.',
-        FirebaseDynamicLinksCustomDomains: ['https://mooncake.social'],
         UIBackgroundModes: ['remote-notification'],
       },
       googleServicesFile: './GoogleService-Info.plist',
-      associatedDomains: ['applinks:mooncake.social'],
+      associatedDomains: ['applinks:mooncake.app.link'],
     },
     android: {
       adaptiveIcon: {
@@ -46,7 +45,7 @@ export default {
           data: [
             {
               scheme: 'https',
-              host: 'mooncake.social',
+              host: 'mooncake.app.link',
               pathPrefix: '/',
             },
           ],
