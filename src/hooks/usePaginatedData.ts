@@ -156,7 +156,7 @@ export function usePaginatedData<T, F extends Object, M = T>(
 
   // Function to fetch the next `itemsPerPage` items.
   const fetchDataFunction = React.useCallback(
-    async (reset?: boolean) => {
+    async (reset?: boolean, isRefresh?: boolean) => {
       if (endReachedRef.current && reset !== true) {
         // Nothing more to fetch.
         return;
@@ -227,7 +227,11 @@ export function usePaginatedData<T, F extends Object, M = T>(
       if (extraDelay !== undefined && extraDelay > 0) {
         await sleep(extraDelay);
       }
-
+      if (isRefresh) {
+        setRefreshing(false);
+        // This has been added to prevent the refresh control animation to flicker while the list is being updated
+        await sleep(500);
+      }
       if (fetchedItems.length >= 0) {
         dataRef.current = reset ? fetchedItems : [...dataRef.current, ...fetchedItems];
         // Safe to cast to M[], if the dataMapFunction is not defined, M will be equal to T.
@@ -258,15 +262,18 @@ export function usePaginatedData<T, F extends Object, M = T>(
   const refresh = React.useCallback(async () => {
     setRefreshing(true);
     setError(undefined);
-    try {
-      if (preRefetchActionRef.current !== undefined) {
-        await preRefetchActionRef.current();
+    // This set timeout is used to allow the refresh control animation to complete
+    // and prevents any animation flickering
+    setTimeout(async () => {
+      try {
+        if (preRefetchActionRef.current !== undefined) {
+          await preRefetchActionRef.current();
+        }
+        await fetchDataFunction(true, true);
+      } catch (e) {
+        setError(e as Error);
       }
-      await fetchDataFunction(true);
-    } catch (e) {
-      setError(e as Error);
-    }
-    setRefreshing(false);
+    }, 500);
   }, [fetchDataFunction]);
 
   // Function to update the current filter.

@@ -140,8 +140,7 @@ const useSignAndBroadcastTx = () => {
             showToast({
               toastType: ToastType.error,
               title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),
-              message:
-                (options?.onError?.popup?.description as string) ?? parseError(error.message),
+              message: options?.onError?.popup?.description ?? parseError(error.message),
               retryLabel: options?.onError?.popup?.retryLabel,
               retryAction: options?.onError?.popup?.retryAction,
             });

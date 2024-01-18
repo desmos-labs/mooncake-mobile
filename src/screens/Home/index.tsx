@@ -4,7 +4,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
-import HomePostListContentLoader from 'components/Loaders/HomePostListContentLoader';
 import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
@@ -100,7 +99,7 @@ const Home = () => {
   }, [refreshPosts]);
 
   const footerComponent = useMemo(() => {
-    if (fetchingMore) {
+    if (loading) {
       return (
         <View style={styles.loaderView}>
           <HomePostContentLoader />
@@ -123,12 +122,6 @@ const Home = () => {
   // -------------------------------------------------------------------------------------
   // --- Component rendering
   // -------------------------------------------------------------------------------------
-
-  // Return the loading view if the posts are still loading
-  // This might be the case if the user is offline and has no cached posts
-  if (loading) {
-    return <HomePostListContentLoader />;
-  }
 
   return (
     <View style={styles.homeView} testID="homeView">
