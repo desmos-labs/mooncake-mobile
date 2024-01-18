@@ -1,15 +1,7 @@
-import { Bank, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import {
-  addReactionTxIcon,
-  createPostTxIcon,
-  editProfileTxIcon,
-  emptyListPlaceholder,
-  sendReportTxIcon,
-  tipTxIcon,
-} from 'assets/images';
+import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
 import OperationContentLoader from 'components/Loaders/OperationContentLoader';
 import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
@@ -30,8 +22,8 @@ import { useTranslation } from 'react-i18next';
 import { ListRenderItemInfo, SafeAreaView, SectionList, SectionListData, View } from 'react-native';
 import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
-import useHooks from './useHooks';
 import useStyles from './useStyles';
+import { useGetOperationImage, useGetOperationTitle, usePastActionsSections } from './useHooks';
 
 export interface ProfileOperationsParams {
   /**
@@ -64,7 +56,6 @@ const ProfileOperations = () => {
     loading: balanceLoading,
   } = useAccountBalance(userAddress);
   const { symbol, amount: fiatAmount, refetch: refreshFiatAmount } = useBalanceFiatAmount(balance);
-  const { usePastActionsSections } = useHooks();
 
   const {
     sections,
@@ -94,74 +85,8 @@ const ProfileOperations = () => {
   // --- Utility methods
   // -------------------------------------------------------------------------------------
 
-  const getImage = useCallback((messageType: string) => {
-    const formattedMessage = `/${messageType}`;
-    switch (formattedMessage) {
-      case Posts.v3.MsgCreatePostTypeUrl:
-        return createPostTxIcon;
-      case Relationships.v1.MsgCreateRelationshipTypeUrl:
-        return editProfileTxIcon;
-      case Relationships.v1.MsgDeleteRelationshipTypeUrl:
-        return editProfileTxIcon;
-      case Relationships.v1.MsgBlockUserTypeUrl:
-        return editProfileTxIcon;
-      case Relationships.v1.MsgUnblockUserTypeUrl:
-        return editProfileTxIcon;
-      case Reactions.v1.MsgAddReactionTypeUrl:
-        return addReactionTxIcon;
-      case Reactions.v1.MsgRemoveReactionTypeUrl:
-        return addReactionTxIcon;
-      case Profiles.v3.MsgDeleteProfileTypeUrl:
-      case Profiles.v3.MsgSaveProfileTypeUrl:
-        return editProfileTxIcon;
-      case Reports.v1.MsgCreateReportTypeUrl:
-        return sendReportTxIcon;
-      case Bank.v1beta1.MsgSendTypeUrl:
-        return tipTxIcon;
-      default:
-        console.warn(`No image found for message type ${formattedMessage}`);
-        return undefined;
-    }
-  }, []);
-
-  const getTitle = useCallback(
-    (message: PastTransactionMessage) => {
-      const formattedMessage = `/${message.type}`;
-      switch (formattedMessage) {
-        case Posts.v3.MsgCreatePostTypeUrl:
-          return t('create comment post');
-        case Relationships.v1.MsgCreateRelationshipTypeUrl:
-          return t('follow user');
-        case Relationships.v1.MsgDeleteRelationshipTypeUrl:
-          return t('unfollow user');
-        case Relationships.v1.MsgBlockUserTypeUrl:
-          return t('block user');
-        case Relationships.v1.MsgUnblockUserTypeUrl:
-          return t('unblock user');
-        case Reactions.v1.MsgAddReactionTypeUrl:
-          return t('add reaction');
-        case Reactions.v1.MsgRemoveReactionTypeUrl:
-          return t('remove reaction');
-        case Profiles.v3.MsgSaveProfileTypeUrl:
-          return t('edit profile');
-        case Profiles.v3.MsgDeleteProfileTypeUrl:
-          return t('delete profile');
-        case Reports.v1.MsgCreateReportTypeUrl:
-          return t('create report');
-        case Bank.v1beta1.MsgSendTypeUrl:
-          console.log('message.senderAddress', message.senderAddress, userAddress);
-          if (message.senderAddress === userAddress) {
-            return t('send tip');
-          } else {
-            return t('receive tip');
-          }
-        default:
-          console.warn(`No title found for message type ${formattedMessage}`);
-          return '';
-      }
-    },
-    [t, userAddress],
-  );
+  const getImage = useGetOperationImage();
+  const getTitle = useGetOperationTitle(userAddress);
 
   // -------------------------------------------------------------------------------------
   // --- Child components

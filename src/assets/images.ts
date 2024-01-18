@@ -94,6 +94,7 @@ export const createPostTxIcon = require ('./images/txIcons/createPostTx.png');
 export const addReactionTxIcon = require ('./images/txIcons/addReactionTx.png');
 export const sendReportTxIcon = require ('./images/txIcons/sendReportTx.png');
 export const tipTxIcon = require ('./images/txIcons/tipTx.png');
+export const unknownTxIcon = require ('./images/txIcons/unknownTx.png');
 
 export const hidePost = require ('./images/hidePost.png');
 
