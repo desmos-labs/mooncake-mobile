@@ -56,6 +56,13 @@ export default {
     },
     scheme: ['mooncakeweb3auth', 'mooncake'],
     plugins: [
+      [
+        '@config-plugins/react-native-branch',
+        {
+          apiKey: process.env.BRANCH_API_KEY,
+          iosAppDomain: 'mooncake.app.link',
+        },
+      ],
       ['sentry-expo'],
       ['expo-localization'],
       [

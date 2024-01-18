@@ -1409,6 +1409,11 @@
   dependencies:
     mathjs "^10.1.1"
 
+"@config-plugins/react-native-branch@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@config-plugins/react-native-branch/-/react-native-branch-6.0.0.tgz#86b248ac9af8a64229f0b0129cd5c090562a3ad8"
+  integrity sha512-yIV3weP+VuYippYCYoE5bXwTEE9cUSvtlwI2Gky3wFRT0lS4cXvuAC8+iwtlmdN8CQ0dEXvXDTRvnUAg6P1Ozw==
+
 "@confio/ics23@^0.6.8":
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/@confio/ics23/-/ics23-0.6.8.tgz#2a6b4f1f2b7b20a35d9a0745bb5a446e72930b3d"
@@ -14236,6 +14241,11 @@ react-native-background-actions@^3.0.1:
   integrity sha512-xlEjUM2PP+OEQQkr9Z4c4+dRIzhbCh1xAeakL8FKGDib2a3dki2kMR4ZTw+9oHspHn9VF1Fuu78mWXR5zqkVaA==
   dependencies:
     eventemitter3 "^4.0.7"
+
+react-native-branch@^5.9.0:
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-5.9.2.tgz#72c7e2fb2f13d48fa52bf4d9d7876eb0e251f5b2"
+  integrity sha512-gOiFtlQNAvnNKBWB0yfZssDSgg6KJ4LyBvTD399+dW4i/iWW6xOiWDwS15huXQ1QLCsjyseiKxy90UBYOKJsPw==
 
 react-native-circular-progress@^1.3.7:
   version "1.3.7"
