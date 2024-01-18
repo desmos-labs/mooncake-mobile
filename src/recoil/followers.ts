@@ -19,7 +19,7 @@ const followersState = atom<Record<string, string[]>>({
  */
 // Ignore ts-prune error since we may need this in the future.
 // ts-prune-ignore-next
-export const useCachedUserFollowers = (user: string | undefined) => {
+export const useCachedUserFollowing = (user: string | undefined) => {
   const followers = useRecoilValue(followersState);
   return React.useMemo(() => {
     if (user === undefined) {
@@ -31,12 +31,10 @@ export const useCachedUserFollowers = (user: string | undefined) => {
 };
 
 /**
- * Hook that provides a function to update an user's followers.
+ * Hook that provides a function to update the list of users that an user is following.
  * NOTE: The list of followers will be erased when the application closes.
  */
-// Ignore ts-prune error since we may need this in the future.
-// ts-prune-ignore-next
-export const useSetCachedUserFollowers = () => {
+export const useSetCachedUserFollowing = () => {
   const setCahcedFollowers = useSetRecoilState(followersState);
 
   return React.useCallback(
@@ -68,7 +66,7 @@ export const useSetCachedUserFollowers = () => {
  * If the provided user is undefined, the hook will always return false.
  */
 export const useCachedIsFollowingUser = (user: string | undefined, counterparty: string) => {
-  const followers = useCachedUserFollowers(user);
+  const followers = useCachedUserFollowing(user);
   return React.useMemo(
     () => (user ? followers.includes(counterparty) : false),
     [user, followers, counterparty],
@@ -80,7 +78,7 @@ export const useCachedIsFollowingUser = (user: string | undefined, counterparty:
  * of users that the provided user is following.
  */
 export const useUpdateUserFollowersCache = () => {
-  const setCachedFollowers = useSetCachedUserFollowers();
+  const setCachedFollowers = useSetCachedUserFollowing();
   /**
    * Adds or removes a follower from the provided user's follower list.
    * @param user - The user address.
