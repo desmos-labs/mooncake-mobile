@@ -10,7 +10,11 @@ const GetAccountFollowers = gql`
     $offset: Int!
   ) @api(name: desmos) {
     relationships: user_relationship(
-      where: { subspace_id: { _eq: $subspaceId }, counterparty_address: { _eq: $userAddress } }
+      where: {
+        creator: { dtag: { _is_null: false } }
+        subspace_id: { _eq: $subspaceId }
+        counterparty_address: { _eq: $userAddress }
+      }
       limit: $limit
       offset: $offset
     ) {

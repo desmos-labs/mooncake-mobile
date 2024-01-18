@@ -1,6 +1,7 @@
 import { useLazyQuery } from '@apollo/client';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
+import { useSetCachedUserFollowing } from '@recoil/followers';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import React from 'react';
@@ -60,10 +61,20 @@ const useFetchUserFollowing = (address: string | undefined) => {
 const useFollowing = (address?: string, usersPerPage: number = 50) => {
   const activeAccount = useActiveAccountAddress();
   const userAddress = address || activeAccount;
+  const setCachedFollowing = useSetCachedUserFollowing();
 
   return usePaginatedData(useFetchUserFollowing(userAddress), {
     itemsPerPage: usersPerPage,
     autoFetchFirstPage: true,
+    onDataChanged: React.useCallback(
+      (profiles: DesmosProfile[]) => {
+        setCachedFollowing(
+          userAddress,
+          profiles.map(profile => profile.address),
+        );
+      },
+      [setCachedFollowing, userAddress],
+    ),
   });
 };
 
