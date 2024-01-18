@@ -5,6 +5,7 @@ import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useActiveProfile } from '@recoil/profiles';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useSetPostsListState } from '@recoil/screens/postsListState';
+import { useSetUriAction, useUriAction } from '@recoil/uriAction';
 import {
   bottomActivitiesFilledIcon,
   bottomActivitiesIcon,
@@ -16,6 +17,7 @@ import {
   middleButtonIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import useHandleUriAction from 'hooks/dynamicLinks/useHandleUriAction';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Box, useTheme } from 'native-base';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
@@ -106,7 +108,6 @@ const BottomTabBar = (props: Props) => {
 
   const { state, navigation } = props;
   const { navigate } = navigation;
-
   // -------------------------------------------------------------------------------------
   // --- Application state
   // -------------------------------------------------------------------------------------
@@ -257,7 +258,20 @@ const BottomTabBar = (props: Props) => {
  * @constructor
  */
 const BottomTabsNavigator = () => {
+  const handleUriAction = useHandleUriAction();
+  const uriAction = useUriAction();
+  const setUriAction = useSetUriAction();
   const renderTabBar = useCallback((props: BottomTabBarProps) => <BottomTabBar {...props} />, []);
+
+  // Effect handle the uri action.
+  React.useEffect(() => {
+    if (uriAction !== undefined) {
+      // Clear the action.
+      setUriAction(undefined);
+      // Handle the uri action.
+      handleUriAction(uriAction);
+    }
+  }, [handleUriAction, setUriAction, uriAction]);
 
   return (
     <Box flex={1} backgroundColor="white">

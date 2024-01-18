@@ -74,6 +74,8 @@ export const accountCreatedIcon = require ('./images/accountCreatedIcon.png');
 export const reportSuccessIcon = require ('./images/reportSuccessIcon.png');
 export const emptyListPlaceholder = require ('./images/emptyListsPlaceholders/emptyListPlaceholder.png');
 
+export const share = require ('./images/share.png');
+
 export const block = require ('./images/block.png');
 export const unblock = require ('./images/unblockIcon.png');
 

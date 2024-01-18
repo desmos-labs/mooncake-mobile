@@ -6,6 +6,7 @@ import {
   followBlackIcon,
   hidePost,
   reportIcon,
+  share,
   unblock,
   unfollowBlackIcon,
 } from 'assets/images';
@@ -33,6 +34,7 @@ interface PostCardProfileInfoProps {
   readonly onPressReport: () => void;
   readonly onPressHide: () => void;
   readonly onPressBlock: () => void;
+  readonly onPressShare: () => void;
 }
 
 /**
@@ -44,7 +46,15 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
 
-  const { post, onPressAuthor, onPressFollow, onPressReport, onPressHide, onPressBlock } = props;
+  const {
+    post,
+    onPressAuthor,
+    onPressFollow,
+    onPressReport,
+    onPressHide,
+    onPressBlock,
+    onPressShare,
+  } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -127,6 +137,11 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
           : t('follow', { ns: 'relationships' }),
         onPress: onPressFollow,
         icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
+      },
+      {
+        label: t('share', { ns: 'postOperations' }),
+        onPress: onPressShare,
+        icon: share,
       },
       {
         label: t('report', { ns: 'postOperations' }),
