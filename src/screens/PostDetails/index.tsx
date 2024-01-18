@@ -92,9 +92,9 @@ const PostDetails = () => {
 
   // Comments data
   const {
-    comments,
+    data: comments,
     loading: areCommentsLoading,
-    refetch: refreshComments,
+    refresh: refreshComments,
     fetchMore: fetchMoreComments,
   } = usePostComments(postData);
   const { refetch: refreshCommentsCount } = usePostCommentsCount(postData);
