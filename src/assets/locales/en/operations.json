@@ -1,17 +1,42 @@
 {
   "balance": "Balance",
   "operations": "Operations",
-  "create comment post": "Create, edit, comment a post",
+  "no operations": "No operations",
+  
+  "send tip": "Send tip",
+  "receive tip": "Receive tip",
+
+  "create comment post": "Create, comment a post",
+  "edit comment post": "Edit comment or post",
+  "delete post": "Delete post",
+  "add post attachment": "Add media to post",
+  "remove post attachment": "Remove media from post",
+  "answer poll": "Answer poll",
+  "move post comment": "Move post or comment",
+  "request post owner transfer": "Request post owner transfer",
+  "cancel post owner transfer request": "Cancel post owner transfer request",
+  "accept post owner transfer request": "Accept post owner transfer request",
+  "refuse post owner transfer request": "Refuse post owner transfer request",
+  
+  "edit profile": "Edit profile",
+  "delete profile": "Delete profile",
+  "request dtag transfer": "Request dtag transfer",
+  "accept dtag transfer request": "Accept dtag transfer request",
+  "refuse dtag transfer request": "Refuse dtag transfer request",
+  "cancel dtag transfer request": "Cancel dtag transfer request",
+  "link application": "Link application",
+  "unlink application": "Unlink application",
+  "link chain account": "Link chain account",
+  "unlink chain account": "Unlink chain account",
+  
+  "add reaction": "Add reaction",
+  "remove reaction": "Remove reaction",
+  
   "follow user": "Follow an user",
   "unfollow user": "Unfollow an user",
   "block user": "Block user",
   "unblock user": "Unblock user",
-  "edit profile": "Edit profile",
-  "delete profile": "Delete profile",
-  "add reaction": "Add reaction",
-  "remove reaction": "Remove reaction",
+  
   "create report": "Create report",
-  "send tip": "Send tip",
-  "receive tip": "Receive tip",
-  "no operations": "No operations"
+  "delete report": "Delete report"
 }
