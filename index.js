@@ -1,4 +1,3 @@
-import 'fastestsmallesttextencoderdecoder';
 import { registerRootComponent } from 'expo';
 import { handleBackcroundNotifications } from 'lib/NotificationsUtils';
 import messaging from '@react-native-firebase/messaging';
@@ -6,6 +5,25 @@ import App from './App';
 import './src/lib/ignoreWarningsUtils';
 import './shim';
 import './src/assets/locales/i18n';
+import branch from 'react-native-branch';
+import { parseBranchParams, setCachedUriAction } from 'lib/BranchUtils';
+
+// Init branch.
+branch.subscribe(({ params, error }) => {
+  if (error === null) {
+    const parsedAction = parseBranchParams(params);
+    if (parsedAction !== undefined) {
+      if (__DEV__) {
+        console.log('[Branch]:', 'Parsed action', parsedAction);
+      }
+      setCachedUriAction(parsedAction);
+    }
+  } else {
+    if (__DEV__) {
+      console.error('[Branch]:', error);
+    }
+  }
+});
 
 // Init backgroud norification logic
 messaging().setBackgroundMessageHandler(handleBackcroundNotifications);
