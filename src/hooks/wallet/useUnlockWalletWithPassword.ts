@@ -103,7 +103,7 @@ const useUnlockWalletWithPassword = () => {
       address: string,
       password: string,
       signingMode?: SigningMode,
-    ): Promise<Result<Wallet | undefined, Error>> => {
+    ): Promise<Result<Wallet, Error>> => {
       const serializedWallet = await getWallet(address, password);
       if (serializedWallet.isErr()) {
         return err(serializedWallet.error);

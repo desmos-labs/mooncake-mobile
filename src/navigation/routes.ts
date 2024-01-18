@@ -65,6 +65,7 @@ enum ROUTES {
   BLOCKED_USERS = 'BLOCKED_USERS',
   ABOUT = 'ABOUT',
   ABOUT_DETAILS = 'ABOUT_DETAILS',
+  REVEAL_PRIVATE_KEY = 'REVEAL_PRIVATE_KEY',
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS

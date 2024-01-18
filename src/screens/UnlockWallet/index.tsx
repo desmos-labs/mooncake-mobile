@@ -20,7 +20,7 @@ import { ResultAsync } from 'neverthrow';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
-import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
+import useUnlockWalletWithPassword from 'hooks/wallet/useUnlockWalletWithPassword';
 import { Wallet } from 'types/wallet';
 import * as Yup from 'yup';
 import Spacer from 'components/Spacer';
