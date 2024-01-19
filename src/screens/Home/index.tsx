@@ -1,6 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
@@ -9,7 +10,7 @@ import { useGetPostType } from 'components/PostCard/hooks';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import { useTheme } from 'native-base';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -30,7 +31,8 @@ const Home = () => {
   const theme = useTheme();
 
   const { name: routeName } = useRoute<NavProps['route']>();
-
+  const postListState = usePostsListState();
+  const setPostListState = useSetPostsListState();
   // Reference and state of the post list, to be able to scroll to the top of it
   const postListRef = useRef<any>(null);
 
@@ -75,6 +77,16 @@ const Home = () => {
 
   const getPostType = useGetPostType();
 
+  useEffect(() => {
+    if (postListState.scrollToTop) {
+      postListRef.current.scrollToIndex({
+        animated: true,
+        index: 0,
+      });
+      setPostListState(val => ({ ...val, scrollToTop: false }));
+    }
+  }, [postListState.scrollToTop, setPostListState]);
+
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
@@ -111,12 +123,12 @@ const Home = () => {
   }, [fetchingMore, styles]);
 
   const emptyComponent = useMemo(() => {
-    return (
+    return !loading && !refreshing ? (
       <View style={styles.emptyView}>
         <Image source={emptyListPlaceholder} style={styles.emptyImage} />
         <Typography.Regular14>{t('no posts to display')}</Typography.Regular14>
       </View>
-    );
+    ) : null;
   }, [styles, t]);
 
   // -------------------------------------------------------------------------------------

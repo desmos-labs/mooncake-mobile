@@ -93,7 +93,7 @@ const shadows = {
 };
 
 const textBlack = {
-  color: '##25282D',
+  color: '#25282D',
 };
 
 const textPrimary = {

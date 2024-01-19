@@ -2,10 +2,12 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 
 type PostsListState = {
   searchBarFocused: boolean;
+  scrollToTop: boolean;
 };
 
 const DefaultListOptions: PostsListState = {
   searchBarFocused: false,
+  scrollToTop: false,
 };
 
 /**

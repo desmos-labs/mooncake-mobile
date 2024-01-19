@@ -168,6 +168,15 @@ const BottomTabBar = (props: Props) => {
               setNotificationsCount(0);
             }
 
+            if (route.name === ROUTES.HOME_TABS) {
+              setPostsListState(value => {
+                return {
+                  ...value,
+                  scrollToTop: true,
+                };
+              });
+            }
+
             // @ts-ignore
             navigation.navigate({ name: route.name, merge: true });
           } else {
