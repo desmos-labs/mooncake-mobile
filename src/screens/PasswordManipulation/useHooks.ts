@@ -1,15 +1,11 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import { useSetLoginFlowState } from '@recoil/login';
 import { useStoreProfile } from '@recoil/profiles';
 import { ToastType } from 'config/toast/toastConfig';
 import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import useUpdateAccount from 'hooks/accounts/useUpdateAccount';
-import useTrackLoggedInUser from 'hooks/analytics/useTrackLoggedInUser';
-import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
-import useTrackProfileSelected from 'hooks/analytics/useTrackProfileSelected';
 import useCheckBiometrics from 'hooks/biometrics/useCheckBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
-import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
+import useGoToLoginStep from 'hooks/login/useGoToLoginStep';
 import useToast from 'hooks/toasts/useToast';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -67,13 +63,9 @@ const useHooks = () => {
   const storeAccount = useStoreAccount();
   const updateAccount = useUpdateAccount();
   const storeProfile = useStoreProfile();
-  const saveProfile = useNavigateToProfileEdit();
   const enableBiometrics = useEnableBiometrics();
-  const setLoginFlowState = useSetLoginFlowState();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();
-  const trackLoggedInUser = useTrackLoggedInUser();
-  const trackProfileCreated = useTrackProfileCreated();
-  const trackProfileSelected = useTrackProfileSelected();
+  const goToLoginStep = useGoToLoginStep();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -161,21 +153,7 @@ const useHooks = () => {
           }
           setSigninStatus(SignInStatus.SAVING_PROFILE);
           storeProfile(profile.address, profile);
-
-          navigate(ROUTES.FOLLOW_CREATORS, {
-            isOnboarding: true,
-            onStartBroadcasting: () => {
-              setLoginFlowState({
-                step: LoginFlowStep.Completed,
-              });
-              trackLoggedInUser(account.account);
-              trackProfileSelected();
-              setSigninStatus(SignInStatus.DONE);
-              navigate(ROUTES.WELCOME_PAGE, {
-                action: 'import',
-              });
-            },
-          });
+          goToLoginStep({ step: LoginFlowStep.FollowCreators, account: account.account });
         } else {
           setLoading(false);
         }
@@ -193,29 +171,7 @@ const useHooks = () => {
           setSigninStatus(SignInStatus.ENABLING_BIOMETRICS);
           await enableBiometrics(formValues.newPassword, false, account.wallet.address);
         }
-        setLoginFlowState({
-          step: LoginFlowStep.AccountCreated,
-        });
-        saveProfile({
-          accountWithWallet: account,
-          isOnboarding: true,
-          onProfileSaved: async () => {
-            navigate(ROUTES.FOLLOW_CREATORS, {
-              isOnboarding: true,
-              onStartBroadcasting: () => {
-                setSigninStatus(SignInStatus.DONE);
-                setLoginFlowState({
-                  step: LoginFlowStep.Completed,
-                });
-                trackLoggedInUser(account.account);
-                trackProfileCreated();
-                navigate(ROUTES.WELCOME_PAGE, {
-                  action: 'create',
-                });
-              },
-            });
-          },
-        });
+        goToLoginStep({ step: LoginFlowStep.CreateProfile, account: account.account });
         setLoading(false);
       }
 
@@ -232,13 +188,7 @@ const useHooks = () => {
             setSigninStatus(SignInStatus.ENABLING_BIOMETRICS);
             await enableBiometrics(formValues.newPassword, false, account.wallet.address);
           }
-          trackLoggedInUser(account.account);
-          setLoginFlowState({
-            step: LoginFlowStep.RequestFeeGrant,
-          });
-          navigate(ROUTES.FEE_GRANT_WAITING_SCREEN, {
-            granted: false,
-          });
+          goToLoginStep({ step: LoginFlowStep.RequestFeeGrant });
         } else {
           console.warn(storeAccountResult.error);
         }
@@ -269,18 +219,14 @@ const useHooks = () => {
       account,
       biometricsAvailable,
       enableBiometrics,
+      goToLoginStep,
       mode,
       navigate,
       profile,
-      saveProfile,
-      setLoginFlowState,
       storeAccount,
       storeProfile,
       t,
       toast,
-      trackLoggedInUser,
-      trackProfileCreated,
-      trackProfileSelected,
       updateAccount,
     ],
   );

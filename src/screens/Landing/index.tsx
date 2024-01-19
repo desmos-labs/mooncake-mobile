@@ -22,6 +22,11 @@ import {
 } from 'types/login';
 import { useIsLoginWithPrivateKeyEnabled } from './hooks';
 import useStyles from './useStyles';
+import ThemedLottieView from 'components/ThemedLottieView';
+import { landingPageAnimation } from 'assets/animations';
+import { Image } from 'expo-image';
+import useStyles from './useStyles';
+import { useIsLoginWithPrivateKeyEnabled, useResumeLoginFlow } from './hooks';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 
@@ -41,6 +46,7 @@ const Landing = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
   const loginWithPrivateKeyEnabled = useIsLoginWithPrivateKeyEnabled();
+  const { pendingLoginFlow, resumeLoginFlow, cancelLoginFlow } = useResumeLoginFlow();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -55,6 +61,28 @@ const Landing = () => {
     },
     [navigate],
   );
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  React.useEffect(() => {
+    if (pendingLoginFlow) {
+      navigate(ROUTES.CONFIRM_MODAL, {
+        title: t('incomplete login'),
+        subtitle: t('incomplete login description'),
+        primaryButtonLabel: t('resume', { ns: 'common' }),
+        onPressPrimary: resumeLoginFlow,
+        secondaryButtonLabel: t('cancel', { ns: 'common' }),
+        onPressSecondary: cancelLoginFlow,
+        onDismiss: cancelLoginFlow,
+      });
+    }
+
+    // Safe to ignore this, we want to execute this effect only the first time that
+    // we enter in this screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

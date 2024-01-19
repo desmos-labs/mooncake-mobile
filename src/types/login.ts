@@ -1,4 +1,5 @@
 import { Web3AuthLoginProvider } from 'types/web3auth';
+import { Account } from './account';
 
 /**
  * Login methods supported by the application.
@@ -56,7 +57,7 @@ export enum LoginFlowStep {
    * enough tokens to pay for the transaction to create the profile.
    * In this case we should bring the user to the create profile screen.
    */
-  AccountCreated,
+  CreateProfile,
   /**
    * The user has created their profile, and we need to let the user
    * select which creators they want to follow before navigating to the home.
@@ -95,7 +96,7 @@ interface LoginFlowStateWaitingFeeGrant extends BaseLoginFlowState<LoginFlowStep
  * the user's account and the user have enough tokens or have requested
  * a fee grant to pay for the transaction to create the profile.
  */
-interface LoginFlowStateAccountCreated extends BaseLoginFlowState<LoginFlowStep.AccountCreated> {
+interface LoginFlowStateAccountCreated extends BaseLoginFlowState<LoginFlowStep.CreateProfile> {
   /**
    * Address of the fee granter that we should use to pay for the transaction
    * fees. If undefined means that the user have enough tokens to pay for the
@@ -124,3 +125,57 @@ export type LoginFlowState =
   | LoginFlowStateWaitingFeeGrant
   | LoginFlowStateFollowCreators
   | LoginFlowStateCompleted;
+
+/**
+ * Interface that represent an action to navigate to
+ * a specific login step.
+ */
+interface BaseLoginNavigationAction<S extends LoginFlowStep> {
+  readonly step: S;
+}
+
+/**
+ * Interface that represent an action to navigate to
+ * the screen that requests the fee grant.
+ */
+interface LoginNavigationActionRequestFeeGrant
+  extends BaseLoginNavigationAction<LoginFlowStep.RequestFeeGrant> {}
+
+/**
+ * Interface that represent an action to navigate to
+ * the screen that waits for the fee grant.
+ */
+interface LoginNavigationActionWaitingFeeGrant
+  extends BaseLoginNavigationAction<LoginFlowStep.WaitingFeeGrant> {}
+
+/**
+ * Interface that represent an action to navigate to
+ * the profile creation screen since the user has already created the profile.
+ */
+interface LoginNavigationActionAccountCreated
+  extends BaseLoginNavigationAction<LoginFlowStep.CreateProfile> {
+  readonly account: Account;
+}
+
+/**
+ * Interface that represent an action to navigate to
+ * the follow creator screen since the user has already created the profile.
+ */
+interface LoginNavigationActionFollowCreators
+  extends BaseLoginNavigationAction<LoginFlowStep.FollowCreators> {
+  readonly account: Account;
+}
+
+/**
+ * Interface that represent an action to navigate to
+ * the login completed screen.
+ */
+interface LoginNavigationActionCompleted
+  extends BaseLoginNavigationAction<LoginFlowStep.Completed> {}
+
+export type LoginNavigationAction =
+  | LoginNavigationActionRequestFeeGrant
+  | LoginNavigationActionWaitingFeeGrant
+  | LoginNavigationActionAccountCreated
+  | LoginNavigationActionFollowCreators
+  | LoginNavigationActionCompleted;

@@ -24,5 +24,6 @@
   "message": "Message",
   "skip": "Skip",
   "delete": "Delete",
-  "please wait": "Please wait..."
+  "please wait": "Please wait...",
+  "resume": "Resume",
 }

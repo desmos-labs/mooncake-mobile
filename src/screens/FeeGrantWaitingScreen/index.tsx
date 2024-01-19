@@ -11,16 +11,15 @@ import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
-import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
-import GRANTER_ADDRESS, { hasSaveProfileAllowance } from 'lib/grantsUtils';
+import { hasSaveProfileAllowance } from 'lib/grantsUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { LoginFlowStep } from 'types/login';
+import useGoToLoginStep from 'hooks/login/useGoToLoginStep';
 import useStyles from './useStyles';
 
 export interface FeeGrantWaitingScreenParams {
@@ -49,9 +48,7 @@ const FeeGrantWaitingScreen = () => {
   const [feeGrantReady, setFeeGrantReady] = useState(params?.granted ?? false);
   const { feeGrants, startCheckingFeeGrants, stopCheckingFeeGrants } =
     useGetAuthorizationInformation(activeAccount?.address!);
-
-  const saveProfile = useNavigateToProfileEdit();
-  const trackProfileCreated = useTrackProfileCreated();
+  const goToLoginStep = useGoToLoginStep();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -59,25 +56,8 @@ const FeeGrantWaitingScreen = () => {
 
   const createDesmosProfile = useCallback(() => {
     // If there are no errors, navigate to the save profile screen
-    saveProfile({
-      blockBackAction: true,
-      isOnboarding: true,
-      onProfileSaved: async () => {
-        navigation.navigate(ROUTES.FOLLOW_CREATORS, {
-          isOnboarding: true,
-          onStartBroadcasting: () => {
-            trackProfileCreated();
-            setLoginFlowState({
-              step: LoginFlowStep.Completed,
-            });
-            navigation.navigate(ROUTES.WELCOME_PAGE, {
-              action: 'create',
-            });
-          },
-        });
-      },
-    });
-  }, [navigation, saveProfile, setLoginFlowState, trackProfileCreated]);
+    goToLoginStep({ step: LoginFlowStep.CreateProfile, account: activeAccount! });
+  }, [activeAccount, goToLoginStep]);
 
   const checkFeeGrant = useCallback(async () => {
     startCheckingFeeGrants(1000);
@@ -87,12 +67,8 @@ const FeeGrantWaitingScreen = () => {
     if (hasSaveProfileAllowance(feeGrants)) {
       stopCheckingFeeGrants();
       setFeeGrantReady(true);
-      setLoginFlowState({
-        step: LoginFlowStep.AccountCreated,
-        feeGranter: GRANTER_ADDRESS,
-      });
     }
-  }, [feeGrants, setLoginFlowState, startCheckingFeeGrants, stopCheckingFeeGrants]);
+  }, [feeGrants, startCheckingFeeGrants, stopCheckingFeeGrants]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -115,7 +91,7 @@ const FeeGrantWaitingScreen = () => {
       setLoginFlowState({ step: LoginFlowStep.WaitingFeeGrant });
       checkFeeGrant();
     } else {
-      setLoginFlowState({ step: LoginFlowStep.AccountCreated });
+      setLoginFlowState({ step: LoginFlowStep.CreateProfile });
     }
   }, [checkFeeGrant, params, setLoginFlowState]);
 
