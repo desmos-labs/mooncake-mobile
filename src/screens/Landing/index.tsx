@@ -20,6 +20,8 @@ import {
   LoginMethodWeb3AuthApple,
   LoginMethodWeb3AuthGoogle,
 } from 'types/login';
+import useIsLoginFlowUncompleted from 'hooks/login/useIsLoginFlowUncompleted';
+import useResumeLoginFlow from 'hooks/login/useResumeLoginFlow';
 import { useIsLoginWithPrivateKeyEnabled } from './hooks';
 import useStyles from './useStyles';
 
@@ -41,6 +43,8 @@ const Landing = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
   const loginWithPrivateKeyEnabled = useIsLoginWithPrivateKeyEnabled();
+  const pendingLoginFlow = useIsLoginFlowUncompleted();
+  const { resumeLoginFlow, cancelLoginFlow } = useResumeLoginFlow();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -55,6 +59,29 @@ const Landing = () => {
     },
     [navigate],
   );
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  React.useEffect(() => {
+    if (pendingLoginFlow) {
+      navigate(ROUTES.CONFIRM_MODAL, {
+        title: t('incomplete login'),
+        subtitle: t('incomplete login description'),
+        primaryButtonLabel: t('resume', { ns: 'common' }),
+        onPressPrimary: resumeLoginFlow,
+        secondaryButtonLabel: t('cancel', { ns: 'common' }),
+        onPressSecondary: cancelLoginFlow,
+        onDismiss: cancelLoginFlow,
+        removeModalAfterButtonPress: true,
+      });
+    }
+
+    // Safe to ignore this, we want to execute this effect only the first time that
+    // we enter in this screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

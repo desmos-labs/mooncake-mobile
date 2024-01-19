@@ -24,6 +24,10 @@ const useStyles = makeStyle(theme => ({
     width: 180,
     height: 180,
   },
+  loadingAnimation: {
+    width: 180,
+    height: 180,
+  },
 }));
 
 export default useStyles;

@@ -79,13 +79,20 @@ export interface AccountWithWallet {
 export type SerializableAccount = SerializableWeb3AuthAccount | SerializablePrivateKeyAccount;
 
 /**
+ * Interface that represents the information
+ * about the user's account that can be updated.
+ */
+export interface UpdatableAccountInfo {
+  readonly loginTourLastStep: LoginOnboardingStep;
+  readonly languageIsoCode: string;
+}
+
+/**
  * Interface representing the account information that can be requested from
  * the server.
  */
-export interface AccountInfo {
-  readonly loginTourLastStep: LoginOnboardingStep;
-  readonly creationTime: string;
+export interface AccountInfo extends UpdatableAccountInfo {
   readonly desmosAddress: string;
+  readonly creationTime: string;
   readonly lastLogin?: string;
-  readonly userDeepLink: string;
 }

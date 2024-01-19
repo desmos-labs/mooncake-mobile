@@ -4,23 +4,22 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
 import { dotsAnimation } from 'assets/animations';
-import { mooncakeHomeIcon } from 'assets/images';
+import { mooncakeLogo } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import useTrackProfileCreated from 'hooks/analytics/useTrackProfileCreated';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
-import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
-import GRANTER_ADDRESS, { hasSaveProfileAllowance } from 'lib/grantsUtils';
+import { hasSaveProfileAllowance } from 'lib/grantsUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { LoginFlowStep } from 'types/login';
+import useGoToLoginStep from 'hooks/login/useGoToLoginStep';
 import useStyles from './useStyles';
 
 export interface FeeGrantWaitingScreenParams {
@@ -49,9 +48,7 @@ const FeeGrantWaitingScreen = () => {
   const [feeGrantReady, setFeeGrantReady] = useState(params?.granted ?? false);
   const { feeGrants, startCheckingFeeGrants, stopCheckingFeeGrants } =
     useGetAuthorizationInformation(activeAccount?.address!);
-
-  const saveProfile = useNavigateToProfileEdit();
-  const trackProfileCreated = useTrackProfileCreated();
+  const goToLoginStep = useGoToLoginStep();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -59,25 +56,8 @@ const FeeGrantWaitingScreen = () => {
 
   const createDesmosProfile = useCallback(() => {
     // If there are no errors, navigate to the save profile screen
-    saveProfile({
-      blockBackAction: true,
-      isOnboarding: true,
-      onProfileSaved: async () => {
-        navigation.navigate(ROUTES.FOLLOW_CREATORS, {
-          isOnboarding: true,
-          onStartBroadcasting: () => {
-            trackProfileCreated();
-            setLoginFlowState({
-              step: LoginFlowStep.Completed,
-            });
-            navigation.navigate(ROUTES.WELCOME_PAGE, {
-              action: 'create',
-            });
-          },
-        });
-      },
-    });
-  }, [navigation, saveProfile, setLoginFlowState, trackProfileCreated]);
+    goToLoginStep({ step: LoginFlowStep.CreateProfile, account: activeAccount! });
+  }, [activeAccount, goToLoginStep]);
 
   const checkFeeGrant = useCallback(async () => {
     startCheckingFeeGrants(1000);
@@ -87,12 +67,8 @@ const FeeGrantWaitingScreen = () => {
     if (hasSaveProfileAllowance(feeGrants)) {
       stopCheckingFeeGrants();
       setFeeGrantReady(true);
-      setLoginFlowState({
-        step: LoginFlowStep.AccountCreated,
-        feeGranter: GRANTER_ADDRESS,
-      });
     }
-  }, [feeGrants, setLoginFlowState, startCheckingFeeGrants, stopCheckingFeeGrants]);
+  }, [feeGrants, startCheckingFeeGrants, stopCheckingFeeGrants]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -112,9 +88,12 @@ const FeeGrantWaitingScreen = () => {
 
   useEffect(() => {
     if (!params?.granted) {
+      setLoginFlowState({ step: LoginFlowStep.WaitingFeeGrant });
       checkFeeGrant();
+    } else {
+      setLoginFlowState({ step: LoginFlowStep.CreateProfile });
     }
-  }, [checkFeeGrant, params]);
+  }, [checkFeeGrant, params, setLoginFlowState]);
 
   const title = useMemo(() => {
     if (feeGrantReady) {
@@ -139,23 +118,19 @@ const FeeGrantWaitingScreen = () => {
       <View style={styles.innerContainer}>
         {feeGrantReady ? (
           <Image
-            source={mooncakeHomeIcon}
+            source={mooncakeLogo}
             tintColor={theme.colors.primary}
             style={styles.feeGrantReadyImage}
           />
         ) : (
-          <ThemedLottieView autoSize autoPlay loop source={dotsAnimation} />
+          <ThemedLottieView style={styles.loadingAnimation} autoPlay loop source={dotsAnimation} />
         )}
         <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>
         <Spacer paddingBottom={theme.spacing.l} />
         <Typography.Regular14 style={styles.subtitle}>{subtitle}</Typography.Regular14>
         <Spacer paddingBottom={theme.spacing.xl} />
-        <Button
-          backgroundColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          onPress={createDesmosProfile}
-          disabled={!feeGrantReady}>
+        <Button onPress={createDesmosProfile} disabled={!feeGrantReady}>
           Create a Desmos Profile
         </Button>
       </View>

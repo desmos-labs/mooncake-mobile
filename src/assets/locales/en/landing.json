@@ -3,4 +3,6 @@
   "login with private key": "Login with private key",
   "continue with google": "Continue with Google",
   "continue with apple": "Continue with Apple",
+  "incomplete login": "Incomplete Login",
+  "incomplete login description": "Oops! It looks like your login process is incomplete.\nWould you like to resume your login now, or cancel it?",
 }
