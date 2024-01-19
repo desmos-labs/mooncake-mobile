@@ -71,6 +71,7 @@ const Landing = () => {
         secondaryButtonLabel: t('cancel', { ns: 'common' }),
         onPressSecondary: cancelLoginFlow,
         onDismiss: cancelLoginFlow,
+        removeModalAfterButtonPress: true,
       });
     }
 
