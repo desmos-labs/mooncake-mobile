@@ -1,4 +1,5 @@
 import { makeStyle } from 'config/theme';
+import CommonStyles from 'config/theme/CommonStyles';
 
 /**
  * Style hook for the Settings screen
@@ -6,6 +7,15 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   root: {
     paddingHorizontal: theme.spacing.m,
+  },
+  scrollview: {
+    marginTop: -16,
+    marginHorizontal: -16,
+    marginBottom: theme.spacing.m,
+  },
+  scrollViewContent: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
   },
   title: {
     marginBottom: 24,
@@ -17,8 +27,9 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.background,
     borderWidth: 0,
   },
-  spacer: {
+  section: {
     marginBottom: 24,
+    ...CommonStyles.shadows.Shadows,
   },
   bottomText: {
     textAlign: 'center',

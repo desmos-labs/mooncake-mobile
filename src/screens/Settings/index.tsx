@@ -14,7 +14,6 @@ import useDisableBiometrics from 'hooks/biometrics/useDisableBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { usePostHog } from 'posthog-react-native';
@@ -47,7 +46,7 @@ const Settings = (props: NavProps) => {
   const styles = useStyles();
   const { navigation } = props;
   const { navigate } = navigation;
-  const theme = useTheme();
+
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
@@ -164,12 +163,14 @@ const Settings = (props: NavProps) => {
       style={styles.root}
       topBar={<TopBar />}
       showLoadingOverlay={signOutLoading}
-      disableHideKeyboardTouchable={true}
-      backgroundColor={theme.colors.backgroundGrey}>
+      disableHideKeyboardTouchable={true}>
       <Typography.Semibold24 style={styles.title}>{t('settings')}</Typography.Semibold24>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollview}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollViewContent}>
         {/* Security section */}
-        <Section style={styles.spacer} title={t('security')}>
+        <Section style={[styles.section]} title={t('security')}>
           <SectionSwitch
             label={t('enable analytics')}
             value={analytics}
@@ -187,12 +188,12 @@ const Settings = (props: NavProps) => {
           )}
         </Section>
         {/* Acccount section */}
-        <Section style={styles.spacer} title={t('account')}>
+        <Section style={styles.section} title={t('account')}>
           <SectionButton label={t('delete account data')} onPress={deleteAccountData} />
           <SectionButton label={t('delete profile')} onPress={deleteProfile} />
         </Section>
         {/* Other section */}
-        <Section style={styles.spacer} title={t('others')}>
+        <Section style={styles.section} title={t('others')}>
           <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
           <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
           <SectionButton label={t('about')} onPress={showAboutInfo} />
