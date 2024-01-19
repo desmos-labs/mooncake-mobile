@@ -80,7 +80,7 @@ const useFetchPosts = (queryData: QueryOptions<any, any>) => {
       data: posts,
       endReached: posts.length < queryData.variables.limit,
     };
-  }, [fetchPostComments]);
+  }, [fetchPostComments, queryData.variables]);
 };
 
 const usePosts = (queryType: PostsQueryType) => {
@@ -91,11 +91,14 @@ const usePosts = (queryType: PostsQueryType) => {
   const storePosts = useStorePosts(activeAccountAddress!);
   const cachedPosts = useStoredRootPosts(activeAccountAddress!);
 
-  const mapDataFunction = useCallback((data: Post[]) => {
-    const filteredPosts = data.filter((post: Post) => post.author);
-    const [merged] = mergePosts(cachedPosts, filteredPosts);
-    return merged;
-  }, []);
+  const mapDataFunction = useCallback(
+    (data: Post[]) => {
+      const filteredPosts = data.filter((post: Post) => post.author);
+      const [merged] = mergePosts(cachedPosts, filteredPosts);
+      return merged;
+    },
+    [cachedPosts],
+  );
 
   const { loading, refreshing, fetchMore, refresh, error } = usePaginatedData(
     useFetchPosts(queryData),
