@@ -20,13 +20,8 @@ import {
   LoginMethodWeb3AuthApple,
   LoginMethodWeb3AuthGoogle,
 } from 'types/login';
-import { useIsLoginWithPrivateKeyEnabled } from './hooks';
-import useStyles from './useStyles';
-import ThemedLottieView from 'components/ThemedLottieView';
-import { landingPageAnimation } from 'assets/animations';
-import { Image } from 'expo-image';
-import useStyles from './useStyles';
 import { useIsLoginWithPrivateKeyEnabled, useResumeLoginFlow } from './hooks';
+import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 
