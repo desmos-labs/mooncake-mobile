@@ -12,7 +12,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'space-around',
   },
   text: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutral['700'],
   },
   button: {
     alignItems: 'center',
@@ -22,7 +22,7 @@ const useStyles = makeStyle(theme => ({
   },
   icon: {
     marginRight: theme.spacing.xs,
-    tintColor: theme.colors.surfaceBlack,
+    tintColor: theme.colors.neutral['700'],
     width: 25,
     height: 25,
     resizeMode: 'contain',

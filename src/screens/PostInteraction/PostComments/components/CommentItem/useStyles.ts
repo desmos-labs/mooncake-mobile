@@ -30,7 +30,7 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     marginRight: theme.spacing.s,
   },
   textStyle: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutral['700'],
   },
   subTextStyle: {
     color: theme.colors.grey02,
@@ -38,7 +38,7 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
   buttonImage: {
     width: 20,
     height: 20,
-    tintColor: theme.colors.surfaceBlack,
+    tintColor: theme.colors.neutral['700'],
     resizeMode: 'contain',
   },
   interactionImage: {

@@ -1,4 +1,5 @@
 import { makeStyle } from 'config/theme';
+import { scale } from 'react-native-size-matters';
 
 /**
  * Theme hook for the PostCard component
@@ -10,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.m,
     justifyContent: 'space-between',
   },
-  bottomBarIcon: { height: 24, width: 24, marginRight: theme.spacing.xs },
+  bottomBarIcon: { height: scale(22), width: scale(22), marginRight: theme.spacing.xs },
   commentButton: {
     flexDirection: 'row',
     alignItems: 'center',

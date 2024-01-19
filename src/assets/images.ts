@@ -109,6 +109,7 @@ export const middleButtonIcon = require ('./images/bottomBarIcons/middleButton.p
 
 // Post icons
 
+export const postCommentedIcon = require ('./images/homePostIcons/postCommentedIdon.png');
 export const postToCommentIcon = require ('./images/homePostIcons/postToCommentIcon.png');
 export const postLikedIcon = require ('./images/homePostIcons/postLikedIcon.png');
 export const postToLikeIcon = require ('./images/homePostIcons/postToLikeIcon.png');

@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { commentIcon, commentLiked, commentLikeEmptyIcon } from 'assets/images';
+import { postLikedIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
 import Spacer from 'components/Spacer';
 import { Divider } from 'native-base';
 import React from 'react';
@@ -29,7 +29,7 @@ const PostActionButtonsBar = (props: Props) => {
       <View style={styles.container}>
         <TouchableOpacity onPress={handleLikePress} style={styles.button}>
           <Image
-            source={postLiked ? commentLiked : commentLikeEmptyIcon}
+            source={postLiked ? postLikedIcon : postToLikeIcon}
             style={[styles.icon, postLiked && styles.orangeIconAndText]}
           />
           <Typography.Semibold14
@@ -39,7 +39,7 @@ const PostActionButtonsBar = (props: Props) => {
           </Typography.Semibold14>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCommentPress} style={styles.button}>
-          <Image source={commentIcon} style={styles.icon} />
+          <Image source={postToCommentIcon} style={styles.icon} />
           <Typography.Semibold14 numberOfLines={1} style={styles.text}>
             {t('comment')}
           </Typography.Semibold14>

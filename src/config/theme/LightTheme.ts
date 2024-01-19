@@ -127,6 +127,7 @@ const lightTheme = extendTheme({
     neutral: {
       100: '#F7F7F7',
       300: '#E8E8E8',
+      700: '#616161',
       900: '#25282D',
     },
     fedback: {
