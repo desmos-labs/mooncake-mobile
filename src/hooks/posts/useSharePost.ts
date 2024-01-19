@@ -23,7 +23,7 @@ export const useSharePost = (postId: number) => {
         toastType: ToastType.error,
       });
     }
-  }, []);
+  }, [postId, showToast]);
 };
 
 export default useSharePost;

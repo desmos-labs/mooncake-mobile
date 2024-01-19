@@ -172,8 +172,6 @@ const ReportPost = () => {
     styles.messageInput,
     styles.textInput,
     t,
-    theme.colors.surfaceBlack,
-    theme.colors.white,
     theme.spacing.s,
   ]);
 

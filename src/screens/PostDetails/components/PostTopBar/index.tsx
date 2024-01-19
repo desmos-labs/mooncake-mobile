@@ -136,16 +136,17 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
     isAuthorActiveUser,
-    handlePressFollowOrUnfollow,
-    handlePressBlockOrUnblock,
-    handlePressHidePost,
-    handlePressMore,
-    handlePressReport,
-    isBlocked,
     isFollowing,
-    onBackButtonPress,
-    post,
     t,
+    sharePost,
+    isBlocked,
+    handlePressMore,
+    handlePressFollowOrUnfollow,
+    post,
+    handlePressReport,
+    handlePressHidePost,
+    onBackButtonPress,
+    handlePressBlockOrUnblock,
   ]);
 
   // -------------------------------------------------------------------------------------

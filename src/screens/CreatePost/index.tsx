@@ -153,14 +153,7 @@ const CreatePost = () => {
         {t('post')}
       </Button>
     );
-  }, [
-    canCreatePost,
-    onCreatePostPressWrapper,
-    loading,
-    t,
-    theme.colors.primary,
-    theme.colors.white,
-  ]);
+  }, [canCreatePost, onCreatePostPressWrapper, loading, t, theme.colors.white]);
 
   const TopBarCenterElement = React.useMemo(() => {
     if (!parent) {

@@ -2,7 +2,6 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import { Image } from 'expo-image';
-import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useEffect } from 'react';
@@ -41,13 +40,11 @@ const UserListItem = (props: UserListItemProps) => {
   const activeAccountAddress = useActiveAccountAddress();
   const isActiveAccount = activeAccountAddress === profileAddress;
 
-  const { isFollowing, refetch: refreshFollowing } = useIsFollowing(user.address);
+  const { refetch: refreshFollowing } = useIsFollowing(user.address);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
-
-  const followOrUnfollowUser = useFollowOrUnfollowUser();
 
   // -------------------------------------------------------------------------------------
   // --- Effects

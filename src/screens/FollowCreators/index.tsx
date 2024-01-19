@@ -8,7 +8,6 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import useTrackSelectedUsersToFollow from 'hooks/analytics/useTrackSelectedUsersToFollow';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -39,7 +38,6 @@ const MIN_FOLLOWAGE_COUNT = 3;
  */
 const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation('onboarding');
 
   // -----------------------------------------------------

@@ -89,7 +89,7 @@ const Button = (props: Props) => {
       },
     };
     return styleMap[type as string];
-  }, [theme.colors.background, theme.colors.primary, type]);
+  }, [theme.colors.background, type]);
 
   const defaultLoadingColor = React.useMemo(() => {
     switch (type) {

@@ -79,7 +79,16 @@ const useHandlePostActions = () => {
         }
       }
     },
-    [activeAccount, showToast, navigation, t, showLoadingModal, hideLoadingModal],
+    [
+      activeAccount,
+      showToast,
+      navigation,
+      t,
+      showLoadingModal,
+      hideLoadingModal,
+      getPostById,
+      navigateToPostDetails,
+    ],
   );
 };
 

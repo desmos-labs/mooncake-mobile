@@ -120,7 +120,7 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [fetchingMore, styles]);
+  }, [fetchingMore, styles, loading]);
 
   const emptyComponent = useMemo(() => {
     return !loading && !refreshing ? (
@@ -129,7 +129,7 @@ const Home = () => {
         <Typography.Regular14>{t('no posts to display')}</Typography.Regular14>
       </View>
     ) : null;
-  }, [styles, t]);
+  }, [styles, t, loading, refreshing]);
 
   // -------------------------------------------------------------------------------------
   // --- Component rendering

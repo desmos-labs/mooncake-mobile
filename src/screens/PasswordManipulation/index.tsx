@@ -121,7 +121,7 @@ const PasswordManipulation = () => {
           initialValues={initialFormValues}
           onSubmit={handleFormSubmit}
           validationSchema={validationSchema}>
-          {({ handleSubmit, values, errors, setFieldValue, setFieldError }) => {
+          {({ handleSubmit, values, errors, setFieldValue }) => {
             return (
               <>
                 <ScrollView
