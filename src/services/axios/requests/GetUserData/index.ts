@@ -8,7 +8,7 @@ import { LoginOnboardingStep } from 'types/tourguide';
 /**
  * Gets the account information of the current logged user.
  */
-const GetAccountInfo = (): ResultAsync<AccountInfo, Error> => {
+const GetUserData = (): ResultAsync<AccountInfo, Error> => {
   return promiseToResult(
     axiosInstance.get('/me').then(response => {
       const userData = response.data;
@@ -26,4 +26,4 @@ const GetAccountInfo = (): ResultAsync<AccountInfo, Error> => {
   );
 };
 
-export default GetAccountInfo;
+export default GetUserData;

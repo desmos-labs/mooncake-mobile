@@ -1,7 +1,7 @@
 import { useCachedTourGuide, useSetCachedTourGuide } from '@recoil/tourguide';
 import React from 'react';
 import * as Sentry from 'sentry-expo';
-import GetAccountInfo from 'services/axios/requests/GetAccountData';
+import GetUserData from 'services/axios/requests/GetUserData';
 
 /**
  * Hook that provides a function to fetch the tour guide state from the server.
@@ -14,7 +14,7 @@ const useFetchTourGuidesState = () => {
 
   return React.useCallback(async () => {
     let tourGuide = cachedTourGuide;
-    const accountInfoResult = await GetAccountInfo();
+    const accountInfoResult = await GetUserData();
     if (accountInfoResult.isOk()) {
       tourGuide = {
         ...cachedTourGuide,
