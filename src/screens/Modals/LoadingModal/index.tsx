@@ -8,6 +8,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { View } from 'react-native';
+import { isGoBackEvent } from 'lib/EventUtils';
 
 export enum LoadingAnimation {
   Squares = 'squares',
@@ -61,7 +62,7 @@ const LoadingModal: React.FC<NavProps> = ({
 
   React.useEffect(() => {
     return navigation.addListener('beforeRemove', e => {
-      if (blockBackAction && e.data.action.type === 'GO_BACK') {
+      if (blockBackAction && isGoBackEvent(e)) {
         e.preventDefault();
       }
     });

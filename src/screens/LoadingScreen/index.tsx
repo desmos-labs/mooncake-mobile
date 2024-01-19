@@ -10,6 +10,7 @@ import { Center } from 'native-base';
 import Spacer from 'components/Spacer';
 import { makeStyle } from 'config/theme';
 import { scale } from 'react-native-size-matters';
+import { isGoBackEvent } from 'lib/EventUtils';
 
 export interface LoadingScreenParams {
   /**
@@ -39,7 +40,7 @@ const LoadingScreen: React.FC<NavProps> = ({
   // Prevent going back.
   React.useEffect(() => {
     return navigation.addListener('beforeRemove', e => {
-      if (!__DEV__ && e.data.action.type === 'GO_BACK') {
+      if (!__DEV__ && isGoBackEvent(e)) {
         e.preventDefault();
       }
     });
@@ -61,7 +62,7 @@ const LoadingScreen: React.FC<NavProps> = ({
 
 const useStyles = makeStyle(() => ({
   loadingAnimation: {
-    widyhe: 127,
+    width: 127,
     height: 127,
   },
 }));
