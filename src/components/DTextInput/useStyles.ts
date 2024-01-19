@@ -18,7 +18,6 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     fontStyle: 'normal',
     fontWeight: '400',
     lineHeight: 21,
-    letterSpacing: 0.025,
     textAlign: 'left',
     paddingHorizontal: 11,
     flexGrow: 1,

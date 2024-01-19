@@ -209,10 +209,18 @@ const UnlockWallet = () => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>
-      <Typography.Semibold24 style={styles.headerText}>
-        {titleLabelOverride || t('unlock wallet')}
-      </Typography.Semibold24>
+    <DView
+      style={styles.container}
+      backgroundColor={theme.colors.white}
+      topBar={
+        <TopBar
+          centerElement={
+            <Typography.Semibold16>
+              {titleLabelOverride || t('unlock wallet')}
+            </Typography.Semibold16>
+          }
+        />
+      }>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -223,9 +231,9 @@ const UnlockWallet = () => {
           validationSchema={validationSchema}>
           {({ handleSubmit, errors, setValues, values }) => (
             <View style={styles.formContainer}>
-              <Typography.Semibold16 style={styles.inputLabel}>
+              <Typography.Regular16 style={styles.inputLabel}>
                 {subtitleLabelOverride || t('password')}
-              </Typography.Semibold16>
+              </Typography.Regular16>
               {optionalBodyText && (
                 <>
                   <Typography.Regular14 style={styles.optionalBody}>
@@ -264,7 +272,7 @@ const UnlockWallet = () => {
                 </Button>
                 <Spacer paddingTop="s" />
                 <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>
-                  <Typography.Semibold14>{t('forgot password')}</Typography.Semibold14>
+                  <Typography.Regular14>{t('forgot password')}</Typography.Regular14>
                 </TouchableOpacity>
               </View>
             </View>

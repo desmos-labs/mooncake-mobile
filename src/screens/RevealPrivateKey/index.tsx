@@ -1,25 +1,26 @@
+import { toHex } from '@cosmjs/encoding';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import Button from 'components/Button';
+import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
+import CommonStyles from 'config/theme/CommonStyles';
+import { ToastType } from 'config/toast/toastConfig';
+import { Formik, FormikHelpers } from 'formik';
+import useToast from 'hooks/toasts/useToast';
+import useClearUserData from 'hooks/useClearUserData';
+import useUnlockWalletWithPassword from 'hooks/wallet/useUnlockWalletWithPassword';
+import { Center, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import Spacer from 'components/Spacer';
-import DSecureTextInput from 'components/DSecureTextInput';
-import Button from 'components/Button';
-import { Center, useTheme } from 'native-base';
-import useUnlockWalletWithPassword from 'hooks/wallet/useUnlockWalletWithPassword';
-import { useActiveAccountAddress } from '@recoil/accounts';
+import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import { WalletWithPrivateKey } from 'types/wallet';
-import { toHex } from '@cosmjs/encoding';
-import Clipboard from '@react-native-clipboard/clipboard';
-import useToast from 'hooks/toasts/useToast';
-import { ToastType } from 'config/toast/toastConfig';
-import { Formik, FormikHelpers } from 'formik';
-import useClearUserData from 'hooks/useClearUserData';
 import useStyles from './useStyles';
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.REVEAL_PRIVATE_KEY>;
@@ -110,9 +111,11 @@ const RevealPrivateKey: React.FC<NavProps> = () => {
         </Typography.Regular14>
       </View>
       <Spacer paddingTop="l" />
-
       {privateKey === undefined ? (
-        <>
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={CommonStyles.flex['1']}>
           <Formik onSubmit={onFormSubmit} initialValues={initialFormValues}>
             {({ handleSubmit, values, errors, setFieldValue, setErrors }) => {
               return (
@@ -135,26 +138,29 @@ const RevealPrivateKey: React.FC<NavProps> = () => {
                     </Typography.Regular14>
                   )}
                   <Spacer paddingTop={40} />
-                  <Button
-                    size={44}
-                    backgroundColor={theme.colors.neutral['900']}
-                    textColor={theme.colors.white}
-                    onPress={handleSubmit}>
-                    {t('confirm', { ns: 'common' })}
-                  </Button>
+                  <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+                    <Button
+                      size={44}
+                      backgroundColor={theme.colors.neutral['900']}
+                      textColor={theme.colors.white}
+                      disabled={!values.password || Object.values(errors).length > 0}
+                      onPress={handleSubmit}>
+                      {t('confirm', { ns: 'common' })}
+                    </Button>
+                    <Spacer paddingTop="m" />
+                    <TouchableOpacity onPress={clearUserData}>
+                      <Center>
+                        <Typography.Regular14>
+                          {t('forgot password', { ns: 'password' })}
+                        </Typography.Regular14>
+                      </Center>
+                    </TouchableOpacity>
+                  </View>
                 </>
               );
             }}
           </Formik>
-          <Spacer paddingTop="m" />
-          <TouchableOpacity onPress={clearUserData}>
-            <Center>
-              <Typography.Regular14>
-                {t('forgot password', { ns: 'password' })}
-              </Typography.Regular14>
-            </Center>
-          </TouchableOpacity>
-        </>
+        </KeyboardAvoidingView>
       ) : (
         <TouchableOpacity onPress={copyPrivateKey}>
           <View style={styles.privateKeyView}>
