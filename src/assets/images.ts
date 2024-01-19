@@ -13,10 +13,6 @@ export const unfollowBlackIcon = require ('./images/unfollowBlackIcon.png');
 export const tipIcon = require ('./images/tipIcon.png');
 export const tipUserIcon = require ('./images/tipUser.png');
 
-export const commentIcon = require ('./images/commentIcon.png');
-
-export const commentLikeEmptyIcon = require ('./images/commentLikeIconEmpty.png');
-
 export const defaultBanner = require ('./images/defaultBanner.png');
 
 export const settingsButton = require ('./images/settingsButton.png');
@@ -109,7 +105,9 @@ export const middleButtonIcon = require ('./images/bottomBarIcons/middleButton.p
 
 // Post icons
 
+/*
 export const postCommentedIcon = require ('./images/homePostIcons/postCommentedIdon.png');
+*/
 export const postToCommentIcon = require ('./images/homePostIcons/postToCommentIcon.png');
 export const postLikedIcon = require ('./images/homePostIcons/postLikedIcon.png');
 export const postToLikeIcon = require ('./images/homePostIcons/postToLikeIcon.png');
