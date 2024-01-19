@@ -136,7 +136,7 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
 
   return (
     <DView style={styles.root} topBar={<TopBar />} disableHideKeyboardTouchable>
-      <Typography.Semibold24>{t('build your feed')}</Typography.Semibold24>
+      <Typography.Semibold20>{t('build your feed')}</Typography.Semibold20>
       <Spacer paddingTop="m" />
       <Typography.Regular14>{t('follow 3 creators')}</Typography.Regular14>
       <Spacer paddingTop="l" />

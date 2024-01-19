@@ -156,7 +156,7 @@ const Activities = () => {
           paddingHorizontal: theme.spacing.m,
           paddingBottom: theme.spacing.m,
         }}>
-        <Typography.H3>{t('activities')}</Typography.H3>
+        <Typography.Semibold24>{t('activities')}</Typography.Semibold24>
       </View>
       {/* Notifications list */}
       <FlashList

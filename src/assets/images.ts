@@ -1,4 +1,4 @@
-export const mooncakeHomeIcon = require ('./images/mooncakeHomeIcon.png');
+export const mooncakeLogo = require ('./images/mooncakeLogo.png');
 
 export const desmosIcon = require ('./images/desmosIcon.png');
 
