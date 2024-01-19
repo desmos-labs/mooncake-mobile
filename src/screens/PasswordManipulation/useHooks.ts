@@ -234,7 +234,7 @@ const useHooks = () => {
           }
           trackLoggedInUser(account.account);
           setLoginFlowState({
-            step: LoginFlowStep.WaitingFeeGrant,
+            step: LoginFlowStep.RequestFeeGrant,
           });
           navigate(ROUTES.FEE_GRANT_WAITING_SCREEN, {
             granted: false,

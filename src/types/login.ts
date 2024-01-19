@@ -1,7 +1,7 @@
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
 /**
- * Login methods supperthed by the application.
+ * Login methods supported by the application.
  */
 export enum LoginMethodType {
   PrivateKey = 'PrivateKey',
@@ -46,14 +46,14 @@ export enum LoginFlowStep {
    */
   RequestFeeGrant,
   /**
-   * We have the user's account and we have alredy requested the feegrant.
+   * We have the user's account and we have already requested the feegrant.
    * In this case we should bring back the user in the screen that
    * tells the user to wait for the feegrant.
    */
   WaitingFeeGrant,
   /**
    * We have the user's account and we have the fee grant or the user has
-   * enough tokens to pay for the transction to create the profile.
+   * enough tokens to pay for the transaction to create the profile.
    * In this case we should bring the user to the create profile screen.
    */
   AccountCreated,
@@ -74,19 +74,24 @@ interface BaseLoginFlowState<T extends LoginFlowStep> {
 }
 
 /**
- * Inteface that represents a login flow state where we are
+ * Interface that represents a login flow state where we are
  * not logged in.
  */
 interface LoginFlowStateNone extends BaseLoginFlowState<LoginFlowStep.None> {}
 
 /**
- * Inteface that represents a login flow state where we are
+ * Interface that represents a login flow state where we are
+ * should take the user to the request fee grant screen.
+ */
+interface LoginFlowStateRequestFeeGrant extends BaseLoginFlowState<LoginFlowStep.RequestFeeGrant> {}
+/**
+ * Interface that represents a login flow state where we are
  * waiting the fee grant.
  */
 interface LoginFlowStateWaitingFeeGrant extends BaseLoginFlowState<LoginFlowStep.WaitingFeeGrant> {}
 
 /**
- * Inteface that represents a login flow state where we have
+ * Interface that represents a login flow state where we have
  * the user's account and the user have enough tokens or have requested
  * a fee grant to pay for the transaction to create the profile.
  */
@@ -114,7 +119,8 @@ interface LoginFlowStateCompleted extends BaseLoginFlowState<LoginFlowStep.Compl
 
 export type LoginFlowState =
   | LoginFlowStateNone
-  | LoginFlowStateWaitingFeeGrant
   | LoginFlowStateAccountCreated
+  | LoginFlowStateRequestFeeGrant
+  | LoginFlowStateWaitingFeeGrant
   | LoginFlowStateFollowCreators
   | LoginFlowStateCompleted;

@@ -112,9 +112,12 @@ const FeeGrantWaitingScreen = () => {
 
   useEffect(() => {
     if (!params?.granted) {
+      setLoginFlowState({ step: LoginFlowStep.WaitingFeeGrant });
       checkFeeGrant();
+    } else {
+      setLoginFlowState({ step: LoginFlowStep.AccountCreated });
     }
-  }, [checkFeeGrant, params]);
+  }, [checkFeeGrant, params, setLoginFlowState]);
 
   const title = useMemo(() => {
     if (feeGrantReady) {
