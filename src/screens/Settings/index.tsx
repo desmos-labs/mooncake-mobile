@@ -19,12 +19,26 @@ import ROUTES from 'navigation/routes';
 import { usePostHog } from 'posthog-react-native';
 import React, { useCallback } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
+import { Linking, ScrollView } from 'react-native';
 import { getVersion } from 'react-native-device-info';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import useStyles from 'screens/Settings/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
+import {
+  settingsAnalyticsIcon,
+  settingsDataIcon,
+  settingsFaceIdIcon,
+  settingsLockIcon,
+  settingsMailIcon,
+  settingsMooncakeIcon,
+  settingsNotificationsIcon,
+  settingsPrivacyPolicyIcon,
+  settingsPrivateKeyIcon,
+  settingsProfileIcon,
+  settingsToSIcon,
+  settingsUserIcon,
+} from 'assets/images';
 import {
   useDeleteAccountData,
   useDeleteProfile,
@@ -172,32 +186,83 @@ const Settings = (props: NavProps) => {
         {/* Security section */}
         <Section style={[styles.section]} title={t('security')}>
           <SectionSwitch
-            label={t('enable analytics')}
-            value={analytics}
-            onValueChange={() => handleAnalyticsToggle(!analytics)}
-          />
-          <SectionSwitch
             label={t('enable biometrics')}
+            leftIcon={settingsFaceIdIcon}
             value={biometrics}
             onValueChange={handleBiometricsToggle}
           />
-          <SectionButton label={t('change password')} onPress={navigateToChangePassword} />
-          <SectionButton label={t('blocked users')} onPress={handlePressBlockedUsers} />
+          <SectionButton
+            label={t('change password')}
+            leftIcon={settingsLockIcon}
+            onPress={navigateToChangePassword}
+          />
           {canShowPrivateKey && (
-            <SectionButton label={t('reveal private key')} onPress={showPrivateKey} />
+            <SectionButton
+              label={t('reveal private key')}
+              leftIcon={settingsPrivateKeyIcon}
+              onPress={showPrivateKey}
+            />
           )}
+          <SectionButton
+            label={t('blocked users')}
+            leftIcon={settingsUserIcon}
+            onPress={handlePressBlockedUsers}
+          />
         </Section>
-        {/* Acccount section */}
-        <Section style={styles.section} title={t('account')}>
-          <SectionButton label={t('delete account data')} onPress={deleteAccountData} />
-          <SectionButton label={t('delete profile')} onPress={deleteProfile} />
+
+        {/* Preferences section */}
+        <Section style={styles.section} title={t('preferences')}>
+          <SectionButton
+            label={t('notifications')}
+            leftIcon={settingsNotificationsIcon}
+            onPress={openNotificationsSettings}
+          />
+          <SectionSwitch
+            label={t('enable analytics')}
+            leftIcon={settingsAnalyticsIcon}
+            value={analytics}
+            onValueChange={() => handleAnalyticsToggle(!analytics)}
+          />
         </Section>
+
         {/* Other section */}
         <Section style={styles.section} title={t('others')}>
-          <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
-          <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
-          <SectionButton label={t('about')} onPress={showAboutInfo} />
+          <SectionButton
+            label={t('feedbacks')}
+            leftIcon={settingsMailIcon}
+            onPress={sendFeedback}
+          />
+          <SectionButton
+            label={t('about')}
+            leftIcon={settingsMooncakeIcon}
+            onPress={showAboutInfo}
+          />
+          <SectionButton
+            label={t('terms of service', { ns: 'legal' })}
+            leftIcon={settingsToSIcon}
+            onPress={() => Linking.openURL('https://butter.social/privacy-policy')}
+          />
+          <SectionButton
+            label={t('privacy policy', { ns: 'legal' })}
+            leftIcon={settingsPrivacyPolicyIcon}
+            onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}
+          />
         </Section>
+
+        {/* Account management section */}
+        <Section style={styles.section} title={t('account management')}>
+          <SectionButton
+            label={t('delete account data')}
+            leftIcon={settingsDataIcon}
+            onPress={deleteAccountData}
+          />
+          <SectionButton
+            label={t('delete profile')}
+            leftIcon={settingsProfileIcon}
+            onPress={deleteProfile}
+          />
+        </Section>
+
         <Spacer paddingVertical={12} />
         <Button height={44} type="outline" onPress={openConfirmSignOutModal}>
           {t('sign out')}

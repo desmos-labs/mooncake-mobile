@@ -18,11 +18,10 @@
   "reveal private key title unlock": "Reveal Private Key",
   "reveal private key subtitle unlock": "Never disclose this key.",
   "reveal private key body unlock": "Anyone who obtains your private key can take full control of your account.",
-  "sign out": "Sign out",
+  "sign out": "Logout",
   "sign out private key warning": "Once you sign out you will be required to re-enter your private key if you have logged in with it. Make sure you have it stored somewhere before proceeding further.",
   "blocked users": "Blocked users",
   "enable analytics": "Enable analytics",
-  "account": "Account",
   "delete account data": "Delete account data",
   "delete profile": "Delete profile",
   "we are deleting your profile": "We are deleting your profile permanently.",
@@ -35,4 +34,7 @@
   "never disclose this key": "Never disclose this key.",
   "never disclose this key explanation": "Anyone who obtains your private key can take full control of your account.",
   "private key copied": "Private key copied into your clipboard",
+  "preferences": "Preferences",
+  "account management": "Account management",
+
 }

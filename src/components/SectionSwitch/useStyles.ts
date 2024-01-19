@@ -7,6 +7,12 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     paddingVertical: theme.spacing.m,
   },
+  icon: {
+    width: 24,
+    height: 24,
+    marginRight: theme.spacing.s,
+    tintColor: theme.colors.neutral['900'],
+  },
   label: {
     flex: 1,
   },

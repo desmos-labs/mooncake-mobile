@@ -115,3 +115,17 @@ export const postToLikeIcon = require ('./images/homePostIcons/postToLikeIcon.pn
 // Checkbox
 export const uncheck_circle = require ('./images/checkbox/uncheck_circle.png');
 export const check_circle = require ('./images/checkbox/check_circle.png');
+
+// Settings
+export const settingsUserIcon = require('./images/settings/settingsUser.png');
+export const settingsToSIcon = require('./images/settings/settingsToS.png');
+export const settingsProfileIcon = require('./images/settings/settingsProfile.png');
+export const settingsPrivateKeyIcon = require('./images/settings/settingsPrivateKey.png');
+export const settingsPrivacyPolicyIcon = require('./images/settings/settingsPrivacyPolicy.png');
+export const settingsNotificationsIcon = require('./images/settings/settingsNotifications.png');
+export const settingsMooncakeIcon = require('./images/settings/settingsMooncake.png');
+export const settingsMailIcon = require('./images/settings/settingsMail.png');
+export const settingsLockIcon = require('./images/settings/settingsLock.png');
+export const settingsFaceIdIcon = require('./images/settings/settingsFaceId.png');
+export const settingsDataIcon = require('./images/settings/settingsData.png');
+export const settingsAnalyticsIcon = require('./images/settings/settingsAnalytics.png');
