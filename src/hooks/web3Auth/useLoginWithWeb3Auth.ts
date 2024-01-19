@@ -53,9 +53,10 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
         setLoginLoading(false);
         return;
       }
-
       let privateKey;
       try {
+        const loadl = 'asdas';
+        console.log(loadl);
         privateKey = await keyProvider.getPrivateKey();
       } catch (e) {
         Sentry.Native.captureException(e);
