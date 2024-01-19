@@ -3,7 +3,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonVariant } from 'components/Button';
+import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import CommonStyles from 'config/theme/CommonStyles';
 import { useTheme } from 'native-base';
@@ -26,6 +26,8 @@ export enum ButtonsLayout {
   Row = 'row',
   Column = 'column',
 }
+
+type ButtonVariant = 'solid' | 'outline' | 'text' | 'elevated';
 
 export type ConfirmModalParams = {
   /**
@@ -112,7 +114,7 @@ const ConfirmModal = () => {
       removeModalAfterButtonPress,
       image,
       primaryButtonMode = 'solid',
-      secondaryButtonMode = 'link',
+      secondaryButtonMode = 'outline',
       primaryButtonLoading,
       secondaryButtonLoading,
       buttonsLayout = ButtonsLayout.Column,
@@ -150,7 +152,7 @@ const ConfirmModal = () => {
             style={buttonsLayout === ButtonsLayout.Row ? styles.inlineButton : undefined}
             loading={primaryButtonLoading ?? false}
             height={44}
-            type={primaryButtonMode as any}
+            type={primaryButtonMode}
             onPress={onPressPrimaryButton}>
             {primaryButtonLabel}
           </Button>
@@ -163,7 +165,7 @@ const ConfirmModal = () => {
               style={buttonsLayout === ButtonsLayout.Row ? styles.inlineButton : undefined}
               loading={secondaryButtonLoading ?? false}
               height={44}
-              type={secondaryButtonMode as any}
+              type={secondaryButtonMode}
               onPress={onPressSecondaryButton}>
               {secondaryButtonLabel}
             </Button>
@@ -183,8 +185,6 @@ const ConfirmModal = () => {
     secondaryButtonMode,
     styles.buttonsRow,
     styles.inlineButton,
-    theme.colors.surfaceBlack,
-    theme.colors.white,
   ]);
 
   return (
