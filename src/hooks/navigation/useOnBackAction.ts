@@ -1,12 +1,9 @@
 import { DependencyList, useCallback, useEffect, useMemo } from 'react';
-import { EventArg, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { isGoBackEvent } from 'lib/EventUtils';
+import { BeforeRemoveEventArgs } from 'types/events';
 
-type CallbackArg = EventArg<
-  'beforeRemove',
-  true,
-  { action: { type: string; source?: string }; target?: string }
->;
-type BackCallback = (event: CallbackArg) => any | (() => any);
+type BackCallback = (event: BeforeRemoveEventArgs) => any | (() => any);
 
 /**
  * Hook that execute the provided callback when the user go back from the current screen.
@@ -23,14 +20,11 @@ const useOnBackAction = (onBack: BackCallback, deps: DependencyList) => {
   }, [navigation]);
 
   useEffect(() => {
-    return navigation.addListener('beforeRemove', (e: CallbackArg) => {
+    return navigation.addListener('beforeRemove', (e: BeforeRemoveEventArgs) => {
       // Call the back action only when the go back action source is the current screen,
       // this is to prevent executing the callback when is another screen that
       // originated the event.
-      if (
-        (e.data.action.type === 'GO_BACK' || e.data.action.type === 'POP') &&
-        e.target === currentScreen.key
-      ) {
+      if (isGoBackEvent(e) && e.target === currentScreen.key) {
         memoizedBackCallback(e);
       }
     });
