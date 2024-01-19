@@ -5,9 +5,9 @@ import {
   useHandlePressDetails,
   useHandlePressHidePost,
   useHandlePressReport,
-  useHandlePressShare,
 } from 'components/PostCard/hooks';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import useSharePost from 'hooks/posts/useSharePost';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import { useTheme } from 'native-base';
@@ -15,7 +15,6 @@ import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
-import GetPostShareLink from 'services/axios/requests/GetPostShareLink';
 import { isPostPending, Post } from 'types/posts';
 import useStyles from './useStyles';
 
@@ -49,7 +48,7 @@ const PostCard = (props: PostCardProps) => {
   const handlePressComments = useHandlePressComments();
   const handlePressReport = useHandlePressReport();
   const handlePressBlock = useHandlePressBlock();
-  const handlePressShare = useHandlePressShare();
+  const sharePost = useSharePost(post.id);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -79,13 +78,6 @@ const PostCard = (props: PostCardProps) => {
   const onPressHide = React.useCallback(() => {
     handlePressHidePost(post.id);
   }, [handlePressHidePost, post.id]);
-
-  const onPressShare = React.useCallback(async () => {
-    const result = await GetPostShareLink(post.id);
-    if (result.isOk()) {
-      await handlePressShare(result.value);
-    }
-  }, [handlePressShare, post.id]);
 
   const onPressComment = React.useCallback(() => {
     if (isPostPending(post)) {
@@ -125,7 +117,7 @@ const PostCard = (props: PostCardProps) => {
         onPressReport={onPressReport}
         onPressHide={onPressHide}
         onPressBlock={onPressBlock}
-        onPressShare={onPressShare}
+        onPressShare={sharePost}
       />
       {/* Post text */}
       {post.text && (

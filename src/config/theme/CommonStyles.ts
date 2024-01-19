@@ -92,6 +92,18 @@ const shadows = {
   },
 };
 
+const textBlack = {
+  color: '#25282D',
+};
+
+const textPrimary = {
+  color: '#FEB027',
+};
+
+const textWhite = {
+  color: '#fff',
+};
+
 const CommonStyles = {
   flex,
   flexGrow,
@@ -101,6 +113,9 @@ const CommonStyles = {
   flexDirection,
   position,
   shadows,
+  textPrimary,
+  textWhite,
+  textBlack,
 };
 
 export default CommonStyles;

@@ -144,25 +144,25 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
   const userBalanceComponent = React.useMemo(() => {
     if (loadingBalance) {
       return (
-        <Typography.Regular16 style={styles.availableText}>
+        <Typography.Regular14 style={styles.availableText}>
           {t('available')} ...
-        </Typography.Regular16>
+        </Typography.Regular14>
       );
     }
 
     if (fetchBalanceError) {
       return (
-        <Typography.Regular16 style={styles.errorText}>
+        <Typography.Regular14 style={styles.errorText}>
           {`${t("can't get user's balance")}:\n`}
           {fetchBalanceError.message}
-        </Typography.Regular16>
+        </Typography.Regular14>
       );
     }
 
     return (
-      <Typography.Regular16 style={styles.availableText}>
+      <Typography.Regular14 style={styles.availableText}>
         {t('available')} {formatCoin(spendableAmount)}
-      </Typography.Regular16>
+      </Typography.Regular14>
     );
   }, [
     fetchBalanceError,
@@ -176,14 +176,15 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
   return (
     <View style={styles.root}>
       <Typography.Semibold20 style={styles.header}>{t('tip')}</Typography.Semibold20>
-      <Typography.Semibold14 style={styles.subtitle}>
+      <Typography.Regular16 style={styles.subtitle}>
         {t('how much do you want to send')}
-      </Typography.Semibold14>
+      </Typography.Regular16>
       {/* Amount selector row */}
       <View style={styles.quickSelectorRow}>
         <Button
-          variant={textAmount === '1' ? 'solid' : 'outline'}
+          type={textAmount === '1' ? 'solid' : 'outline'}
           style={styles.quickSelectButton}
+          textStyle={textAmount !== '1' ? styles.quickSelectButtonText : undefined}
           disabled={interactionDisabled}
           onPress={() => {
             onAmountChange('1');
@@ -192,8 +193,9 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
         </Button>
         <Spacer paddingLeft="m" />
         <Button
-          variant={textAmount === '5' ? 'solid' : 'outline'}
+          type={textAmount === '5' ? 'solid' : 'outline'}
           style={styles.quickSelectButton}
+          textStyle={textAmount !== '5' ? styles.quickSelectButtonText : undefined}
           disabled={interactionDisabled}
           onPress={() => {
             onAmountChange('5');
@@ -202,7 +204,8 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
         </Button>
         <Spacer paddingLeft="m" />
         <Button
-          variant={textAmount === '10' ? 'solid' : 'outline'}
+          type={textAmount === '10' ? 'solid' : 'outline'}
+          textStyle={textAmount !== '10' ? styles.quickSelectButtonText : undefined}
           disabled={interactionDisabled}
           style={styles.quickSelectButton}
           onPress={() => {
@@ -215,7 +218,6 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
       <Spacer paddingTop={20} />
       <DTextInput
         style={styles.inputContainer}
-        showBorder
         error={tipCoin === undefined && textAmount !== ''}
         editable={!interactionDisabled}
         rightElement={<Typography.Semibold14>DSM</Typography.Semibold14>}
@@ -228,12 +230,11 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
       {userBalanceComponent}
       <Spacer paddingTop="l" />
       {/* Message to user input */}
-      <Typography.H7>{t('message', { ns: 'common' })}</Typography.H7>
+      <Typography.Regular16>{t('message', { ns: 'common' })}</Typography.Regular16>
       <Spacer paddingTop="s" />
       <DTextInput
         style={styles.inputContainer}
         editable={!interactionDisabled}
-        showBorder
         multiline
         numberOfLines={4}
         textAlignVertical="top"
@@ -241,9 +242,7 @@ const TipUserBottomSheet: React.FC<TipUserBottomSheetProps> = ({ toTipUserAddres
       />
       <Spacer paddingTop={20} />
       <Button
-        size={44}
-        bgColor="black"
-        textColor="white"
+        height={44}
         disabled={interactionDisabled || tipCoin === undefined || tipCoin.amount === '0'}
         onPress={sendTip}>
         {t('confirm', { ns: 'common' })}

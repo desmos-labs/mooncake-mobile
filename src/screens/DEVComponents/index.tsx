@@ -1,15 +1,15 @@
-import React from 'react';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
+import Button from 'components/Button';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import Toasts, { ToastProps } from 'components/Toasts';
 import TopBar from 'components/TopBar';
 import { makeStyle } from 'config/theme';
-import Spacer from 'components/Spacer';
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React from 'react';
 import { View } from 'react-native';
-import Button from 'components/Button';
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.DEV_COMPONENTS>;
 
@@ -37,10 +37,10 @@ const DevComponents: React.FC<NavProps> = () => {
       {/* Toasts debugger */}
       <Typography.Semibold16>Toasts selector</Typography.Semibold16>
       <View style={styles.inlineButtons}>
-        <Button variant="outline" onPress={() => setToast('success')}>
+        <Button type="outline" onPress={() => setToast('success')}>
           Success
         </Button>
-        <Button variant="outline" onPress={() => setToast('error')}>
+        <Button type="outline" onPress={() => setToast('error')}>
           Error
         </Button>
       </View>

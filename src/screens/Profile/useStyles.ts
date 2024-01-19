@@ -193,8 +193,20 @@ const useStyles = makeStyleWithProps(
       marginTop: theme.spacing.s,
     },
     tipUserIcon: {
-      width: 16,
-      height: 16,
+      width: 24,
+      height: 24,
+      marginBottom: 4,
+      marginRight: 5,
+    },
+    btStyle: {
+      backgroundColor: '#E8E8E8',
+      borderRadius: 4,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    tipStyle: {
+      paddingHorizontal: theme.spacing.l,
+      gap: 4,
     },
   }),
 );

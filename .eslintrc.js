@@ -5,7 +5,7 @@ module.exports = {
   },
   extends: ['airbnb', '@react-native-community'],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react-native', 'eslint-plugin-prettier', 'react-hooks', 'jest'],
+  plugins: ['@typescript-eslint', 'react-native', 'eslint-plugin-prettier', 'react-hooks'],
   globals: {
     window: true,
     fetch: false,

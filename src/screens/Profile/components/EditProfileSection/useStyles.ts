@@ -7,8 +7,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.m,
   },
   editButton: {
-    backgroundColor: theme.colors.surfaceGrey,
-    height: 35,
+    backgroundColor: '#E8E8E8',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

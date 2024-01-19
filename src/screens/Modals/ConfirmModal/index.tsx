@@ -148,12 +148,9 @@ const ConfirmModal = () => {
         {primaryButtonLabel && (
           <Button
             style={buttonsLayout === ButtonsLayout.Row ? styles.inlineButton : undefined}
-            isLoading={primaryButtonLoading ?? false}
-            size={44}
-            textColor={theme.colors.white}
-            backgroundColor={theme.colors.surfaceBlack}
-            alignSelf="stretch"
-            variant={primaryButtonMode as any}
+            loading={primaryButtonLoading ?? false}
+            height={44}
+            type={primaryButtonMode as any}
             onPress={onPressPrimaryButton}>
             {primaryButtonLabel}
           </Button>
@@ -164,10 +161,9 @@ const ConfirmModal = () => {
             {buttonsLayout === ButtonsLayout.Row && <Spacer paddingRight="m" />}
             <Button
               style={buttonsLayout === ButtonsLayout.Row ? styles.inlineButton : undefined}
-              isLoading={secondaryButtonLoading ?? false}
-              size={44}
-              alignSelf="stretch"
-              variant={secondaryButtonMode as any}
+              loading={secondaryButtonLoading ?? false}
+              height={44}
+              type={secondaryButtonMode as any}
               onPress={onPressSecondaryButton}>
               {secondaryButtonLabel}
             </Button>

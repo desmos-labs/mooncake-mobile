@@ -61,13 +61,15 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
       <View style={styles.bottomBarInnerView}>
         <ImageButton
           onPress={onPressLike}
-          tintColor={liked ? theme.colors.butterOrange01 : theme.colors.grey02}
+          tintColor={liked ? theme.colors.butterOrange01 : theme.colors.neutral['700']}
           image={liked ? postLikedIcon : postToLikeIcon}
           style={styles.bottomBarIcon}
         />
         <Typography.Regular16
-          style={liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }}>
-          {likesCount}
+          style={
+            liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.neutral['700'] }
+          }>
+          {likesCount > 0 ? likesCount : ''}
         </Typography.Regular16>
         {/* I have completely removed the logic that changed the color of the button based on whether */}
         {/* the user comment the post or not. This has been done for the following reasons: */}
@@ -76,12 +78,12 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
         <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
           <Image
             contentFit="cover"
-            tintColor={theme.colors.grey02}
+            tintColor={theme.colors.neutral['700']}
             source={postToCommentIcon}
             style={styles.bottomBarIcon}
           />
-          <Typography.Regular16 style={{ color: theme.colors.grey02 }}>
-            {commentsCount}
+          <Typography.Regular16 style={{ color: theme.colors.neutral['700'] }}>
+            {commentsCount > 0 ? commentsCount : ''}
           </Typography.Regular16>
         </TouchableOpacity>
       </View>

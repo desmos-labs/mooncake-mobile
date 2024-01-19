@@ -11,7 +11,6 @@ import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
-import _ from 'lodash';
 import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
@@ -122,7 +121,7 @@ const PasswordManipulation = () => {
           initialValues={initialFormValues}
           onSubmit={handleFormSubmit}
           validationSchema={validationSchema}>
-          {({ handleSubmit, values, errors, setFieldValue, setFieldError }) => {
+          {({ handleSubmit, values, errors, setFieldValue }) => {
             return (
               <>
                 <ScrollView
@@ -141,7 +140,6 @@ const PasswordManipulation = () => {
                     onChangeText={(value: string) => {
                       debounceTyping();
                       setFieldValue('newPassword', value, true);
-                      setFieldError('newPassword', undefined);
                     }}
                     style={styles.inputLabel}
                     placeholder={t('new password')}
@@ -175,7 +173,6 @@ const PasswordManipulation = () => {
                     style={styles.inputLabel}
                     onChangeText={(value: string) => {
                       setFieldValue('confirmPassword', value, true);
-                      setFieldError('confirmPassword', undefined);
                     }}
                   />
                   {errors.confirmPassword && (
@@ -188,15 +185,15 @@ const PasswordManipulation = () => {
                   </Box>
                 ) : (
                   <Button
-                    size={44}
-                    backgroundColor={theme.colors.surfaceBlack}
-                    textColor={theme.colors.white}
+                    height={44}
+                    type="solid"
                     onPress={() => handleSubmit()}
                     disabled={
                       loading ||
                       values.confirmPassword.length === 0 ||
                       values.newPassword.length === 0 ||
-                      _.flatten(Object.values(errors)).length > 0
+                      errors.confirmPassword !== undefined ||
+                      errors.newPassword !== undefined
                     }>
                     {t(buttonLabel as any)}
                   </Button>

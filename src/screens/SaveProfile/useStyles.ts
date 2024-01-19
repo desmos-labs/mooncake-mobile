@@ -17,7 +17,6 @@ const useStyles = makeStyleWithProps(
     headerButtonGroup: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      top: theme.spacing.m,
       paddingHorizontal: theme.spacing.m,
     },
     bannerImage: {

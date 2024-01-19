@@ -1,4 +1,4 @@
-export const mooncakeHomeIcon = require ('./images/mooncakeHomeIcon.png');
+export const mooncakeLogo = require ('./images/mooncakeLogo.png');
 
 export const desmosIcon = require ('./images/desmosIcon.png');
 
@@ -12,10 +12,6 @@ export const unfollowBlackIcon = require ('./images/unfollowBlackIcon.png');
 
 export const tipIcon = require ('./images/tipIcon.png');
 export const tipUserIcon = require ('./images/tipUser.png');
-
-export const commentIcon = require ('./images/commentIcon.png');
-
-export const commentLikeEmptyIcon = require ('./images/commentLikeIconEmpty.png');
 
 export const defaultBanner = require ('./images/defaultBanner.png');
 
@@ -67,10 +63,6 @@ export const eyeOpen = require ('./images/eyeOpen.png');
 
 export const emptyPostsIcon = require ('./images/emptyPosts.png');
 
-export const accountCreatedBg = require ('./images/accountCreatedBg.png');
-
-export const accountCreatedIcon = require ('./images/accountCreatedIcon.png');
-
 export const reportSuccessIcon = require ('./images/reportSuccessIcon.png');
 export const emptyListPlaceholder = require ('./images/emptyListsPlaceholders/emptyListPlaceholder.png');
 
@@ -113,6 +105,9 @@ export const middleButtonIcon = require ('./images/bottomBarIcons/middleButton.p
 
 // Post icons
 
+/*
+export const postCommentedIcon = require ('./images/homePostIcons/postCommentedIdon.png');
+*/
 export const postToCommentIcon = require ('./images/homePostIcons/postToCommentIcon.png');
 export const postLikedIcon = require ('./images/homePostIcons/postLikedIcon.png');
 export const postToLikeIcon = require ('./images/homePostIcons/postToLikeIcon.png');

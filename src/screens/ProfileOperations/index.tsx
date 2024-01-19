@@ -3,8 +3,6 @@ import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
-import OperationContentLoader from 'components/Loaders/OperationContentLoader';
-import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
@@ -19,11 +17,11 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ListRenderItemInfo, SafeAreaView, SectionList, SectionListData, View } from 'react-native';
+import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
 import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
-import useStyles from './useStyles';
 import { useGetOperationImage, useGetOperationTitle, usePastActionsSections } from './useHooks';
+import useStyles from './useStyles';
 
 export interface ProfileOperationsParams {
   /**
@@ -132,7 +130,7 @@ const ProfileOperations = () => {
 
   // Component used to render an empty list
   const EmptyOperations = useMemo(() => {
-    if (isDataLoading) {
+    if (balanceLoading || isDataLoading) {
       return undefined;
     }
 
@@ -142,7 +140,7 @@ const ProfileOperations = () => {
         <Typography.Regular14>{t('no operations')}</Typography.Regular14>
       </Center>
     );
-  }, [isDataLoading, styles.emptyIcon, t]);
+  }, [balanceLoading, isDataLoading, styles.emptyIcon, t]);
 
   // Component displayed at the bottom of the list
   const FooterComponent = useMemo(() => {
@@ -161,14 +159,6 @@ const ProfileOperations = () => {
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
-  if (isDataLoading || balanceLoading) {
-    return (
-      <SafeAreaView style={styles.flexCenter}>
-        <StyledSpinner />
-      </SafeAreaView>
-    );
-  }
-
   return (
     <DView
       topBar={<TopBar />}
@@ -184,42 +174,37 @@ const ProfileOperations = () => {
         <Typography.Semibold30>{formatCoins(balance, ', ')}</Typography.Semibold30>
         {/* Balance amount (in fiat) */}
         {/* TODO: Show something if the balance is still loading */}
-        <Typography.Semibold30>
-          {symbol}
-          {formatCurrencyAmount(fiatAmount)}
-        </Typography.Semibold30>
+        {balanceLoading ? (
+          <StyledSpinner />
+        ) : (
+          <Typography.Semibold30>
+            {symbol}
+            {formatCurrencyAmount(fiatAmount)}
+          </Typography.Semibold30>
+        )}
         <Spacer paddingVertical={theme.spacing.m} />
         {/* Past operations section title */}
         <Typography.H5 style={styles.subtitle}>{t('operations')}</Typography.H5>
         {/* Loading indicator */}
-        {isDataLoading && (
-          <View style={{ marginVertical: theme.spacing.m }}>
-            <TextRowContentLoader width="120" />
-            <Spacer paddingVertical={theme.spacing.s} />
-            <OperationContentLoader />
-          </View>
-        )}
       </View>
       {/* Messages list TODO: move to Flashlist */}
-      {!isDataLoading && (
-        <SectionList
-          style={CommonStyles.flex[1]}
-          contentContainerStyle={CommonStyles.flexGrow[1]}
-          refreshing={refreshing}
-          onRefresh={refreshActions}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          sections={sections}
-          renderItem={renderItem}
-          initialNumToRender={20}
-          maxToRenderPerBatch={20}
-          windowSize={31}
-          renderSectionHeader={renderSectionHeader}
-          ListEmptyComponent={EmptyOperations}
-          ListFooterComponent={FooterComponent}
-          onEndReached={fetchMore}
-        />
-      )}
+      <SectionList
+        style={CommonStyles.flex[1]}
+        contentContainerStyle={CommonStyles.flexGrow[1]}
+        refreshing={refreshing}
+        onRefresh={refreshActions}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
+        sections={sections}
+        renderItem={renderItem}
+        initialNumToRender={20}
+        maxToRenderPerBatch={20}
+        windowSize={31}
+        renderSectionHeader={renderSectionHeader}
+        ListEmptyComponent={EmptyOperations}
+        ListFooterComponent={FooterComponent}
+        onEndReached={fetchMore}
+      />
     </DView>
   );
 };

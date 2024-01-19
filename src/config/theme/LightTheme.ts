@@ -125,8 +125,9 @@ const lightTheme = extendTheme({
     whiteGradient01: [addAlphaToHex('#FFFFFF', 0.1), '#ABC1FB'],
     blackGradient01: [addAlphaToHex('#000000', 0.4), addAlphaToHex('#FFFFFF', 0.1)],
     neutral: {
-      100: '#EFEFEF',
+      100: '#F7F7F7',
       300: '#E8E8E8',
+      700: '#616161',
       900: '#25282D',
     },
     fedback: {

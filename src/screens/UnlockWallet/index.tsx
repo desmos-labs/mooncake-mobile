@@ -6,12 +6,14 @@ import { useSetting } from '@recoil/settings';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useClearUserData from 'hooks/useClearUserData';
+import useUnlockWalletWithPassword from 'hooks/wallet/useUnlockWalletWithPassword';
 import { getBiometricPassword } from 'lib/SecureStorage';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -20,10 +22,8 @@ import { ResultAsync } from 'neverthrow';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
-import useUnlockWalletWithPassword from 'hooks/wallet/useUnlockWalletWithPassword';
 import { Wallet } from 'types/wallet';
 import * as Yup from 'yup';
-import Spacer from 'components/Spacer';
 import useStyles from './useStyles';
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;
@@ -209,10 +209,18 @@ const UnlockWallet = () => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>
-      <Typography.Semibold24 style={styles.headerText}>
-        {titleLabelOverride || t('unlock wallet')}
-      </Typography.Semibold24>
+    <DView
+      style={styles.container}
+      backgroundColor={theme.colors.white}
+      topBar={
+        <TopBar
+          centerElement={
+            <Typography.Semibold16>
+              {titleLabelOverride || t('unlock wallet')}
+            </Typography.Semibold16>
+          }
+        />
+      }>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -223,9 +231,9 @@ const UnlockWallet = () => {
           validationSchema={validationSchema}>
           {({ handleSubmit, errors, setValues, values }) => (
             <View style={styles.formContainer}>
-              <Typography.Semibold16 style={styles.inputLabel}>
+              <Typography.Regular16 style={styles.inputLabel}>
                 {subtitleLabelOverride || t('password')}
-              </Typography.Semibold16>
+              </Typography.Regular16>
               {optionalBodyText && (
                 <>
                   <Typography.Regular14 style={styles.optionalBody}>
@@ -255,17 +263,16 @@ const UnlockWallet = () => {
               )}
               <View style={styles.buttonGroup}>
                 <Button
-                  isLoading={loading}
-                  backgroundColor={theme.colors.surfaceBlack}
-                  textColor={theme.colors.white}
+                  type="solid"
+                  loading={loading}
                   disabled={!values.password || Object.values(errors).length > 0}
                   onPress={handleSubmit as any}
-                  size={44}>
+                  height={44}>
                   {t('next', { ns: 'common' })}
                 </Button>
                 <Spacer paddingTop="s" />
                 <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>
-                  <Typography.Semibold14>{t('forgot password')}</Typography.Semibold14>
+                  <Typography.Regular14>{t('forgot password')}</Typography.Regular14>
                 </TouchableOpacity>
               </View>
             </View>

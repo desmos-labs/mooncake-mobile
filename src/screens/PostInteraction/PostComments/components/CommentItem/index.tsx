@@ -2,11 +2,11 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { squaresAnimation } from 'assets/animations';
 import {
   block,
-  commentIcon,
-  commentLiked,
-  commentLikeEmptyIcon,
   followBlackIcon,
   hidePost,
+  postLikedIcon,
+  postToCommentIcon,
+  postToLikeIcon,
   reportIcon,
   unblock,
   unfollowBlackIcon,
@@ -243,7 +243,10 @@ const CommentItem = (props: CommentItemProps) => {
               <TouchableOpacity
                 onPress={handlePressCommentWithFocus}
                 style={styles.interactionButton}>
-                <Image source={commentIcon} style={[styles.buttonImage, styles.interactionImage]} />
+                <Image
+                  source={postToCommentIcon}
+                  style={[styles.buttonImage, styles.interactionImage]}
+                />
                 <Typography.Semibold14 style={styles.textStyle}>
                   {formatNumShorthand(commentsCount)}
                 </Typography.Semibold14>
@@ -251,7 +254,7 @@ const CommentItem = (props: CommentItemProps) => {
             )}
             <TouchableOpacity onPress={handlePressLike} style={styles.interactionButton}>
               <Image
-                source={liked ? commentLiked : commentLikeEmptyIcon}
+                source={liked ? postLikedIcon : postToLikeIcon}
                 style={[
                   styles.buttonImage,
                   liked ? styles.orangeIcon : {},

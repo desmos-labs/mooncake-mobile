@@ -8,13 +8,13 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: theme.spacing.m,
     backgroundColor: theme.colors.white,
     flex: 1,
-    paddingBottom: theme.spacing.l,
   },
   headerText: {
     marginBottom: theme.spacing.m,
   },
   formContainer: {
     flex: 1,
+    marginTop: theme.spacing.m,
   },
   inputLabel: {
     textTransform: 'capitalize',
@@ -37,8 +37,9 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.pink01,
   },
   textInput: {
-    borderWidth: 1,
-    borderColor: theme.colors.lightGrey01,
+    backgroundColor: theme.colors.neutral['100'],
+    borderRadius: 8,
+    padding: 8,
   },
 }));
 

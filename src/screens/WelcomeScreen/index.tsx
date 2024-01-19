@@ -2,7 +2,7 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
+import { mooncakeLogo } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -66,10 +66,10 @@ const WelcomePage = () => {
   }, [activeAddress, navigation, requestNotificationsPermissions, trackUser]);
 
   return (
-    <DView style={styles.root} backgroundImage={accountCreatedBg} backgroundFillScreen={true}>
+    <DView style={styles.root}>
       <Box flex={1} style={styles.container}>
-        <Image contentFit="cover" source={accountCreatedIcon} style={styles.image} />
-        <Spacer paddingTop={100} />
+        <Image contentFit="cover" source={mooncakeLogo} style={styles.image} />
+        <Spacer paddingTop={46} />
         <Box alignItems="center">
           <Typography.H6>{t('welcomeTitle')}</Typography.H6>
           <Spacer paddingTop={theme.spacing.s} />
@@ -78,14 +78,8 @@ const WelcomePage = () => {
           </Typography.Regular14>
         </Box>
         <Spacer paddingTop={60} />
-        <Button
-          size={44}
-          width={220}
-          backgroundColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          style={styles.button}
-          onPress={resetToHome}>
-          {t('enter butter')}
+        <Button height={44} style={styles.button} onPress={resetToHome}>
+          {t('explore now')}
         </Button>
         <Spacer paddingTop={theme.spacing.m} />
       </Box>

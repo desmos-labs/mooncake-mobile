@@ -8,7 +8,6 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import useTrackSelectedUsersToFollow from 'hooks/analytics/useTrackSelectedUsersToFollow';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -39,7 +38,6 @@ const MIN_FOLLOWAGE_COUNT = 3;
  */
 const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation('onboarding');
 
   // -----------------------------------------------------
@@ -136,7 +134,7 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
 
   return (
     <DView style={styles.root} topBar={<TopBar />} disableHideKeyboardTouchable>
-      <Typography.Semibold24>{t('build your feed')}</Typography.Semibold24>
+      <Typography.Semibold20>{t('build your feed')}</Typography.Semibold20>
       <Spacer paddingTop="m" />
       <Typography.Regular14>{t('follow 3 creators')}</Typography.Regular14>
       <Spacer paddingTop="l" />
@@ -152,13 +150,12 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
       />
       <Spacer paddingTop="l" />
       <Button
-        size={44}
+        height={44}
         disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT || broadcasting}
-        bgColor={theme.colors.surfaceBlack}
-        textColor={theme.colors.white}
         onPress={onNextPressed}>
         {t('next', { ns: 'common' })}
       </Button>
+      <Spacer paddingTop="m" />
     </DView>
   );
 };

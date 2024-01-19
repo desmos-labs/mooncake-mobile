@@ -4,6 +4,7 @@ import {
   followBlackIcon,
   hidePost,
   reportIcon,
+  share,
   unblock,
   unfollowBlackIcon,
 } from 'assets/images';
@@ -17,6 +18,7 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useHidePost from 'hooks/posts/useHidePost';
+import useSharePost from 'hooks/posts/useSharePost';
 import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
@@ -70,6 +72,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handlePressReport = useHandlePressReport();
   const handlePressHidePost = useHidePost();
   const handlePressBlockOrUnblock = useHandlePressBlockOrUnblock();
+  const sharePost = useSharePost(post.id);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -102,6 +105,11 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
       },
       {
+        label: t('share', { ns: 'postOperations' }),
+        onPress: sharePost,
+        icon: share,
+      },
+      {
         label: t('report', { ns: 'postOperations' }),
         onPress: () => handlePressReport(post),
         icon: reportIcon,
@@ -128,16 +136,17 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [
     isAuthorActiveUser,
-    handlePressFollowOrUnfollow,
-    handlePressBlockOrUnblock,
-    handlePressHidePost,
-    handlePressMore,
-    handlePressReport,
-    isBlocked,
     isFollowing,
-    onBackButtonPress,
-    post,
     t,
+    sharePost,
+    isBlocked,
+    handlePressMore,
+    handlePressFollowOrUnfollow,
+    post,
+    handlePressReport,
+    handlePressHidePost,
+    onBackButtonPress,
+    handlePressBlockOrUnblock,
   ]);
 
   // -------------------------------------------------------------------------------------
