@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
 import { dotsAnimation } from 'assets/animations';
-import { mooncakeHomeIcon } from 'assets/images';
+import { mooncakeLogo } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -118,23 +118,19 @@ const FeeGrantWaitingScreen = () => {
       <View style={styles.innerContainer}>
         {feeGrantReady ? (
           <Image
-            source={mooncakeHomeIcon}
+            source={mooncakeLogo}
             tintColor={theme.colors.primary}
             style={styles.feeGrantReadyImage}
           />
         ) : (
-          <ThemedLottieView autoSize autoPlay loop source={dotsAnimation} />
+          <ThemedLottieView style={styles.loadingAnimation} autoPlay loop source={dotsAnimation} />
         )}
         <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>
         <Spacer paddingBottom={theme.spacing.l} />
         <Typography.Regular14 style={styles.subtitle}>{subtitle}</Typography.Regular14>
         <Spacer paddingBottom={theme.spacing.xl} />
-        <Button
-          backgroundColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          onPress={createDesmosProfile}
-          disabled={!feeGrantReady}>
+        <Button onPress={createDesmosProfile} disabled={!feeGrantReady}>
           Create a Desmos Profile
         </Button>
       </View>
