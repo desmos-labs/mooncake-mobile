@@ -67,10 +67,6 @@ export const eyeOpen = require ('./images/eyeOpen.png');
 
 export const emptyPostsIcon = require ('./images/emptyPosts.png');
 
-export const accountCreatedBg = require ('./images/accountCreatedBg.png');
-
-export const accountCreatedIcon = require ('./images/accountCreatedIcon.png');
-
 export const reportSuccessIcon = require ('./images/reportSuccessIcon.png');
 export const emptyListPlaceholder = require ('./images/emptyListsPlaceholders/emptyListPlaceholder.png');
 

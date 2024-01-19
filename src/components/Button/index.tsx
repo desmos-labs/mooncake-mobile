@@ -23,7 +23,7 @@ const ReanimatedPressable = Reanimated.createAnimatedComponent(Pressable);
  * Button type
  * @type {('solid' | 'outline' | 'text' | 'elevated')}
  */
-export type BButtonType = 'solid' | 'outline' | 'text' | 'elevated';
+type BButtonType = 'solid' | 'outline' | 'text' | 'elevated';
 
 export interface Props extends PressableProps {
   height?: 72 | 52 | 44 | 32;

@@ -7,7 +7,7 @@ import GetPostShareLink from 'services/axios/requests/GetPostShareLink';
 /**
  * Hook that allows to handle the press of the share button of a post.
  */
-export const useSharePost = (postId: number) => {
+const useSharePost = (postId: number) => {
   const showToast = useToast();
   return React.useCallback(async () => {
     const result = await GetPostShareLink(postId);
