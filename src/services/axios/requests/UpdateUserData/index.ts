@@ -2,8 +2,6 @@ import { promiseToResult } from 'lib/NeverThrowUtils';
 import axiosInstance from 'services/axios';
 import { UpdatableAccountInfo as UpdatableUserData } from 'types/account';
 
-// Keep this since we may need this in the future.
-// ts-prune-ignore-next
 const UpdateUserData = (userData: Partial<UpdatableUserData>) => {
   return promiseToResult(
     axiosInstance.put('/me', {
@@ -14,4 +12,6 @@ const UpdateUserData = (userData: Partial<UpdatableUserData>) => {
   );
 };
 
+// Keep this since we may need this in the future.
+// ts-prune-ignore-next
 export default UpdateUserData;
