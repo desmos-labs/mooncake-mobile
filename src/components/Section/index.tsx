@@ -26,9 +26,9 @@ const Section: React.FC<Props> = props => {
   }, [children]);
 
   return (
-    <View style={[style, styles.container]}>
+    <View style={[styles.container, style]}>
       <View style={styles.innerContainer}>
-        {title ? <Typography.Semibold14 style={styles.title}>{title}</Typography.Semibold14> : null}
+        {title ? <Typography.Semibold16 style={styles.title}>{title}</Typography.Semibold16> : null}
         <View>{wrapped}</View>
       </View>
     </View>

@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Switch, useTheme } from 'native-base';
 import React from 'react';
-import { View } from 'react-native';
+import { Image, ImageSourcePropType, View } from 'react-native';
 import useStyles from './useStyles';
 
 type Props = {
@@ -14,6 +14,10 @@ type Props = {
    */
   value: boolean;
   /**
+   * The switch icon:
+   */
+  leftIcon?: ImageSourcePropType;
+  /**
    * True to disable the switch (opacity 0.3)
    */
   disabled?: boolean;
@@ -24,12 +28,13 @@ type Props = {
 };
 
 const SectionSwitch: React.FC<Props> = props => {
-  const { label, value, disabled, onValueChange } = props;
+  const { label, value, leftIcon, disabled, onValueChange } = props;
   const styles = useStyles();
   const theme = useTheme();
 
   return (
     <View style={styles.root}>
+      {leftIcon !== undefined && <Image style={styles.icon} source={leftIcon} />}
       <Typography.Regular16 style={[styles.label, disabled ? styles.disabled : null]}>
         {label}
       </Typography.Regular16>
