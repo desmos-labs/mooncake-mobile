@@ -7,7 +7,11 @@ const useStyles = makeStyle(() => ({
     justifyContent: 'center',
   },
   button: {
+    borderRadius: 6,
     justifyContent: 'center',
+  },
+  unfollowButton: {
+    backgroundColor: '#EDEDED',
   },
 }));
 

@@ -93,7 +93,7 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 20) 
     return pendingTransactions.flatMap(convertPendingTransaction);
   }, [pendingTransactions]);
 
-  const { data, loading, initialLoading, fetchMore, refresh, refreshing, error } = usePaginatedData(
+  const { data, loading, fetchMore, refresh, refreshing, error } = usePaginatedData(
     useFetchPastTransactions(address),
     {
       itemsPerPage: transactionsPerPage,
@@ -108,7 +108,7 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 20) 
 
   return {
     transactions,
-    initialLoading,
+    loading,
     fetchMore,
     fetchingMore: loading,
     refetch: refresh,

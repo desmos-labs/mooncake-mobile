@@ -1,10 +1,13 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { landingPageAnimation } from 'assets/animations';
 import { appleLoginIcon, googleLoginIcon, mooncakeTextYellow } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import ThemedLottieView from 'components/ThemedLottieView';
+import { Image } from 'expo-image';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -17,11 +20,8 @@ import {
   LoginMethodWeb3AuthApple,
   LoginMethodWeb3AuthGoogle,
 } from 'types/login';
-import ThemedLottieView from 'components/ThemedLottieView';
-import { landingPageAnimation } from 'assets/animations';
-import { Image } from 'expo-image';
-import useStyles from './useStyles';
 import { useIsLoginWithPrivateKeyEnabled } from './hooks';
+import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 
@@ -63,7 +63,7 @@ const Landing = () => {
   const loginWithProvateKeyButton = React.useMemo(() => {
     return (
       <Button
-        variant="outline"
+        type="outline"
         style={styles.loginButton}
         onPress={() => onSignUp(LoginMethodPrivateKey)}>
         <Typography.Semibold16>{t('login with private key')}</Typography.Semibold16>
@@ -89,7 +89,7 @@ const Landing = () => {
           // Login buttons displayed when the login with private key is disabled.
           <>
             <Button
-              variant="outline"
+              type="outline"
               style={styles.loginButton}
               height={52}
               onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}>
@@ -102,7 +102,7 @@ const Landing = () => {
               <>
                 <Spacer paddingTop="m" />
                 <Button
-                  variant="outline"
+                  type="outline"
                   style={styles.loginButton}
                   height={52}
                   onPress={() => onSignUp(LoginMethodWeb3AuthApple)}>

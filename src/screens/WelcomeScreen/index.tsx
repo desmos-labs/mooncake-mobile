@@ -78,13 +78,7 @@ const WelcomePage = () => {
           </Typography.Regular14>
         </Box>
         <Spacer paddingTop={60} />
-        <Button
-          size={44}
-          width={220}
-          backgroundColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          style={styles.button}
-          onPress={resetToHome}>
+        <Button height={44} style={styles.button} onPress={resetToHome}>
           {t('enter butter')}
         </Button>
         <Spacer paddingTop={theme.spacing.m} />

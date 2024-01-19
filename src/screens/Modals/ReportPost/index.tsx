@@ -154,11 +154,7 @@ const ReportPost = () => {
               <StyledSpinner />
             </View>
           ) : (
-            <Button
-              size={44}
-              backgroundColor={theme.colors.surfaceBlack}
-              textColor={theme.colors.white}
-              onPress={onSubmit}>
+            <Button height={44} onPress={onSubmit}>
               {t('submit', { ns: 'common' })}
             </Button>
           )}

@@ -201,7 +201,7 @@ const SaveProfile = (props: NavProps) => {
         await submitForm(values, profilePic, coverPic);
       });
     },
-    [coverPic, goBack, profilePic, submitForm],
+    [coverPic, profilePic, submitForm],
   );
 
   // -------------------------------------------------------------------------------------
@@ -326,12 +326,7 @@ const SaveProfile = (props: NavProps) => {
                 </View>
               </ScrollView>
               <View style={{ padding: theme.spacing.m }}>
-                <Button
-                  disabled={!values.dTag}
-                  textColor={theme.colors.white}
-                  backgroundColor={theme.colors.surfaceBlack}
-                  size={44}
-                  onPress={handleSubmit as any}>
+                <Button disabled={!values.dTag} height={44} onPress={handleSubmit as any}>
                   {t('confirm', { ns: 'common' })}
                 </Button>
               </View>

@@ -1,153 +1,157 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Image, ImageSource } from 'expo-image';
+import { useTheme } from 'native-base';
+import React, { useMemo } from 'react';
+import { ActivityIndicator, Platform, Pressable, PressableProps, View } from 'react-native';
+import Reanimated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import {
-  TypographyConfigSemibold12,
-  TypographyConfigSemibold14,
-  TypographyConfigSemibold16,
-} from '@desmoslabs/desmos-kit-ui/components/Typography/config';
-import _ from 'lodash';
-import { Button as NBButton, useTheme, useToken } from 'native-base';
-import { ColorType } from 'native-base/lib/typescript/components/types';
-import React from 'react';
-import { StyleProp, StyleSheet, TextStyle } from 'react-native';
+  ImageStyle as RNImageStyle,
+  TextStyle,
+} from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
+import useStyles from './useStyles';
 
-interface Props
-  extends Omit<
-    React.ComponentProps<typeof NBButton>,
-    'shadow' | '_pressed' | 'hover' | 'opacity' | 'color' | 'colorScheme' | '_text'
-  > {
-  /**
-   * The relative height of the button.
-   */
-  size?: 26 | 28 | 30 | 32 | 44 | 56;
+const ReanimatedPressable = Reanimated.createAnimatedComponent(Pressable);
 
-  /**
-   * The text that will be rendered on the button.
-   */
-  children?: React.ReactNode;
+/**
+ * Button type
+ * @type {('solid' | 'outline' | 'text' | 'elevated')}
+ */
+export type BButtonType = 'solid' | 'outline' | 'text' | 'elevated';
 
-  /**
-   * Optionally override the default button text color.
-   */
-  textColor?: ColorType;
-
-  /**
-   * Change the background color of the button.
-   */
-  backgroundColor?: ColorType;
-
-  /**
-   * Change the outline/border color of the button. Only relevant for outlined variant.
-   */
-  borderColor?: ColorType;
-
-  /**
-   * What to do when the button is pressed.
-   */
-  onPress?: () => void;
+export interface Props extends PressableProps {
+  height?: 72 | 52 | 44 | 32;
+  type?: BButtonType;
+  children: React.ReactNode;
+  leftIcon?: ImageSource;
+  leftIconStyle?: RNImageStyle;
+  rightIcon?: ImageSource;
+  rightIconStyle?: RNImageStyle;
+  loading?: boolean;
+  loadingColor?: string;
+  radius?: number;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 /**
- * The button variant.
- */
-export type ButtonVariant = Props['variant'];
-
-/**
- * A button component based on the native-base Button.
+ * Button component
  * @constructor
  */
-const Button = ({
-  size = 56,
-  variant = 'solid',
-  backgroundColor,
-  borderColor,
-  textColor,
-  children,
-  ...rest
-}: Props) => {
+const Button = (props: Props) => {
+  const styles = useStyles(props);
   const theme = useTheme();
-  const defaultTextColor = useToken('colors', ['surfaceBlack'][0]);
+  const {
+    type = 'solid',
+    children,
+    leftIcon,
+    rightIcon,
+    leftIconStyle,
+    rightIconStyle,
+    disabled,
+    style,
+    loading,
+    loadingColor,
+    textStyle,
+    ...rest
+  } = props;
 
-  const paddingY = () => {
-    switch (size) {
-      case 56:
-        return 16;
-      case 44:
-        return 12;
-      case 32:
-        return 8;
-      case 30:
-        return 6;
-      case 28:
-        return 4;
-      case 26:
-        return 2;
-      default:
-        return 0;
-    }
-  };
-
-  const buttonTypography = React.useMemo(() => {
-    const sizeToTypographyMap: { [index: number]: StyleProp<TextStyle> } = {
-      56: TypographyConfigSemibold16,
-      44: TypographyConfigSemibold16,
-      32: TypographyConfigSemibold14,
-      30: TypographyConfigSemibold14,
-      28: TypographyConfigSemibold14,
-      26: TypographyConfigSemibold12,
-    };
-
-    const typographyStyle = sizeToTypographyMap[size as number];
-
-    const variantToTypographyMap: { [index: string]: any } = {
+  const buttonStyle = useMemo(() => {
+    const styleMap: { [index: string]: any } = {
       solid: {
-        color: textColor ?? defaultTextColor,
-      },
-      outline: {
-        color: textColor ?? theme.colors.black,
-      },
-    };
-
-    return {
-      _text: StyleSheet.flatten([
-        typographyStyle,
-        variantToTypographyMap[variant as string],
-        {
-          numberOfLines: 1,
-        },
-      ]),
-    };
-  }, [defaultTextColor, size, textColor, theme.colors.black, variant]);
-
-  const buttonStyle = React.useMemo(() => {
-    const backgroundColorFromTheme = _.get(theme, `colors.${backgroundColor}`, backgroundColor);
-
-    const variantStyleMap: { [index: string]: any } = {
-      solid: {
-        backgroundColor: backgroundColorFromTheme || theme.colors.primary,
-      },
-      link: {
-        textDecorationLine: 'none',
+        backgroundColor: '#25282D',
       },
       outline: {
         borderWidth: 1,
-        backgroundColor: theme.colors.white,
-        borderColor: borderColor ?? theme.colors.black,
+        borderColor: '#25282D',
+      },
+      text: {
+        borderWidth: 0,
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      },
+      elevated: {
+        backgroundColor: theme.colors.background,
+        shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
+        shadowOffset: {
+          width: 0,
+          height: 5,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 20,
+
+        elevation: 10,
       },
     };
+    return styleMap[type as string];
+  }, [theme.colors.background, theme.colors.primary, type]);
 
-    return variantStyleMap[variant as string];
-  }, [backgroundColor, borderColor, theme, variant]);
+  const defaultLoadingColor = React.useMemo(() => {
+    switch (type) {
+      case 'text':
+      case 'outline':
+      case 'elevated':
+        return '#25282D';
+      default:
+        return theme.colors.white;
+    }
+  }, [theme.colors.primary, theme.colors.white, type]);
+
+  const defaultTextStyle = React.useMemo(() => {
+    switch (type) {
+      case 'outline':
+      case 'text':
+        return CommonStyles.textBlack;
+      default:
+        return CommonStyles.textWhite;
+    }
+  }, [type]);
+
+  // Reanimated
+  const buttonScale = useSharedValue(1);
+
+  const animatedButtonStyle = useAnimatedStyle(
+    () => ({
+      transform: [{ scale: buttonScale.value }],
+      opacity: disabled ? 0.5 : interpolate(buttonScale.value, [0.9, 1], [0.5, 1]),
+    }),
+    [disabled],
+  );
 
   return (
-    <NBButton
-      py={`${paddingY()}px`}
-      isDisabled={rest.disabled || rest.isDisabled}
-      {...buttonTypography}
-      // can ignore this error as variant has a default value of solid
-      // @ts-ignore
-      {...buttonStyle}
+    <ReanimatedPressable
+      disabled={disabled}
+      style={[animatedButtonStyle, styles.root, buttonStyle, disabled && styles.disabled, style]}
+      onPressIn={() => {
+        buttonScale.value = withTiming(0.9, { duration: 200 });
+      }}
+      onPressOut={() => {
+        buttonScale.value = withTiming(1, { duration: 200 });
+      }}
       {...rest}>
-      {children}
-    </NBButton>
+      <View style={styles.innerView}>
+        {loading ? (
+          <ActivityIndicator color={loadingColor || defaultLoadingColor} />
+        ) : (
+          <>
+            {leftIcon && <Image source={leftIcon} style={[styles.icon, leftIconStyle!]} />}
+            {typeof children === 'string' ? (
+              <Typography.Semibold16 style={[defaultTextStyle, textStyle]}>
+                {children}
+              </Typography.Semibold16>
+            ) : (
+              children
+            )}
+            {rightIcon && <Image source={rightIcon} style={[styles.icon, rightIconStyle!]} />}
+          </>
+        )}
+      </View>
+    </ReanimatedPressable>
   );
 };
 

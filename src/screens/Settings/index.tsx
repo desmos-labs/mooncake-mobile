@@ -198,7 +198,7 @@ const Settings = (props: NavProps) => {
           <SectionButton label={t('about')} onPress={showAboutInfo} />
         </Section>
         <Spacer paddingVertical={12} />
-        <Button size={44} variant="outline" onPress={openConfirmSignOutModal}>
+        <Button height={44} type="outline" onPress={openConfirmSignOutModal}>
           {t('sign out')}
         </Button>
         <Typography.Regular12 style={styles.bottomText}>

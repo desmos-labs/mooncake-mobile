@@ -146,13 +146,9 @@ const CreatePost = () => {
 
     return (
       <Button
-        isLoading={loading}
-        size={26}
-        width={61}
-        backgroundColor={theme.colors.primary}
-        textColor={theme.colors.white}
+        loading={loading}
+        height={32}
         disabled={!canCreatePost}
-        height="32px"
         onPress={onCreatePostPressWrapper}>
         {t('post')}
       </Button>

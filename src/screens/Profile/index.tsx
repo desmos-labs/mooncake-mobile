@@ -317,33 +317,22 @@ const Profile = () => {
     if (!isActiveAccount) {
       // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
       if (isBlocked) {
-        return (
-          <Button
-            mt="s"
-            backgroundColor="surfaceGrey"
-            minWidth="80px"
-            size={32}
-            onPress={handlePressBlock}
-            textColor="surfaceBlack">
-            {t('unblock', { ns: 'relationships' })}
-          </Button>
-        );
+        return <Button onPress={handlePressBlock}>{t('unblock', { ns: 'relationships' })}</Button>;
       }
       return (
         <View style={styles.followUnfollowSection}>
           <Button
-            style={CommonStyles.flex['1']}
-            mt="s"
-            backgroundColor="surfaceGrey"
-            minWidth="80px"
-            size={32}
-            onPress={handlePressFollow}
-            textColor="surfaceBlack">
-            {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
+            height={32}
+            style={[styles.btStyle, CommonStyles.flex['1']]}
+            onPress={handlePressFollow}>
+            <Typography.Regular14>
+              {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
+            </Typography.Regular14>
           </Button>
           <Spacer paddingLeft="s" />
-          <Button mt="s" backgroundColor="surfaceGrey" minWidth="35px" size={32} onPress={tipUser}>
+          <Button onPress={tipUser} height={32} style={[styles.btStyle, styles.tipStyle]}>
             <Image style={styles.tipUserIcon} source={tipUserIcon} />
+            <Typography.Regular14>{t('tip')}</Typography.Regular14>
           </Button>
         </View>
       );

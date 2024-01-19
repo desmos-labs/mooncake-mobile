@@ -56,6 +56,8 @@ const useFetchCreators = (userAddress: string) => {
         throw error;
       }
 
+      console.log(data);
+
       // Handle the case where no data is returned.
       const profiles = data?.public_users ?? [];
       // Convert the GraphQL profiles to a DesmosProfile.
@@ -63,7 +65,6 @@ const useFetchCreators = (userAddress: string) => {
       // Query to check which of the fetched profiles are followed
       // from the current user.
       const counterpartyAddresses = fetchedProfiles.map(profile => profile.address);
-
       const { data: followedProfilesData, error: followedError } =
         await apolloClient.query<GetFollowedProfileAddressesGqlResponse>({
           query: GetFollowedProfileAddresses,
@@ -132,6 +133,7 @@ export const useCreators = () => {
     refreshing,
     error,
   } = usePaginatedData(useFetchCreators(userAddress), {
+    autoFetchFirstPage: true,
     itemsPerPage: 20,
     onPreFetchPage: React.useCallback(
       // When fetching the first page fetch also the total number
@@ -145,6 +147,8 @@ export const useCreators = () => {
       [getFollowageCount],
     ),
   });
+
+  console.log(creators);
 
   return {
     creators,

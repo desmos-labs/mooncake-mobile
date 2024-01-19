@@ -1,9 +1,3 @@
-import React from 'react';
-import { PastTransactionMessage } from 'types/transactions';
-import { SectionBase } from 'react-native';
-import usePastTransactions from 'hooks/transactions/usePastTransactions';
-import { getDate } from 'date-fns';
-import { useTranslation } from 'react-i18next';
 import { Bank, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
 import {
   addReactionTxIcon,
@@ -13,6 +7,12 @@ import {
   tipTxIcon,
   unknownTxIcon,
 } from 'assets/images';
+import { getDate } from 'date-fns';
+import usePastTransactions from 'hooks/transactions/usePastTransactions';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { SectionBase } from 'react-native';
+import { PastTransactionMessage } from 'types/transactions';
 
 /**
  * Type that contains the details of a single section of the list of past actions.
@@ -206,7 +206,7 @@ export const useGetOperationTitle = (userAddress: string) => {
 export const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
   const {
     transactions,
-    initialLoading,
+    loading,
     fetchMore: fetchMoreTransactions,
     fetchingMore,
     refetch: refetchTransactions,
@@ -215,10 +215,10 @@ export const usePastActionsSections = (address: string, transactionsPerPage: num
 
   return {
     sections: groupMessagesByDate(transactions),
-    loading: initialLoading && !refreshing,
+    loading,
+    refreshing,
     fetchMore: fetchMoreTransactions,
     fetchingMore,
     refetch: refetchTransactions,
-    refreshing,
   };
 };

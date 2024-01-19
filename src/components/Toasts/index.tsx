@@ -76,7 +76,7 @@ const makeToastComponent: (config: ToastConfig) => React.FC<ToastProps> = config
             />
           )}
           {actionLabel && action && (
-            <Button variant="text" onPress={action}>
+            <Button type="text" onPress={action}>
               <Typography.Semibold14>{actionLabel}</Typography.Semibold14>
             </Button>
           )}

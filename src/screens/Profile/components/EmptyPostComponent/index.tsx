@@ -29,12 +29,7 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
       <Image style={styles.emptyImage} source={emptyListPlaceholder} />
       <Typography.Regular14 style={styles.text}>{textLabel}</Typography.Regular14>
       <Spacer paddingVertical={theme.spacing.m} />
-      <Button
-        onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}
-        size={44}
-        variant="outlined"
-        mx="100px"
-        justifyContent="center">
+      <Button onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)} height={44} type="outline">
         {buttonLabel}
       </Button>
     </View>

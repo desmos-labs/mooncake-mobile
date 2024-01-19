@@ -1,11 +1,13 @@
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import Button from 'components/Button';
+import commonStyles from 'config/theme/CommonStyles';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
-import { useTheme } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
-import useStyles from './useStyles';
 import { useToggleFollowage } from './hooks';
+import useStyles from './useStyles';
 
 interface NotificationButtonProps {
   readonly user: DesmosProfile;
@@ -30,7 +32,11 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
         <ActivityIndicator color={following ? theme.colors.surfaceBlack : theme.colors.white} />
       );
     }
-    return following ? t('unfollow') : t('follow');
+    return (
+      <Typography.Semibold14 style={following ? commonStyles.textBlack : commonStyles.textWhite}>
+        {following ? t('unfollow') : t('follow')}
+      </Typography.Semibold14>
+    );
   }, [
     fetchingFollowState,
     following,
@@ -43,12 +49,10 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   return (
     <View style={styles.buttonView}>
       <Button
-        textColor={following ? theme.colors.surfaceBlack : theme.colors.white}
         onPress={toggleFollow}
-        size={32}
-        variant={following ? 'outline' : 'solid'}
-        backgroundColor={following ? theme.colors.white : theme.colors.surfaceBlack}
-        style={styles.button}
+        height={32}
+        type="solid"
+        style={[styles.button, following ? styles.unfollowButton : null]}
         disabled={fetchingFollowState || updatingFollow}>
         {buttonContent}
       </Button>

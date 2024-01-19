@@ -1,10 +1,11 @@
-import React, { useCallback } from 'react';
-import { View } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
-import { DesmosProfile } from 'types/desmos';
-import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import Button from 'components/Button';
+import useNavigateToProfileEdit from 'hooks/navigation/useNavigateToProfileEdit';
+import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
 interface EditProfileSectionProps {
@@ -48,8 +49,8 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
 
   return (
     <View style={styles.container}>
-      <Button size={32} flex={1} backgroundColor="surfaceGrey" onPress={handleSaveProfile}>
-        {t('edit profile')}
+      <Button height={32} onPress={handleSaveProfile} style={styles.editButton}>
+        <Typography.Regular14>{t('edit profile')}</Typography.Regular14>
       </Button>
     </View>
   );

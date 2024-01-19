@@ -6,8 +6,8 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    paddingBottom: Platform.OS === 'android' ? theme.spacing.xs : -2,
-    paddingTop: 10,
+    paddingBottom: Platform.OS === 'android' ? -12 : -22,
+    paddingTop: 2,
     paddingHorizontal: theme.spacing.m,
     shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
     shadowOffset: {
@@ -20,7 +20,6 @@ const useStyles = makeStyle(theme => ({
   },
   middleButtonView: {
     flex: 1,
-    marginHorizontal: theme.spacing.s,
     backgroundColor: theme.colors.white,
     paddingHorizontal: theme.spacing.s,
     paddingBottom: 6,
@@ -47,9 +46,10 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'center',
   },
   middleButtonImage: {
-    height: 45,
-    width: 45,
+    height: 56,
+    width: 56,
     alignSelf: 'center',
+    marginBottom: 16,
   },
   text: {
     alignSelf: 'center',

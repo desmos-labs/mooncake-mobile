@@ -18,7 +18,11 @@ const useStyles = makeStyle(theme => ({
   quickSelectButton: {
     flex: 1,
   },
+  quickSelectButtonText: {
+    color: theme.colors.surfaceBlack,
+  },
   inputContainer: {
+    backgroundColor: '#F7F7F7',
     paddingHorizontal: theme.spacing.s,
     paddingVertical: theme.spacing.m,
   },

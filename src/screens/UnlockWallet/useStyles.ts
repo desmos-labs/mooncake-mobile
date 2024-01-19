@@ -8,7 +8,6 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: theme.spacing.m,
     backgroundColor: theme.colors.white,
     flex: 1,
-    paddingBottom: theme.spacing.l,
   },
   headerText: {
     marginBottom: theme.spacing.m,

@@ -152,13 +152,12 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
       />
       <Spacer paddingTop="l" />
       <Button
-        size={44}
+        height={44}
         disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT || broadcasting}
-        bgColor={theme.colors.surfaceBlack}
-        textColor={theme.colors.white}
         onPress={onNextPressed}>
         {t('next', { ns: 'common' })}
       </Button>
+      <Spacer paddingTop="m" />
     </DView>
   );
 };

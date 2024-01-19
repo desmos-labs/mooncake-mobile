@@ -1,6 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import FollowUnfollowButton from 'components/FollowUnfollowButton';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import { Image } from 'expo-image';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
@@ -78,12 +78,7 @@ const UserListItem = (props: UserListItemProps) => {
         </Typography.Regular12>
       </View>
       {/* Button to follow or unfollow a user */}
-      {!isActiveAccount && (
-        <FollowUnfollowButton
-          onPress={() => followOrUnfollowUser(user)}
-          isFollowing={isFollowing}
-        />
-      )}
+      {!isActiveAccount && <ToggleFollowageButton user={user} />}
     </TouchableOpacity>
   );
 };

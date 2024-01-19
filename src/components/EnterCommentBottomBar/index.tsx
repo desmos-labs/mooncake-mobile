@@ -170,19 +170,17 @@ const EnterCommentBottomBar = (props: Props) => {
       return <StyledSpinner />;
     }
     return (
-      <Button
-        size={30}
-        p={0}
-        width={71}
-        ml="12px"
-        textColor={theme.colors.white}
-        backgroundColor={theme.colors.butterOrange01}
-        disabled={postAttachments.length === 0 && comment.length === 0}
-        onPress={onPostCommentPressWrapper}>
-        {t('post')}
-      </Button>
+      <>
+        <Spacer paddingLeft="s" />
+        <Button
+          height={32}
+          disabled={postAttachments.length === 0 && comment.length === 0}
+          onPress={onPostCommentPressWrapper}>
+          {t('post')}
+        </Button>
+      </>
     );
-  }, [loading, theme, postAttachments.length, comment.length, onPostCommentPressWrapper, t]);
+  }, [loading, postAttachments.length, comment.length, onPostCommentPressWrapper, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering
