@@ -20,7 +20,9 @@ import {
   LoginMethodWeb3AuthApple,
   LoginMethodWeb3AuthGoogle,
 } from 'types/login';
-import { useIsLoginWithPrivateKeyEnabled, useResumeLoginFlow } from './hooks';
+import useIsLoginFlowUncompleted from 'hooks/login/useIsLoginFlowUncompleted';
+import useResumeLoginFlow from 'hooks/login/useResumeLoginFlow';
+import { useIsLoginWithPrivateKeyEnabled } from './hooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -41,7 +43,8 @@ const Landing = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
   const loginWithPrivateKeyEnabled = useIsLoginWithPrivateKeyEnabled();
-  const { pendingLoginFlow, resumeLoginFlow, cancelLoginFlow } = useResumeLoginFlow();
+  const pendingLoginFlow = useIsLoginFlowUncompleted();
+  const { resumeLoginFlow, cancelLoginFlow } = useResumeLoginFlow();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
