@@ -24,10 +24,16 @@
     },
     "preview": {
       "extends": "base",
+      "env": {
+        "BRANCH_API_KEY": "branchApiKey"
+      },
       "distribution": "internal"
     },
     "production": {
       "extends": "base",
+      "env": {
+        "BRANCH_API_KEY": "branchApiKey"
+      },
       "autoIncrement": true,
       "ios": {
         "buildConfiguration": "Release",
