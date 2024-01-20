@@ -1,6 +1,6 @@
 {
   "name": "butter",
-  "version": "0.0.1",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "start": "expo start --dev-client",
