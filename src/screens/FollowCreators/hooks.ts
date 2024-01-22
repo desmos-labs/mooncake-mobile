@@ -56,8 +56,6 @@ const useFetchCreators = (userAddress: string) => {
         throw error;
       }
 
-      console.log(data);
-
       // Handle the case where no data is returned.
       const profiles = data?.public_users ?? [];
       // Convert the GraphQL profiles to a DesmosProfile.
@@ -147,8 +145,6 @@ export const useCreators = () => {
       [getFollowageCount],
     ),
   });
-
-  console.log(creators);
 
   return {
     creators,

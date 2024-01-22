@@ -1,5 +1,4 @@
 import about from './about.json';
-import activities from './activities.json';
 import broadcastTx from './broadcastTx.json';
 import common from './common.json';
 import createPost from './createPost.json';
@@ -11,6 +10,7 @@ import home from './home.json';
 import landing from './landing.json';
 import legal from './legal.json';
 import modals from './modals.json';
+import notifications from './notifications.json';
 import onboarding from './onboarding.json';
 import operations from './operations.json';
 import password from './password.json';
@@ -29,7 +29,6 @@ import tips from './tips.json';
 
 const en = {
   about,
-  activities,
   broadcastTx,
   common,
   createPost,
@@ -41,6 +40,7 @@ const en = {
   landing,
   legal,
   modals,
+  notifications,
   onboarding,
   operations,
   password,

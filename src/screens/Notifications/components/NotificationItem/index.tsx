@@ -12,7 +12,7 @@ import { getNotificationOriginator } from 'lib/NotificationsUtils';
 import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import PostAttachmentsPreview from 'screens/Activities/components/PostAttachmentsPreview';
+import PostAttachmentsPreview from 'screens/Notifications/components/PostAttachmentsPreview';
 import { DesmosProfile } from 'types/desmos';
 import { Notification, NotificationType } from 'types/notifications';
 import useStyles from './useStyles';
@@ -30,7 +30,7 @@ interface NotificationComponentProps {
  * @constructor
  */
 const NotificationItem = (props: NotificationComponentProps) => {
-  const { t } = useTranslation('activities');
+  const { t } = useTranslation('notifications');
   const styles = useStyles();
   const showToast = useToast();
   const { notification, onPress } = props;
