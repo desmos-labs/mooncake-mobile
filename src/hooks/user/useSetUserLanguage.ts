@@ -17,8 +17,6 @@ const useSetUserLanguage = () => {
   const languageIsoCode = match ? match[0] : 'en';
 
   return React.useCallback(async () => {
-    console.log('Setting user language to ', languageIsoCode);
-
     const serverRequestResult = await SetLanguage(languageIsoCode);
     if (serverRequestResult.isErr()) {
       Sentry.Native.captureException(serverRequestResult.error);
