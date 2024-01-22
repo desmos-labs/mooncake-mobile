@@ -11,8 +11,6 @@ const useInitNotificationsLogic = () => {
   // Effect to handle the notification that has triggered the
   // application open from a quiet state.
   React.useEffect(() => {
-    firebase.messaging().getToken().then(console.log);
-
     firebase
       .messaging()
       .getInitialNotification()
