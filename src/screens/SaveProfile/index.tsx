@@ -72,6 +72,7 @@ export interface SaveProfileParams {
   readonly blockBackAction?: boolean;
   /**
    * Tells if the profile is being created during the onboading.
+   * Default: false.
    */
   readonly isOnboarding?: boolean;
 }
@@ -92,7 +93,7 @@ const SaveProfile = (props: NavProps) => {
   const accountWithWallet = params?.accountWithWallet;
   const customTransactionHeader = params?.customTransactionHeader;
   const customTransactionBody = params?.customTransactionBody;
-  const isOnboarding = params?.isOnboarding;
+  const isOnboarding = params?.isOnboarding ?? false;
   const onProfileSaved = params?.onProfileSaved || (() => {});
   const onCompleteOrError = () => {};
 
@@ -198,10 +199,13 @@ const SaveProfile = (props: NavProps) => {
   const onSaveProfile = useCallback(
     async (values: SaveProfileFormState) => {
       InteractionManager.runAfterInteractions(async () => {
-        await submitForm(values, profilePic, coverPic);
+        const result = await submitForm(values, profilePic, coverPic);
+        if (result.isOk() && !isOnboarding) {
+          goBack();
+        }
       });
     },
-    [coverPic, profilePic, submitForm],
+    [coverPic, goBack, isOnboarding, profilePic, submitForm],
   );
 
   // -------------------------------------------------------------------------------------
