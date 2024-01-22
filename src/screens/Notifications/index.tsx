@@ -11,8 +11,8 @@ import { Divider, useTheme } from 'native-base';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
-import NotificationComponent from 'screens/Activities/components/NotificationItem';
-import useSplitNotificationsByWeek from 'screens/Activities/hooks';
+import NotificationComponent from 'screens/Notifications/components/NotificationItem';
+import useSplitNotificationsByWeek from 'screens/Notifications/hooks';
 import { Notification } from 'types/notifications';
 import useStyles from './useStyles';
 
@@ -20,8 +20,8 @@ import useStyles from './useStyles';
  * Screen that allows the user to view their past notifications and interact with them.
  * @constructor
  */
-const Activities = () => {
-  const { t } = useTranslation('activities');
+const Notifications = () => {
+  const { t } = useTranslation('notifications');
   const theme = useTheme();
   const styles = useStyles();
 
@@ -76,14 +76,14 @@ const Activities = () => {
   // -------------------------------------------------------------------------------------
 
   // Component shown if there are no past activities
-  const EmptyActivities = useMemo(() => {
+  const EmptyNotifications = useMemo(() => {
     if (loading || notifications.length > 0) {
       return;
     }
     return (
       <View style={styles.emptyView}>
         <Image source={emptyListPlaceholder} style={styles.errorImage} />
-        <Typography.Regular14>{t('no activities')}</Typography.Regular14>
+        <Typography.Regular14>{t('no notifications')}</Typography.Regular14>
       </View>
     );
   }, [loading, notifications.length, styles.emptyView, styles.errorImage, t]);
@@ -156,7 +156,7 @@ const Activities = () => {
           paddingHorizontal: theme.spacing.m,
           paddingBottom: theme.spacing.m,
         }}>
-        <Typography.Semibold24>{t('activities')}</Typography.Semibold24>
+        <Typography.Semibold24>{t('notifications')}</Typography.Semibold24>
       </View>
       {/* Notifications list */}
       <FlashList
@@ -170,7 +170,7 @@ const Activities = () => {
           />
         }
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={EmptyActivities}
+        ListEmptyComponent={EmptyNotifications}
         data={items}
         renderItem={renderItem}
         ListFooterComponent={FooterComponent}
@@ -185,4 +185,4 @@ const Activities = () => {
   );
 };
 
-export default Activities;
+export default Notifications;

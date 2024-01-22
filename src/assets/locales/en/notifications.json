@@ -1,5 +1,5 @@
 {
-  "activities": "Activities",
+  "notifications": "Notifications",
   "this week": "This week",
   "earlier": "Earlier",
   "you": "You",
@@ -9,7 +9,7 @@
   "commented": "Commented your post",
   "commented reply": "Replied to your comment",
   "followed you": "Started following you",
-  "no activities": "No Activities",
+  "no notifications": "No Notifications",
   "liked your post": "Liked your post",
   "profileNotFound": "Profile not found",
   "started following you": "started following you"

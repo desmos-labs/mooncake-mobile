@@ -7,10 +7,10 @@ import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useSetPostsListState } from '@recoil/screens/postsListState';
 import { useSetUriAction, useUriAction } from '@recoil/uriAction';
 import {
-  bottomActivitiesFilledIcon,
-  bottomActivitiesIcon,
   bottomHomeFilledIcon,
   bottomHomeIcon,
+  bottomNotificationsFilledIcon,
+  bottomNotificationsIcon,
   bottomProfileIcon,
   bottomSearchFilledIcon,
   bottomSearchIcon,
@@ -26,7 +26,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Activities from 'screens/Activities';
+import Notifications from 'screens/Notifications';
 import Profile from 'screens/Profile';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
 import useStyles from './useStyles';
@@ -42,7 +42,7 @@ export type BottomTabsParamList = {
   // [ROUTES.COMMUNITIES]: undefined;
   [ROUTES.SEARCH_TABS]: SearchTabsParams | undefined;
   [ROUTES.CREATE_BUTTON]: undefined;
-  [ROUTES.ACTIVITIES]: undefined;
+  [ROUTES.NOTIFICATIONS]: undefined;
   [ROUTES.PROFILE]: undefined;
 };
 
@@ -64,8 +64,8 @@ const getCorrectImage = (routeName: string) => {
       return bottomSearchIcon;
     case ROUTES.PROFILE:
       return bottomProfileIcon;
-    case ROUTES.ACTIVITIES:
-      return bottomActivitiesIcon;
+    case ROUTES.NOTIFICATIONS:
+      return bottomNotificationsIcon;
   }
 };
 
@@ -80,8 +80,8 @@ const getCorrectFilledImage = (routeName: string) => {
       return bottomSearchFilledIcon;
     case ROUTES.PROFILE:
       return bottomProfileIcon;
-    case ROUTES.ACTIVITIES:
-      return bottomActivitiesFilledIcon;
+    case ROUTES.NOTIFICATIONS:
+      return bottomNotificationsFilledIcon;
   }
 };
 
@@ -93,7 +93,7 @@ const getBottomText = (routeName: string) => {
       return 'Search';
     case ROUTES.PROFILE:
       return 'You';
-    case ROUTES.ACTIVITIES:
+    case ROUTES.NOTIFICATIONS:
       return 'Notifications';
   }
 };
@@ -164,7 +164,7 @@ const BottomTabBar = (props: Props) => {
 
           if (!isFocused && !event.defaultPrevented) {
             // The `merge: true` option makes sure that the params inside the tab screen are preserved
-            if (route.name === ROUTES.ACTIVITIES) {
+            if (route.name === ROUTES.NOTIFICATIONS) {
               setNotificationsCount(0);
             }
 
@@ -234,7 +234,7 @@ const BottomTabBar = (props: Props) => {
         return (
           <View key={route.key} style={styles.buttonView}>
             <ImageButton
-              overlayComponent={route.name === ROUTES.ACTIVITIES && OverlayComponent}
+              overlayComponent={route.name === ROUTES.NOTIFICATIONS && OverlayComponent}
               onPress={onPress}
               tintColor={isFocused ? theme.colors.butterOrange01 : theme.colors.lightGrey02}
               image={isFocused ? getCorrectFilledImage(route.name) : getCorrectImage(route.name)}
@@ -293,7 +293,7 @@ const BottomTabsNavigator = () => {
         {/* <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} /> */}
         <Tab.Screen name={ROUTES.SEARCH_TABS} component={SearchTabs} />
         <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
-        <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
+        <Tab.Screen name={ROUTES.NOTIFICATIONS} component={Notifications} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
       </Tab.Navigator>
     </Box>

@@ -9,7 +9,7 @@ import { Notification } from 'types/notifications';
  * 2. the second one containing all the notifications that have timestamp older than the current week
  */
 const useSplitNotificationsByWeek = () => {
-  const { t } = useTranslation('activities');
+  const { t } = useTranslation('notifications');
 
   return React.useCallback(
     (notifications: Notification[]) => {

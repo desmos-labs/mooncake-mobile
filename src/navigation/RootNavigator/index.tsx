@@ -17,7 +17,7 @@ import React from 'react';
 import { Dimensions, Platform } from 'react-native';
 import About from 'screens/About';
 import AboutDetails, { AboutDetailsParams } from 'screens/AboutDetails';
-import Activities from 'screens/Activities';
+import Notifications from 'screens/Notifications';
 import BlockedUsers from 'screens/BlockedUsers';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import DevScreen from 'screens/DEV';
@@ -87,7 +87,7 @@ export type RootNavigatorParamList = {
 
   // Bottom tabs
   [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
-  [ROUTES.ACTIVITIES]: undefined;
+  [ROUTES.NOTIFICATIONS]: undefined;
 
   // Home page
   [ROUTES.HOME_TABS]: HomeTabsParams;
@@ -228,7 +228,7 @@ const RootNavigator = () => {
       {/* --- HOME SCREENS --- */}
       {/* -------------------- */}
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
-      <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
+      <Stack.Screen name={ROUTES.NOTIFICATIONS} component={Notifications} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       {/* -------------------- */}
       {/* --- POST SCREENS --- */}

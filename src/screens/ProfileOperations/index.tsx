@@ -25,7 +25,7 @@ import useStyles from './useStyles';
 
 export interface ProfileOperationsParams {
   /**
-   * Address of the user for which to display the past activities.
+   * Address of the user for which to display the past operations.
    */
   userAddress: string;
 }
@@ -33,7 +33,7 @@ export interface ProfileOperationsParams {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_OPERATIONS>;
 
 /**
- * Screen that allows to display the pat activities (tx) made from a given user.
+ * Screen that allows to display the pat operations that are related to a given user.
  * @constructor
  */
 const ProfileOperations = () => {
