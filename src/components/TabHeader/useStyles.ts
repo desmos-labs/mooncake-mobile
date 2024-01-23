@@ -22,7 +22,10 @@ const useStyles = makeStyle(theme => ({
   },
   tabButton: {
     height: '100%',
-    padding: 10,
+    paddingVertical: 10,
+  },
+  firstTabButton: {
+    marginRight: 36,
   },
   buttonText: {
     textAlign: 'center',

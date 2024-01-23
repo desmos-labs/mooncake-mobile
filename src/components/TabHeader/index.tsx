@@ -57,7 +57,8 @@ const TabHeader = ({
             onPress={onPress}
             style={[
               styles.tabButton,
-              spaceBetween ? { marginHorizontal: 72 } : { marginHorizontal: 8 },
+              spaceBetween ? { marginHorizontal: 72 } : { marginHorizontal: 4 },
+              !spaceBetween && idx === 0 && styles.firstTabButton,
             ]}>
             <Typography.Semibold16
               numberOfLines={1}
