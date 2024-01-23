@@ -1,14 +1,14 @@
+import { cameraIcon, galleryIcon } from 'assets/images';
+import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
+import { CameraType } from 'expo-image-picker';
+import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
 import usePostsParams from 'hooks/posts/usePostsParams';
+import useImageFromDevice from 'hooks/useImageFromDevice';
+import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
+import { useTheme } from 'native-base';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
-import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
-import useImageFromDevice from 'hooks/useImageFromDevice';
-import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
-import { CameraType } from 'expo-image-picker';
-import ImageButton from 'components/ImageButton';
-import { useTheme } from 'native-base';
-import { cameraIcon, galleryIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 export type OnImageSelectedCallback = (

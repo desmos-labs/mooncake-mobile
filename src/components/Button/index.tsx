@@ -100,7 +100,7 @@ const Button = (props: Props) => {
       default:
         return theme.colors.white;
     }
-  }, [theme.colors.primary, theme.colors.white, type]);
+  }, [theme.colors.white, type]);
 
   const defaultTextStyle = React.useMemo(() => {
     switch (type) {
