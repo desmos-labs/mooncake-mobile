@@ -199,7 +199,7 @@ const useStyles = makeStyleWithProps(
       marginRight: 5,
     },
     btStyle: {
-      backgroundColor: '#E8E8E8',
+      backgroundColor: theme.colors.neutral['300'],
       borderRadius: 4,
       alignItems: 'center',
       justifyContent: 'center',

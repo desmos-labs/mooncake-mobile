@@ -9,6 +9,7 @@ const useStyles = makeStyle(() => ({
   button: {
     borderRadius: 6,
     justifyContent: 'center',
+    alignSelf: 'stretch',
   },
   unfollowButton: {
     backgroundColor: '#EDEDED',
