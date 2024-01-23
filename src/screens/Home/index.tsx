@@ -50,7 +50,6 @@ const Home = () => {
     posts,
     loading,
     fetchMore: fetchMorePosts,
-    fetchingMore,
     refresh: refreshPosts,
     refreshing,
   } = usePosts(postsQueryType);
