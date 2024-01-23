@@ -28,10 +28,7 @@ const useStyles = makeStyle(theme => ({
     paddingTop: 10,
   },
   messageInput: {
-    height: 80,
-    borderWidth: 1,
-    borderRadius: theme.roundness,
-    borderColor: theme.colors.lightGrey01,
+    height: 120,
     paddingTop: theme.spacing.s,
     paddingBottom: theme.spacing.s,
   },

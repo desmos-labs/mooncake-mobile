@@ -21,6 +21,7 @@ const routesToRender = [
   ROUTES.DEV_COMPONENTS,
   ROUTES.LANDING,
   ROUTES.ONBOARDING,
+  ROUTES.PASSWORD_MANIPULATION,
   ROUTES.PROFILE,
   ROUTES.SETTINGS,
   ROUTES.WELCOME_PAGE,
@@ -50,7 +51,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   // -------------------------------------------------------------------------------------
 
   const navigateToHome = useNavigateToHome();
-  const activeAccountAddress = useActiveAccountAddress(); 
+  const activeAccountAddress = useActiveAccountAddress();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -84,6 +85,11 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           switch (item) {
+            case ROUTES.PASSWORD_MANIPULATION:
+              navigate(item, {
+                mode: PASSWORD_MANIPULATION_MODE.SETUP_ACCOUNT_AND_CREATE_PROFILE,
+              });
+              break;
             case ROUTES.ONBOARDING:
               navigate(item, {
                 passwordManipulationMode:
@@ -103,10 +109,10 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             case ROUTES.BOTTOM_SHEET:
               navigate(ROUTES.BOTTOM_SHEET, {
                 component: TipUserBottomSheet,
-                props: { 
+                props: {
                   toTipUserAddress: activeAccountAddress,
                 },
-              })
+              });
               break;
             case ROUTES.FOLLOW_CREATORS:
               navigate(item, {});
@@ -114,13 +120,13 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             case ROUTES.LOADING_MODAL:
               navigate(item, {
                 message: 'Test modal',
-              })
+              });
               break;
-              case ROUTES.LOADING_SCREEN:
-                navigate(item, {
-                  title: 'Test Loading Screen',
-                  message: 'Test Loading Screen',
-                });
+            case ROUTES.LOADING_SCREEN:
+              navigate(item, {
+                title: 'Test Loading Screen',
+                message: 'Test Loading Screen',
+              });
               break;
             default:
               navigate(item);
@@ -136,7 +142,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const ItemSeparatorComponent = React.useCallback(() => <Spacer paddingVertical={8} />, []);
 
   return (
-    <DView>
+    <DView disableHideKeyboardTouchable={true}>
       <FlatList
         style={CommonStyles.flex[1]}
         contentContainerStyle={styles.flatList}
@@ -147,38 +153,30 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       <Spacer paddingVertical={4} />
       <Box mx="s">
         <Box></Box>
-        <Button
-          backgroundColor="rgb(0,140,0)"
-          textColor="white"
-          size={44}
-          onPress={() => navigate(ROUTES.LANDING)}>
+        <Button height={44} onPress={() => navigate(ROUTES.LANDING)}>
           Continue to Landing screen
         </Button>
         <Spacer paddingVertical={4} />
-        <Button
-          backgroundColor="primary"
-          textColor="white"
-          size={44}
-          onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}>
+        <Button height={44} onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}>
           Continue to Home screen
         </Button>
         <Spacer paddingVertical={4} />
         <HStack>
           <VStack flex={0.5}>
-            <Button onPress={showToastSuccess} size={32}>
+            <Button onPress={showToastSuccess} height={32}>
               Show toast success
             </Button>
-            <Button onPress={showToastLoading} size={32}>
+            <Button onPress={showToastLoading} height={32}>
               Show toast loading
             </Button>
-            <Button onPress={showToastError} size={32}>
+            <Button onPress={showToastError} height={32}>
               Show toast error
             </Button>
           </VStack>
           <Spacer paddingHorizontal={4} />
           <VStack flex={0.5}>
             <Button
-              size={32}
+              height={32}
               onPress={() => {
                 Alert.alert(
                   'Are you sure?',

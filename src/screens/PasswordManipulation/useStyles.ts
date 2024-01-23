@@ -18,9 +18,7 @@ const useStyles = makeStyle(theme => ({
     marginVertical: theme.spacing.s,
   },
   inputLabel: {
-    borderWidth: 0.5,
-    borderColor: theme.colors.lightGrey01,
-    borderRadius: 8,
+    borderRadius: 12,
   },
   confirmButtonText: {
     color: theme.colors.white,

@@ -2,15 +2,11 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   input: {
-    backgroundColor: theme.colors.white,
-  },
-  focused: {
-    borderWidth: 1,
-    borderRadius: theme.roundness,
-    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.neutral['100'],
   },
   error: {
-    borderColor: theme.colors.pink01,
+    borderColor: theme.colors.fedback.error,
+    backgroundColor: theme.colors.fedback.errorBg,
   },
   icon: {
     width: 24,

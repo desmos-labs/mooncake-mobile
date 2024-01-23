@@ -10,7 +10,7 @@ import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
-import { Formik } from 'formik';
+import { Formik, FormikErrors, FormikValues } from 'formik';
 import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
@@ -101,6 +101,19 @@ const PasswordManipulation = () => {
     initialFormValues,
   } = useHooks();
 
+  const isButtonDisabled = React.useCallback(
+    (values: FormikValues, errors: FormikErrors<any>) => {
+      return (
+        loading ||
+        values.confirmPassword.length === 0 ||
+        values.newPassword.length === 0 ||
+        errors.confirmPassword !== undefined ||
+        errors.newPassword !== undefined
+      );
+    },
+    [loading],
+  );
+
   return (
     <DView style={styles.container} topBar={<TopBar />} backgroundColor={theme.colors.white}>
       <Spacer paddingBottom="s" />
@@ -135,6 +148,7 @@ const PasswordManipulation = () => {
                     )}
                   </View>
                   <DSecureTextInput
+                    error={errors.newPassword !== undefined}
                     testID="newPasswordField"
                     value={values.newPassword}
                     onChangeText={(value: string) => {
@@ -145,9 +159,6 @@ const PasswordManipulation = () => {
                     placeholder={t('new password')}
                     // error={!!errors.newPassword}
                   />
-                  {errors.newPassword && (
-                    <PasswordChecksGroup label={errors.newPassword} mode="error" />
-                  )}
                   {!isUserTyping && values.newPassword.length > 0 && (
                     <PasswordChecksGroup passwordToCheck={values.newPassword} mode="password" />
                   )}
@@ -188,13 +199,7 @@ const PasswordManipulation = () => {
                     height={44}
                     type="solid"
                     onPress={() => handleSubmit()}
-                    disabled={
-                      loading ||
-                      values.confirmPassword.length === 0 ||
-                      values.newPassword.length === 0 ||
-                      errors.confirmPassword !== undefined ||
-                      errors.newPassword !== undefined
-                    }>
+                    disabled={isButtonDisabled(values, errors)}>
                     {t(buttonLabel as any)}
                   </Button>
                 )}
