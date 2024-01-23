@@ -34,7 +34,6 @@ import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
-import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
@@ -70,6 +69,7 @@ import BalanceSection from 'screens/Profile/components/BalanceSection';
 import Biography from 'screens/Profile/components/Biography';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import useStyles, {
   PROFILE_HEADER_HEIGHT,
   PROFILE_HEADER_HEIGHT_COMPACT,
@@ -150,8 +150,7 @@ const Profile = () => {
   const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
   // Relationships data
-  const { isFollowing, refetch: refreshFollowing } = useIsFollowing(address);
-  const followOrUnfollowUser = useFollowOrUnfollowUser();
+  const { refetch: refreshFollowing } = useIsFollowing(address);
 
   const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(address);
   const blockOrUnblockUser = useBlockOrUnblockUser();
@@ -276,10 +275,6 @@ const Profile = () => {
     navigateToFollowageScreen(ROUTES.PROFILE_FOLLOWERS, profile);
   }, [navigateToFollowageScreen, profile]);
 
-  const handlePressFollow = useCallback(async () => {
-    await followOrUnfollowUser(profile!);
-  }, [followOrUnfollowUser, profile]);
-
   const handlePressBlock = useCallback(async () => {
     // This assertion is necessary, otherwise it will throw a ts error
     await blockOrUnblockUser(profile!);
@@ -321,14 +316,7 @@ const Profile = () => {
       }
       return (
         <View style={styles.followUnfollowSection}>
-          <Button
-            height={32}
-            style={[styles.btStyle, CommonStyles.flex['1']]}
-            onPress={handlePressFollow}>
-            <Typography.Regular14>
-              {isFollowing ? t('following') : t('follow', { ns: 'relationships' })}
-            </Typography.Regular14>
-          </Button>
+          <ToggleFollowageButton user={profile!} style={[CommonStyles.flex['1']]} />
           <Spacer paddingLeft="s" />
           <Button onPress={tipUser} height={32} style={[styles.btStyle, styles.tipStyle]}>
             <Image style={styles.tipUserIcon} source={tipUserIcon} />
@@ -340,11 +328,12 @@ const Profile = () => {
     return undefined;
   }, [
     handlePressBlock,
-    handlePressFollow,
     isActiveAccount,
     isBlocked,
-    isFollowing,
+    profile,
+    styles.btStyle,
     styles.followUnfollowSection,
+    styles.tipStyle,
     styles.tipUserIcon,
     t,
     tipUser,

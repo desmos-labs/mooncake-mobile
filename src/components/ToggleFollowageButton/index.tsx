@@ -4,13 +4,14 @@ import commonStyles from 'config/theme/CommonStyles';
 import { useTheme } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, StyleProp, View, ViewStyle } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 import { useToggleFollowage } from './hooks';
 import useStyles from './useStyles';
 
 interface NotificationButtonProps {
   readonly user: DesmosProfile;
+  readonly style?: StyleProp<ViewStyle>;
 }
 
 /**
@@ -23,7 +24,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const styles = useStyles();
   const { t } = useTranslation('relationships');
 
-  const { user } = props;
+  const { user, style } = props;
   const { toggleFollow, following, fetchingFollowState, updatingFollow } = useToggleFollowage(user);
 
   const buttonContent = React.useMemo(() => {
@@ -33,9 +34,9 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
       );
     }
     return (
-      <Typography.Semibold14 style={following ? commonStyles.textBlack : commonStyles.textWhite}>
-        {following ? t('unfollow') : t('follow')}
-      </Typography.Semibold14>
+      <Typography.Regular14 style={following ? commonStyles.textBlack : commonStyles.textWhite}>
+        {following ? t('following') : t('follow')}
+      </Typography.Regular14>
     );
   }, [
     fetchingFollowState,
@@ -47,7 +48,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   ]);
 
   return (
-    <View style={styles.buttonView}>
+    <View style={[styles.buttonView, style]}>
       <Button
         onPress={toggleFollow}
         height={32}
