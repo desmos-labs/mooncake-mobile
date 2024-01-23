@@ -23,7 +23,6 @@ import relationships from './relationships.json';
 import search from './search.json';
 import selectProfile from './selectProfile.json';
 import settings from './settings.json';
-import signup from './signup.json';
 import sendTips from './tips.json';
 import tips from './tips.json';
 
@@ -54,7 +53,6 @@ const en = {
   selectProfile,
   sendTips,
   settings,
-  signup,
   tips,
 };
 

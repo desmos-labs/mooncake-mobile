@@ -44,7 +44,7 @@ export const useValidationSchema = (profileParams: ProfileParams) => {
         .required(t('field required', { ns: 'common' }))
         .min(profileParams.dTag.minLength)
         .max(profileParams.dTag.maxLength)
-        .test('respect reg_ex', t('invalid dtag'), value => {
+        .test('respect reg_ex', t('invalid handle'), value => {
           return new RegExp(profileParams.dTag.regEx, 'g').test(value as string);
         }),
       bio: Yup.string().max(
