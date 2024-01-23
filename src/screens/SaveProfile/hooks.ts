@@ -108,6 +108,7 @@ const getValueToSave = (
  * has been completed or an error occurred.
  * @param customHeader {string | undefined} - Optional custom header to be used inside the transaction screen.
  * @param customBody {string | undefined} - Optional custom body to be used inside the transaction screen.
+ * @param isOnboarding {boolean | undefined} - Whether the transaction is being performed during the onboarding process.
  */
 export const useSubmitForm = (
   profile: DesmosProfile | undefined,
