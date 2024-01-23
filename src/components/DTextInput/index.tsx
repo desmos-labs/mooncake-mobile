@@ -1,6 +1,6 @@
+import { useTheme } from 'native-base';
 import React, { MutableRefObject } from 'react';
 import { ColorValue, StyleProp, TextInput, TextStyle, View, ViewStyle } from 'react-native';
-import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 export type Props = Omit<React.ComponentProps<typeof TextInput>, 'style'> & {
@@ -10,11 +10,6 @@ export type Props = Omit<React.ComponentProps<typeof TextInput>, 'style'> & {
    * is not valid.
    */
   error?: boolean;
-  /**
-   * If true, show a border around the
-   * input field.
-   */
-  showBorder?: boolean;
   /**
    * Element to show on the right side of the
    * input area.
@@ -39,7 +34,7 @@ const DTextInput: React.FC<Props> = props => {
         ref={inputRef}
         {...props}
         style={[inputStyle, styles.input]}
-        placeholderTextColor={placeHolderColor || theme.colors.grey01}
+        placeholderTextColor={placeHolderColor || theme.colors.neutral['600']}
       />
       <View style={styles.right}>{rightElement}</View>
     </View>

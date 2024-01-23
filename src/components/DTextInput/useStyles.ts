@@ -5,10 +5,10 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: theme.colors.white,
-    borderWidth: props.showBorder ? 1 : 0,
+    backgroundColor: theme.colors.neutral['100'],
+    borderWidth: props.error ? 1 : 0,
     borderColor: props.error ? theme.colors.pink01 : undefined,
-    borderRadius: 8,
+    borderRadius: 12,
     minHeight: 48,
     alignItems: 'center',
   },
