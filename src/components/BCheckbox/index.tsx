@@ -31,7 +31,7 @@ const BCheckbox = ({ style, value, disabled, onValueChange }: Props) => {
       disabled={disabled || onPress === undefined}
       onPress={onPress}>
       <Image
-        tintColor={disabled ? theme.colors.lightGrey02 : theme.colors.surfaceBlack}
+        tintColor={disabled ? theme.colors.lightGrey02 : theme.colors.neutral['700']}
         source={value ? check_circle : uncheck_circle}
         style={styles.icon}
       />

@@ -12,7 +12,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 import { LoginFlowStep } from 'types/login';
 import CreatorListItem from './components/CreatorListItem';
@@ -134,28 +134,32 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
 
   return (
     <DView style={styles.root} topBar={<TopBar />} disableHideKeyboardTouchable>
-      <Typography.Semibold20>{t('build your feed')}</Typography.Semibold20>
+      <Typography.H6>{t('build your feed')}</Typography.H6>
       <Spacer paddingTop="m" />
-      <Typography.Regular14>{t('follow 3 creators')}</Typography.Regular14>
-      <Spacer paddingTop="l" />
-      <FlashList
-        data={creators}
-        renderItem={renderItem}
-        estimatedItemSize={100}
-        refreshing={refreshing}
-        onRefresh={refresh}
-        onEndReached={fetchMore}
-        extraData={selectedAccounts}
-        ListFooterComponent={<ActivityIndicator hidesWhenStopped animating={loading} />}
-      />
-      <Spacer paddingTop="l" />
+      <Typography.Regular14 style={styles.neutral700}>
+        {t('follow 3 creators')}
+      </Typography.Regular14>
+      <View style={styles.listWrapper}>
+        <FlashList
+          data={creators}
+          renderItem={renderItem}
+          estimatedItemSize={100}
+          refreshing={refreshing}
+          onRefresh={refresh}
+          onEndReached={fetchMore}
+          contentContainerStyle={styles.contentContainerStyle}
+          extraData={selectedAccounts}
+          ListFooterComponent={<ActivityIndicator hidesWhenStopped animating={loading} />}
+        />
+      </View>
+
       <Button
         height={44}
         disabled={totalFollowageCount < MIN_FOLLOWAGE_COUNT || broadcasting}
         onPress={onNextPressed}>
         {t('next', { ns: 'common' })}
       </Button>
-      <Spacer paddingTop="m" />
+      <Spacer paddingBottom="m" />
     </DView>
   );
 };
