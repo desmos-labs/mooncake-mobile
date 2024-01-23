@@ -1,13 +1,16 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { landingPageAnimation } from 'assets/animations';
-import { appleLoginIcon, googleLoginIcon, mooncakeTextYellow } from 'assets/images';
+import { mooncakeAnimationWhite } from 'assets/animations';
+import { appleLoginIcon, googleLoginIcon, mooncakeTextWhite } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
+import commonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
+import useIsLoginFlowUncompleted from 'hooks/login/useIsLoginFlowUncompleted';
+import useResumeLoginFlow from 'hooks/login/useResumeLoginFlow';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -20,8 +23,6 @@ import {
   LoginMethodWeb3AuthApple,
   LoginMethodWeb3AuthGoogle,
 } from 'types/login';
-import useIsLoginFlowUncompleted from 'hooks/login/useIsLoginFlowUncompleted';
-import useResumeLoginFlow from 'hooks/login/useResumeLoginFlow';
 import { useIsLoginWithPrivateKeyEnabled } from './hooks';
 import useStyles from './useStyles';
 
@@ -90,7 +91,7 @@ const Landing = () => {
   const loginWithProvateKeyButton = React.useMemo(() => {
     return (
       <Button
-        type="outline"
+        type="solid"
         style={styles.loginButton}
         onPress={() => onSignUp(LoginMethodPrivateKey)}>
         <Typography.Semibold16>{t('login with private key')}</Typography.Semibold16>
@@ -99,15 +100,16 @@ const Landing = () => {
   }, [onSignUp, styles.loginButton, t]);
 
   return (
-    <DView style={styles.container}>
+    <DView style={styles.container} gradientColors={['#FFAB2D', '#FFE03E']}>
       <View style={styles.innerView}>
         {/* Butter animation with text */}
-        <ThemedLottieView style={styles.animation} source={landingPageAnimation} autoPlay loop />
+        <ThemedLottieView style={styles.animation} source={mooncakeAnimationWhite} autoPlay loop />
         <Spacer paddingTop={20} />
-        <Image style={styles.mooncakeText} source={mooncakeTextYellow} />
-        <Spacer paddingTop={40} />
-        <Typography.Regular16 allowFontScaling>{t('mooncake slogan')}</Typography.Regular16>
-        <Spacer paddingTop={theme.spacing.m} />
+        <Image style={styles.mooncakeText} source={mooncakeTextWhite} />
+        <Spacer paddingTop={30} />
+        <Typography.Regular16 allowFontScaling style={commonStyles.textWhite}>
+          {t('mooncake slogan')}
+        </Typography.Regular16>
         <Spacer paddingTop={40} />
         {/* Login buttons */}
         {loginWithPrivateKeyEnabled ? (
@@ -116,7 +118,7 @@ const Landing = () => {
           // Login buttons displayed when the login with private key is disabled.
           <>
             <Button
-              type="outline"
+              type="solid"
               style={styles.loginButton}
               height={52}
               onPress={() => onSignUp(LoginMethodWeb3AuthGoogle)}>
@@ -129,7 +131,7 @@ const Landing = () => {
               <>
                 <Spacer paddingTop="m" />
                 <Button
-                  type="outline"
+                  type="solid"
                   style={styles.loginButton}
                   height={52}
                   onPress={() => onSignUp(LoginMethodWeb3AuthApple)}>

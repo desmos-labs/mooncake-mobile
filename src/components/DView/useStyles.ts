@@ -2,16 +2,16 @@ import { Props } from 'components/DView/index';
 import { makeStyleWithProps } from 'config/theme';
 import { verticalScale } from 'react-native-size-matters';
 
-const useStyles = makeStyleWithProps((background: Props, theme) => ({
+const useStyles = makeStyleWithProps((props: Props, theme) => ({
   root: {
     flexDirection: 'column',
     flexGrow: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: props.gradientColors ? undefined : theme.colors.background,
   },
   background: {
     width: '100%',
-    bottom: background.backgroundFillScreen ? 0 : undefined,
-    height: background.backgroundFillScreen ? undefined : verticalScale(230),
+    bottom: props.backgroundFillScreen ? 0 : undefined,
+    height: props.backgroundFillScreen ? undefined : verticalScale(230),
     resizeMode: 'cover',
     position: 'absolute',
     top: 0,

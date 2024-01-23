@@ -1,4 +1,4 @@
-import { landingPageAnimation } from 'assets/animations';
+import { mooncakeAnimationOrange } from 'assets/animations';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { makeStyle } from 'config/theme';
 import React from 'react';
@@ -12,7 +12,7 @@ const MooncakeLoader = ({ speed }: Props) => {
   return (
     <ThemedLottieView
       style={styles.animation}
-      source={landingPageAnimation}
+      source={mooncakeAnimationOrange}
       autoPlay
       loop
       speed={speed}
