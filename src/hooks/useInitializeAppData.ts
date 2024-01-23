@@ -7,6 +7,7 @@ import useProfileParams from 'hooks/profiles/useProfileParams';
 import { useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
 import useInitTaskContext from 'hooks/tasks/useInitTaskContext';
+import useSetUserLanguage from 'hooks/user/useSetUserLanguage';
 
 /**
  * Hook that allows initializing the application data.
@@ -17,6 +18,7 @@ const useInitializeAppData = () => {
   const { refetch: refreshProfileParams } = useProfileParams();
   const { refetch: refreshPostsParams } = usePostsParams();
   const refreshSession = useRefreshSession();
+  const setUserLanguage = useSetUserLanguage();
 
   // App state setters
   const setDataInitialized = useSetAppStateValue('dataInitialized');
@@ -31,6 +33,8 @@ const useInitializeAppData = () => {
   // Not the most elegant way, but it will do for now
   useEffect(() => {
     refreshSession();
+    setUserLanguage();
+
     // Refresh the various params
     refreshSubspaceParams();
     refreshProfileParams();
@@ -46,6 +50,7 @@ const useInitializeAppData = () => {
     refreshSubspaceParams,
     setCurrentTimezone,
     setDataInitialized,
+    setUserLanguage,
   ]);
 };
 
