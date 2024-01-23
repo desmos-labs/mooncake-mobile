@@ -264,12 +264,12 @@ const SaveProfile = (props: NavProps) => {
                   )}
                   <>
                     <Typography.Semibold16 style={styles.inputLabel}>
-                      {t('dtag')}
+                      {t('handle')}
                     </Typography.Semibold16>
                     <DTextInput
                       style={styles.inputStyle}
                       value={values.dTag}
-                      placeholder={t('enter dtag')}
+                      placeholder={t('enter handle')}
                       onChangeText={value => {
                         setFieldValue('dTag', value, true);
                       }}

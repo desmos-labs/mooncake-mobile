@@ -2,8 +2,8 @@
   "header": "Create a profile",
   "description": "Create your decentralized profiles",
   "nickname": "Nickname",
-  "dtag": "DTag*",
-  "enter dtag": "Enter your DTag",
+  "handle": "Handle*",
+  "enter handle": "Enter your handle",
   "enter nickanme": "Enter your nickname",
   "bio": "Bio",
   "add bio": "Add a bio to your profile (optional)",
@@ -13,7 +13,7 @@
   "creating profile": "Creating profile",
   "creating profile body": "We are setting up your amazing profile...",
   "profile saved": "Your profile has been saved",
-  "invalid dtag": "Invalid DTag value",
+  "invalid handle": "Invalid handle",
   "max bio length exceeded": "The bio must be at most {{numChars}} characters long",
   "enter nickname": "Enter your nickname"
 }
