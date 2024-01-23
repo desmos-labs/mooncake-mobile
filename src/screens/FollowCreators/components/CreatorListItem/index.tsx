@@ -4,7 +4,7 @@ import BCheckbox from 'components/BCheckbox';
 import Spacer from 'components/Spacer';
 import { makeStyle } from 'config/theme';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 
 interface CreatorListItemProps {
@@ -49,7 +49,7 @@ const CreatorListItem: React.FC<CreatorListItemProps> = ({
           <Typography.Semibold16 style={disabled ? styles.disabledText : undefined}>
             {profile.nickname}
           </Typography.Semibold16>
-          <Typography.Regular14 style={disabled ? styles.disabledText : undefined}>
+          <Typography.Regular14 style={disabled ? styles.disabledText : styles.neutral700}>
             @{profile.dTag}
           </Typography.Regular14>
         </View>
@@ -66,15 +66,26 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: theme.colors.neutral['100'],
     padding: 12,
     marginBottom: theme.spacing.m,
+    backgroundColor: theme.colors.background,
+    shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+
+    elevation: 10,
   },
   profileInfo: {
     flex: 1,
   },
   disabledText: {
     color: theme.colors.lightGrey02,
+  },
+  neutral700: {
+    color: theme.colors.neutral['700'],
   },
 }));
