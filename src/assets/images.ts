@@ -4,8 +4,6 @@ export const desmosIcon = require('./images/desmosIcon.png');
 
 export const copyIcon = require('./images/copy.png');
 
-export const iconCrossBlack = require('./images/iconCrossBlack.png');
-
 export const followBlackIcon = require('./images/followBlackIcon.png');
 
 export const unfollowBlackIcon = require('./images/unfollowBlackIcon.png');
@@ -15,17 +13,8 @@ export const tipUserIcon = require('./images/tipUser.png');
 
 export const defaultBanner = require('./images/defaultBanner.png');
 
-export const settingsButton = require('./images/settingsButton.png');
-
-export const check = require('./images/check.png');
-
-export const validCheck = require('./images/validCheck.png');
 
 export const eyeClosed = require('./images/eyeClosed.png');
-
-export const checkboxChecked = require('./images/checkboxChecked.png');
-
-export const checkboxUnchecked = require('./images/checkbox.png');
 
 export const defaultProfilePic = require('./images/defaultProfilePic.png');
 
@@ -80,9 +69,9 @@ export const deleteData = require('./images/deleteData.png');
 export const successfulOperation = require('./images/successufulOpearation.gif');
 
 export const mooncakeTextYellow = require('./images/mooncakeTextYellow.png');
+export const hidePost = require('./images/hidePost.png');
 
-// TX
-
+// Transactions
 export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');
 export const createPostTxIcon = require('./images/txIcons/createPostTx.png');
 export const addReactionTxIcon = require('./images/txIcons/addReactionTx.png');
@@ -90,10 +79,8 @@ export const sendReportTxIcon = require('./images/txIcons/sendReportTx.png');
 export const tipTxIcon = require('./images/txIcons/tipTx.png');
 export const unknownTxIcon = require('./images/txIcons/unknownTx.png');
 
-export const hidePost = require('./images/hidePost.png');
 
 // Bottom tabs bar
-
 export const bottomNotificationsIcon = require('./images/bottomBarIcons/bottomNotifications.png');
 export const bottomNotificationsFilledIcon = require('./images/bottomBarIcons/bottomNotificationsFilled.png');
 export const bottomHomeIcon = require('./images/bottomBarIcons/bottomHome.png');
@@ -104,10 +91,6 @@ export const bottomSearchFilledIcon = require('./images/bottomBarIcons/bottomSea
 export const middleButtonIcon = require('./images/bottomBarIcons/middleButton.png');
 
 // Post icons
-
-/*
-export const postCommentedIcon = require ('./images/homePostIcons/postCommentedIdon.png');
-*/
 export const postToCommentIcon = require('./images/homePostIcons/postToCommentIcon.png');
 export const postLikedIcon = require('./images/homePostIcons/postLikedIcon.png');
 export const postToLikeIcon = require('./images/homePostIcons/postToLikeIcon.png');
@@ -117,6 +100,7 @@ export const uncheck_circle = require('./images/checkbox/uncheck_circle.png');
 export const check_circle = require('./images/checkbox/check_circle.png');
 
 // Settings
+export const settingsButton = require('./images/settingsButton.png');
 export const settingsUserIcon = require('./images/settings/settingsUser.png');
 export const settingsToSIcon = require('./images/settings/settingsToS.png');
 export const settingsProfileIcon = require('./images/settings/settingsProfile.png');
