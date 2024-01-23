@@ -3,6 +3,20 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveAccount, useActiveAccountAddress, useStoredAccounts } from '@recoil/accounts';
 import { useActiveProfile } from '@recoil/profiles';
 import { useSetSetting, useSetting } from '@recoil/settings';
+import {
+  settingsAnalyticsIcon,
+  settingsDataIcon,
+  settingsFaceIdIcon,
+  settingsLockIcon,
+  settingsMailIcon,
+  settingsMooncakeIcon,
+  settingsNotificationsIcon,
+  settingsPrivacyPolicyIcon,
+  settingsPrivateKeyIcon,
+  settingsProfileIcon,
+  settingsToSIcon,
+  settingsUserIcon,
+} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Section from 'components/Section';
@@ -25,20 +39,6 @@ import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHook
 import useStyles from 'screens/Settings/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
-import {
-  settingsAnalyticsIcon,
-  settingsDataIcon,
-  settingsFaceIdIcon,
-  settingsLockIcon,
-  settingsMailIcon,
-  settingsMooncakeIcon,
-  settingsNotificationsIcon,
-  settingsPrivacyPolicyIcon,
-  settingsPrivateKeyIcon,
-  settingsProfileIcon,
-  settingsToSIcon,
-  settingsUserIcon,
-} from 'assets/images';
 import {
   useDeleteAccountData,
   useDeleteProfile,
@@ -280,7 +280,6 @@ const Settings = (props: NavProps) => {
         </Typography.Regular12>
         <Spacer paddingBottom="xl" />
       </ScrollView>
-      <Spacer paddingBottom="xl" />
     </DView>
   );
 };

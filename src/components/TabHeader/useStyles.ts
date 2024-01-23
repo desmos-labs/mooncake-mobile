@@ -9,6 +9,8 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     borderRadius: 14,
     overflow: 'hidden',
+  },
+  center: {
     justifyContent: 'center',
   },
   tabIndicator: {
@@ -37,7 +39,7 @@ const useStyles = makeStyle(theme => ({
   },
   selectedIndicator: {
     top: theme.spacing.xs,
-    width: 24,
+    width: 28,
     height: 2,
     alignSelf: 'center',
     borderRadius: 4,

@@ -7,6 +7,7 @@ import CommonStyles from 'config/theme/CommonStyles';
 const useStyles = makeStyle(theme => ({
   root: {
     paddingHorizontal: theme.spacing.m,
+    paddingBottom: theme.spacing.xl,
   },
   scrollview: {
     marginTop: -16,
