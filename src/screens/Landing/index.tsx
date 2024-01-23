@@ -11,7 +11,6 @@ import commonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useIsLoginFlowUncompleted from 'hooks/login/useIsLoginFlowUncompleted';
 import useResumeLoginFlow from 'hooks/login/useResumeLoginFlow';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -35,7 +34,6 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
  */
 
 const Landing = () => {
-  const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('landing');
   const styles = useStyles();

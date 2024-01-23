@@ -68,7 +68,6 @@ export const profileContextButton = require('./images/profile_context.png');
 export const deleteData = require('./images/deleteData.png');
 export const successfulOperation = require('./images/successufulOpearation.gif');
 
-export const mooncakeTextYellow = require('./images/mooncakeTextYellow.png');
 export const mooncakeTextWhite = require('./images/mooncakeTextWhite.png');
 export const hidePost = require('./images/hidePost.png');
 

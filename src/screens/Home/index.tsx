@@ -120,7 +120,7 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [fetchingMore, styles, loading]);
+  }, [styles, loading]);
 
   const emptyComponent = useMemo(() => {
     return !loading && !refreshing ? (

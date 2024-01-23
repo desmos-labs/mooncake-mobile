@@ -1,16 +1,16 @@
-import { MsgCreateReport } from '@desmoslabs/desmjs-types/desmos/reports/v1/msgs';
 import { Reports } from '@desmoslabs/desmjs';
+import { MsgCreateReport } from '@desmoslabs/desmjs-types/desmos/reports/v1/msgs';
+import { MsgCreateReportTypeUrl } from '@desmoslabs/desmjs/build/modules/reports/v1';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import useHasReportedPost from 'hooks/reports/useHasReportedPost';
+import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import Long from 'long';
 import { err, ok, Result } from 'neverthrow';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { PostAlreadyReportedError } from 'types/error';
 import { Post } from 'types/posts';
-import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
-import { useTranslation } from 'react-i18next';
-import { MsgCreateReportTypeUrl } from '@desmoslabs/desmjs/build/modules/reports/v1';
 
 /**
  * Hook that allows to report the given post for a given reason and with an optional message.
@@ -68,7 +68,7 @@ const useReportPost = (post: Post) => {
 
       return ok(undefined);
     },
-    [activeAddress, hasReportedPost, post.id, post.subspaceId, t],
+    [activeAddress, hasReportedPost, post.id, post.subspaceId, signAndBroadcastTx, subspaceId, t],
   );
 };
 
