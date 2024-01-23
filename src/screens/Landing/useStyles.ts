@@ -9,7 +9,7 @@ const useStyles = makeStyle(theme => ({
   },
   innerView: {
     alignItems: 'center',
-    marginTop: verticalScale(100),
+    marginTop: verticalScale(80),
   },
   animation: {
     width: 88,
@@ -21,6 +21,7 @@ const useStyles = makeStyle(theme => ({
   },
   loginButton: {
     width: '100%',
+    backgroundColor: theme.colors.butterOrange04,
   },
   loginTextWithLogoContainer: {
     display: 'flex',

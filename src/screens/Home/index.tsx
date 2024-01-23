@@ -50,7 +50,6 @@ const Home = () => {
     posts,
     loading,
     fetchMore: fetchMorePosts,
-    fetchingMore,
     refresh: refreshPosts,
     refreshing,
   } = usePosts(postsQueryType);
@@ -120,7 +119,7 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [fetchingMore, styles, loading]);
+  }, [styles, loading]);
 
   const emptyComponent = useMemo(() => {
     return !loading && !refreshing ? (

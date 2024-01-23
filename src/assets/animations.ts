@@ -17,7 +17,12 @@ export const squaresAnimation: LottieAnimation = {
   dark: require ('./animations/squaresAnimation.json'),
 };
 
-export const landingPageAnimation: LottieAnimation = {
-  light: require ('./animations/landingPageAnimation.json'),
-  dark: require ('./animations/landingPageAnimation.json'),
+export const mooncakeAnimationOrange: LottieAnimation = {
+  light: require ('./animations/mooncakeAnimationOrange.json'),
+  dark: require ('./animations/mooncakeAnimationOrange.json'),
+}
+
+export const mooncakeAnimationWhite: LottieAnimation = {
+  light: require ('./animations/mooncakeAnimationWhite.json'),
+  dark: require ('./animations/mooncakeAnimationWhite.json'),
 }
