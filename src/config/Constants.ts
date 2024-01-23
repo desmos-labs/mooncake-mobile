@@ -10,7 +10,7 @@ interface ButterConstants {
  * Default values for the application's constants.
  */
 const Constants: ButterConstants = {
-  apiEndpoint: 'https://api.mainnet.butter.social',
+  apiEndpoint: 'https://api.mooncake.space',
   subspaceId: 6,
 };
 

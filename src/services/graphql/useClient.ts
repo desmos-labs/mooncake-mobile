@@ -17,7 +17,7 @@ const multiApiLink = ApolloLink.from([
     endpoints: {
       forbole: 'https://gql.desmos.forbole.com',
       desmos: 'https://gql.mainnet.desmos.network',
-      butter: 'https://gql.mainnet.butter.social',
+      butter: 'https://gql.mooncake.space',
     },
     httpSuffix: '/v1/graphql',
     wsSuffix: '/v1/graphql',
