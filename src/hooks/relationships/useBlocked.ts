@@ -5,20 +5,26 @@ import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { DesmosProfile } from 'types/desmos';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
+import { useAppStateValue } from '@recoil/appState';
 
 const useFetchUserBlocked = (address: string | undefined) => {
   const [fetchBlocked] = useLazyQuery(GetAccountBlocked);
+  const subspaceId = useAppStateValue('subspaceId');
 
   return React.useCallback<FetchDataFunction<DesmosProfile>>(
     async (offset: number, limit: number) => {
       if (!address) {
-        throw new Error('Cannot get the blocked list without an address.');
+        return {
+          data: [],
+          endReached: true,
+        };
       }
 
       const { data, error } = await fetchBlocked({
         fetchPolicy: 'no-cache',
         variables: {
           userAddress: address,
+          subspaceId,
           offset,
           limit,
         },
@@ -37,7 +43,7 @@ const useFetchUserBlocked = (address: string | undefined) => {
         endReached: blocked.length < limit,
       };
     },
-    [address, fetchBlocked],
+    [address, fetchBlocked, subspaceId],
   );
 };
 
@@ -49,7 +55,7 @@ const useFetchUserBlocked = (address: string | undefined) => {
  */
 const useBlocked = (address?: string, usersPerPage: number = 50) => {
   const activeAccount = useActiveAccountAddress();
-  const userAddress = address || activeAccount;
+  const userAddress = address ?? activeAccount;
 
   return usePaginatedData(useFetchUserBlocked(userAddress), {
     itemsPerPage: usersPerPage,
