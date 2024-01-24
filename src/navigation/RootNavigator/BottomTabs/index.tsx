@@ -85,19 +85,6 @@ const getCorrectFilledImage = (routeName: string) => {
   }
 };
 
-const getBottomText = (routeName: string) => {
-  switch (routeName) {
-    case ROUTES.HOME_TABS:
-      return 'Discover';
-    case ROUTES.SEARCH_TABS:
-      return 'Search';
-    case ROUTES.PROFILE:
-      return 'You';
-    case ROUTES.NOTIFICATIONS:
-      return 'Notifications';
-  }
-};
-
 /**
  * Component that represents the bottom tabs of the application.
  * @constructor
