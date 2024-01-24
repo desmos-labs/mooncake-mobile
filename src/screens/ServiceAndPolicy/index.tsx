@@ -15,9 +15,11 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -50,6 +52,8 @@ const ServiceAndPolicy = () => {
 
   const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
   const trackAcceptedLegalTerms = useTrackAcceptedLegalTerms();
+  const openTermsAndConditions = useOpenTermsAndConditions();
+  const openPrivacyPolicy = useOpenPrivacyPolicy();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -80,18 +84,14 @@ const ServiceAndPolicy = () => {
       <Typography.Regular16>{t('please review')}</Typography.Regular16>
       <Spacer paddingBottom="l" />
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.border]}
-          onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}>
+        <TouchableOpacity style={[styles.button, styles.border]} onPress={openTermsAndConditions}>
           <Typography.Regular16>{t('terms of service')}</Typography.Regular16>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
             iconColor={theme.colors.surfaceBlack}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => Linking.openURL('https://butter.social/privacy-policy')}>
+        <TouchableOpacity style={styles.button} onPress={openPrivacyPolicy}>
           <Typography.Regular16>{t('privacy policy')}</Typography.Regular16>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
