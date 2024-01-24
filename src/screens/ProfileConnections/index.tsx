@@ -1,10 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabNavigationOptions,
-} from '@react-navigation/material-top-tabs';
-import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
-import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
+import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -14,14 +11,9 @@ import { formatNumShorthand } from 'lib/FormatUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  GestureResponderEvent,
-  I18nManager,
-  PanResponder,
-  PanResponderGestureState,
-} from 'react-native';
+import ConnectionsTabBar from 'screens/ProfileConnections/components/ConnectionsTabBar';
 import { DesmosProfile } from 'types/desmos';
 import FollowersTab from './components/FollowersTab';
 import FollowingTab from './components/FollowingTab';
@@ -69,76 +61,40 @@ const ProfileConnections = () => {
   const { count: followingCount, refetch: refreshFollowingCount } = useFollowingCount(
     profile?.address,
   );
-  const followingTabName = `${formatNumShorthand(followingCount)} ${t('following', {
-    ns: 'relationships',
-  })}`;
+  const followingTabName = useMemo(() => {
+    return `${formatNumShorthand(followingCount)} ${t('following', {
+      ns: 'relationships',
+    })}`;
+  }, [followingCount, t]);
 
   const { count: followersCount, refetch: refreshFollowersCount } = useFollowersCount(
     profile?.address,
   );
-  const followersTabName = `${formatNumShorthand(followersCount)} ${t('followers', {
-    ns: 'relationships',
-  })}`;
-
-  // -------------------------------------------------------------------------------------
-  // --- Tab bar labels
-  // -------------------------------------------------------------------------------------
-
-  useEffect(() => {
-    refreshFollowingCount();
-    refreshFollowersCount();
-
-    // It's fine to disable the exhaustive deps check here, since we want to refresh the count
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // -------------------------------------------------------------------------------------
-  // --- Gestures handlers
-  // -------------------------------------------------------------------------------------
-
-  // To allow going back to previous screen via swipe left.
-  const [swipeEnabled, setSwipeEnabled] = useState(true);
-
-  // A callback function that is called when the user touches the screen.
-  // It enables the swipe handler of tab view, and prevent the swipe event from bubbling to parent.
-  const disableParentSwipeLeft = useCallback(() => setSwipeEnabled(true), []);
-
-  // Create a pan responder for the root container.
-  const panResponder = useMemo(() => {
-    // A callback function that is called when the user start to swipe left.
-    // It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent.
-    const enableParentSwipeLeft = (
-      _gestureResponderEvent: GestureResponderEvent,
-      gestureState: PanResponderGestureState,
-    ) => {
-      const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
-      const focusedRouteName = getFocusedRouteNameFromRoute(route) ?? initialTabRouteName;
-      setSwipeEnabled(focusedRouteName !== ROUTES.PROFILE_FOLLOWING || diffX < 0);
-      return false;
-    };
-    return PanResponder.create({
-      onStartShouldSetPanResponderCapture: enableParentSwipeLeft,
-      onMoveShouldSetPanResponderCapture: enableParentSwipeLeft,
-    });
-  }, [initialTabRouteName, route]);
-
-  // -------------------------------------------------------------------------------------
-  // --- View rendering
-  // -------------------------------------------------------------------------------------
-
-  const screenOptions: MaterialTopTabNavigationOptions = {
-    tabBarStyle: styles.tabBar,
-    tabBarItemStyle: styles.tabBarItem,
-    tabBarLabelStyle: styles.tabBarLabel,
-    tabBarInactiveTintColor: theme.colors.grey01,
-    tabBarIndicatorStyle: styles.tabBarIndicator,
-    swipeEnabled,
-    lazy: true,
-  };
+  const followersTabName = useMemo(() => {
+    return `${formatNumShorthand(followersCount)} ${t('followers', {
+      ns: 'relationships',
+    })}`;
+  }, [followersCount, t]);
 
   const CenterElement = useMemo(() => {
     return <Typography.Semibold14>{profile?.nickname || 'no-nickname'}</Typography.Semibold14>;
   }, [profile?.nickname]);
+
+  const renderTabBar = React.useCallback(
+    (props: MaterialTopTabBarProps) => (
+      <ConnectionsTabBar
+        followersTabName={followersTabName}
+        followingTabName={followingTabName}
+        {...props}
+      />
+    ),
+    [followersTabName, followingTabName],
+  );
+
+  useEffect(() => {
+    refreshFollowingCount();
+    refreshFollowersCount();
+  }, [refreshFollowersCount, refreshFollowingCount]);
 
   return (
     <DView
@@ -146,24 +102,25 @@ const ProfileConnections = () => {
       disableHideKeyboardTouchable={true}
       style={styles.container}
       backgroundColor={theme.colors.white}
-      scrollable={false}
-      onTouchStart={disableParentSwipeLeft}
-      {...panResponder.panHandlers}>
+      scrollable={false}>
       <Tab.Navigator
         initialRouteName={initialTabRouteName}
-        screenOptions={screenOptions}
-        tabBar={MaterialTopTabBar}
+        screenOptions={{
+          swipeEnabled: false,
+          lazy: true,
+        }}
+        tabBar={renderTabBar}
         sceneContainerStyle={styles.tabContainerStyle}>
-        <Tab.Screen
-          name={ROUTES.PROFILE_FOLLOWING}
-          component={FollowingTab}
-          options={{ tabBarLabel: followingTabName }}
-          initialParams={{ userAddress: profile?.address }}
-        />
         <Tab.Screen
           name={ROUTES.PROFILE_FOLLOWERS}
           component={FollowersTab}
           options={{ tabBarLabel: followersTabName }}
+          initialParams={{ userAddress: profile?.address }}
+        />
+        <Tab.Screen
+          name={ROUTES.PROFILE_FOLLOWING}
+          component={FollowingTab}
+          options={{ tabBarLabel: followingTabName }}
           initialParams={{ userAddress: profile?.address }}
         />
       </Tab.Navigator>

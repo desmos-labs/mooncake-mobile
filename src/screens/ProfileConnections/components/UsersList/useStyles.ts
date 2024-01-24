@@ -5,7 +5,6 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   contentContainer: {
-    flexGrow: 1,
     paddingHorizontal: 20,
   },
 

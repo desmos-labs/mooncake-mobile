@@ -1,10 +1,10 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import React, { ReactNode, useCallback, useMemo } from 'react';
-import { FlatList, Image, ListRenderItemInfo, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
-import ItemSeparator from '../../../UsersList/components/ItemSeparator';
 import Loading from '../Loading';
 import UserListItem from '../UserListItem';
 import useStyles from './useStyles';
@@ -42,7 +42,6 @@ interface UsersListProps {
 
 // Layout parameters
 const ITEM_HEIGHT = 60;
-const ITEM_SEPARATOR_HEIGHT = 15;
 
 /**
  * Component that renders a list of users.
@@ -58,24 +57,6 @@ const UsersList = (props: UsersListProps) => {
   // -------------------------------------------------------------------------------------
 
   const navigateToProfile = useNavigateToProfile();
-
-  // -------------------------------------------------------------------------------------
-  // --- Child components
-  // -------------------------------------------------------------------------------------
-
-  // Callback used to get the key of each item
-  const keyExtractor = useCallback((item: DesmosProfile) => {
-    return item.address;
-  }, []);
-
-  // Callback used to get the item layout
-  const getItemLayout = useCallback((_: unknown, index: number) => {
-    return {
-      length: ITEM_HEIGHT,
-      offset: (ITEM_HEIGHT + ITEM_SEPARATOR_HEIGHT) * index,
-      index,
-    };
-  }, []);
 
   // Callback used to render each item within the list
   const renderItem = useCallback(
@@ -107,19 +88,16 @@ const UsersList = (props: UsersListProps) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <FlashList
         data={users}
         refreshing={refreshing}
         onRefresh={refresh}
         renderItem={renderItem}
-        ItemSeparatorComponent={ItemSeparator}
         ListEmptyComponent={loading ? null : EmptyComponent}
         ListFooterComponent={fetchingMore ? Loading : undefined}
-        onEndReachedThreshold={3}
         onEndReached={fetchMore}
-        getItemLayout={getItemLayout}
-        keyExtractor={keyExtractor}
-        removeClippedSubviews={true}
+        keyExtractor={item => item.address}
+        estimatedItemSize={ITEM_HEIGHT}
         contentContainerStyle={styles.contentContainer}
       />
     </View>
