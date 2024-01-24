@@ -8,7 +8,6 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
     borderRadius: 14,
-    overflow: 'hidden',
     justifyContent: 'center',
   },
   tabIndicator: {
@@ -20,7 +19,10 @@ const useStyles = makeStyle(theme => ({
   },
   tabButton: {
     height: '100%',
-    padding: 10,
+    paddingVertical: 10,
+  },
+  firstTabButton: {
+    marginRight: 36,
   },
   buttonText: {
     textAlign: 'center',
@@ -37,7 +39,7 @@ const useStyles = makeStyle(theme => ({
   },
   selectedIndicator: {
     top: theme.spacing.xs,
-    width: 24,
+    width: 28,
     height: 2,
     alignSelf: 'center',
     borderRadius: 4,

@@ -8,7 +8,6 @@ import {
   profileBack,
   profileContextButton,
   reportIcon,
-  settingsButton,
   tipUserIcon,
   unblock,
 } from 'assets/images';
@@ -20,6 +19,7 @@ import PopupMenu from 'components/PopupMenu';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import CommonStyles from 'config/theme/CommonStyles';
 import { ImageSource } from 'expo-image';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
@@ -69,7 +69,6 @@ import BalanceSection from 'screens/Profile/components/BalanceSection';
 import Biography from 'screens/Profile/components/Biography';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
-import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import useStyles, {
   PROFILE_HEADER_HEIGHT,
   PROFILE_HEADER_HEIGHT_COMPACT,
@@ -165,14 +164,6 @@ const Profile = () => {
     image: {} as ImageSource,
     isVisible: false,
   });
-
-  // -------------------------------------------------------------------------------------
-  // --- useCallback(
-  // -------------------------------------------------------------------------------------
-
-  const openSettings = useCallback(() => {
-    navigation.navigate(ROUTES.SETTINGS);
-  }, [navigation]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -413,14 +404,6 @@ const Profile = () => {
               style={styles.topButton}
               containerStyle={styles.topButton}
               onPress={goBack}
-            />
-          )}
-          {isActiveAccount && (
-            <ProfileHeaderButton
-              image={settingsButton}
-              style={styles.topButton}
-              containerStyle={styles.topButtonRight}
-              onPress={openSettings}
             />
           )}
         </View>

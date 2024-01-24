@@ -41,7 +41,15 @@ const useStyles = makeStyle(theme => ({
   icon: {
     width: 36,
     height: 36,
-    resizeMode: 'contain',
+  },
+  topView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  mooncakeLogo: {
+    width: 114,
+    height: 26,
   },
 }));
 

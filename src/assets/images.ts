@@ -69,6 +69,7 @@ export const deleteData = require('./images/deleteData.png');
 export const successfulOperation = require('./images/successufulOpearation.gif');
 
 export const mooncakeTextWhite = require('./images/mooncakeTextWhite.png');
+export const mooncakeTextAndLogo = require('./images/mooncakeTextAndLogo.png');
 export const hidePost = require('./images/hidePost.png');
 
 // Transactions
