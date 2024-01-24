@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
-import UsersList from 'screens/ProfileConnections/components/UsersList';
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
+import { useRoute } from '@react-navigation/native';
+import StyledSpinner from 'components/StyledSpinner';
+import useFollowing from 'hooks/relationships/useFollowing';
+import sleep from 'lib/sleep';
+import { Center } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import useFollowing from 'hooks/relationships/useFollowing';
-import { Center } from 'native-base';
-import sleep from 'lib/sleep';
-import StyledSpinner from 'components/StyledSpinner';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import UsersList from 'screens/ProfileConnections/components/UsersList';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWING>;
 
@@ -39,14 +39,9 @@ const FollowingTab = () => {
   // --- Effects
   // -------------------------------------------------------------------------------------
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Hack to correctly display the spinner
-      refreshFollowing().then(() => sleep(500).then(() => setFirstFocus(false)));
-      // It's fine to disable the next line lint in order to fetch the posts only on the first page load
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  );
+  useEffect(() => {
+    refreshFollowing().then(() => sleep(500).then(() => setFirstFocus(false)));
+  }, [refreshFollowing]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
