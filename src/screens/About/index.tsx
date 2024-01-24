@@ -9,7 +9,9 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import useStyles from './useStyles';
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.ABOUT>;
@@ -21,6 +23,9 @@ const About: React.FC<NavProps> = ({ navigation }) => {
   const { t } = useTranslation('about');
   const styles = useStyles();
   const theme = useTheme();
+
+  const openTermsAndConditions = useOpenTermsAndConditions();
+  const openPrivacyPolicy = useOpenPrivacyPolicy();
 
   const openAboutDetails = React.useCallback(() => {
     navigation.navigate(ROUTES.ABOUT_DETAILS, {
@@ -41,9 +46,7 @@ const About: React.FC<NavProps> = ({ navigation }) => {
         />
       </TouchableOpacity>
       <Spacer paddingTop="m" />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => Linking.openURL('https://butter.social/privacy-policy')}>
+      <TouchableOpacity style={styles.button} onPress={openPrivacyPolicy}>
         <Typography.Semibold14>{t('privacy policy', { ns: 'legal' })}</Typography.Semibold14>
         <BackButton
           style={{ transform: [{ rotate: '180deg' }] }}
@@ -51,9 +54,7 @@ const About: React.FC<NavProps> = ({ navigation }) => {
         />
       </TouchableOpacity>
       <Spacer paddingTop="m" />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}>
+      <TouchableOpacity style={styles.button} onPress={openTermsAndConditions}>
         <Typography.Semibold14>{t('terms of service', { ns: 'legal' })}</Typography.Semibold14>
         <BackButton
           style={{ transform: [{ rotate: '180deg' }] }}

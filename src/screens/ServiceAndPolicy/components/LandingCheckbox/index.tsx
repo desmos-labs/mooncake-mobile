@@ -5,12 +5,21 @@ import * as Haptics from 'expo-haptics';
 import { useTheme } from 'native-base';
 import React from 'react';
 import { Trans } from 'react-i18next';
-import { Linking, View } from 'react-native';
+import { View } from 'react-native';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import useStyles from './useStyles';
 
+/**
+ * View that represents a checkbox with the terms of service and privacy policy.
+ * @constructor
+ */
 const LandingCheckbox = ({ onValueChange, ...rest }: CheckboxProps) => {
   const styles = useStyles();
   const theme = useTheme();
+
+  const openTermsAndConditions = useOpenTermsAndConditions();
+  const openPrivacyPolicy = useOpenPrivacyPolicy();
 
   /**
    * Function to handle the checkbox value change with haptic feedback
@@ -36,11 +45,11 @@ const LandingCheckbox = ({ onValueChange, ...rest }: CheckboxProps) => {
           ns="legal"
           components={[
             <Typography.Regular14
-              onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}
+              onPress={openTermsAndConditions}
               style={{ color: theme.colors.primary }}
             />,
             <Typography.Regular14
-              onPress={() => Linking.openURL('https://butter.social/privacy-policy')}
+              onPress={openPrivacyPolicy}
               style={{ color: theme.colors.primary }}
             />,
           ]}

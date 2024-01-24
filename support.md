@@ -3,11 +3,12 @@
 Thank you for using Mooncake! If you encounter any bugs or have feedback about the application, we are here to assist
 you. Please feel free to reach out to us through any of the following channels:
 
-- Mail: You can send an email to our development team at [support@butter.social](mailto:support@butter.social). We
+- Mail: You can send an email to our development team at [support@desmos.network](mailto:support@desmos.network). We
   appreciate detailed descriptions of the issue or feedback you have encountered, as it will help us better understand
   and resolve any problems.
 
-- Discord: Join our [Discord server](https://discord.butter.social). This is a community space where you can engage with
+- Discord: Join our [Discord server](https://discord.desmos.network). This is a community space where you can engage
+  with
   other users and interact directly with our team. Feel free to ask questions, report bugs, or share your feedback.
 
 We value your input and are committed to continuously improving the application. Your feedback plays a crucial role in

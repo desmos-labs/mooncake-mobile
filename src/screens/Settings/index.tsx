@@ -33,12 +33,14 @@ import ROUTES from 'navigation/routes';
 import { usePostHog } from 'posthog-react-native';
 import React, { useCallback } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Linking, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { getVersion } from 'react-native-device-info';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import useStyles from 'screens/Settings/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import {
   useDeleteAccountData,
   useDeleteProfile,
@@ -89,6 +91,9 @@ const Settings = (props: NavProps) => {
   const disableBiometrics = useDisableBiometrics();
   const deleteAccountData = useDeleteAccountData();
   const deleteProfile = useDeleteProfile();
+
+  const openTermsAndConditions = useOpenTermsAndConditions();
+  const openPrivacyPolicy = useOpenPrivacyPolicy();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -240,12 +245,12 @@ const Settings = (props: NavProps) => {
           <SectionButton
             label={t('terms of service', { ns: 'legal' })}
             leftIcon={settingsToSIcon}
-            onPress={() => Linking.openURL('https://butter.social/privacy-policy')}
+            onPress={openPrivacyPolicy}
           />
           <SectionButton
             label={t('privacy policy', { ns: 'legal' })}
             leftIcon={settingsPrivacyPolicyIcon}
-            onPress={() => Linking.openURL('https://butter.social/terms-and-conditions')}
+            onPress={openTermsAndConditions}
           />
         </Section>
 

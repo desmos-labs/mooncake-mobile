@@ -16,7 +16,7 @@ import usePerformLogout from 'hooks/user/usePerformLogout';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { Profiles } from '@desmoslabs/desmjs';
 import { MsgDeleteProfile } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_profile';
-import { Result, err, ok } from 'neverthrow';
+import { err, ok, Result } from 'neverthrow';
 import useLoadingModal from 'hooks/modals/useLoadingModal';
 import { LoadingAnimation } from 'screens/Modals/LoadingModal';
 import { Wallet } from 'types/wallet';
@@ -58,7 +58,7 @@ export const useOpenNotificationsSettings = () => {
  */
 export const useSendFeedback = () => {
   return React.useCallback(async () => {
-    Linking.openURL('mailto:support@butter.social').catch(error =>
+    Linking.openURL('mailto:support@desmos.network').catch(error =>
       console.error("Couldn't open email application", error),
     );
   }, []);
