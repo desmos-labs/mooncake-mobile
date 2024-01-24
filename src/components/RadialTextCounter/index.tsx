@@ -5,6 +5,10 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 type Props = {
   /**
+   * Size of the component.
+   */
+  size: number;
+  /**
    * The maximum value used to calculate progress
    */
   max: number;
@@ -34,6 +38,7 @@ type Props = {
 };
 
 const RadialTextCounter = ({
+  size,
   max,
   current,
   customFillColor,
@@ -67,7 +72,7 @@ const RadialTextCounter = ({
   return (
     <AnimatedCircularProgress
       rotation={0}
-      size={24}
+      size={size}
       width={2}
       fill={progress}
       tintColor={showWarning ? warnColor : fillColor}

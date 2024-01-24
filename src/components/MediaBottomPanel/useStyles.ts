@@ -11,8 +11,8 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
   },
   imageButtonStyle: {
-    width: 24,
-    height: 24,
+    width: 36,
+    height: 36,
     resizeMode: 'contain',
   },
   leftGroup: {

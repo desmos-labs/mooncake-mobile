@@ -118,7 +118,13 @@ const MediaBottomPanel = ({
           />
         </View>
         <View style={styles.rightGroup}>
-          {!loading && <RadialTextCounter max={params.maxTextLength} current={commentLength} />}
+          {!loading && (
+            <RadialTextCounter
+              size={styles.imageButtonStyle.height}
+              max={params.maxTextLength}
+              current={commentLength}
+            />
+          )}
           {rightComponent}
         </View>
       </View>
