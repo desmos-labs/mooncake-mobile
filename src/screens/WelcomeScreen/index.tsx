@@ -2,12 +2,12 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { mooncakeLogo } from 'assets/images';
+import { mooncakeAnimationOrange } from 'assets/animations';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import ThemedLottieView from 'components/ThemedLottieView';
 import CommonStyles from 'config/theme/CommonStyles';
-import { Image } from 'expo-image';
 import useTrackUser from 'hooks/analytics/useTrackUser';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import { Box, useTheme } from 'native-base';
@@ -68,7 +68,12 @@ const WelcomePage = () => {
   return (
     <DView style={styles.root}>
       <Box flex={1} style={styles.container}>
-        <Image contentFit="cover" source={mooncakeLogo} style={styles.image} />
+        <ThemedLottieView
+          source={mooncakeAnimationOrange}
+          style={styles.image}
+          loop={true}
+          autoPlay
+        />
         <Spacer paddingTop={46} />
         <Box alignItems="center">
           <Typography.H6>{t('welcomeTitle')}</Typography.H6>
