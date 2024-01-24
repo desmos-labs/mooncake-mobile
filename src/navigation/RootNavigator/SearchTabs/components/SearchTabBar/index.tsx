@@ -34,7 +34,6 @@ const SearchTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) =
           navigation={navigation}
           getTabName={getTabName}
           spaceBetween={true}
-          center={true}
         />
       </Animated.View>
     </Animated.View>

@@ -11,7 +11,6 @@ type Props = {
   disableButtons: boolean;
   getTabName: (routeName: string) => string | undefined;
   spaceBetween?: boolean;
-  center?: boolean;
 };
 
 const TabHeader = ({
@@ -21,12 +20,11 @@ const TabHeader = ({
   disableButtons,
   getTabName,
   spaceBetween,
-  center,
 }: Props) => {
   const styles = useStyles();
 
   return (
-    <View style={[styles.container, center && styles.center]}>
+    <View style={[styles.container]}>
       {state.routes.map((route, idx) => {
         const inputRange = state.routes.map((_, i) => i);
         const opacity = position.interpolate({

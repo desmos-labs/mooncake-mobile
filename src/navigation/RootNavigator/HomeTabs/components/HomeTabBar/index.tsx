@@ -48,6 +48,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
           position={position}
           navigation={navigation}
           getTabName={getTabName}
+          spaceBetween={true}
         />
       </Animated.View>
     </Animated.View>

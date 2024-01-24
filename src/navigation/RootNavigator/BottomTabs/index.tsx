@@ -1,4 +1,3 @@
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
@@ -17,6 +16,7 @@ import {
   middleButtonIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import Spacer from 'components/Spacer';
 import useHandleUriAction from 'hooks/dynamicLinks/useHandleUriAction';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Box, useTheme } from 'native-base';
@@ -200,21 +200,7 @@ const BottomTabBar = (props: Props) => {
                 // @ts-ignore
                 style={[styles.profile, isFocused ? styles.profileFocused : undefined]}
               />
-              {isFocused ? (
-                <Typography.Semibold10
-                  style={[styles.text, isFocused ? styles.textFocused : undefined]}
-                  numberOfLines={1}
-                  ellipsizeMode="middle">
-                  {getBottomText(route.name)}
-                </Typography.Semibold10>
-              ) : (
-                <Typography.Regular10
-                  style={[styles.text, isFocused ? styles.textFocused : undefined]}
-                  numberOfLines={1}
-                  ellipsizeMode="middle">
-                  {getBottomText(route.name)}
-                </Typography.Regular10>
-              )}
+              <View style={[styles.dot, !isFocused && styles.dotInactive]} />
             </View>
           );
         }
@@ -240,21 +226,8 @@ const BottomTabBar = (props: Props) => {
               image={isFocused ? getCorrectFilledImage(route.name) : getCorrectImage(route.name)}
               style={styles.imageButton}
             />
-            {isFocused ? (
-              <Typography.Semibold10
-                style={[styles.text, isFocused ? styles.textFocused : undefined]}
-                numberOfLines={1}
-                ellipsizeMode="middle">
-                {getBottomText(route.name)}
-              </Typography.Semibold10>
-            ) : (
-              <Typography.Regular10
-                style={[styles.text, isFocused ? styles.textFocused : undefined]}
-                numberOfLines={1}
-                ellipsizeMode="middle">
-                {getBottomText(route.name)}
-              </Typography.Regular10>
-            )}
+            <Spacer paddingBottom={6} />
+            <View style={[styles.dot, !isFocused && styles.dotInactive]} />
           </View>
         );
       })}

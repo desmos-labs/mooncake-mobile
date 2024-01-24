@@ -8,9 +8,6 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
     borderRadius: 14,
-    overflow: 'hidden',
-  },
-  center: {
     justifyContent: 'center',
   },
   tabIndicator: {
