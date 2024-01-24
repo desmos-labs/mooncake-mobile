@@ -42,7 +42,6 @@ interface UsersListProps {
 
 // Layout parameters
 const ITEM_HEIGHT = 60;
-const ITEM_SEPARATOR_HEIGHT = 15;
 
 /**
  * Component that renders a list of users.
