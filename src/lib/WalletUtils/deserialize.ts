@@ -1,7 +1,9 @@
 import {
+  SerializableKeplrWalletConnectWallet,
   SerializablePrivateKeyWallet,
   SerializableWallet,
   SerializableWeb3AuthWallet,
+  WalletConnectWalletClient,
   WalletType,
 } from 'types/wallet';
 
@@ -70,6 +72,63 @@ const deserializePrivateKeyWallet = (
 };
 
 /**
+ * Deserialize a [SerializableKeplrWalletConnectWallet] from a JSON parsed object.
+ * @param value - The JSON parsed value that should be a [SerializableKeplrWalletConnectWallet].
+ */
+const deserializeKeplrWalletConnectWallet = (
+  value: Partial<SerializableKeplrWalletConnectWallet>,
+): SerializableKeplrWalletConnectWallet => {
+  if (
+    typeof value.version !== 'number' ||
+    typeof value.addressPrefix !== 'string' ||
+    typeof value.address !== 'string'
+  ) {
+    throw new Error('invalid serialized Keplr wallet');
+  }
+
+  if (value.type !== WalletType.WalletConnect) {
+    throw new Error(`invalid Keplr wallet wallet type: ${value.type}`);
+  }
+
+  if (value.client !== WalletConnectWalletClient.Keplr) {
+    throw new Error(`invalid Keplr wallet wallet client: ${value.client}`);
+  }
+
+  // Skip version check, at the moment we just have one version.
+
+  return {
+    type: WalletType.WalletConnect,
+    client: WalletConnectWalletClient.Keplr,
+    version: value.version,
+    addressPrefix: value.addressPrefix,
+    address: value.address,
+  };
+};
+
+/**
+ * Deserialize a [SerializableWalletConnectWallet] from a JSON parsed object.
+ * @param value - The JSON parsed value that should be a [SerializableWalletConnectWallet].
+ */
+const deserializeWalletConnectWallet = (
+  value: Partial<SerializableKeplrWalletConnectWallet>,
+): SerializableKeplrWalletConnectWallet => {
+  if (typeof value.client !== 'string' || typeof value.type !== 'string') {
+    throw new Error('invalid serialized WalletConnect wallet');
+  }
+
+  if (value.type !== WalletType.WalletConnect) {
+    throw new Error(`invalid WalletConnect wallet type: ${value.type}`);
+  }
+
+  switch (value.client) {
+    case WalletConnectWalletClient.Keplr:
+      return deserializeKeplrWalletConnectWallet(value);
+    default:
+      throw new Error(`can't deserialize WalletConnect wallet with client ${value.client}`);
+  }
+};
+
+/**
  * Deserialize a [SerializableWallet] from a JSON parsed object.
  * @param value - The JSON parsed value that should be a [SerializableWallet].
  */
@@ -81,6 +140,8 @@ export const deserializeWallet = (value: Partial<SerializableWallet>): Serializa
       return deserializeWeb3AuthWallet(value);
     case WalletType.PrivateKey:
       return deserializePrivateKeyWallet(value);
+    case WalletType.WalletConnect:
+      return deserializeWalletConnectWallet(value);
     default:
       // @ts-ignore
       throw new Error(`can't deserialize wallet with type ${value.type}`);

@@ -1,10 +1,13 @@
 import { toHex } from '@cosmjs/encoding';
 import {
   PrivateKeyWallet,
+  SerializableKeplrWalletConnectWallet,
   SerializablePrivateKeyWallet,
   SerializableWallet,
   SerializableWeb3AuthWallet,
   Wallet,
+  WalletConnectWallet,
+  WalletConnectWalletClient,
   WalletSerializationVersion,
   WalletType,
   Web3AuthWallet,
@@ -36,6 +39,27 @@ const serializePrivateKeyWallet = (wallet: PrivateKeyWallet): SerializablePrivat
 });
 
 /**
+ * Convert a [WalletConnectWallet] into a [SerializableWalletConnectWallet]
+ * @param wallet - The [WalletConnectWallet] to convert.
+ */
+const serializeWalletConnectWallet = (
+  wallet: WalletConnectWallet,
+): SerializableKeplrWalletConnectWallet => {
+  switch (wallet.client) {
+    case WalletConnectWalletClient.Keplr:
+      return {
+        type: WalletType.WalletConnect,
+        version: WalletSerializationVersion.WallletConnectKeplr,
+        client: WalletConnectWalletClient.Keplr,
+        addressPrefix: wallet.addressPrefix,
+        address: wallet.address,
+      };
+    default:
+      throw new Error(`can't serialize WalletConnect wallet with client ${wallet.client}`);
+  }
+};
+
+/**
  * Convert a [Wallet] into a [SerializableWallet]
  * @param wallet - The [Wallet] to convert.
  */
@@ -50,6 +74,9 @@ export const serializeWallet = (wallet: Wallet): SerializableWallet => {
       break;
     case WalletType.PrivateKey:
       serializableWallet = serializePrivateKeyWallet(wallet);
+      break;
+    case WalletType.WalletConnect:
+      serializableWallet = serializeWalletConnectWallet(wallet);
       break;
     default:
       // @ts-ignore
