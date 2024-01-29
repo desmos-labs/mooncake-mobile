@@ -19,9 +19,9 @@ export type OnImageSelectedCallback = (
 
 type MediaBottomPanelProps = {
   /**
-   * Actual length of the comment
+   * Actual length of the post
    */
-  commentLength: number;
+  textLength: number;
   /**
    * If the image is selected
    */
@@ -51,7 +51,7 @@ type MediaBottomPanelProps = {
 
 const MediaBottomPanel = ({
   imageSelected,
-  commentLength,
+  textLength,
   rightComponent,
   style,
   loading,
@@ -118,7 +118,14 @@ const MediaBottomPanel = ({
           />
         </View>
         <View style={styles.rightGroup}>
-          {!loading && <RadialTextCounter max={params.maxTextLength} current={commentLength} />}
+          {!loading && (
+            <RadialTextCounter
+              max={params.maxTextLength}
+              current={textLength}
+              customFillColor={theme.colors.primary}
+              size={styles.imageButtonStyle.width}
+            />
+          )}
           {rightComponent}
         </View>
       </View>
