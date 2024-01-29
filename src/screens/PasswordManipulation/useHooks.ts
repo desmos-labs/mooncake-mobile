@@ -239,6 +239,7 @@ const useHooks = () => {
       account,
       biometricsAvailable,
       enableBiometrics,
+      followingCount.count,
       goToLoginStep,
       mode,
       navigate,
