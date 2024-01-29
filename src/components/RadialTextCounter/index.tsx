@@ -45,7 +45,7 @@ const RadialTextCounter = ({
   customFillColor,
   customEmptyColor,
   customWarnColor,
-  size,
+  size = 24,
 }: Props) => {
   const theme = useTheme();
 
@@ -74,7 +74,7 @@ const RadialTextCounter = ({
   return (
     <AnimatedCircularProgress
       rotation={0}
-      size={size ? size + 2 : 24}
+      size={size + 2}
       width={2}
       padding={2}
       fill={progress}
