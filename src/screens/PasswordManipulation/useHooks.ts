@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
+import useFollowingCount from 'hooks/relationships/useFollowingCount';
 
 /**
  * Password manipulation mode.
@@ -53,12 +54,17 @@ enum SignInStatus {
  * Hooks for the PasswordManipulation screen
  */
 const useHooks = () => {
+  // ------------------------------------------------------------------------------------------------------------------
+  // --- Common hooks
+  // ------------------------------------------------------------------------------------------------------------------
   const { t } = useTranslation('password');
-  const [, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
-  const [loading, setLoading] = React.useState(false);
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const { mode, account, profile } = params;
+
+  // ------------------------------------------------------------------------------------------------------------------
+  // --- Custom hooks
+  // ------------------------------------------------------------------------------------------------------------------
   const toast = useToast();
   const storeAccount = useStoreAccount();
   const updateAccount = useUpdateAccount();
@@ -66,6 +72,15 @@ const useHooks = () => {
   const enableBiometrics = useEnableBiometrics();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();
   const goToLoginStep = useGoToLoginStep();
+
+  const { count: followingCount } = useFollowingCount(account?.account.address ?? '');
+
+  // ------------------------------------------------------------------------------------------------------------------
+  // --- Local state
+  // ------------------------------------------------------------------------------------------------------------------
+
+  const [, setSigninStatus] = React.useState<SignInStatus>(SignInStatus.UNDEFINED);
+  const [loading, setLoading] = React.useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -153,7 +168,12 @@ const useHooks = () => {
           }
           setSigninStatus(SignInStatus.SAVING_PROFILE);
           storeProfile(profile.address, profile);
-          goToLoginStep({ step: LoginFlowStep.FollowCreators, account: account.account });
+
+          if (followingCount.count === 0) {
+            goToLoginStep({ step: LoginFlowStep.FollowCreators, account: account.account });
+          } else {
+            goToLoginStep({ step: LoginFlowStep.Completed });
+          }
         } else {
           setLoading(false);
         }
@@ -219,6 +239,7 @@ const useHooks = () => {
       account,
       biometricsAvailable,
       enableBiometrics,
+      followingCount.count,
       goToLoginStep,
       mode,
       navigate,
