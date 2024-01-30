@@ -31,6 +31,12 @@ type Props = {
    * @default theme.colors.pink01
    */
   customWarnColor?: string;
+
+  /**
+   * The size of the progress bar.
+   * Defaults to 24.
+   */
+  size?: number;
 };
 
 const RadialTextCounter = ({
@@ -39,6 +45,7 @@ const RadialTextCounter = ({
   customFillColor,
   customEmptyColor,
   customWarnColor,
+  size = 24,
 }: Props) => {
   const theme = useTheme();
 
@@ -67,8 +74,9 @@ const RadialTextCounter = ({
   return (
     <AnimatedCircularProgress
       rotation={0}
-      size={24}
+      size={size + 2}
       width={2}
+      padding={2}
       fill={progress}
       tintColor={showWarning ? warnColor : fillColor}
       backgroundColor={emptyColor}>

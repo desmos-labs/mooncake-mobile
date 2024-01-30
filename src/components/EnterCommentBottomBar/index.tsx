@@ -250,7 +250,7 @@ const EnterCommentBottomBar = (props: Props) => {
             loading={loading}
             onImageSelected={onPictureTaken}
             rightComponent={RightButtonComponent}
-            commentLength={comment.length}
+            textLength={comment.length}
           />
         )}
       </Shadow>
