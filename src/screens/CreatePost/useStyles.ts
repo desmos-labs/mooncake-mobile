@@ -40,15 +40,13 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   input: {
-    color: theme.colors.surfaceBlack,
-    minHeight: 100,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins_400Regular',
     fontSize: 16,
-    lineHeight: 24,
     fontStyle: 'normal',
     fontWeight: '400',
-    letterSpacing: 0.025,
-    textAlign: 'left',
+    lineHeight: 24,
+    color: theme.colors.surfaceBlack,
+    minHeight: 100,
   },
 }));
 
