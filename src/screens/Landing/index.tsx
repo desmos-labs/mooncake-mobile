@@ -32,7 +32,6 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
  * From here, they can decide to create a new account, or import an existing one.
  * @constructor
  */
-
 const Landing = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('landing');
@@ -41,6 +40,7 @@ const Landing = () => {
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
+
   const loginWithPrivateKeyEnabled = useIsLoginWithPrivateKeyEnabled();
   const pendingLoginFlow = useIsLoginFlowUncompleted();
   const { resumeLoginFlow, cancelLoginFlow } = useResumeLoginFlow();
@@ -78,7 +78,7 @@ const Landing = () => {
     }
 
     // Safe to ignore this, we want to execute this effect only the first time that
-    // we enter in this screen.
+    // we enter this screen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,7 +86,7 @@ const Landing = () => {
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
-  const loginWithProvateKeyButton = React.useMemo(() => {
+  const loginWithPrivateKeyButton = React.useMemo(() => {
     return (
       <Button
         type="solid"
@@ -111,7 +111,7 @@ const Landing = () => {
         <Spacer paddingTop={40} />
         {/* Login buttons */}
         {loginWithPrivateKeyEnabled ? (
-          loginWithProvateKeyButton
+          loginWithPrivateKeyButton
         ) : (
           // Login buttons displayed when the login with private key is disabled.
           <>
@@ -143,7 +143,7 @@ const Landing = () => {
             {__DEV__ && (
               <>
                 <Spacer paddingTop="m" />
-                {loginWithProvateKeyButton}
+                {loginWithPrivateKeyButton}
               </>
             )}
           </>
