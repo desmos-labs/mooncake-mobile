@@ -153,7 +153,7 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         ListFooterComponent={footerComponent}
         ListEmptyComponent={emptyComponent}
-        estimatedItemSize={180}
+        estimatedItemSize={600}
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
         getItemType={getPostType}

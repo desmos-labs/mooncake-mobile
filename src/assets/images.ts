@@ -95,6 +95,7 @@ export const middleButtonIcon = require('./images/bottomBarIcons/middleButton.pn
 export const postToCommentIcon = require('./images/homePostIcons/postToCommentIcon.png');
 export const postLikedIcon = require('./images/homePostIcons/postLikedIcon.png');
 export const postToLikeIcon = require('./images/homePostIcons/postToLikeIcon.png');
+export const postShareIcon = require('./images/homePostIcons/postShareIcon.png');
 
 // Checkbox
 export const uncheck_circle = require('./images/checkbox/uncheck_circle.png');

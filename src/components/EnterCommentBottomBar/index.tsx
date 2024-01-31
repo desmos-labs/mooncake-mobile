@@ -16,19 +16,12 @@ import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import { Image } from 'expo-image';
 import usePostsParams from 'hooks/posts/usePostsParams';
+import useKeyboardVisibility from 'hooks/useKeyboardVisibility';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
-import React, { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { RefObject, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  KeyboardEventName,
-  Platform,
-  ScrollView,
-  TextInput,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
 import { NavProps } from 'screens/Home';
@@ -83,6 +76,7 @@ const EnterCommentBottomBar = (props: Props) => {
   // -------------------------------------------------------------------------------------
   const [textInputNumberOfLines, setTextInputNumberOfLines] = useState(0);
   const { params: postsParams } = usePostsParams();
+  const { keyboardVisible } = useKeyboardVisibility();
   const comment = useCreatePostValue('text');
   const setComment = useSetCreatePostValue('text');
   const postAttachments = useCreatePostValue('attachments');
@@ -99,45 +93,17 @@ const EnterCommentBottomBar = (props: Props) => {
     },
     [addPostAttachment],
   );
-  const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
 
   const dTextInputStyles = useDTextInputStyles({});
   const styles = useStyles({
     baseTextInputStyle: dTextInputStyles.input,
-    keyboardShow,
+    keyboardShow: keyboardVisible,
     bottomInset: bottom,
   });
 
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.select({
-        // keyboardWillShow only works on ios
-        ios: 'keyboardWillShow',
-        android: 'keyboardDidShow',
-      }) as KeyboardEventName,
-      () => {
-        setKeyboardShow(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      Platform.select({
-        ios: 'keyboardWillHide',
-        android: 'keyboardDidHide',
-      }) as KeyboardEventName,
-      () => {
-        setKeyboardShow(false);
-      },
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   // When the user leaves the screen, we reset the state of the post and remove the attachment if any
   React.useEffect(
@@ -189,7 +155,7 @@ const EnterCommentBottomBar = (props: Props) => {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
         stretch={true}
-        style={[styles.shadow, !keyboardShow ? { paddingBottom: bottom } : {}]}
+        style={[styles.shadow, !keyboardVisible ? { paddingBottom: bottom } : {}]}
         startColor="rgba(51, 51, 51, 0.1)"
         distance={30}>
         <View style={styles.container}>
@@ -234,7 +200,7 @@ const EnterCommentBottomBar = (props: Props) => {
               />
             </ScrollView>
             <View
-              pointerEvents={keyboardShow ? 'auto' : 'none'}
+              pointerEvents={keyboardVisible ? 'auto' : 'none'}
               style={styles.expandButtonContainer}>
               <ImageButton
                 style={styles.expandButton}
@@ -244,7 +210,7 @@ const EnterCommentBottomBar = (props: Props) => {
             </View>
           </View>
         </View>
-        {keyboardShow && (
+        {keyboardVisible && (
           <MediaBottomPanel
             imageSelected={false}
             loading={loading}

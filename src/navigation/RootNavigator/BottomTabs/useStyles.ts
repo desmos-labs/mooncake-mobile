@@ -35,7 +35,7 @@ const useStyles = makeStyle(theme => ({
     width: scale(22),
     height: scale(22),
     borderRadius: scale(22 / 2),
-    marginBottom: 6,
+    marginBottom: 8,
   },
   profileFocused: {
     borderWidth: 2,
@@ -58,6 +58,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 2,
     backgroundColor: theme.colors.primary,
     alignSelf: 'center',
+    marginBottom: 16,
   },
   dotInactive: {
     backgroundColor: theme.colors.white,

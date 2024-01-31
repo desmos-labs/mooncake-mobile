@@ -19,13 +19,18 @@ const useStyles = makeStyle(theme => ({
     marginLeft: theme.spacing.l,
   },
   bottomBarInnerView: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   tipButton: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: theme.spacing.s,
+  },
+  leftButtonsGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 }));
 

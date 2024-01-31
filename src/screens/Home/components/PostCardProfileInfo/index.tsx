@@ -34,7 +34,7 @@ interface PostCardProfileInfoProps {
   readonly onPressReport: () => void;
   readonly onPressHide: () => void;
   readonly onPressBlock: () => void;
-  readonly onPressShare: () => void;
+  readonly onPressShare?: () => void;
 }
 
 /**
@@ -138,7 +138,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         onPress: onPressFollow,
         icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
       },
-      {
+      onPressShare && {
         label: t('share', { ns: 'postOperations' }),
         onPress: onPressShare,
         icon: share,
