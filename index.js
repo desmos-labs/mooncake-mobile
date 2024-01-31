@@ -1,5 +1,5 @@
 import { registerRootComponent } from 'expo';
-import { handleBackcroundNotifications } from 'lib/NotificationsUtils';
+import { handleBackgroundNotifications } from 'lib/NotificationsUtils';
 import messaging from '@react-native-firebase/messaging';
 import './src/lib/ignoreWarningsUtils';
 import './shim';
@@ -26,7 +26,7 @@ branch.subscribe(({ params, error }) => {
 });
 
 // Init background notification logic
-messaging().setBackgroundMessageHandler(handleBackcroundNotifications);
+messaging().setBackgroundMessageHandler(handleBackgroundNotifications);
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,
