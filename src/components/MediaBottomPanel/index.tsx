@@ -61,7 +61,6 @@ const MediaBottomPanel = ({
   const styles = useStyles();
   const theme = useTheme();
   const { params } = usePostsParams();
-
   // --------------------------------------
   // ----- Hooks
   // --------------------------------------

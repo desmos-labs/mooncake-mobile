@@ -103,7 +103,7 @@ const PostCard = (props: PostCardProps) => {
   const { MediaAttachment } = useRenderMediaAttachment(post.attachments, {
     useAutoSize: true,
     horizontalPaddingWithAutoSize: 32,
-    imageStyle: { borderRadius: 10, backgroundColor: theme.colors.lightGrey01 },
+    imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
     resizeMode: 'contain',
   });
 
@@ -117,7 +117,6 @@ const PostCard = (props: PostCardProps) => {
         onPressReport={onPressReport}
         onPressHide={onPressHide}
         onPressBlock={onPressBlock}
-        onPressShare={sharePost}
       />
       {/* Post text */}
       {post.text && (
@@ -128,7 +127,9 @@ const PostCard = (props: PostCardProps) => {
       {/* Media view */}
       {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
       {/* Post bottom bar */}
-      {!isPending && <PostCardBottomBar post={post} onPressComment={onPressComment} />}
+      {!isPending && (
+        <PostCardBottomBar post={post} onPressComment={onPressComment} onPressShare={sharePost} />
+      )}
     </TouchableOpacity>
   );
 };

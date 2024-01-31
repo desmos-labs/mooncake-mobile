@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { postLikedIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
+import { postLikedIcon, postShareIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import { Image } from 'expo-image';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
@@ -13,6 +13,7 @@ import useStyles from './useStyles';
 interface PostBottomBarProps {
   readonly post: Post;
   readonly onPressComment: () => void;
+  readonly onPressShare: () => void;
 }
 
 /**
@@ -23,7 +24,7 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const { post, onPressComment } = props;
+  const { post, onPressComment, onPressShare } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Utility hooks
@@ -59,32 +60,44 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   return (
     <View style={styles.bottomBarView}>
       <View style={styles.bottomBarInnerView}>
-        <ImageButton
-          onPress={onPressLike}
-          tintColor={liked ? theme.colors.butterOrange01 : theme.colors.neutral['700']}
-          image={liked ? postLikedIcon : postToLikeIcon}
-          style={styles.bottomBarIcon}
-        />
-        <Typography.Regular16
-          style={
-            liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.neutral['700'] }
-          }>
-          {likesCount > 0 ? likesCount : ''}
-        </Typography.Regular16>
-        {/* I have completely removed the logic that changed the color of the button based on whether */}
-        {/* the user comment the post or not. This has been done for the following reasons: */}
-        {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
-        {/* 2. It's extremely hard to implement, and completely useless in the first place */}
-        <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
+        <View style={styles.leftButtonsGroup}>
+          <ImageButton
+            onPress={onPressLike}
+            tintColor={liked ? theme.colors.butterOrange01 : theme.colors.neutral['700']}
+            image={liked ? postLikedIcon : postToLikeIcon}
+            style={styles.bottomBarIcon}
+          />
+          <Typography.Regular16
+            style={
+              liked
+                ? { color: theme.colors.butterOrange01 }
+                : { color: theme.colors.neutral['700'] }
+            }>
+            {likesCount > 0 ? likesCount : ''}
+          </Typography.Regular16>
+          {/* I have completely removed the logic that changed the color of the button based on whether */}
+          {/* the user comment the post or not. This has been done for the following reasons: */}
+          {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
+          {/* 2. It's extremely hard to implement, and completely useless in the first place */}
+          <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
+            <Image
+              contentFit="cover"
+              tintColor={theme.colors.neutral['700']}
+              source={postToCommentIcon}
+              style={styles.bottomBarIcon}
+            />
+            <Typography.Regular16 style={{ color: theme.colors.neutral['700'] }}>
+              {commentsCount > 0 ? commentsCount : ''}
+            </Typography.Regular16>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={onPressShare}>
           <Image
             contentFit="cover"
             tintColor={theme.colors.neutral['700']}
-            source={postToCommentIcon}
+            source={postShareIcon}
             style={styles.bottomBarIcon}
           />
-          <Typography.Regular16 style={{ color: theme.colors.neutral['700'] }}>
-            {commentsCount > 0 ? commentsCount : ''}
-          </Typography.Regular16>
         </TouchableOpacity>
       </View>
     </View>

@@ -13,7 +13,6 @@ import Button from 'components/Button';
 import DView from 'components/DView';
 import MediaBottomPanel, { OnImageSelectedCallback } from 'components/MediaBottomPanel';
 import SelectedPostImage from 'components/SelectedPostImage';
-import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
@@ -22,13 +21,16 @@ import useCreatePost from 'hooks/posts/useCreatePost';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useToast from 'hooks/toasts/useToast';
+import useKeyboardVisibility from 'hooks/useKeyboardVisibility';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
+import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Shadow } from 'react-native-shadow-2';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
@@ -64,7 +66,8 @@ const CreatePost = () => {
   const navigation = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const parent = params?.parent;
-  const insets = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
+  const { keyboardVisible } = useKeyboardVisibility();
   // -------------------------------------------------------------------------------------
   // --- Useful hooks
   // -------------------------------------------------------------------------------------
@@ -200,9 +203,20 @@ const CreatePost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
+  const height = useSharedValue(0);
+
+  useEffect(() => {
+    if (keyboardVisible) {
+      height.value = withTiming(0, { easing: Easing.linear, duration: 50 });
+    } else {
+      height.value = withTiming(bottom, { easing: Easing.linear });
+    }
+  }, [bottom, height, keyboardVisible]);
+
   return (
     <View style={styles.root}>
       <DView
+        edges={['top']}
         style={styles.container}
         backgroundColor={theme.colors.white}
         topBar={
@@ -239,13 +253,17 @@ const CreatePost = () => {
           </ScrollView>
         </View>
       </DView>
-      <MediaBottomPanel
-        style={styles.bottomPanel}
-        textLength={postText.length}
-        imageSelected={postAttachments.length > 0}
-        onImageSelected={onImageSelected}
-      />
-      <Spacer paddingBottom={insets.bottom} />
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Shadow stretch={true} startColor="rgba(51, 51, 51, 0.1)" distance={30}>
+          <MediaBottomPanel
+            style={styles.bottomPanel}
+            textLength={postText.length}
+            imageSelected={postAttachments.length > 0}
+            onImageSelected={onImageSelected}
+          />
+          <Animated.View style={{ height }} />
+        </Shadow>
+      </KeyboardAvoidingView>
     </View>
   );
 };
