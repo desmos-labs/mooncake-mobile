@@ -195,7 +195,7 @@ interface PostLikeNotificationData extends BaseNotificationData {
   /**
    * Address of the user that has liked the post.
    */
-  readonly post_like_address: string;
+  readonly post_liker_address: string;
 }
 
 // ---------------------------------------------------------------------

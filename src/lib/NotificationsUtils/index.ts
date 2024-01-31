@@ -4,10 +4,7 @@ import { Notification, NotificationData, NotificationType } from 'types/notifica
 /**
  * Function to handle the notifications received in the background
  */
-// Disable eslint since in the future we may want to add more
-// functions.
-
-export const handleBackcroundNotifications = async (
+export const handleBackgroundNotifications = async (
   message: FirebaseMessagingTypes.RemoteMessage,
 ): Promise<void> => {
   console.log('[Background-Firebase]: RemoteMessage', message);
@@ -25,7 +22,7 @@ export const getNotificationOriginator = (notification: Notification): string | 
     case NotificationType.PostComment:
       return notification.additionalData.comment_author_address;
     case NotificationType.PostLike:
-      return notification.additionalData.post_like_address;
+      return notification.additionalData.post_liker_address;
     case NotificationType.NewTip:
       return notification.additionalData.tipper_address;
     case NotificationType.PostMention:
