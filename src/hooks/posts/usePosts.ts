@@ -9,6 +9,7 @@ import { useCallback, useMemo } from 'react';
 import GetPosts from 'services/graphql/queries/GetPosts';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 import { Post } from 'types/posts';
+import { OperationVariables } from '@apollo/client/core';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -26,6 +27,13 @@ interface TimelineQueryParams {
 
 type PostsQueryParams = TimelineQueryParams | DiscoveryQueryParam;
 
+interface OffsetLimitPostQueryVariables extends OperationVariables {
+  readonly offset: number;
+  readonly limit: number;
+}
+
+interface PostQueryVariables extends OffsetLimitPostQueryVariables {}
+
 const useQueryParams = (type: PostsQueryType, followingAddresses: string[]) => {
   return useMemo(() => {
     if (type === PostsQueryType.TIMELINE) {
@@ -35,21 +43,25 @@ const useQueryParams = (type: PostsQueryType, followingAddresses: string[]) => {
   }, [type, followingAddresses]);
 };
 
-const useQueryData = (params: PostsQueryParams, postsPerPage = 10): QueryOptions<any> => {
+/**
+ * Hook that returns the query data for the posts query.
+ * @param params Parameters that define the query type.
+ */
+const useQueryData = (params: PostsQueryParams): QueryOptions<PostQueryVariables> => {
   const getDiscoveryQuery = useCallback(
     () => ({
       query: GetPosts,
-      variables: { offset: 0, limit: postsPerPage },
+      variables: { offset: 0, limit: 25 },
     }),
-    [postsPerPage],
+    [],
   );
 
   const getTimelineQuery = useCallback(
     (followedUsers: string[]) => ({
       query: GetPostsFromFollowing,
-      variables: { following: followedUsers, offset: 0, limit: postsPerPage },
+      variables: { following: followedUsers, offset: 0, limit: 25 },
     }),
-    [postsPerPage],
+    [],
   );
 
   return useMemo(() => {
@@ -61,28 +73,44 @@ const useQueryData = (params: PostsQueryParams, postsPerPage = 10): QueryOptions
   }, [getDiscoveryQuery, getTimelineQuery, params]);
 };
 
-const useFetchPosts = (queryData: QueryOptions<any, any>) => {
-  const [fetchPostComments] = useLazyQuery(queryData.query);
+/**
+ * Hook that returns a function that fetches posts from the server.
+ * This can be used with the usePaginatedData hook.
+ * @param queryData The query data for the posts query.
+ */
+const useFetchPosts = (queryData: QueryOptions<PostQueryVariables, any>) => {
+  const [fetchServerPosts] = useLazyQuery(queryData.query);
 
-  return useCallback<FetchDataFunction<Post>>(async () => {
-    const { data, error } = await fetchPostComments({
-      fetchPolicy: 'network-only',
-      variables: queryData.variables,
-    });
+  return useCallback<FetchDataFunction<Post>>(
+    async (offset, limit) => {
+      const { data, error } = await fetchServerPosts({
+        fetchPolicy: 'network-only',
+        variables: {
+          ...queryData.variables,
+          limit,
+          offset,
+        },
+      });
 
-    if (error) {
-      throw error;
-    }
+      if (error) {
+        throw error;
+      }
 
-    const posts = data?.posts?.map(convertGraphQLPost) ?? [];
+      const posts = data?.posts?.map(convertGraphQLPost) ?? [];
 
-    return {
-      data: posts,
-      endReached: posts.length < queryData.variables.limit,
-    };
-  }, [fetchPostComments, queryData.variables]);
+      return {
+        data: posts,
+        endReached: posts.length < (queryData.variables?.limit ?? 25),
+      };
+    },
+    [fetchServerPosts, queryData.variables],
+  );
 };
 
+/**
+ * Hook that returns the posts for the given query type.
+ * @param queryType
+ */
 const usePosts = (queryType: PostsQueryType) => {
   const activeAccountAddress = useActiveAccountAddress();
   const followingAddresses = useFollowingAddresses();
@@ -103,7 +131,7 @@ const usePosts = (queryType: PostsQueryType) => {
   const { loading, refreshing, fetchMore, refresh, error } = usePaginatedData(
     useFetchPosts(queryData),
     {
-      itemsPerPage: queryData.variables.limit,
+      itemsPerPage: queryData.variables?.limit ?? 25,
       autoFetchFirstPage: true,
       mapData: mapDataFunction,
       onDataChanged: storePosts,

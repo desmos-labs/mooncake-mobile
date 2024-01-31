@@ -1,5 +1,5 @@
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { findSamePost } from 'lib/PostsUtils';
+import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import React from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
@@ -143,12 +143,14 @@ export const useStorePosts = (user: string) => {
           ...currentTimeline,
         };
 
+        let posts: Post[];
         if (typeof valOrUpdater === 'function') {
-          updatedPosts[user] = valOrUpdater(updatedPosts[user] ?? []);
+          posts = valOrUpdater(updatedPosts[user] ?? []);
         } else {
-          updatedPosts[user] = valOrUpdater;
+          posts = valOrUpdater;
         }
 
+        updatedPosts[user] = sortPostsByCreationDate(posts);
         return updatedPosts;
       });
     },
