@@ -217,6 +217,7 @@ const EnterCommentBottomBar = (props: Props) => {
             onImageSelected={onPictureTaken}
             rightComponent={RightButtonComponent}
             textLength={comment.length}
+            allowPictures={false}
           />
         )}
       </Shadow>
