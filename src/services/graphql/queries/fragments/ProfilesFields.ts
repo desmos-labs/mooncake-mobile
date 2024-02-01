@@ -9,6 +9,7 @@ const ProfileFields = gql`
     cover_picture: cover_pic
     nickname
     profile_picture: profile_pic
+    is_user_following
   }
 `;
 
