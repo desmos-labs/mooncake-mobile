@@ -22,7 +22,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   rightGroup: {
-    flex: 0.8,
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',

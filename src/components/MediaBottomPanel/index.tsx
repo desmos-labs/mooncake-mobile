@@ -1,5 +1,3 @@
-import { cameraIcon, galleryIcon } from 'assets/images';
-import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import { CameraType } from 'expo-image-picker';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
@@ -9,6 +7,8 @@ import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { useTheme } from 'native-base';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
+import ImageButton from 'components/ImageButton';
+import { cameraIcon, galleryIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 export type OnImageSelectedCallback = (
@@ -21,32 +21,36 @@ type MediaBottomPanelProps = {
   /**
    * Actual length of the post
    */
-  textLength: number;
+  readonly textLength: number;
   /**
    * If the image is selected
    */
-  imageSelected: boolean;
+  readonly imageSelected: boolean;
   /**
    * Callback to handle when the user selects an image
    */
-  onImageSelected: OnImageSelectedCallback;
+  readonly onImageSelected: OnImageSelectedCallback;
   /**
    * Optional style
    */
-  style?: StyleProp<ImageStyle>;
+  readonly style?: StyleProp<ImageStyle>;
   /**
    * Optional right component (usefull for the EnterCommentBottomBar)
    */
-  rightComponent?: React.ReactNode;
+  readonly rightComponent?: React.ReactNode;
   /**
    * Is the app processing a comment?
    */
-  loading?: boolean;
+  readonly loading?: boolean;
   /**
    * Camera that will be used to take a picture.
    * Defaults to <code>CameraType.front</code>.
    */
   readonly cameraType?: CameraType;
+  /**
+   * If true, the user can select an image from the device.
+   */
+  readonly allowPictures?: boolean;
 };
 
 const MediaBottomPanel = ({
@@ -57,6 +61,7 @@ const MediaBottomPanel = ({
   loading,
   onImageSelected,
   cameraType,
+  allowPictures = true,
 }: MediaBottomPanelProps) => {
   const styles = useStyles();
   const theme = useTheme();
@@ -96,26 +101,28 @@ const MediaBottomPanel = ({
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : undefined}>
       <View style={[style, styles.container]}>
-        <View style={styles.leftGroup}>
-          <ImageButton
-            accessibilityLabel="use image from gallery"
-            hitSlopValue={8}
-            disabled={imageSelected}
-            onPress={handlePressGallery}
-            image={galleryIcon}
-            style={styles.imageButtonStyle}
-            tintColor={theme.colors.darkGrey}
-          />
-          <ImageButton
-            accessibilityLabel="use image from camera"
-            hitSlopValue={8}
-            disabled={imageSelected}
-            onPress={handlePressCamera}
-            image={cameraIcon}
-            style={styles.imageButtonStyle}
-            tintColor={theme.colors.darkGrey}
-          />
-        </View>
+        {allowPictures && (
+          <View style={styles.leftGroup}>
+            <ImageButton
+              accessibilityLabel="use image from gallery"
+              hitSlopValue={8}
+              disabled={imageSelected}
+              onPress={handlePressGallery}
+              image={galleryIcon}
+              style={styles.imageButtonStyle}
+              tintColor={theme.colors.darkGrey}
+            />
+            <ImageButton
+              accessibilityLabel="use image from camera"
+              hitSlopValue={8}
+              disabled={imageSelected}
+              onPress={handlePressCamera}
+              image={cameraIcon}
+              style={styles.imageButtonStyle}
+              tintColor={theme.colors.darkGrey}
+            />
+          </View>
+        )}
         <View style={styles.rightGroup}>
           {!loading && (
             <RadialTextCounter
