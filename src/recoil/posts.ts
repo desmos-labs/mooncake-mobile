@@ -138,6 +138,7 @@ export const useStorePosts = (user: string) => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
     (valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
+      console.log('[RECOIL] useStorePosts', user, valOrUpdater);
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,

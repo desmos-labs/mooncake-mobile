@@ -133,7 +133,6 @@ const Home = () => {
   // -------------------------------------------------------------------------------------
   // --- Component rendering
   // -------------------------------------------------------------------------------------
-
   return (
     <View style={styles.homeView} testID="homeView">
       <FlashList
@@ -153,7 +152,7 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         ListFooterComponent={footerComponent}
         ListEmptyComponent={emptyComponent}
-        estimatedItemSize={600}
+        estimatedItemSize={450}
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
         getItemType={getPostType}

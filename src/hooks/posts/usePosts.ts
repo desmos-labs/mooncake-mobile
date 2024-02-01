@@ -1,15 +1,15 @@
-import { QueryOptions, useLazyQuery } from '@apollo/client';
+import { QueryOptions } from '@apollo/client';
+import { OperationVariables } from '@apollo/client/core';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@recoil/posts';
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
-import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
+import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import { useCallback, useMemo } from 'react';
+import GetFollowingUsersPosts from 'services/graphql/queries/GetFollowingUsersPosts';
 import GetPosts from 'services/graphql/queries/GetPosts';
-import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 import { Post } from 'types/posts';
-import { OperationVariables } from '@apollo/client/core';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -22,7 +22,6 @@ interface DiscoveryQueryParam {
 
 interface TimelineQueryParams {
   readonly type: PostsQueryType.TIMELINE;
-  readonly followedUsers: string[];
 }
 
 type PostsQueryParams = TimelineQueryParams | DiscoveryQueryParam;
@@ -34,13 +33,10 @@ interface OffsetLimitPostQueryVariables extends OperationVariables {
 
 interface PostQueryVariables extends OffsetLimitPostQueryVariables {}
 
-const useQueryParams = (type: PostsQueryType, followingAddresses: string[]) => {
+const useQueryParams = (type: PostsQueryType) => {
   return useMemo(() => {
-    if (type === PostsQueryType.TIMELINE) {
-      return { type, followedUsers: followingAddresses };
-    }
     return { type };
-  }, [type, followingAddresses]);
+  }, [type]);
 };
 
 /**
@@ -51,60 +47,25 @@ const useQueryData = (params: PostsQueryParams): QueryOptions<PostQueryVariables
   const getDiscoveryQuery = useCallback(
     () => ({
       query: GetPosts,
-      variables: { offset: 0, limit: 25 },
+      variables: { offset: 0, limit: 3 },
     }),
     [],
   );
 
   const getTimelineQuery = useCallback(
-    (followedUsers: string[]) => ({
-      query: GetPostsFromFollowing,
-      variables: { following: followedUsers, offset: 0, limit: 25 },
+    () => ({
+      query: GetFollowingUsersPosts,
+      variables: { offset: 0, limit: 3 },
     }),
     [],
   );
 
   return useMemo(() => {
     if (params.type === PostsQueryType.TIMELINE) {
-      const timelineParams = params as TimelineQueryParams;
-      return getTimelineQuery(timelineParams.followedUsers);
+      return getTimelineQuery();
     }
     return getDiscoveryQuery();
   }, [getDiscoveryQuery, getTimelineQuery, params]);
-};
-
-/**
- * Hook that returns a function that fetches posts from the server.
- * This can be used with the usePaginatedData hook.
- * @param queryData The query data for the posts query.
- */
-const useFetchPosts = (queryData: QueryOptions<PostQueryVariables, any>) => {
-  const [fetchServerPosts] = useLazyQuery(queryData.query);
-
-  return useCallback<FetchDataFunction<Post>>(
-    async (offset, limit) => {
-      const { data, error } = await fetchServerPosts({
-        fetchPolicy: 'network-only',
-        variables: {
-          ...queryData.variables,
-          limit,
-          offset,
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      const posts = data?.posts?.map(convertGraphQLPost) ?? [];
-
-      return {
-        data: posts,
-        endReached: posts.length < (queryData.variables?.limit ?? 25),
-      };
-    },
-    [fetchServerPosts, queryData.variables],
-  );
 };
 
 /**
@@ -114,13 +75,17 @@ const useFetchPosts = (queryData: QueryOptions<PostQueryVariables, any>) => {
 const usePosts = (queryType: PostsQueryType) => {
   const activeAccountAddress = useActiveAccountAddress();
   const followingAddresses = useFollowingAddresses();
-  const queryParams = useQueryParams(queryType, followingAddresses);
+  const queryParams = useQueryParams(queryType);
   const queryData = useQueryData(queryParams);
   const storePosts = useStorePosts(activeAccountAddress!);
   const cachedPosts = useStoredRootPosts(activeAccountAddress!);
 
-  const mapDataFunction = useCallback(
-    (data: Post[]) => {
+  const convertData = useCallback((data: any): Post[] => {
+    return (data?.posts ?? []).map(convertGraphQLPost);
+  }, []);
+
+  const transformData = useCallback(
+    (data: Post[]): Post[] => {
       const filteredPosts = data.filter((post: Post) => post.author);
       const [merged] = mergePosts(cachedPosts, filteredPosts);
       return merged;
@@ -128,15 +93,18 @@ const usePosts = (queryType: PostsQueryType) => {
     [cachedPosts],
   );
 
-  const { loading, refreshing, fetchMore, refresh, error } = usePaginatedData(
-    useFetchPosts(queryData),
-    {
+  const { loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery({
+    query: queryData.query,
+    queryOptions: {
       itemsPerPage: queryData.variables?.limit ?? 25,
-      autoFetchFirstPage: true,
-      mapData: mapDataFunction,
-      onDataChanged: storePosts,
     },
-  );
+    variables: {
+      ...queryData.variables,
+    },
+    convertData,
+    transformData,
+    cacheState: [[], storePosts],
+  });
 
   const discoveryPosts = useStoredRootPosts(activeAccountAddress!);
   const timelinePosts = useStoredFollowingPosts(activeAccountAddress!, followingAddresses);
@@ -149,7 +117,7 @@ const usePosts = (queryType: PostsQueryType) => {
     posts,
     loading,
     fetchMore,
-    fetchingMore: loading,
+    fetchingMore,
     refresh,
     refreshing,
     error,
