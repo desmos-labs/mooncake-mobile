@@ -81,11 +81,11 @@ export default function usePaginatedQuery<QT, T, R = T>({
     setFetchingMore(true);
     await fetchMoreData({
       variables: {
-        offset: items.length,
+        offset: fetchOffsetRef.current,
       },
     });
     setFetchingMore(false);
-  }, [fetchMoreData, items.length]);
+  }, [fetchMoreData]);
 
   return {
     items: cacheState ? cacheState[0] : items,
