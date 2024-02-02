@@ -14,6 +14,7 @@ import {
 import AnimatedCoverPicture from 'components/AnimatedCoverPicture';
 import TipUserBottomSheet from 'components/BottomSheets/TipUser';
 import Button from 'components/Button';
+import DView from 'components/DView';
 import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import PopupMenu from 'components/PopupMenu';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -48,7 +49,6 @@ import {
   Platform,
   Pressable,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   View,
@@ -63,9 +63,7 @@ import Reanimated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import AddressCopy from 'screens/Profile/components/AddressCopy';
 import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePicture';
-import BalanceSection from 'screens/Profile/components/BalanceSection';
 import Biography from 'screens/Profile/components/Biography';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
@@ -145,7 +143,7 @@ const Profile = () => {
     refetch: refreshBalance,
   } = useAccountBalance(address);
 
-  const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 5);
+  const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 25);
   const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
   // Relationships data
@@ -374,9 +372,13 @@ const Profile = () => {
     // defined after the isProfileLoading becomes false.
     if (isProfileLoading || profileError === undefined) {
       return (
-        <SafeAreaView style={styles.flexCenter}>
+        <DView
+          disableHideKeyboardTouchable={true}
+          backgroundColor={theme.colors.white}
+          edges={['top']}
+          style={styles.flexCenter}>
           <MooncakeLoader speed={3} />
-        </SafeAreaView>
+        </DView>
       );
     }
 
@@ -444,6 +446,7 @@ const Profile = () => {
         style={styles.scrollView}
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.contentContainerStyle}
+        showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}>
         <View style={styles.contentView}>
           <View style={styles.innerContainer}>
@@ -458,45 +461,33 @@ const Profile = () => {
                 <Typography.Regular12 style={styles.profileDtag} numberOfLines={1}>
                   @{profile.dTag}
                 </Typography.Regular12>
-                {/* Profile address */}
-                <AddressCopy address={address} />
-                {/* Profile biography */}
               </View>
-              <View style={styles.rightButtonsContainer}>
-                {/* Posts count */}
-                <TouchableOpacity style={styles.postCount} onPress={handlePostsSectionPressed}>
-                  <Typography.Semibold14>{postsCount}</Typography.Semibold14>
-                  <Typography.Regular12>{t('posts')}</Typography.Regular12>
-                </TouchableOpacity>
+              {profile?.bio && (
+                <Spacer paddingVertical="s">
+                  <Biography text={profile.bio} numberOfLines={3} />
+                </Spacer>
+              )}
+              <View style={styles.profileConnectionsButtonContainer}>
                 {/* Followage count */}
-                <TouchableOpacity
-                  style={styles.centerLeftSpacingM}
-                  onPress={handleFollowingPressed}>
+                <TouchableOpacity style={styles.connectionButton} onPress={handleFollowingPressed}>
                   {isFollowageCountLoading ? (
                     <StyledSpinner size={21} />
                   ) : (
-                    <Typography.Semibold14>{followageCount}</Typography.Semibold14>
+                    <Typography.Semibold16>{followageCount}</Typography.Semibold16>
                   )}
-                  <Typography.Regular12>{t('following')}</Typography.Regular12>
+                  <Typography.Regular14>{t('following')}</Typography.Regular14>
                 </TouchableOpacity>
                 {/* Followers count */}
-                <TouchableOpacity
-                  style={styles.centerLeftSpacingM}
-                  onPress={handleFollowersPressed}>
+                <TouchableOpacity style={styles.connectionButton} onPress={handleFollowersPressed}>
                   {isFollowersCountLoading ? (
                     <StyledSpinner size={21} />
                   ) : (
-                    <Typography.Semibold14>{followersCount}</Typography.Semibold14>
+                    <Typography.Semibold16>{followersCount}</Typography.Semibold16>
                   )}
-                  <Typography.Regular12>{t('followers')}</Typography.Regular12>
+                  <Typography.Regular14>{t('followers')}</Typography.Regular14>
                 </TouchableOpacity>
               </View>
             </View>
-            {profile?.bio && (
-              <Spacer paddingVertical="s">
-                <Biography text={profile.bio} numberOfLines={3} />
-              </Spacer>
-            )}
             {/* Section to edit the profile */}
             {isActiveAccount && <EditProfileSection profile={profile} />}
             {/* Follow/Unfollow button */}
@@ -504,18 +495,6 @@ const Profile = () => {
             <Spacer paddingVertical={theme.spacing.s} />
             {/* Lower section (balance, posts, NFTs, badges, etc) */}
             <View style={styles.container}>
-              {/* Balance, visibile only if displaing the current active account's profile */}
-              {isActiveAccount && (
-                <>
-                  <BalanceSection
-                    address={address}
-                    balance={balance}
-                    isLoading={isBalanceLoading}
-                    handlePressBalanceInfo={handlePressBalanceInfo}
-                  />
-                  <View style={styles.divider} />
-                </>
-              )}
               {/* Posts */}
               <PostsSection
                 address={address}

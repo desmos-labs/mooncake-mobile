@@ -25,6 +25,7 @@
   "connectedChains": "{{count}} Chain",
   "connectedChains_plural": "{{count}} Chains",
   "and": "and",
+  "likes": "Likes",
   "connectedApps": "{{count}} App connected",
   "connectedApps_plural": "{{count}} Apps connected",
   "created liked tipped": "Created, liked and tipped posts",

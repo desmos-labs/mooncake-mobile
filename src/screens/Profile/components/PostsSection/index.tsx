@@ -58,7 +58,7 @@ const PostsSection = (props: PostsSectionProps) => {
       );
     }
 
-    return <PostCard post={posts[0]} />;
+    return posts.map(post => <PostCard post={post} key={post.externalId} />);
   }, [posts, styles.emptyImage, t, theme.colors.midGrey]);
 
   // -------------------------------------------------------------------------------------
