@@ -6,6 +6,7 @@ import { DesmosProfile } from 'types/desmos';
 /**
  * Hook that allows to toggle the follow/unfollow state of a user.
  */
+// Disable the eslint rule since we may want to add more hooks in the future.
 // eslint-disable-next-line import/prefer-default-export
 export const useToggleFollowage = (counterpartyProfile: DesmosProfile) => {
   const [updatingFollow, setUpdatingFollow] = React.useState(false);
