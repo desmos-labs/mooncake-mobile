@@ -85,18 +85,18 @@ export default function usePaginatedQuery<QT, T>({
     console.log('[APOLLO] fetchMore');
     loadingData.current = true;
     setFetchingMore(true);
-    const { data, error } = await fetchMoreData({
+    const { data, error: fetchMoreError } = await fetchMoreData({
       variables: {
         offset: fetchOffsetRef.current,
       },
     });
-    if (error) {
-      onError(error);
+    if (fetchMoreError) {
+      onError(fetchMoreError);
     } else {
       onCompleted(data);
     }
     setFetchingMore(false);
-  }, [fetchMoreData]);
+  }, [fetchMoreData, onCompleted, onError]);
 
   return {
     items,
