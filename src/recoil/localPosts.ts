@@ -1,7 +1,7 @@
 import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import { useCallback, useMemo } from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Post } from 'types/posts';
+import { isComment, isCommentTo, Post } from 'types/posts';
 
 /**
  * Atom that contains the posts that are currently
@@ -21,7 +21,27 @@ const localPosts = atom<Record<string, Post[]>>({
  */
 export const useUserLocalPosts = (userAddress?: string) => {
   const posts = useRecoilValue(localPosts);
-  return useMemo(() => (userAddress ? posts[userAddress] ?? [] : []), [posts, userAddress]);
+  return useMemo(
+    () => (userAddress ? posts[userAddress] ?? [] : []).filter(p => !isComment(p)),
+    [posts, userAddress],
+  );
+};
+
+/**
+ * Hook that provides the user's comments that are currently
+ * being broadcast on-chain.
+ */
+export const useUserLocalComments = (userAddress: string | undefined, parentId: number) => {
+  const posts = useRecoilValue(localPosts);
+  return useMemo(
+    () =>
+      (userAddress ? posts[userAddress] ?? [] : []).filter(p => {
+        const comment = isCommentTo(p, parentId);
+        console.log('[Recoil] useUserLocalComments filter', p.id, comment);
+        return comment;
+      }),
+    [posts, userAddress, parentId],
+  );
 };
 
 /**
@@ -63,7 +83,6 @@ export const useSetUserLocalPosts = () => {
  */
 export const useStoreUserLocalPost = () => {
   const setUserPosts = useSetUserLocalPosts();
-
   return useCallback(
     (user: string | undefined, post: Post) => {
       setUserPosts(user, posts => {
@@ -79,6 +98,7 @@ export const useStoreUserLocalPost = () => {
             userPosts[existingPostIndex] = post;
             break;
         }
+        console.log('[Recoil] Store user local post');
         return userPosts;
       });
     },

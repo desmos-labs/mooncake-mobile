@@ -1,46 +1,13 @@
-import { useLazyQuery } from '@apollo/client';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useIsPostHiddenLocally } from '@recoil/hiddenPosts';
-import { usePostCommentsToSync } from '@recoil/posts';
-import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
+import { useComments, useDeleteComments, useSetComments } from '@recoil/comments';
+import { useUserLocalComments } from '@recoil/localPosts';
+import useSyncLocalComments from 'hooks/posts/comments/useSyncLocalComments';
+import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
-import { mergePosts } from 'lib/PostsUtils';
-import React, { useCallback } from 'react';
+import { sortPostsByCreationDate } from 'lib/PostsUtils';
+import { useCallback, useEffect, useMemo } from 'react';
 import GetPostComments from 'services/graphql/queries/GetPostComments';
 import { Post } from 'types/posts';
-
-/**
- * Hook that provides a function that can be used inside the usePaginatedData
- * hook to fetch the current user's liked events.
- */
-const useFetchComments = (postId: number) => {
-  const [fetchPostComments] = useLazyQuery(GetPostComments);
-
-  return React.useCallback<FetchDataFunction<Post>>(
-    async (offset, limit) => {
-      const { data, error } = await fetchPostComments({
-        fetchPolicy: 'no-cache',
-        variables: {
-          postId,
-          offset,
-          limit,
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      const comments = data?.comments?.map(convertGraphQLPost) ?? [];
-
-      return {
-        data: comments,
-        endReached: comments.length < limit,
-      };
-    },
-    [fetchPostComments, postId],
-  );
-};
 
 /**
  * Hook that allows to get the reactions for the given post.
@@ -54,32 +21,52 @@ const useFetchComments = (postId: number) => {
  */
 const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage: number = 20) => {
   const activeAccountAddress = useActiveAccountAddress();
-  const { localHiddenPosts } = useIsPostHiddenLocally();
-  const commentsToSync = usePostCommentsToSync(activeAccountAddress, post.subspaceId, post.id);
+  const cachedComments = useComments(post.id);
+  const storeComments = useSetComments();
+  const syncLocalComments = useSyncLocalComments(post.id);
+  const localComments = useUserLocalComments(activeAccountAddress, post.id);
+  const deleteComments = useDeleteComments();
 
-  const mapDataFunction = useCallback(
-    (data: Post[]) => {
-      if (!commentsToSync) {
-        return [];
-      }
-      const notHiddenComments = commentsToSync.filter(
-        comment => !localHiddenPosts.includes(comment.id),
-      );
-      const onChainComments = (data ?? []).filter((comment: Post) => comment.author);
-      const [merged] = mergePosts(notHiddenComments, onChainComments);
-      return merged;
+  const convertData = useCallback((data: any): Post[] => {
+    return (data?.comments ?? []).map(convertGraphQLPost);
+  }, []);
+
+  const onDataFetched = useCallback(
+    (comments: Post[]) => {
+      syncLocalComments(comments);
+      storeComments(post.id, comments);
     },
-    [commentsToSync, localHiddenPosts],
+    [post.id, syncLocalComments, storeComments],
   );
 
-  const paginatedDataFields = usePaginatedData(useFetchComments(post.id), {
-    itemsPerPage: commentsPerPage,
-    autoFetchFirstPage: true,
-    mapData: mapDataFunction,
+  useEffect(() => {
+    return () => deleteComments(post.id);
+  }, []);
+
+  const { loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery({
+    query: GetPostComments,
+    queryOptions: {
+      itemsPerPage: commentsPerPage,
+    },
+    variables: {
+      postId: post.id,
+    },
+    convertData,
+    onDataFetched,
   });
 
+  const comments = useMemo(() => {
+    return sortPostsByCreationDate([...localComments, ...cachedComments]);
+  }, [localComments, cachedComments]);
+
   return {
-    ...paginatedDataFields,
+    comments,
+    loading,
+    refresh,
+    refreshing,
+    fetchMore,
+    fetchingMore,
+    error,
   };
 };
 

@@ -12,7 +12,7 @@ import { Post } from 'types/posts';
  * the server, to make sure the local posts can be updated properly.
  * @param userAddress
  */
-const useSyncLocalPosts = (userAddress?: string) => {
+const useSyncLocalPosts = (userAddress: string | undefined) => {
   const localPosts = useUserLocalPosts(userAddress);
   const setUserLocalPosts = useSetUserLocalPosts();
 
@@ -22,7 +22,7 @@ const useSyncLocalPosts = (userAddress?: string) => {
       const filteredLocalPosts = _.differenceBy(localPosts, toRemoveLocalPosts, p => p.externalId);
       setUserLocalPosts(userAddress, filteredLocalPosts);
     },
-    [localPosts, setUserLocalPosts],
+    [localPosts, setUserLocalPosts, userAddress],
   );
 };
 

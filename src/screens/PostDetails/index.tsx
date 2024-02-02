@@ -92,11 +92,12 @@ const PostDetails = () => {
 
   // Comments data
   const {
-    data: comments,
+    comments,
     loading: areCommentsLoading,
     refresh: refreshComments,
     fetchMore: fetchMoreComments,
   } = usePostComments(postData);
+
   const { refetch: refreshCommentsCount } = usePostCommentsCount(postData);
 
   const handleCreateComment = useHandleCreateComment();
@@ -109,7 +110,6 @@ const PostDetails = () => {
 
   // Comment creation
   const onCommentCreated = useCallback(async () => {
-    await refreshComments();
     await refreshCommentsCount();
     setCommentPosting(false);
   }, [refreshComments, refreshCommentsCount]);
@@ -126,7 +126,6 @@ const PostDetails = () => {
   // Method used to refresh the post data
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
-    await refreshPost();
     await refreshComments();
     await refreshCommentsCount();
     setPageRefreshing(false);
@@ -198,7 +197,7 @@ const PostDetails = () => {
       topBar={<PostTopBar post={post} onBackButtonPress={goBack} />}>
       {/* List of comments */}
       <FlashList
-        estimatedItemSize={120}
+        estimatedItemSize={110}
         ref={scrollViewRef}
         // Only show the loading indicator on the flatList if the user manually drags down on it
         refreshing={!firstLoad && pageRefreshing}
