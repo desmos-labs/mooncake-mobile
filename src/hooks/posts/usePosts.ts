@@ -47,7 +47,7 @@ const useQueryData = (params: PostsQueryParams): QueryOptions<PostQueryVariables
   const getDiscoveryQuery = useCallback(
     () => ({
       query: GetPosts,
-      variables: { offset: 0, limit: 3 },
+      variables: { offset: 0, limit: 20 },
     }),
     [],
   );
@@ -55,7 +55,7 @@ const useQueryData = (params: PostsQueryParams): QueryOptions<PostQueryVariables
   const getTimelineQuery = useCallback(
     () => ({
       query: GetFollowingUsersPosts,
-      variables: { offset: 0, limit: 3 },
+      variables: { offset: 0, limit: 20 },
     }),
     [],
   );
@@ -93,18 +93,18 @@ const usePosts = (queryType: PostsQueryType) => {
     [cachedPosts],
   );
 
-  const { loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery({
-    query: queryData.query,
-    queryOptions: {
-      itemsPerPage: queryData.variables?.limit ?? 25,
+  const { items, loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery(
+    {
+      query: queryData.query,
+      queryOptions: {
+        itemsPerPage: queryData.variables?.limit ?? 20,
+      },
+      variables: {
+        ...queryData.variables,
+      },
+      convertData,
     },
-    variables: {
-      ...queryData.variables,
-    },
-    convertData,
-    transformData,
-    cacheState: [[], storePosts],
-  });
+  );
 
   const discoveryPosts = useStoredRootPosts(activeAccountAddress!);
   const timelinePosts = useStoredFollowingPosts(activeAccountAddress!, followingAddresses);
@@ -114,7 +114,7 @@ const usePosts = (queryType: PostsQueryType) => {
   }, [queryType, timelinePosts, discoveryPosts]);
 
   return {
-    posts,
+    posts: items,
     loading,
     fetchMore,
     fetchingMore,

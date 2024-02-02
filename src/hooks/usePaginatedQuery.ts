@@ -1,64 +1,58 @@
 import { DocumentNode, FetchPolicy, useQuery } from '@apollo/client';
+import sleep from 'lib/sleep';
 import { useCallback, useRef, useState } from 'react';
 
-type SetterOrUpdater<T> = (valOrUpdater: ((currVal: T) => T) | T) => void;
-
-interface PaginatedQueryParams<QT, T, R> {
+interface PaginatedQueryParams<QT, T> {
   readonly query: DocumentNode;
-  readonly convertData: (data: QT) => T[];
-  readonly transformData?: (data: T[]) => R[];
+  readonly convertData: (data?: QT) => T[];
   readonly queryOptions?: {
     readonly itemsPerPage?: number;
     readonly fetchPolicy?: FetchPolicy;
   };
   readonly variables?: Record<any, any>;
-  readonly cacheState?: [R[], SetterOrUpdater<R[]>];
 }
 
-export default function usePaginatedQuery<QT, T, R = T>({
+export default function usePaginatedQuery<QT, T>({
   query,
   convertData,
-  transformData,
   queryOptions,
   variables,
-  cacheState,
-}: PaginatedQueryParams<QT, T, R>) {
-  const [items, setItems] = useState<R[]>([]);
+}: PaginatedQueryParams<QT, T>) {
+  const loadingData = useRef(true);
+  const fetchOffsetRef = useRef(0);
+  const [items, setItems] = useState<T[]>([]);
+  const [error, setError] = useState<Error>();
   const [refreshing, setRefreshing] = useState(false);
   const [fetchingMore, setFetchingMore] = useState(false);
-  const dataRef = useRef<T[]>([]);
-
-  const updateItems = useCallback<SetterOrUpdater<R[]>>(
-    valOrUpdater => {
-      if (cacheState) {
-        cacheState[1](valOrUpdater);
-      } else {
-        setItems(valOrUpdater);
-      }
-    },
-    [cacheState],
-  );
 
   const onCompleted = useCallback(
-    (data: QT) => {
+    (data: QT, refresh?: boolean) => {
       console.log('[APOLLO] onCompleted');
       const convertedData = convertData(data);
-      dataRef.current = [...dataRef.current, ...convertedData];
-      if (transformData) {
-        updateItems(transformData(dataRef.current));
-      } else {
-        // @ts-ignore
-        updateItems(dataRef.current);
-      }
+      setItems(old => {
+        if (refresh) {
+          fetchOffsetRef.current = convertedData.length;
+          return convertedData;
+        } else {
+          const newData = [...old, ...convertedData];
+          fetchOffsetRef.current = newData.length;
+          return newData;
+        }
+      });
+      loadingData.current = false;
     },
-    [convertData, transformData, updateItems],
+    [convertData],
   );
+
+  const onError = useCallback((error: Error) => {
+    setError(error);
+    loadingData.current = false;
+  }, []);
 
   const {
     refetch: refetchData,
     fetchMore: fetchMoreData,
     loading,
-    error,
   } = useQuery<QT>(query, {
     variables: {
       ...variables,
@@ -66,29 +60,46 @@ export default function usePaginatedQuery<QT, T, R = T>({
       limit: queryOptions?.itemsPerPage ?? 20,
     },
     onCompleted,
+    onError,
     fetchPolicy: queryOptions?.fetchPolicy ?? 'no-cache',
   });
 
   const refresh = useCallback(async () => {
     console.log('[APOLLO] refresh');
     setRefreshing(true);
-    await refetchData();
+    const { data, error } = await refetchData();
+    await sleep(500);
+    if (error) {
+      onError(error);
+    } else {
+      onCompleted(data, true);
+    }
     setRefreshing(false);
   }, [refetchData]);
 
   const fetchMore = useCallback(async () => {
+    if (loadingData.current) {
+      console.log('[APOLLO] Already loading the data');
+      return;
+    }
     console.log('[APOLLO] fetchMore');
+    loadingData.current = true;
     setFetchingMore(true);
-    await fetchMoreData({
+    const { data, error } = await fetchMoreData({
       variables: {
         offset: fetchOffsetRef.current,
       },
     });
+    if (error) {
+      onError(error);
+    } else {
+      onCompleted(data);
+    }
     setFetchingMore(false);
   }, [fetchMoreData]);
 
   return {
-    items: cacheState ? cacheState[0] : items,
+    items,
     refresh,
     refreshing,
     fetchMore,

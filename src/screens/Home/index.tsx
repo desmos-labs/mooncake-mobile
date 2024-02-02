@@ -156,6 +156,7 @@ const Home = () => {
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
         getItemType={getPostType}
+        onEndReachedThreshold={0.8}
       />
     </View>
   );
