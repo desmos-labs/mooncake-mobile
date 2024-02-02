@@ -1,14 +1,12 @@
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import React from 'react';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, RecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
 import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
- * This also contains all the posts that have been created by the user but are
- * still waiting to be broadcast on-chain.
  * It's cached using MMKV so that the user can see the last post before they went offline.
  * We use a Record<String, Post[]> in order to be able to save multiple user's timeline if
  * the application user has multiple profiles.
@@ -20,6 +18,24 @@ const postsState = atom<Record<string, Post[]>>({
     ({ onSet }) => {
       onSet(posts => {
         setMMKV(MMKVKEYS.POSTS, posts);
+      });
+    },
+  ],
+});
+
+/**
+ * Atom that holds all the posts moda from the users that the user follows.
+ * It's cached using MMKV so that the user can see the last post before they went offline.
+ * We use a Record<String, Post[]> in order to be able to save multiple user's timeline if
+ * the application user has multiple profiles.
+ */
+const followingPostsState = atom<Record<string, Post[]>>({
+  key: 'followingPostsState',
+  default: getMMKV(MMKVKEYS.FOLLOWING_POSTS) ?? {},
+  effects: [
+    ({ onSet }) => {
+      onSet(posts => {
+        setMMKV(MMKVKEYS.FOLLOWING_POSTS, posts);
       });
     },
   ],
@@ -93,10 +109,8 @@ export const usePostCommentsToSync = (
     return userPosts.filter(p => isCommentTo(p, postId) && p.status !== PostStatus.DELETED_LOCALLY);
   }, [posts, user, postId]);
 };
-/**
- * Hook that allows to store a given post.
- */
-export const useStorePost = () => {
+
+const useCreateStorePost = (recoil: RecoilState<Record<string, Post[]>>) => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
     (user: string, post: Post) => {
@@ -127,18 +141,16 @@ export const useStorePost = () => {
 };
 
 /**
- * Hook that allows to set the posts related to a user.
- *
- * <b>Note</b>
- * It should be responsibility of the caller of this hook to properly merge all the
- * synced and not-synced posts appropriately. By calling this method, the current timeline
- * will be entirely replaced with the given value.
+ * Hook that allows to store a given post.
  */
-export const useStorePosts = (user: string) => {
-  const setPosts = useSetRecoilState(postsState);
+export const useStorePost = () => {
+  return useCreateStorePost(postsState);
+};
+
+export const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: string) => {
+  const setPosts = useSetRecoilState(recoil);
   return React.useCallback(
     (valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
-      console.log('[RECOIL] useStorePosts', user, valOrUpdater);
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -160,6 +172,30 @@ export const useStorePosts = (user: string) => {
 };
 
 /**
+ * Hook that allows to set the posts related to a user.
+ *
+ * <b>Note</b>
+ * It should be responsibility of the caller of this hook to properly merge all the
+ * synced and not-synced posts appropriately. By calling this method, the current timeline
+ * will be entirely replaced with the given value.
+ */
+export const useStorePosts = (user: string) => {
+  return useMakeStorePosts(postsState, user);
+};
+
+/**
+ * Hook that allows to set the posts created by the users followed by a user.
+ *
+ * <b>Note</b>
+ * It should be responsibility of the caller of this hook to properly merge all the
+ * synced and not-synced posts appropriately. By calling this method, the current timeline
+ * will be entirely replaced with the given value.
+ */
+export const useStoreFollowingPosts = (user: string) => {
+  return useMakeStorePosts(followingPostsState, user);
+};
+
+/**
  * Hook that allows to get the stored root posts for the user having the given address.
  * A root post is defined as a post that has <code>conversationId</code> equals to <code>0</code>.
  */
@@ -173,7 +209,7 @@ export const useStoredRootPosts = (user: string) => {
  * created by either one of the addresses provided inside the <code>users</code> array.
  */
 export const useStoredFollowingPosts = (user: string, followingAddresses: string[]) => {
-  const posts = useRecoilValue(postsState);
+  const posts = useRecoilValue(followingPostsState);
   return React.useMemo(
     () => posts[user]?.filter(post => followingAddresses.includes(post.author.address)) ?? [],
     [followingAddresses, posts, user],

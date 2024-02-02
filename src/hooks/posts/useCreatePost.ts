@@ -196,13 +196,10 @@ const useCreatePost = () => {
             onProcessCompleted();
           }
 
-          storePost(activeProfile.address, {
+          storeLocalPost(activeProfile.address, {
             ...post,
             status: PostStatus.SYNCED,
           });
-
-          // Delete the cached post
-          deleteLocalPost(activeProfile.address, post);
 
           showToast({
             toastType: ToastType.success,

@@ -87,7 +87,7 @@ const BProvider = () => {
               <RootNavigator />
             </BottomSheetModalProvider>
           </NavigationContainer>
-          <Toast config={toastConfig} topOffset={insets.top || 60} visibilityTime={50000} />
+          <Toast config={toastConfig} topOffset={insets.top || 60} />
         </NativeBaseProvider>
       </GestureHandlerRootView>
     </ApolloProvider>

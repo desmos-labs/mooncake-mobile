@@ -15,6 +15,7 @@ export enum MMKVKEYS {
 
   // Posts data
   POSTS = 'POSTS',
+  FOLLOWING_POSTS = 'FOLLOWING_POSTS',
 
   // Transactions data
   PENDING_TRANSACTIONS = 'PENDING_TRANSACTIONS',

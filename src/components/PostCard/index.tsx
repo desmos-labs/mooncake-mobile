@@ -13,6 +13,7 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import { isPostPending, Post } from 'types/posts';
@@ -108,29 +109,31 @@ const PostCard = (props: PostCardProps) => {
   });
 
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={onPressDetails}>
-      {/* Post author info */}
-      <PostCardProfileInfo
-        post={post}
-        onPressAuthor={onPressAuthor}
-        onPressFollow={onPressFollowOrUnFollow}
-        onPressReport={onPressReport}
-        onPressHide={onPressHide}
-        onPressBlock={onPressBlock}
-      />
-      {/* Post text */}
-      {post.text && (
-        <Typography.Regular16 style={{ marginTop: theme.spacing.m }}>
-          {post.text}
-        </Typography.Regular16>
-      )}
-      {/* Media view */}
-      {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
-      {/* Post bottom bar */}
-      {!isPending && (
-        <PostCardBottomBar post={post} onPressComment={onPressComment} onPressShare={sharePost} />
-      )}
-    </TouchableOpacity>
+    <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
+      <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={onPressDetails}>
+        {/* Post author info */}
+        <PostCardProfileInfo
+          post={post}
+          onPressAuthor={onPressAuthor}
+          onPressFollow={onPressFollowOrUnFollow}
+          onPressReport={onPressReport}
+          onPressHide={onPressHide}
+          onPressBlock={onPressBlock}
+        />
+        {/* Post text */}
+        {post.text && (
+          <Typography.Regular16 style={{ marginTop: theme.spacing.m }}>
+            {post.text}
+          </Typography.Regular16>
+        )}
+        {/* Media view */}
+        {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
+        {/* Post bottom bar */}
+        {!isPending && (
+          <PostCardBottomBar post={post} onPressComment={onPressComment} onPressShare={sharePost} />
+        )}
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 

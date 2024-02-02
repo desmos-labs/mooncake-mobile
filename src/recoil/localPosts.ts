@@ -1,3 +1,4 @@
+import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import { useCallback, useMemo } from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Post } from 'types/posts';
@@ -35,23 +36,22 @@ export const useSetUserLocalPosts = () => {
         return;
       }
 
-      if (typeof valOrUpdater === 'function') {
-        setPosts(currentTimeline => {
-          const updatedPosts: Record<string, Post[]> = {
-            ...currentTimeline,
-          };
-          updatedPosts[userAddress] = valOrUpdater(currentTimeline[userAddress] ?? []);
-          return updatedPosts;
-        });
-      } else {
-        setPosts(currentTimeline => {
-          const updatedPosts: Record<string, Post[]> = {
-            ...currentTimeline,
-          };
-          updatedPosts[userAddress] = valOrUpdater;
-          return updatedPosts;
-        });
-      }
+      setPosts(currentTimeline => {
+        const updatedPosts: Record<string, Post[]> = {
+          ...currentTimeline,
+        };
+
+        let posts: Post[];
+
+        if (typeof valOrUpdater === 'function') {
+          posts = valOrUpdater(currentTimeline[userAddress] ?? []);
+        } else {
+          posts = valOrUpdater;
+        }
+
+        updatedPosts[userAddress] = sortPostsByCreationDate(posts);
+        return updatedPosts;
+      });
     },
     [setPosts],
   );
@@ -64,9 +64,26 @@ export const useSetUserLocalPosts = () => {
 export const useStoreUserLocalPost = () => {
   const setUserPosts = useSetUserLocalPosts();
 
-  return useCallback((user: string | undefined, post: Post) => {
-    setUserPosts(user, current => [post, ...current]);
-  }, []);
+  return useCallback(
+    (user: string | undefined, post: Post) => {
+      setUserPosts(user, posts => {
+        const userPosts = [...posts];
+        const existingPostIndex = findSamePost(userPosts, post);
+        switch (existingPostIndex) {
+          case -1:
+            // Add the non-existing post
+            userPosts.unshift(post);
+            break;
+          default:
+            // Replace the existing post
+            userPosts[existingPostIndex] = post;
+            break;
+        }
+        return userPosts;
+      });
+    },
+    [setUserPosts],
+  );
 };
 
 /**
@@ -76,7 +93,10 @@ export const useStoreUserLocalPost = () => {
 export const useDeleteUserLocalPost = () => {
   const setUserPosts = useSetUserLocalPosts();
 
-  return useCallback((user: string | undefined, post: Post) => {
-    setUserPosts(user, current => current.filter(p => p.externalId !== post.externalId));
-  }, []);
+  return useCallback(
+    (user: string | undefined, post: Post) => {
+      setUserPosts(user, current => current.filter(p => p.externalId !== post.externalId));
+    },
+    [setUserPosts],
+  );
 };

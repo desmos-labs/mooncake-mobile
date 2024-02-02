@@ -1,19 +1,19 @@
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
+import { CompositeScreenProps, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import useRefreshSession from 'hooks/apis/useRefreshSession';
+import { Box, useTheme } from 'native-base';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { StatusBar } from 'react-native';
-import { Box, useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Home from 'screens/Home';
-import { CompositeScreenProps, useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
-import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 
 // -------------------------------------------------------------------------------------
 // --- TAB DATA
@@ -79,7 +79,7 @@ const HomeTabs = () => {
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <Tab.Navigator
         tabBar={renderTabBar}
-        screenOptions={{ swipeEnabled: false }}
+        screenOptions={{ swipeEnabled: false, lazy: true }}
         initialRouteName={initialRouteName}>
         <Tab.Screen
           name={ROUTES.HOME_TAB_DISCOVER}

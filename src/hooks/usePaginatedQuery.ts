@@ -10,6 +10,7 @@ interface PaginatedQueryParams<QT, T> {
     readonly fetchPolicy?: FetchPolicy;
   };
   readonly variables?: Record<any, any>;
+  readonly onDataFetched?: (items: T[], isRefresh: boolean) => any;
 }
 
 export default function usePaginatedQuery<QT, T>({
@@ -17,10 +18,11 @@ export default function usePaginatedQuery<QT, T>({
   convertData,
   queryOptions,
   variables,
+  onDataFetched,
 }: PaginatedQueryParams<QT, T>) {
   const loadingData = useRef(true);
-  const fetchOffsetRef = useRef(0);
   const [items, setItems] = useState<T[]>([]);
+  const itemsRef = useRef<T[]>([]);
   const [error, setError] = useState<Error>();
   const [refreshing, setRefreshing] = useState(false);
   const [fetchingMore, setFetchingMore] = useState(false);
@@ -28,21 +30,18 @@ export default function usePaginatedQuery<QT, T>({
   const onCompleted = useCallback(
     (data: QT, refresh?: boolean) => {
       const convertedData = convertData(data);
+      if (refresh) {
+        itemsRef.current = convertedData;
+      } else {
+        itemsRef.current = [...itemsRef.current, ...convertedData];
+      }
+      onDataFetched?.(itemsRef.current, refresh ?? false);
       setTimeout(() => {
-        setItems(old => {
-          if (refresh) {
-            fetchOffsetRef.current = convertedData.length;
-            return convertedData;
-          } else {
-            const newData = [...old, ...convertedData];
-            fetchOffsetRef.current = newData.length;
-            return newData;
-          }
-        });
+        setItems(itemsRef.current);
         loadingData.current = false;
       }, 35);
     },
-    [convertData],
+    [convertData, onDataFetched],
   );
 
   const onError = useCallback((receivedError: Error) => {
@@ -86,7 +85,7 @@ export default function usePaginatedQuery<QT, T>({
     setFetchingMore(true);
     const { data, error: fetchMoreError } = await fetchMoreData({
       variables: {
-        offset: fetchOffsetRef.current,
+        offset: itemsRef.current.length,
       },
     });
     if (fetchMoreError) {

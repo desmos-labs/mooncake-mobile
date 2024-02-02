@@ -1,12 +1,19 @@
 import { QueryOptions } from '@apollo/client';
 import { OperationVariables } from '@apollo/client/core';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@recoil/posts';
+import { useUserLocalPosts } from '@recoil/localPosts';
+import {
+  useStoredFollowingPosts,
+  useStoredRootPosts,
+  useStoreFollowingPosts,
+  useStorePosts,
+} from '@recoil/posts';
+import useSyncLocalPosts from 'hooks/posts/useSyncLocalPosts';
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
-import { mergePosts } from 'lib/PostsUtils';
-import { useCallback, useEffect, useMemo } from 'react';
+import { sortPostsByCreationDate } from 'lib/PostsUtils';
+import { useCallback, useMemo } from 'react';
 import GetFollowingUsersPosts from 'services/graphql/queries/GetFollowingUsersPosts';
 import GetPosts from 'services/graphql/queries/GetPosts';
 import { Post } from 'types/posts';
@@ -78,38 +85,48 @@ const usePosts = (queryType: PostsQueryType) => {
   const queryParams = useQueryParams(queryType);
   const queryData = useQueryData(queryParams);
   const storePosts = useStorePosts(activeAccountAddress!);
+  const storeFollowingPosts = useStoreFollowingPosts(activeAccountAddress!);
+  const localPosts = useUserLocalPosts(activeAccountAddress);
+  const syncLocalPosts = useSyncLocalPosts(activeAccountAddress);
 
   const convertData = useCallback((data: any): Post[] => {
     return (data?.posts ?? []).map(convertGraphQLPost);
   }, []);
 
-  const { items, loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery(
-    {
-      query: queryData.query,
-      queryOptions: {
-        itemsPerPage: queryData.variables?.limit ?? 20,
-      },
-      variables: {
-        ...queryData.variables,
-      },
-      convertData,
+  const onDataFetched = useCallback(
+    (posts: Post[]) => {
+      syncLocalPosts(posts);
+      if (queryType === PostsQueryType.DISCOVERY) {
+        storePosts(posts);
+      } else {
+        storeFollowingPosts(posts);
+      }
     },
+    [queryType, syncLocalPosts, storePosts, storeFollowingPosts],
   );
 
-  useEffect(() => {
-    storePosts(currentPosts => {
-      const filteredPosts = items.filter(p => p.author);
-      const [merged] = mergePosts(currentPosts, filteredPosts);
-      return merged;
-    });
-  }, [items, storePosts]);
+  const { loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery({
+    query: queryData.query,
+    queryOptions: {
+      itemsPerPage: queryData.variables?.limit ?? 20,
+    },
+    variables: {
+      ...queryData.variables,
+    },
+    convertData,
+    onDataFetched,
+  });
 
   const discoveryPosts = useStoredRootPosts(activeAccountAddress!);
   const timelinePosts = useStoredFollowingPosts(activeAccountAddress!, followingAddresses);
 
   const posts = useMemo(() => {
-    return queryType === PostsQueryType.TIMELINE ? timelinePosts : discoveryPosts;
-  }, [queryType, timelinePosts, discoveryPosts]);
+    if (queryType === PostsQueryType.DISCOVERY) {
+      return sortPostsByCreationDate([...localPosts, ...discoveryPosts]);
+    } else {
+      return sortPostsByCreationDate([...localPosts, ...timelinePosts]);
+    }
+  }, [queryType, timelinePosts, discoveryPosts, localPosts]);
 
   return {
     posts,
