@@ -1,4 +1,5 @@
 import { useAppStateValue } from '@recoil/appState';
+import { useDeleteUserLocalPost, useStoreUserLocalPost } from '@recoil/localPosts';
 import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
 import { useActiveProfile } from '@recoil/profiles';
 import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
@@ -84,6 +85,8 @@ const useCreatePost = () => {
   const createPostState = useCreatePostState();
   const resetCreatePostState = useResetCreatePostState();
 
+  const storeLocalPost = useStoreUserLocalPost();
+  const deleteLocalPost = useDeleteUserLocalPost();
   const storePost = useStorePost();
   const deletePost = useRemoveStoredPendingPost();
 
@@ -158,7 +161,7 @@ const useCreatePost = () => {
       }
 
       // Store the post locally
-      storePost(activeProfile.address, post);
+      storeLocalPost(activeProfile.address, post);
 
       // Start the task to sign and broadcast the transaction
       const taskReference = await scheduleTask(
@@ -198,6 +201,9 @@ const useCreatePost = () => {
             status: PostStatus.SYNCED,
           });
 
+          // Delete the cached post
+          deleteLocalPost(activeProfile.address, post);
+
           showToast({
             toastType: ToastType.success,
             title: t('success', { ns: 'common' }),
@@ -210,7 +216,7 @@ const useCreatePost = () => {
           }
 
           // Delete the cached post
-          deletePost(activeProfile.address, post.subspaceId, post.externalId);
+          deleteLocalPost(activeProfile.address, post);
 
           showToast({
             toastType: ToastType.error,

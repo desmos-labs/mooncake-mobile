@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { SetterOrUpdater, atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Post } from 'types/posts';
 
 /**
@@ -27,10 +27,10 @@ export const useUserLocalPosts = (userAddress?: string) => {
  * Hook that provides a function to update user's posts that
  * are currently being broadcast on-chain.
  */
-export const useSetUserLocalPosts = (userAddress?: string) => {
+export const useSetUserLocalPosts = () => {
   const setPosts = useSetRecoilState(localPosts);
-  return useCallback<SetterOrUpdater<Post[]>>(
-    valOrUpdater => {
+  return useCallback(
+    (userAddress: string | undefined, valOrUpdater: Post[] | ((value: Post[]) => Post[])) => {
       if (!userAddress) {
         return;
       }
@@ -53,6 +53,30 @@ export const useSetUserLocalPosts = (userAddress?: string) => {
         });
       }
     },
-    [setPosts, userAddress],
+    [setPosts],
   );
+};
+
+/**
+ * Hook that provides a function to store a post
+ * that the user is broadcasting.
+ */
+export const useStoreUserLocalPost = () => {
+  const setUserPosts = useSetUserLocalPosts();
+
+  return useCallback((user: string | undefined, post: Post) => {
+    setUserPosts(user, current => [post, ...current]);
+  }, []);
+};
+
+/**
+ * Hook that provides a function to delete a post
+ * that the user is broadcasting.
+ */
+export const useDeleteUserLocalPost = () => {
+  const setUserPosts = useSetUserLocalPosts();
+
+  return useCallback((user: string | undefined, post: Post) => {
+    setUserPosts(user, current => current.filter(p => p.externalId !== post.externalId));
+  }, []);
 };
