@@ -6,7 +6,7 @@ import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import GetFollowingUsersPosts from 'services/graphql/queries/GetFollowingUsersPosts';
 import GetPosts from 'services/graphql/queries/GetPosts';
 import { Post } from 'types/posts';
@@ -78,20 +78,10 @@ const usePosts = (queryType: PostsQueryType) => {
   const queryParams = useQueryParams(queryType);
   const queryData = useQueryData(queryParams);
   const storePosts = useStorePosts(activeAccountAddress!);
-  const cachedPosts = useStoredRootPosts(activeAccountAddress!);
 
   const convertData = useCallback((data: any): Post[] => {
     return (data?.posts ?? []).map(convertGraphQLPost);
   }, []);
-
-  const transformData = useCallback(
-    (data: Post[]): Post[] => {
-      const filteredPosts = data.filter((post: Post) => post.author);
-      const [merged] = mergePosts(cachedPosts, filteredPosts);
-      return merged;
-    },
-    [cachedPosts],
-  );
 
   const { items, loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery(
     {
@@ -106,6 +96,14 @@ const usePosts = (queryType: PostsQueryType) => {
     },
   );
 
+  useEffect(() => {
+    storePosts(currentPosts => {
+      const filteredPosts = items.filter(p => p.author);
+      const [merged] = mergePosts(currentPosts, filteredPosts);
+      return merged;
+    });
+  }, [items, storePosts]);
+
   const discoveryPosts = useStoredRootPosts(activeAccountAddress!);
   const timelinePosts = useStoredFollowingPosts(activeAccountAddress!, followingAddresses);
 
@@ -114,7 +112,7 @@ const usePosts = (queryType: PostsQueryType) => {
   }, [queryType, timelinePosts, discoveryPosts]);
 
   return {
-    posts: items,
+    posts,
     loading,
     fetchMore,
     fetchingMore,
