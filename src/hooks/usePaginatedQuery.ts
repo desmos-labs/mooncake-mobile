@@ -27,25 +27,26 @@ export default function usePaginatedQuery<QT, T>({
 
   const onCompleted = useCallback(
     (data: QT, refresh?: boolean) => {
-      console.log('[APOLLO] onCompleted');
       const convertedData = convertData(data);
-      setItems(old => {
-        if (refresh) {
-          fetchOffsetRef.current = convertedData.length;
-          return convertedData;
-        } else {
-          const newData = [...old, ...convertedData];
-          fetchOffsetRef.current = newData.length;
-          return newData;
-        }
-      });
-      loadingData.current = false;
+      setTimeout(() => {
+        setItems(old => {
+          if (refresh) {
+            fetchOffsetRef.current = convertedData.length;
+            return convertedData;
+          } else {
+            const newData = [...old, ...convertedData];
+            fetchOffsetRef.current = newData.length;
+            return newData;
+          }
+        });
+        loadingData.current = false;
+      }, 35);
     },
     [convertData],
   );
 
-  const onError = useCallback((error: Error) => {
-    setError(error);
+  const onError = useCallback((receivedError: Error) => {
+    setError(receivedError);
     loadingData.current = false;
   }, []);
 
@@ -65,24 +66,22 @@ export default function usePaginatedQuery<QT, T>({
   });
 
   const refresh = useCallback(async () => {
-    console.log('[APOLLO] refresh');
     setRefreshing(true);
-    const { data, error } = await refetchData();
+    const { data, error: refetchError } = await refetchData();
     await sleep(500);
-    if (error) {
-      onError(error);
+    if (refetchError) {
+      onError(refetchError);
     } else {
       onCompleted(data, true);
     }
     setRefreshing(false);
-  }, [refetchData]);
+  }, [onCompleted, onError, refetchData]);
 
   const fetchMore = useCallback(async () => {
     if (loadingData.current) {
-      console.log('[APOLLO] Already loading the data');
       return;
     }
-    console.log('[APOLLO] fetchMore');
+
     loadingData.current = true;
     setFetchingMore(true);
     const { data, error: fetchMoreError } = await fetchMoreData({
