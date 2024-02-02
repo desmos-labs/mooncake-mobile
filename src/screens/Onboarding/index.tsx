@@ -181,7 +181,7 @@ const Onboarding = () => {
       setFeeGrantRequestFailed(true);
       Sentry.Native.captureException(signUpResult.error);
       showErrorModal(
-        t('an error occured while requesting the fee grant', {
+        t('an error occurred while requesting the fee grant', {
           error: signUpResult.error.message,
         }),
         requestGrant,

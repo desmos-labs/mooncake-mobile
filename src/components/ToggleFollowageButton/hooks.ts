@@ -9,7 +9,7 @@ import { DesmosProfile } from 'types/desmos';
 // eslint-disable-next-line import/prefer-default-export
 export const useToggleFollowage = (counterpartyProfile: DesmosProfile) => {
   const [updatingFollow, setUpdatingFollow] = React.useState(false);
-  const { isFollowing, loading: fetchingFollowState } = useIsFollowing(counterpartyProfile.address);
+  const isFollowing = useIsFollowing(counterpartyProfile);
   const followOrUnfollowUser = useFollowOrUnfollowUser();
 
   const toggleFollow = React.useCallback(async () => {
@@ -20,7 +20,6 @@ export const useToggleFollowage = (counterpartyProfile: DesmosProfile) => {
   }, [counterpartyProfile, followOrUnfollowUser]);
 
   return {
-    fetchingFollowState,
     following: isFollowing,
     updatingFollow,
     toggleFollow,
