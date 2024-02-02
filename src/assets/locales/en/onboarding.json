@@ -18,6 +18,6 @@
   "follow failed description": "Oops! Something went wrong while trying to follow the selected creator.",
   "follow failed description_plural": "Oops! Something went wrong while trying to follow the selected creators.",
   "requesting grant": "Requesting grant...",
-  "an error occured while requesting the fee grant": "Oops! Something went wrong while requesting the fee grant.\n\n{{error}}",
-  "request grant": "Request grant",
+  "an error occurred while requesting the fee grant": "Oops! Something went wrong while requesting the fee grant.\n\n{{error}}",
+  "request grant": "Request grant"
 }
