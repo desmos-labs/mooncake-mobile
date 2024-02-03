@@ -1,5 +1,6 @@
 import React from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Atom that contains a user's followers.
@@ -35,15 +36,14 @@ export const useCachedUserFollowing = (user: string | undefined) => {
  * NOTE: The list of followers will be erased when the application closes.
  */
 export const useSetCachedUserFollowing = () => {
-  const setCahcedFollowers = useSetRecoilState(followersState);
-
+  const setCachedFollowers = useSetRecoilState(followersState);
   return React.useCallback(
     (user: string | undefined, setOrUpdater: string[] | ((prev: string[]) => string[])) => {
       if (!user) {
         return;
       }
 
-      setCahcedFollowers(currentFollowers => {
+      setCachedFollowers(currentFollowers => {
         // Get the current user's follower.
         const userFollowers = currentFollowers[user] ?? [];
         // Obtain the new user's followers.
@@ -61,7 +61,7 @@ export const useSetCachedUserFollowing = () => {
         };
       });
     },
-    [setCahcedFollowers],
+    [setCachedFollowers],
   );
 };
 
@@ -69,11 +69,25 @@ export const useSetCachedUserFollowing = () => {
  * Hook that allows to know if the current user is following a given user or not.
  * If the provided user is undefined, the hook will always return false.
  */
-export const useCachedIsFollowingUser = (user: string | undefined, counterparty: string) => {
+export const useCachedIsFollowingUser = (user: string | undefined, counterparty: DesmosProfile) => {
   const followers = useCachedUserFollowing(user);
   return React.useMemo(
-    () => (user ? followers.includes(counterparty) : false),
+    () => user && followers.includes(counterparty.address),
     [user, followers, counterparty],
+  );
+};
+
+/**
+ * Hook that returns a function that allows to get whether the current
+ * user is following the user having the given counterparty address.
+ */
+export const useGetCachedIsFollowingUser = () => {
+  const followers = useCachedUserFollowing(undefined);
+  return React.useCallback(
+    (user: string | undefined, counterparty: DesmosProfile) => {
+      return user && followers.includes(counterparty.address);
+    },
+    [followers],
   );
 };
 
@@ -91,11 +105,11 @@ export const useUpdateUserFollowersCache = () => {
    * of followers.
    */
   return React.useCallback(
-    (user: string, counterparty: string, add: boolean) => {
+    (user: string, counterparty: string, isFollowing: boolean) => {
       setCachedFollowers(user, currentFollowers => {
-        if (add && !currentFollowers.includes(counterparty)) {
+        if (isFollowing && !currentFollowers.includes(counterparty)) {
           return [...currentFollowers, counterparty];
-        } else if (!add && currentFollowers.includes(counterparty)) {
+        } else if (!isFollowing && currentFollowers.includes(counterparty)) {
           return currentFollowers.filter(f => f !== counterparty);
         }
 

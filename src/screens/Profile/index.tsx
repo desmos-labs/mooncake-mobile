@@ -35,7 +35,6 @@ import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useIsBlocked from 'hooks/relationships/useIsBlocked';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -148,9 +147,6 @@ const Profile = () => {
   const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 5);
   const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
-  // Relationships data
-  const { refetch: refreshFollowing } = useIsFollowing(address);
-
   const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(address);
   const blockOrUnblockUser = useBlockOrUnblockUser();
 
@@ -173,9 +169,8 @@ const Profile = () => {
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
 
-    await refreshFollowing();
-    await refreshIsBlocked();
     await refreshProfile();
+    await refreshIsBlocked();
     await refreshFollowageCount();
     await refreshFollowersCount();
     await refreshBalance();
@@ -186,7 +181,6 @@ const Profile = () => {
     refreshBalance,
     refreshFollowageCount,
     refreshFollowersCount,
-    refreshFollowing,
     refreshIsBlocked,
     refreshPosts,
     refreshPostsCount,
@@ -300,14 +294,14 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // This section will only be rendered if visiting another user's profile
   const ProfileInteractionButton = React.useMemo(() => {
-    if (!isActiveAccount) {
+    if (!isActiveAccount && profile) {
       // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
       if (isBlocked) {
         return <Button onPress={handlePressBlock}>{t('unblock', { ns: 'relationships' })}</Button>;
       }
       return (
         <View style={styles.followUnfollowSection}>
-          <ToggleFollowageButton user={profile!} style={[CommonStyles.flex['1']]} />
+          <ToggleFollowageButton user={profile} style={[CommonStyles.flex['1']]} />
           <Spacer paddingLeft="s" />
           <Button onPress={tipUser} height={32} style={[styles.btStyle, styles.tipStyle]}>
             <Image style={styles.tipUserIcon} source={tipUserIcon} />

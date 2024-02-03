@@ -63,7 +63,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const activeAddress = useActiveAccountAddress();
   const formatDate = useFormatTimeForPostDetails();
 
-  const { isFollowing, refetch: refreshFollowing } = useIsFollowing(post.author.address);
+  const isFollowing = useIsFollowing(post.author);
 
   const { isBlocked, refetch: refreshBlocked } = useIsBlocked(post.author.address);
 
@@ -78,7 +78,6 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   // -------------------------------------------------------------------------------------
 
   useEffect(() => {
-    refreshFollowing();
     refreshBlocked();
 
     // It's fine to disable the following line because we want to run this effect only once

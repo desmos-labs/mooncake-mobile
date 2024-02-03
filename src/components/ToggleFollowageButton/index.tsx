@@ -25,10 +25,10 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const { t } = useTranslation('relationships');
 
   const { user, style } = props;
-  const { toggleFollow, following, fetchingFollowState, updatingFollow } = useToggleFollowage(user);
+  const { toggleFollow, following, updatingFollow } = useToggleFollowage(user);
 
   const buttonContent = React.useMemo(() => {
-    if (fetchingFollowState || updatingFollow) {
+    if (updatingFollow) {
       return (
         <ActivityIndicator color={following ? theme.colors.surfaceBlack : theme.colors.white} />
       );
@@ -38,14 +38,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
         {following ? t('following') : t('follow')}
       </Typography.Regular14>
     );
-  }, [
-    fetchingFollowState,
-    following,
-    t,
-    theme.colors.surfaceBlack,
-    theme.colors.white,
-    updatingFollow,
-  ]);
+  }, [following, t, theme.colors.surfaceBlack, theme.colors.white, updatingFollow]);
 
   return (
     <View style={[styles.buttonView, style]}>
@@ -54,7 +47,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
         height={32}
         type="solid"
         style={[styles.button, following ? styles.unfollowButton : null]}
-        disabled={fetchingFollowState || updatingFollow}>
+        disabled={updatingFollow}>
         {buttonContent}
       </Button>
     </View>

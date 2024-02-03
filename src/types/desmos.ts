@@ -73,6 +73,10 @@ export interface DesmosProfile {
    * Date in which the profile was created.
    */
   readonly creationTime: string;
+  /**
+   * Whether the current app user is following this profile.
+   */
+  readonly isUserFollowing: boolean;
 }
 
 /**
@@ -93,6 +97,7 @@ interface GqlDesmosProfile {
   cover_picture: string;
   nickname: string;
   profile_picture: string;
+  is_user_following: boolean;
 }
 
 /**
