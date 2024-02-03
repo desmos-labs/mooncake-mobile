@@ -50,7 +50,7 @@ const useStyles = makeStyleWithProps(
     topViewButton: { justifyContent: 'center', alignItems: 'center' },
     innerContainer: {
       flex: 1,
-      marginTop: props.isActiveAccount ? 36 : 32,
+      marginTop: props.isActiveAccount ? -10 : 32,
     },
     innerTopSection: {
       flexDirection: 'column',
@@ -207,6 +207,10 @@ const useStyles = makeStyleWithProps(
     tipStyle: {
       paddingHorizontal: theme.spacing.l,
       gap: 4,
+    },
+    walletButton: {
+      alignSelf: 'flex-end',
+      marginTop: 8,
     },
   }),
 );

@@ -11,6 +11,7 @@ export const tipUserIcon = require('./images/tipUser.png');
 
 export const defaultBanner = require('./images/defaultBanner.png');
 
+export const walletIcon = require('./images/walletIcon.png');
 
 export const eyeClosed = require('./images/eyeClosed.png');
 
