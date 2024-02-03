@@ -12,6 +12,7 @@ const useRefreshSession = () => {
   const bearerToken = useAppStateValue('bearerToken');
   const updateAuthToken = useUpdateAuthToken();
   return React.useCallback(async (): Promise<Result<void, Error>> => {
+    console.log('BEARER TOKEN', bearerToken);
     // Set the bearer token to the one that is currently stored inside the app state.
     // This is done to ensure that the refresh session request does not fail due to an empty token.
     updateAuthToken(bearerToken);

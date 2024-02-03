@@ -1,5 +1,3 @@
-import { DesmosProfile } from 'types/desmos';
-
 export interface GQLProfileResult {
   address: string;
   bio: string;
@@ -8,15 +6,12 @@ export interface GQLProfileResult {
   cover_picture: string;
   nickname: string;
   profile_picture: string;
-  followers_count: number;
-  following_count: number;
+  relationships_counters: {
+    followers_count: number;
+    following_count: number;
+  };
 }
 
 export interface GQLProfilesResult {
   profiles: GQLProfileResult[];
-}
-
-export interface ExtendedDesmosProfile extends DesmosProfile {
-  followersCount: number;
-  followingCount: number;
 }

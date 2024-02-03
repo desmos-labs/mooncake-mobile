@@ -9,6 +9,10 @@ const ProfileFields = gql`
     cover_picture: cover_pic
     nickname
     profile_picture: profile_pic
+    relationships_counters {
+      followers_count
+      following_count
+    }
   }
 `;
 

@@ -73,6 +73,14 @@ export interface DesmosProfile {
    * Date in which the profile was created.
    */
   readonly creationTime: string;
+  /**
+   * Number of followers of the user
+   */
+  readonly followersCount: number;
+  /**
+   * Number of users that the user follows
+   */
+  readonly followingCount: number;
 }
 
 /**

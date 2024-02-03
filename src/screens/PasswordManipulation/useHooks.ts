@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { InteractionManager, Keyboard } from 'react-native';
 import { NavProps } from 'screens/PasswordManipulation';
 import { LoginFlowStep } from 'types/login';
-import useFollowingCount from 'hooks/relationships/useFollowingCount';
 
 /**
  * Password manipulation mode.
@@ -72,8 +71,6 @@ const useHooks = () => {
   const enableBiometrics = useEnableBiometrics();
   const { checkBiometrics, biometricsAvailable } = useCheckBiometrics();
   const goToLoginStep = useGoToLoginStep();
-
-  const { count: followingCount } = useFollowingCount(account?.account.address ?? '');
 
   // ------------------------------------------------------------------------------------------------------------------
   // --- Local state
@@ -169,7 +166,7 @@ const useHooks = () => {
           setSigninStatus(SignInStatus.SAVING_PROFILE);
           storeProfile(profile.address, profile);
 
-          if (followingCount.count === 0) {
+          if (profile.followingCount === 0) {
             goToLoginStep({ step: LoginFlowStep.FollowCreators, account: account.account });
           } else {
             goToLoginStep({ step: LoginFlowStep.Completed });
@@ -239,7 +236,6 @@ const useHooks = () => {
       account,
       biometricsAvailable,
       enableBiometrics,
-      followingCount.count,
       goToLoginStep,
       mode,
       navigate,

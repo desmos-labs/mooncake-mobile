@@ -2,6 +2,7 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAppStateValue } from '@recoil/appState';
 import { useSetLoginFlowState } from '@recoil/login';
+import { useActiveProfile } from '@recoil/profiles';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -51,7 +52,8 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
   // -----------------------------------------------------
 
   const failedToFollowCreators = useAppStateValue('failedToFollowCreators');
-  const { creators, loading, fetchMore, refresh, refreshing, followageCount } = useCreators();
+  const activeProfile = useActiveProfile();
+  const { creators, loading, fetchMore, refresh, refreshing } = useCreators();
   const { followCreators, broadcasting } = useFollowCreators(params);
   const setLoginFlowState = useSetLoginFlowState();
   const trackSelectedUsersToFollow = useTrackSelectedUsersToFollow();
@@ -61,8 +63,11 @@ const FollowCreators: React.FC<NavProps> = ({ route: { params } }) => {
   // -----------------------------------------------------
 
   const totalFollowageCount = React.useMemo(() => {
-    return selectedAccounts.length + followageCount;
-  }, [followageCount, selectedAccounts.length]);
+    if (!activeProfile) {
+      return selectedAccounts.length;
+    }
+    return selectedAccounts.length + activeProfile.followingCount;
+  }, [activeProfile, selectedAccounts.length]);
 
   // -----------------------------------------------------
   // ----- Callbacks

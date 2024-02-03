@@ -2,7 +2,6 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import * as WebBrowser from '@toruslabs/react-native-web-browser';
 import {
   block,
   profileBack,
@@ -19,22 +18,17 @@ import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import PopupMenu from 'components/PopupMenu';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
-import StyledSpinner from 'components/StyledSpinner';
 import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import CommonStyles from 'config/theme/CommonStyles';
 import { ImageSource } from 'expo-image';
-import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useShowBottomSheet from 'hooks/bottomsheets/useShowBottomSheet';
 import useGetStatusBarColorFromImage from 'hooks/colors/useGetStatusBarColorFromImage';
 import useSetStatusBarDarkOnImageFullScreen from 'hooks/colors/useSetStatusBarDarkOnImageFullScreen';
 import useSetStatusBarStyle from 'hooks/colors/useSetStatusBarStyle';
 import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfileConnections';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
-import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import useFollowersCount from 'hooks/relationships/useFollowersCount';
-import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
@@ -96,7 +90,7 @@ const Profile = () => {
   const insets = useSafeAreaInsets();
   const route = useRoute<NavProps['route']>();
   const navigation = useNavigation<NavProps['navigation']>();
-  const { navigate, goBack, pop } = navigation;
+  const { navigate, goBack } = navigation;
 
   const { params } = route;
   const givenAddress = params?.address;
@@ -125,26 +119,7 @@ const Profile = () => {
     refetch: refreshProfile,
   } = useProfileGivenAddress(address);
 
-  const {
-    count: followersCount,
-    loading: isFollowersCountLoading,
-    refetch: refreshFollowersCount,
-  } = useFollowersCount(address);
-
-  const {
-    count: followageCount,
-    loading: isFollowageCountLoading,
-    refetch: refreshFollowageCount,
-  } = useFollowingCount(address);
-
-  const {
-    balance,
-    loading: isBalanceLoading,
-    refetch: refreshBalance,
-  } = useAccountBalance(address);
-
   const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 25);
-  const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
   // Relationships data
   const { refetch: refreshFollowing } = useIsFollowing(address);
@@ -174,22 +149,9 @@ const Profile = () => {
     await refreshFollowing();
     await refreshIsBlocked();
     await refreshProfile();
-    await refreshFollowageCount();
-    await refreshFollowersCount();
-    await refreshBalance();
     await refreshPosts();
-    await refreshPostsCount();
     setPageRefreshing(false);
-  }, [
-    refreshBalance,
-    refreshFollowageCount,
-    refreshFollowersCount,
-    refreshFollowing,
-    refreshIsBlocked,
-    refreshPosts,
-    refreshPostsCount,
-    refreshProfile,
-  ]);
+  }, [refreshFollowing, refreshIsBlocked, refreshPosts, refreshProfile]);
 
   // Refresh the data when using pull to refresh gesture. Please note, this trick is needed because
   // we need to manage animations in a smooth way.
@@ -268,23 +230,6 @@ const Profile = () => {
     // This assertion is necessary, otherwise it will throw a ts error
     await blockOrUnblockUser(profile!);
   }, [blockOrUnblockUser, profile]);
-
-  const handlePressBalanceInfo = useCallback(() => {
-    navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('DSM', { ns: 'common' }),
-      // Subtitle needs to be passed as a component, as Trans component in the default implementation will cause
-      // unwanted interpolation of the less than (<) character in the string
-      subtitle: <Typography.Regular16>{t('balanceInfo')}</Typography.Regular16>,
-      subtitleStyle: { textAlign: 'left' },
-      primaryButtonLabel: t('learnMore'),
-      onPressPrimary: () => {
-        WebBrowser.openBrowserAsync('https://desmos.network');
-      },
-      secondaryButtonLabel: t('cancel', { ns: 'common' }),
-      // goBack will make the underlying screen goBack, instead of hiding the modal, so pop is used instead.
-      onPressSecondary: pop,
-    });
-  }, [t, navigate, pop]);
 
   const { show: showBottomSheet } = useShowBottomSheet();
   const tipUser = useCallback(() => {
@@ -468,23 +413,15 @@ const Profile = () => {
                 </Spacer>
               )}
               <View style={styles.profileConnectionsButtonContainer}>
-                {/* Followage count */}
-                <TouchableOpacity style={styles.connectionButton} onPress={handleFollowingPressed}>
-                  {isFollowageCountLoading ? (
-                    <StyledSpinner size={21} />
-                  ) : (
-                    <Typography.Semibold16>{followageCount}</Typography.Semibold16>
-                  )}
-                  <Typography.Regular14>{t('following')}</Typography.Regular14>
-                </TouchableOpacity>
                 {/* Followers count */}
                 <TouchableOpacity style={styles.connectionButton} onPress={handleFollowersPressed}>
-                  {isFollowersCountLoading ? (
-                    <StyledSpinner size={21} />
-                  ) : (
-                    <Typography.Semibold16>{followersCount}</Typography.Semibold16>
-                  )}
+                  <Typography.Semibold16>{profile.followersCount}</Typography.Semibold16>
                   <Typography.Regular14>{t('followers')}</Typography.Regular14>
+                </TouchableOpacity>
+                {/* Followage count */}
+                <TouchableOpacity style={styles.connectionButton} onPress={handleFollowingPressed}>
+                  <Typography.Semibold16>{profile.followingCount}</Typography.Semibold16>
+                  <Typography.Regular14>{t('following')}</Typography.Regular14>
                 </TouchableOpacity>
               </View>
             </View>
@@ -492,7 +429,6 @@ const Profile = () => {
             {isActiveAccount && <EditProfileSection profile={profile} />}
             {/* Follow/Unfollow button */}
             {ProfileInteractionButton}
-            <Spacer paddingVertical={theme.spacing.s} />
             {/* Lower section (balance, posts, NFTs, badges, etc) */}
             <View style={styles.container}>
               {/* Posts */}
