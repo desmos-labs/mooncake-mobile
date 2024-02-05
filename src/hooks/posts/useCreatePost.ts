@@ -1,6 +1,5 @@
 import { useAppStateValue } from '@recoil/appState';
 import { useDeleteUserLocalPost, useStoreUserLocalPost } from '@recoil/localPosts';
-import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
 import { useActiveProfile } from '@recoil/profiles';
 import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
 import { ToastType } from 'config/toast/toastConfig';
@@ -87,8 +86,6 @@ const useCreatePost = () => {
 
   const storeLocalPost = useStoreUserLocalPost();
   const deleteLocalPost = useDeleteUserLocalPost();
-  const storePost = useStorePost();
-  const deletePost = useRemoveStoredPendingPost();
 
   const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
@@ -191,13 +188,14 @@ const useCreatePost = () => {
             message: t('creating post'),
           });
         })
-        .onComplete(() => {
+        .onComplete(event => {
           if (onProcessCompleted) {
             onProcessCompleted();
           }
 
           storeLocalPost(activeProfile.address, {
             ...post,
+            id: event.result.postId,
             status: PostStatus.SYNCED,
           });
 
@@ -227,11 +225,11 @@ const useCreatePost = () => {
     [
       activeProfile,
       createPostState,
-      deletePost,
+      deleteLocalPost,
       prepareDesmosClientAndWallet,
       resetCreatePostState,
       showToast,
-      storePost,
+      storeLocalPost,
       subspaceId,
       t,
     ],

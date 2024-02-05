@@ -49,9 +49,10 @@ const uploadAttachment = async (
  * @param params - Parameters required to create the post.
  * @constructor
  */
-const CreatePostTask: TaskJob<CreatePostTaskParams, string> = async (
-  params: CreatePostTaskParams,
-) => {
+const CreatePostTask: TaskJob<
+  CreatePostTaskParams,
+  { transactionHash: string; postId: number }
+> = async (params: CreatePostTaskParams) => {
   const { desmosClient, signer, memo, post } = params;
   const { apiBearerToken, broadcastTx } = getTaskContext();
 
@@ -84,7 +85,14 @@ const CreatePostTask: TaskJob<CreatePostTaskParams, string> = async (
   // Build the message
   const msgCreatePost = convertPostToMsgCreatePost(postToConvert);
   const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgCreatePost], memo);
-  return broadcastTxResult.transactionHash;
+  const postIdAttribute = broadcastTxResult.events
+    .find(e => e.type === 'create_post')
+    ?.attributes.find(a => a.key === 'post_id');
+
+  return {
+    postId: parseInt(postIdAttribute?.value ?? '-1', 10),
+    transactionHash: broadcastTxResult.transactionHash,
+  };
 };
 
 export default CreatePostTask;
