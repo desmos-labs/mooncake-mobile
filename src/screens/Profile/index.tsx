@@ -427,7 +427,6 @@ const Profile = () => {
             <View style={styles.container}>
               {/* Posts */}
               <PostsSection
-                address={address}
                 posts={posts}
                 loading={arePostsLoading}
                 onPress={handlePostsSectionPressed}

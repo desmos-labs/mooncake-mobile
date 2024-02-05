@@ -1,6 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { FontAwesome } from '@expo/vector-icons';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import { emptyPostsIcon } from 'assets/images';
 import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
@@ -14,10 +13,6 @@ import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface PostsSectionProps {
-  /**
-   * Address of the profile related to the posts that will be displayed.
-   */
-  readonly address: string;
   /**
    * Posts to be displayed.
    */
@@ -41,10 +36,7 @@ const PostsSection = (props: PostsSectionProps) => {
   const theme = useTheme();
   const styles = useStyles();
 
-  const { address, onPress, posts, loading: isLoading } = props;
-
-  const activeAddress = useActiveAccountAddress();
-  const isGuestProfile = useMemo(() => address === activeAddress, [activeAddress, address]);
+  const { onPress, posts, loading: isLoading } = props;
 
   const Content = useMemo(() => {
     if (posts.length === 0) {
