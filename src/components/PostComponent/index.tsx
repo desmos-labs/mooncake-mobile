@@ -5,6 +5,7 @@ import { useTheme } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
 import { Post } from 'types/posts';
+import PostText from 'components/PostText';
 import useStyles from './useStyles';
 
 type Props = {
@@ -36,11 +37,7 @@ const PostComponent = (props: Props) => {
 
   const Content = React.useMemo(() => {
     if (post.text && post.attachments?.length === 0) {
-      return (
-        <View style={styles.textContainer}>
-          <Typography.Regular16>{post.text}</Typography.Regular16>
-        </View>
-      );
+      return <PostText style={styles.textContainer}>{post.text}</PostText>;
     } else if (!post.text && post.attachments?.length !== 0) {
       return <View style={CommonStyles.flex[1]}>{MediaAttachment}</View>;
     } else {

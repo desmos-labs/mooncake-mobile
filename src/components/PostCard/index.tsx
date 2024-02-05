@@ -1,4 +1,3 @@
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import {
   useHandlePressBlock,
   useHandlePressComments,
@@ -17,6 +16,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
+import PostText from 'components/PostText';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -126,11 +126,7 @@ const PostCard = (props: PostCardProps) => {
           onPressBlock={onPressBlock}
         />
         {/* Post text */}
-        {post.text && (
-          <Typography.Regular16 style={{ marginTop: theme.spacing.m }}>
-            {post.text}
-          </Typography.Regular16>
-        )}
+        {post.text && <PostText style={{ marginTop: theme.spacing.m }}>{post.text}</PostText>}
         {/* Media view */}
         {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
         {/* Post bottom bar */}
