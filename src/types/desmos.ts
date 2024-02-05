@@ -77,6 +77,10 @@ export interface DesmosProfile {
    * Whether the current app user is following this profile.
    */
   readonly isUserFollowing: boolean;
+  /**
+   * Whether the current app user has blocked this profile.
+   */
+  readonly isBlockedByUser: boolean;
 }
 
 /**
@@ -98,6 +102,7 @@ interface GqlDesmosProfile {
   nickname: string;
   profile_picture: string;
   is_user_following: boolean;
+  has_user_blocked: boolean;
 }
 
 /**

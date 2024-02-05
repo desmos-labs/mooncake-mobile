@@ -10,7 +10,6 @@ import { DesmosProfile } from 'types/desmos';
 import { useTranslation } from 'react-i18next';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import useGetHasBlocked from 'hooks/relationships/useGetHasBlocked';
 
 /**
  * Hook that allows to block a user both remotely and locally.
@@ -113,7 +112,6 @@ const useUnblockUser = () => {
 const useBlockOrUnblockUser = () => {
   const activeAddress = useActiveAccountAddress();
 
-  const hasBlockedUser = useGetHasBlocked();
   const blockUser = useBlockUser();
   const unblockUser = useUnblockUser();
 
@@ -123,14 +121,13 @@ const useBlockOrUnblockUser = () => {
         throw new Error('Trying to follow or unfollow a user, without active user');
       }
 
-      const isBlocked = await hasBlockedUser(activeAddress, counterparty.address);
-      if (isBlocked) {
+      if (counterparty.isBlockedByUser) {
         await unblockUser(activeAddress, counterparty);
       } else {
         await blockUser(activeAddress, counterparty);
       }
     },
-    [activeAddress, hasBlockedUser, unblockUser, blockUser],
+    [activeAddress, unblockUser, blockUser],
   );
 };
 

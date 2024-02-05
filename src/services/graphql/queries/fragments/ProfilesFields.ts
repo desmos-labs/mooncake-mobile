@@ -10,6 +10,7 @@ const ProfileFields = gql`
     nickname
     profile_picture: profile_pic
     is_user_following
+    has_user_blocked
   }
 `;
 

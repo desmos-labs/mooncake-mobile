@@ -7,6 +7,10 @@ import { DesmosProfile } from 'types/desmos';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import { useAppStateValue } from '@recoil/appState';
 
+/**
+ * Hook that returns a function that allows to fetch the list of the blocked users of a given address.
+ * @param address {String  | undefined} - Address of the user for which to get the blocked list.
+ */
 const useFetchUserBlocked = (address: string | undefined) => {
   const [fetchBlocked] = useLazyQuery(GetAccountBlocked);
   const subspaceId = useAppStateValue('subspaceId');
@@ -53,7 +57,7 @@ const useFetchUserBlocked = (address: string | undefined) => {
  * If this is `undefined`, the current application's user address will be used instead.
  * @param usersPerPage {number} - Number of users to be fetched per page.
  */
-const useBlocked = (address?: string, usersPerPage: number = 50) => {
+const useBlockedUsers = (address?: string, usersPerPage: number = 50) => {
   const activeAccount = useActiveAccountAddress();
   const userAddress = address ?? activeAccount;
 
@@ -63,4 +67,4 @@ const useBlocked = (address?: string, usersPerPage: number = 50) => {
   });
 };
 
-export default useBlocked;
+export default useBlockedUsers;

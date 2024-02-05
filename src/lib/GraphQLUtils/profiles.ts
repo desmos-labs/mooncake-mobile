@@ -37,5 +37,6 @@ export const convertGraphQLProfile = (profile?: any): DesmosProfile => {
     nickname: profile.nickname,
     creationTime: profile.creation_time,
     isUserFollowing: profile.is_user_following,
+    isBlockedByUser: profile.has_user_blocked,
   } as DesmosProfile;
 };
