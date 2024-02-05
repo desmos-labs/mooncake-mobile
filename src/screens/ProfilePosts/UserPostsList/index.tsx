@@ -1,7 +1,6 @@
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
-import StyledSpinner from 'components/StyledSpinner';
 import { useTheme } from 'native-base';
 import React, { useCallback } from 'react';
 import { Platform, RefreshControl, View } from 'react-native';
@@ -15,10 +14,6 @@ interface UserPostsListProps {
    * List of posts to render.
    */
   posts: Post[];
-  /**
-   * Whether the data is loading or not.
-   */
-  isLoading: boolean;
   /**
    * Action to be performed when the user scrolls to the end of the list.
    */
@@ -49,16 +44,7 @@ const UserPostsList = (props: UserPostsListProps) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const {
-    posts,
-    isLoading,
-    fetchMore,
-    // fetchingMore,
-    refreshPosts,
-    refreshing,
-    emptyListText,
-    emptyListButtonText,
-  } = props;
+  const { posts, fetchMore, refreshPosts, refreshing, emptyListText, emptyListButtonText } = props;
 
   // const navigateToPost = useNavigateToPost();
 
@@ -88,14 +74,6 @@ const UserPostsList = (props: UserPostsListProps) => {
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
-
-  if (isLoading) {
-    return (
-      <View style={styles.contentContainer}>
-        <StyledSpinner />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.contentContainer}>

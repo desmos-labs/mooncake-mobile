@@ -1,4 +1,4 @@
-import { DesmosProfile, ProfileParams } from 'types/desmos';
+import { DesmosProfile, GqlDesmosProfile, ProfileParams } from 'types/desmos';
 
 /**
  * Format an incoming profiles params data from the server into a format that is easier to parse by the app.
@@ -27,7 +27,7 @@ export const convertGraphQLProfileParams = (params: any): ProfileParams => {
  * @param {any} profile - Desmos Profile data fetched from the server.
  * @returns {DesmosProfile} - A formatted DesmosProfile object
  */
-export const convertGraphQLProfile = (profile?: any): DesmosProfile => {
+export const convertGraphQLProfile = (profile: GqlDesmosProfile): DesmosProfile => {
   return {
     dTag: profile.dtag,
     address: profile.address,
@@ -38,5 +38,7 @@ export const convertGraphQLProfile = (profile?: any): DesmosProfile => {
     creationTime: profile.creation_time,
     isUserFollowing: profile.is_user_following,
     isBlockedByUser: profile.has_user_blocked,
+    followersCount: profile.relationships_counters?.followers_count ?? 0,
+    followingCount: profile.relationships_counters?.following_count ?? 0,
   } as DesmosProfile;
 };

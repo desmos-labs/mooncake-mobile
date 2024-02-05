@@ -11,7 +11,7 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
     shadowOpacity: 0,
     elevation: 0,
     marginBottom: 10,
-    width: 250,
+    width: 180,
     backgroundColor: theme.colors.white,
   },
   tabBarItem: {
@@ -23,25 +23,21 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
     justifyContent: 'flex-start',
   },
   tabBarLabel: {
-    marginBottom: 10,
-    fontFamily: 'Poppins-SemiBold',
+    marginBottom: 8,
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '600',
     lineHeight: 21,
-    letterSpacing: 0.15,
     textAlign: 'left',
     textTransform: 'none',
   },
   tabBarIndicator: {
-    backgroundColor: theme.colors.primary,
-    width: 4,
-    maxWidth: 4,
-    height: 4,
-    maxHeight: 4,
+    backgroundColor: theme.colors.surfaceBlack,
+    width: 28,
+    height: 2,
     borderRadius: 4,
-    // tentative
-    marginLeft: 23,
+    marginLeft: 9,
   },
 }));
 

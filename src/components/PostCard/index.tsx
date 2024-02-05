@@ -15,7 +15,7 @@ import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
-import { isPostPending, Post } from 'types/posts';
+import { isCommentReply, isPostPending, Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -65,7 +65,7 @@ const PostCard = (props: PostCardProps) => {
   }, [followOrUnfollowUser, post]);
 
   const onPressDetails = React.useCallback(() => {
-    if (isPostPending(post)) {
+    if (isPostPending(post) || isCommentReply(post)) {
       return;
     }
     handlePressDetails(post);

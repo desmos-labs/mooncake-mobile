@@ -1,5 +1,5 @@
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import usePostsCreatedByAddress from 'hooks/posts/usePostsCreatedByAddress';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -25,23 +25,10 @@ const UserPostsTab = () => {
 
   const {
     posts,
-    loading: arePostsLoading,
     fetchMore,
     refetch: refreshPosts,
     refreshing,
   } = usePostsCreatedByAddress(userAddress);
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  useFocusEffect(
-    React.useCallback(() => {
-      refreshPosts();
-      // It's fine to disable the next line lint in order to fetch the posts only on the first page load
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
-  );
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -50,7 +37,6 @@ const UserPostsTab = () => {
   return (
     <UserPostsList
       posts={posts}
-      isLoading={arePostsLoading}
       fetchMore={fetchMore}
       refreshPosts={refreshPosts}
       refreshing={refreshing}

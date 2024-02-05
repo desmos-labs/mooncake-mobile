@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import PROFILE_FIELDS from './fragments/ProfilesFields';
 
-const GetProfileForAddress = gql`
+const GetProfileDataForAddress = gql`
   ${PROFILE_FIELDS}
   query GetProfileForAddress($address: String!) @api(name: butter) {
     profiles: profile(where: { address: { _eq: $address } }) {
@@ -10,4 +10,4 @@ const GetProfileForAddress = gql`
   }
 `;
 
-export default GetProfileForAddress;
+export default GetProfileDataForAddress;

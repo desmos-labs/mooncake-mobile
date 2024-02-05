@@ -1,15 +1,15 @@
-import React from 'react';
-import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
-import { convertGraphQLProfile } from 'lib/GraphQLUtils';
-import { DesmosProfile } from 'types/desmos';
 import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils';
+import React from 'react';
+import GetProfileDataForAddress from 'services/graphql/queries/GetProfileDataForAddress';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Hook that provides a function to fetch the profile
  * associated with an address.
  */
 const useGetOnChainProfile = () => {
-  const [getLazyData] = useCustomLazyQuery(GetProfileForAddress, {
+  const [getLazyData] = useCustomLazyQuery(GetProfileDataForAddress, {
     fetchPolicy: 'cache-first',
   });
 

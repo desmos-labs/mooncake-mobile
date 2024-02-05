@@ -2,8 +2,6 @@ export const mooncakeLogo = require('./images/mooncakeLogo.png');
 
 export const desmosIcon = require('./images/desmosIcon.png');
 
-export const copyIcon = require('./images/copy.png');
-
 export const followBlackIcon = require('./images/followBlackIcon.png');
 
 export const unfollowBlackIcon = require('./images/unfollowBlackIcon.png');
@@ -13,6 +11,7 @@ export const tipUserIcon = require('./images/tipUser.png');
 
 export const defaultBanner = require('./images/defaultBanner.png');
 
+export const walletIcon = require('./images/walletIcon.png');
 
 export const eyeClosed = require('./images/eyeClosed.png');
 
@@ -45,8 +44,6 @@ export const onboarding4 = require('./images/onboarding/onboarding4.png');
 export const bgonboarding = require('./images/onboarding/backgroundOnboarding.png');
 
 export const profileBack = require('./images/profileBack.png');
-
-export const infoIcon = require('assets/images/infoIcon.png');
 
 export const eyeOpen = require('./images/eyeOpen.png');
 

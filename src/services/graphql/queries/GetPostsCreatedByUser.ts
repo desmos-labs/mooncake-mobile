@@ -7,7 +7,11 @@ const GetPostsCreatedByUser = gql`
   @api(name: butter) {
     posts: post(
       order_by: { creation_date: desc }
-      where: { author_address: { _eq: $user }, subspace_id: { _eq: $subspaceId } }
+      where: {
+        author_address: { _eq: $user }
+        subspace_id: { _eq: $subspaceId }
+        _not: { conversation: {} }
+      }
       limit: $limit
       offset: $offset
     ) {

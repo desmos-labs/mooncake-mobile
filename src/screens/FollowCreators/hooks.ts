@@ -4,16 +4,12 @@ import { MsgCreateRelationship } from '@desmoslabs/desmjs-types/desmos/relations
 import { MsgCreateRelationshipEncodeObject } from '@desmoslabs/desmjs/build/modules/relationships/v1';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
-import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useSignAndBroadcastTx from 'hooks/tx/useSignAndBroadcastTx';
 import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import GetCreators, { GetCreatorsGqlResponse } from 'services/graphql/queries/GetCreators';
-import GetFollowageCount, {
-  GetFollowageCountGqlResponse,
-} from 'services/graphql/queries/GetFollowageCount';
 import GetFollowedProfileAddresses, {
   GetFollowedProfileAddressesGqlResponse,
 } from 'services/graphql/queries/GetFollowedProfileAddresses';
@@ -108,20 +104,6 @@ const useFetchCreators = (userAddress: string) => {
  */
 export const useCreators = () => {
   const userAddress = useActiveAccountAddress()!;
-  const subspaceId = useAppStateValue('subspaceId');
-
-  // The number of users that the current user is following.
-  const [followageCount, setFollowageCount] = React.useState(0);
-
-  // Lazy query to fetch the total number of users that
-  // the current user is following.
-  const [getFollowageCount] = useCustomLazyQuery<GetFollowageCountGqlResponse>(GetFollowageCount, {
-    fetchPolicy: 'no-cache',
-    variables: {
-      subspaceId,
-      userAddress,
-    },
-  });
 
   const {
     data: creators,
@@ -133,17 +115,6 @@ export const useCreators = () => {
   } = usePaginatedData(useFetchCreators(userAddress), {
     autoFetchFirstPage: true,
     itemsPerPage: 20,
-    onPreFetchPage: React.useCallback(
-      // When fetching the first page fetch also the total number
-      // of followed users.
-      async (page: number) => {
-        if (page === 0) {
-          const followageCountResult = await getFollowageCount();
-          setFollowageCount(followageCountResult?.followers?.aggregate?.count ?? 0);
-        }
-      },
-      [getFollowageCount],
-    ),
   });
 
   return {
@@ -152,7 +123,6 @@ export const useCreators = () => {
     fetchMore,
     refresh,
     refreshing,
-    followageCount,
     error,
   };
 };
