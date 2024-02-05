@@ -7,12 +7,13 @@ import { emptyListPlaceholder } from 'assets/images';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
+import { Image } from 'expo-image';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import { useTheme } from 'native-base';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Platform, RefreshControl, View } from 'react-native';
+import { Platform, RefreshControl, View } from 'react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
@@ -99,7 +100,7 @@ const Home = () => {
   }, [refreshPosts]);
 
   const footerComponent = useMemo(() => {
-    if (loading) {
+    if (loading || fetchingMorePosts) {
       return (
         <View style={styles.loaderView}>
           <HomePostContentLoader />
@@ -108,7 +109,7 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [styles, loading]);
+  }, [styles, loading, fetchingMorePosts]);
 
   const emptyComponent = useMemo(() => {
     return !loading && !refreshing && !fetchingMorePosts ? (
@@ -141,15 +142,12 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         ListFooterComponent={footerComponent}
         ListEmptyComponent={emptyComponent}
-        estimatedItemSize={300}
+        estimatedItemSize={400}
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
-        getItemType={getPostType}
-        scrollEventThrottle={16}
         onScroll={event => {
           setContentOffset(event.nativeEvent.contentOffset);
         }}
-        onEndReachedThreshold={3}
       />
     </View>
   );

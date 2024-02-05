@@ -1,7 +1,7 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useComments, useDeleteComments, useSetComments } from '@recoil/comments';
 import { useUserLocalComments } from '@recoil/localPosts';
-import useSyncLocalComments from 'hooks/posts/comments/useSyncLocalComments';
+import useSyncLocalPosts from 'hooks/posts/useSyncLocalPosts';
 import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { sortPostsByCreationDate } from 'lib/PostsUtils';
@@ -23,7 +23,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   const activeAccountAddress = useActiveAccountAddress();
   const cachedComments = useComments(post.id);
   const storeComments = useSetComments();
-  const syncLocalComments = useSyncLocalComments(post.id);
+  const syncLocalPosts = useSyncLocalPosts(activeAccountAddress);
   const localComments = useUserLocalComments(activeAccountAddress, post.id);
   const deleteComments = useDeleteComments();
 
@@ -33,15 +33,15 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
 
   const onDataFetched = useCallback(
     (comments: Post[]) => {
-      syncLocalComments(comments);
+      syncLocalPosts(comments);
       storeComments(post.id, comments);
     },
-    [post.id, syncLocalComments, storeComments],
+    [post.id, syncLocalPosts, storeComments],
   );
 
   useEffect(() => {
     return () => deleteComments(post.id);
-  }, []);
+  }, [deleteComments, post.id]);
 
   const { loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery({
     query: GetPostComments,

@@ -20,7 +20,7 @@ const useSyncLocalComments = (postId: number) => {
       );
       setLocalPosts(activeAccountAddress, filteredLocalComments);
     },
-    [postId, localComments, setLocalPosts, activeAccountAddress],
+    [localComments, setLocalPosts, activeAccountAddress],
   );
 };
 
