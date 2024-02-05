@@ -16,12 +16,11 @@ import CommonStyles from 'config/theme/CommonStyles';
 import { parseISO } from 'date-fns';
 import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { Center, HStack, useTheme, VStack } from 'native-base';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import { isPostPending, Post } from 'types/posts';
@@ -64,25 +63,6 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const isFollowing = useIsFollowing(post.author);
-
-  const { isBlocked, refetch: refreshBlocked } = useIsBlocked(post.author.address);
-
-  // -------------------------------------------------------------------------------------
-  // --- Local state
-  // -------------------------------------------------------------------------------------
-
-  // const [actualDate, setActualDate] = useState(new Date());
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  useEffect(() => {
-    refreshBlocked();
-
-    // It's fine to disable the following line because we want to run this effect only once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Memoized variables
@@ -153,22 +133,22 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         icon: hidePost,
       },
       {
-        label: isBlocked
+        label: post.author.isBlockedByUser
           ? t('unblock', { ns: 'relationships' })
           : t('block', { ns: 'relationships' }),
         onPress: onPressBlock,
-        icon: isBlocked ? unblock : block,
+        icon: post.author.isBlockedByUser ? unblock : block,
       },
     ],
     [
       isFollowing,
       t,
       onPressFollow,
+      onPressShare,
       onPressReport,
       onPressHide,
-      isBlocked,
+      post.author.isBlockedByUser,
       onPressBlock,
-      onPressShare,
     ],
   );
 

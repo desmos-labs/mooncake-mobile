@@ -34,7 +34,6 @@ import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -147,7 +146,6 @@ const Profile = () => {
   const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 5);
   const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
-  const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(address);
   const blockOrUnblockUser = useBlockOrUnblockUser();
 
   // -------------------------------------------------------------------------------------
@@ -170,7 +168,6 @@ const Profile = () => {
     setPageRefreshing(true);
 
     await refreshProfile();
-    await refreshIsBlocked();
     await refreshFollowageCount();
     await refreshFollowersCount();
     await refreshBalance();
@@ -181,7 +178,6 @@ const Profile = () => {
     refreshBalance,
     refreshFollowageCount,
     refreshFollowersCount,
-    refreshIsBlocked,
     refreshPosts,
     refreshPostsCount,
     refreshProfile,
@@ -206,6 +202,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Animations
   // -------------------------------------------------------------------------------------
+
   const opacity = useSharedValue(0);
   const scrollOffset = useSharedValue(40 + PROFILE_HEADER_HEIGHT_EXPANDED);
   const animatedStyle = useAnimatedStyle(() => {
@@ -239,6 +236,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
+
   const { statusBarStyle } = useGetStatusBarColorFromImage(profile?.coverPicture);
   useSetStatusBarStyle(statusBarStyle);
   useSetStatusBarDarkOnImageFullScreen(statusBarStyle, fullscreenImage.isVisible);
@@ -292,11 +290,12 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Memoized values
   // -------------------------------------------------------------------------------------
+
   // This section will only be rendered if visiting another user's profile
   const ProfileInteractionButton = React.useMemo(() => {
     if (!isActiveAccount && profile) {
       // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
-      if (isBlocked) {
+      if (profile.isBlockedByUser) {
         return <Button onPress={handlePressBlock}>{t('unblock', { ns: 'relationships' })}</Button>;
       }
       return (
@@ -314,7 +313,6 @@ const Profile = () => {
   }, [
     handlePressBlock,
     isActiveAccount,
-    isBlocked,
     profile,
     styles.btStyle,
     styles.followUnfollowSection,
@@ -327,6 +325,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
   // -------------------------------------------------------------------------------------
+
   const PopupContextMenu = React.useMemo(() => {
     // Don't show PopupMenu if active user
     if (isActiveAccount) {
@@ -342,11 +341,11 @@ const Profile = () => {
         icon: reportIcon,
       },
       {
-        label: isBlocked
+        label: profile?.isBlockedByUser
           ? t('unblock', { ns: 'relationships' })
           : t('block', { ns: 'relationships' }),
         onPress: () => handlePressBlock(),
-        icon: isBlocked ? unblock : block,
+        icon: profile?.isBlockedByUser ? unblock : block,
       },
     ];
 
@@ -357,7 +356,7 @@ const Profile = () => {
         menuIconStyle={styles.contextButtonStyle}
       />
     );
-  }, [handlePressBlock, isActiveAccount, isBlocked, styles.contextButtonStyle, t]);
+  }, [handlePressBlock, isActiveAccount, profile?.isBlockedByUser, styles.contextButtonStyle, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

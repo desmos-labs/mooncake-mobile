@@ -19,12 +19,11 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useHidePost from 'hooks/posts/useHidePost';
 import useSharePost from 'hooks/posts/useSharePost';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import {
@@ -59,7 +58,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const isFollowing = useIsFollowing(post.author);
-  const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(post.author.address);
   const { count: commentsCount } = usePostCommentsCount(post);
   const isAuthorActiveUser = useIsAuthorActiveUser(post.author.address);
 
@@ -73,17 +71,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const handlePressHidePost = useHidePost();
   const handlePressBlockOrUnblock = useHandlePressBlockOrUnblock();
   const sharePost = useSharePost(post.id);
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  useEffect(() => {
-    refreshIsBlocked();
-
-    // It's safe to disable the linter here as we only want to run this effect once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Popup menu
@@ -124,11 +111,11 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
         icon: hidePost,
       },
       {
-        label: isBlocked
+        label: post.author.isBlockedByUser
           ? t('unblock', { ns: 'relationships' })
           : t('block', { ns: 'relationships' }),
         onPress: () => handlePressBlockOrUnblock(post.author),
-        icon: isBlocked ? unblock : block,
+        icon: post.author.isBlockedByUser ? unblock : block,
       },
     ];
 
@@ -138,7 +125,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     isFollowing,
     t,
     sharePost,
-    isBlocked,
     handlePressMore,
     handlePressFollowOrUnfollow,
     post,

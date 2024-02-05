@@ -3,10 +3,9 @@ import Button from 'components/Button';
 import { Image } from 'expo-image';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { HStack, VStack } from 'native-base';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
@@ -24,30 +23,23 @@ const BlockedUserItem = ({ profile }: Props) => {
   const styles = useStyles();
 
   const handleBlockOrUnblockUser = useBlockOrUnblockUser();
-  const { isBlocked, refetch: refreshBlockedCacheForUser } = useIsBlocked(profile.address);
   const navigateToProfile = useNavigateToProfile();
-
-  useEffect(() => {
-    refreshBlockedCacheForUser();
-    // safe to ignore as we only want to run the effect once
-    // eslint-disable-next-line  react-hooks/exhaustive-deps
-  }, []);
 
   const BlockOrUnblockButton = React.useMemo(() => {
     return (
       <Button
         mt="s"
-        backgroundColor={isBlocked ? 'surfaceBlack' : 'surfaceGrey'}
-        textColor={isBlocked ? 'white' : 'surfaceBlack'}
+        backgroundColor={profile.isBlockedByUser ? 'surfaceBlack' : 'surfaceGrey'}
+        textColor={profile.isBlockedByUser ? 'white' : 'surfaceBlack'}
         minWidth="80px"
         size={32}
         onPress={() => {
           handleBlockOrUnblockUser(profile);
         }}>
-        {isBlocked ? t('unblock') : t('block')}
+        {profile.isBlockedByUser ? t('unblock') : t('block')}
       </Button>
     );
-  }, [isBlocked, t, handleBlockOrUnblockUser, profile]);
+  }, [t, handleBlockOrUnblockUser, profile]);
 
   return (
     <TouchableOpacity onPress={() => navigateToProfile(profile.address)}>
