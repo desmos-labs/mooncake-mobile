@@ -6,17 +6,18 @@ import React, { useMemo, useState } from 'react';
 import GetProfileDataForAddress from 'services/graphql/queries/GetProfileDataForAddress';
 import { DesmosProfile } from 'types/desmos';
 import { GQLProfilesResult } from 'types/profile';
+import { useUpdateUserFollowersCache } from '@recoil/followers';
 
 /**
  * Hook to retrieve the Desmos profile of the user having the given address.
  * @param address {string | undefined} - Address of the user for which to get
  * the profile. If no address is provided, the current active account address
  * will be used instead.
+ *
+ * TODO: Improve the handling of the address when we will implement the guest visualization.
  */
 const useProfileGivenAddress = (address?: string) => {
   const activeAccountAddress = useActiveAccountAddress();
-  // TODO: Improve the handling of the address when we will implement
-  // the guest visualization.
   const userAddress = address ?? activeAccountAddress ?? '';
   const isForActiveUser = activeAccountAddress === userAddress;
 
@@ -24,6 +25,9 @@ const useProfileGivenAddress = (address?: string) => {
 
   const storeProfile = useStoreProfile();
   const storedProfiles = useStoredProfiles();
+
+  // Relationships data
+  const updateCachedFollowers = useUpdateUserFollowersCache();
 
   const userProfile = useMemo(
     // If the user we're getting the profile for is the active user, get the cached one.
@@ -56,8 +60,15 @@ const useProfileGivenAddress = (address?: string) => {
       default:
         // Set the fetched profile if the queried user is not the active user
         setFetchedProfile(onChainProfile);
+        if (onChainProfile) {
+          updateCachedFollowers(
+            userAddress,
+            onChainProfile.address,
+            onChainProfile.isUserFollowing,
+          );
+        }
     }
-  }, [data, isForActiveUser, storeProfile, userAddress]);
+  }, [data, isForActiveUser, storeProfile, updateCachedFollowers, userAddress]);
 
   return {
     profile: userProfile,

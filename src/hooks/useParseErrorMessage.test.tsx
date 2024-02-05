@@ -41,4 +41,18 @@ describe('useParseErrorMessage', () => {
       "Sorry, you don't have enough tokens to do this. You need at least 0.000123 DSM. Ask someone to send you some, or get them on Osmosis",
     );
   });
+
+  it('relationship already exists', () => {
+    const result = getErrorMessage(
+      "Query failed with (6): rpc error: code = Unknown desc = failed to execute message; message index: 0: relationship from desmos1jqqaczvut9028dhcey3f7w33p07a2vhwzh4mfj to desmos1q3f03r2203c4wgw6369d5akwujrk6a4lx7r626 does not exist inside subspace 6: invalid request [desmos-labs/desmos/v6/x/relationships/keeper/msg_server.go:78] With gas wanted: '100000000' and gas used: '45340' : unknown request",
+    );
+    expect(result).toEqual('You are not following this user');
+  });
+
+  it('relationship does not exist', () => {
+    const result = getErrorMessage(
+      "Query failed with (6): rpc error: code = Unknown desc = failed to execute message; message index: 0: relationship from desmos1jqqaczvut9028dhcey3f7w33p07a2vhwzh4mfj to desmos1q3f03r2203c4wgw6369d5akwujrk6a4lx7r626 already exists inside subspace 6: invalid request [desmos-labs/desmos/v6/x/relationships/keeper/msg_server.go:42] With gas wanted: '100000000' and gas used: '46340' : unknown request",
+    );
+    expect(result).toEqual('You are already following this user');
+  });
 });

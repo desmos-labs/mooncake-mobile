@@ -74,6 +74,14 @@ export interface DesmosProfile {
    */
   readonly creationTime: string;
   /**
+   * Whether the current app user is following this profile.
+   */
+  readonly isUserFollowing: boolean;
+  /**
+   * Whether the current app user has blocked this profile.
+   */
+  readonly isBlockedByUser: boolean;
+  /**
    * Number of followers of the user
    */
   readonly followersCount: number;
@@ -101,6 +109,8 @@ interface GqlDesmosProfile {
   cover_picture: string;
   nickname: string;
   profile_picture: string;
+  is_user_following: boolean;
+  has_user_blocked: boolean;
 }
 
 /**

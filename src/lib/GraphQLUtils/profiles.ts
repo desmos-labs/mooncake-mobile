@@ -1,5 +1,5 @@
 import { DesmosProfile, ProfileParams } from 'types/desmos';
-import { GQLProfileResult } from 'types/profile';
+import { GQLProfileResult } from "types/profile";
 
 /**
  * Format an incoming profiles params data from the server into a format that is easier to parse by the app.
@@ -37,7 +37,9 @@ export const convertGraphQLProfile = (profile: GQLProfileResult): DesmosProfile 
     coverPicture: profile.cover_picture?.length ? profile.cover_picture : undefined,
     nickname: profile.nickname,
     creationTime: profile.creation_time,
+    isUserFollowing: profile.is_user_following,
+    isBlockedByUser: profile.has_user_blocked,
     followersCount: profile.relationships_counters?.followers_count ?? 0,
     followingCount: profile.relationships_counters?.following_count ?? 0,
-  };
+  } as DesmosProfile;
 };

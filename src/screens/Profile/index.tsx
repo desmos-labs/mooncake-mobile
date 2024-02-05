@@ -29,6 +29,8 @@ import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfi
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
+import useFollowersCount from 'hooks/relationships/useFollowersCount';
+import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
@@ -122,10 +124,6 @@ const Profile = () => {
 
   const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 25);
 
-  // Relationships data
-  const { refetch: refreshFollowing } = useIsFollowing(address);
-
-  const { isBlocked, refetch: refreshIsBlocked } = useIsBlocked(address);
   const blockOrUnblockUser = useBlockOrUnblockUser();
 
   // -------------------------------------------------------------------------------------
@@ -146,13 +144,10 @@ const Profile = () => {
   // Callback to refresh the data
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
-
-    await refreshFollowing();
-    await refreshIsBlocked();
     await refreshProfile();
     await refreshPosts();
     setPageRefreshing(false);
-  }, [refreshFollowing, refreshIsBlocked, refreshPosts, refreshProfile]);
+  }, [refreshPosts, refreshProfile]);
 
   // Refresh the data when using pull to refresh gesture. Please note, this trick is needed because
   // we need to manage animations in a smooth way.
@@ -173,6 +168,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Animations
   // -------------------------------------------------------------------------------------
+
   const opacity = useSharedValue(0);
   const scrollOffset = useSharedValue(40 + PROFILE_HEADER_HEIGHT_EXPANDED);
   const animatedStyle = useAnimatedStyle(() => {
@@ -206,6 +202,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
+
   const { statusBarStyle } = useGetStatusBarColorFromImage(profile?.coverPicture);
   useSetStatusBarStyle(statusBarStyle);
   useSetStatusBarDarkOnImageFullScreen(statusBarStyle, fullscreenImage.isVisible);
@@ -242,16 +239,17 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Memoized values
   // -------------------------------------------------------------------------------------
+
   // This section will only be rendered if visiting another user's profile
   const ProfileInteractionButton = React.useMemo(() => {
-    if (!isActiveAccount) {
+    if (!isActiveAccount && profile) {
       // if the user is blocked, show the unblock button, otherwise show a follow or unfollow button
-      if (isBlocked) {
+      if (profile.isBlockedByUser) {
         return <Button onPress={handlePressBlock}>{t('unblock', { ns: 'relationships' })}</Button>;
       }
       return (
         <View style={styles.followUnfollowSection}>
-          <ToggleFollowageButton user={profile!} style={[CommonStyles.flex['1']]} />
+          <ToggleFollowageButton user={profile} style={[CommonStyles.flex['1']]} />
           <Spacer paddingLeft="s" />
           <Button onPress={tipUser} height={32} style={[styles.btStyle, styles.tipStyle]}>
             <Image style={styles.tipUserIcon} source={tipUserIcon} />
@@ -264,7 +262,6 @@ const Profile = () => {
   }, [
     handlePressBlock,
     isActiveAccount,
-    isBlocked,
     profile,
     styles.btStyle,
     styles.followUnfollowSection,
@@ -277,6 +274,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
   // -------------------------------------------------------------------------------------
+
   const PopupContextMenu = React.useMemo(() => {
     // Don't show PopupMenu if active user
     if (isActiveAccount) {
@@ -292,11 +290,11 @@ const Profile = () => {
         icon: reportIcon,
       },
       {
-        label: isBlocked
+        label: profile?.isBlockedByUser
           ? t('unblock', { ns: 'relationships' })
           : t('block', { ns: 'relationships' }),
         onPress: () => handlePressBlock(),
-        icon: isBlocked ? unblock : block,
+        icon: profile?.isBlockedByUser ? unblock : block,
       },
     ];
 
@@ -307,7 +305,7 @@ const Profile = () => {
         menuIconStyle={styles.contextButtonStyle}
       />
     );
-  }, [handlePressBlock, isActiveAccount, isBlocked, styles.contextButtonStyle, t]);
+  }, [handlePressBlock, isActiveAccount, profile?.isBlockedByUser, styles.contextButtonStyle, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

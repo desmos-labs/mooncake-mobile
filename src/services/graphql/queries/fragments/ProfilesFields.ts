@@ -9,6 +9,8 @@ const ProfileFields = gql`
     cover_picture: cover_pic
     nickname
     profile_picture: profile_pic
+    is_user_following
+    has_user_blocked
     relationships_counters {
       followers_count
       following_count
