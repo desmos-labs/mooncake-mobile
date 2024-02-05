@@ -1,4 +1,4 @@
-import { useSetUserLocalPosts, useUserLocalPosts } from '@recoil/localPosts';
+import { useSetUserLocalPosts } from '@recoil/localPosts';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { Post } from 'types/posts';
@@ -13,16 +13,16 @@ import { Post } from 'types/posts';
  * @param userAddress
  */
 const useSyncLocalPosts = (userAddress: string | undefined) => {
-  const localPosts = useUserLocalPosts(userAddress);
   const setUserLocalPosts = useSetUserLocalPosts();
 
   return useCallback(
     (posts: Post[]) => {
-      const toRemoveLocalPosts = _.intersectionBy(localPosts, posts, p => p.externalId);
-      const filteredLocalPosts = _.differenceBy(localPosts, toRemoveLocalPosts, p => p.externalId);
-      setUserLocalPosts(userAddress, filteredLocalPosts);
+      setUserLocalPosts(userAddress, localPosts => {
+        const toRemoveLocalPosts = _.intersectionBy(localPosts, posts, p => p.externalId);
+        return _.differenceBy(localPosts, toRemoveLocalPosts, p => p.externalId);
+      });
     },
-    [localPosts, setUserLocalPosts, userAddress],
+    [setUserLocalPosts, userAddress],
   );
 };
 
