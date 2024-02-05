@@ -5,7 +5,7 @@ const GetPostsLikedByUser = gql`
   ${PostFields}
   query GetPostsLikedByUser($user: String, $offset: Int!, $limit: Int!) @api(name: butter) {
     posts: post_likes(
-      where: { user_address: { _eq: $user } }
+      where: { user_address: { _eq: $user }, post: { _not: { conversation: {} } } }
       order_by: { post: { id: desc } }
       offset: $offset
       limit: $limit

@@ -19,6 +19,7 @@ const WalletButton = ({ address }: { address: string }) => {
   );
 };
 
+// ts-prune-ignore-next
 export default WalletButton;
 
 const useStyles = makeStyle(theme => ({

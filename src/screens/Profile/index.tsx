@@ -59,7 +59,6 @@ import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePi
 import Biography from 'screens/Profile/components/Biography';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
-import WalletButton from 'screens/Profile/components/WalletButton';
 import useStyles, {
   PROFILE_HEADER_HEIGHT,
   PROFILE_HEADER_HEIGHT_COMPACT,
@@ -389,11 +388,6 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}>
         <View style={styles.contentView}>
-          {isActiveAccount && (
-            <View style={styles.walletButton}>
-              <WalletButton address={address} />
-            </View>
-          )}
           <View style={styles.innerContainer}>
             {/* Posts, following and followers counters */}
             <View style={styles.innerTopSection}>

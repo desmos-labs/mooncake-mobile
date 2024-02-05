@@ -70,7 +70,7 @@ const PostsSection = (props: PostsSectionProps) => {
       <Typography.Semibold16>{t('posts')}</Typography.Semibold16>
       <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
         {/* Subtitle of the section */}
-        {posts.length !== 0 && !isLoading && !isGuestProfile && (
+        {posts.length !== 0 && !isLoading && (
           <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
             {t('created liked tipped')}
           </Typography.Regular12>

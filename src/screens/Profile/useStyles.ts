@@ -50,7 +50,7 @@ const useStyles = makeStyleWithProps(
     topViewButton: { justifyContent: 'center', alignItems: 'center' },
     innerContainer: {
       flex: 1,
-      marginTop: props.isActiveAccount ? -10 : 32,
+      marginTop: 32,
     },
     innerTopSection: {
       flexDirection: 'column',
