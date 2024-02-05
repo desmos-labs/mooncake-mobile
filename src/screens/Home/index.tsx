@@ -6,6 +6,7 @@ import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import PostCard from 'components/PostCard';
+import { useGetPostType } from 'components/PostCard/hooks';
 import { Image } from 'expo-image';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import { useTheme } from 'native-base';
@@ -61,9 +62,7 @@ const Home = () => {
   // --- Utility functions
   // -------------------------------------------------------------------------------------
 
-  /*
   const getPostType = useGetPostType();
-*/
 
   useEffect(() => {
     if (postListState.scrollToTop) {
@@ -146,6 +145,7 @@ const Home = () => {
         estimatedItemSize={400}
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
+        getItemType={getPostType}
         onScroll={event => {
           setContentOffset(event.nativeEvent.contentOffset);
         }}
