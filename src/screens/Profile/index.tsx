@@ -29,10 +29,6 @@ import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfi
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import useFollowersCount from 'hooks/relationships/useFollowersCount';
-import useFollowingCount from 'hooks/relationships/useFollowingCount';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';

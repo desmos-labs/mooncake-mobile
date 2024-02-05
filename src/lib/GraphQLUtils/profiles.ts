@@ -1,5 +1,4 @@
-import { DesmosProfile, ProfileParams } from 'types/desmos';
-import { GQLProfileResult } from "types/profile";
+import { DesmosProfile, GqlDesmosProfile, ProfileParams } from 'types/desmos';
 
 /**
  * Format an incoming profiles params data from the server into a format that is easier to parse by the app.
@@ -28,7 +27,7 @@ export const convertGraphQLProfileParams = (params: any): ProfileParams => {
  * @param {any} profile - Desmos Profile data fetched from the server.
  * @returns {DesmosProfile} - A formatted DesmosProfile object
  */
-export const convertGraphQLProfile = (profile: GQLProfileResult): DesmosProfile => {
+export const convertGraphQLProfile = (profile: GqlDesmosProfile): DesmosProfile => {
   return {
     dTag: profile.dtag,
     address: profile.address,

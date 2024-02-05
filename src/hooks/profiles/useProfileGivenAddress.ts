@@ -1,12 +1,11 @@
 import { useQuery } from '@apollo/client';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { useUpdateUserFollowersCache } from '@recoil/followers';
 import { useStoredProfiles, useStoreProfile } from '@recoil/profiles';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 import React, { useMemo, useState } from 'react';
 import GetProfileDataForAddress from 'services/graphql/queries/GetProfileDataForAddress';
-import { DesmosProfile } from 'types/desmos';
-import { GQLProfilesResult } from 'types/profile';
-import { useUpdateUserFollowersCache } from '@recoil/followers';
+import { DesmosProfile, GqlDesmosProfiles } from 'types/desmos';
 
 /**
  * Hook to retrieve the Desmos profile of the user having the given address.
@@ -36,7 +35,7 @@ const useProfileGivenAddress = (address?: string) => {
     [fetchedProfile, isForActiveUser, storedProfiles, userAddress],
   );
 
-  const { data, error, loading, refetch } = useQuery<GQLProfilesResult>(GetProfileDataForAddress, {
+  const { data, error, loading, refetch } = useQuery<GqlDesmosProfiles>(GetProfileDataForAddress, {
     variables: { address: userAddress },
     fetchPolicy: 'cache-and-network',
   });
