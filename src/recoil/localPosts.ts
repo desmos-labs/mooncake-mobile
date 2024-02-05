@@ -1,7 +1,7 @@
 import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import { useCallback, useMemo } from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { isComment, isCommentTo, Post } from 'types/posts';
+import { isCommentTo, isRootPost, Post } from 'types/posts';
 
 /**
  * Atom that contains the posts that are currently
@@ -22,7 +22,7 @@ const localPosts = atom<Record<string, Post[]>>({
 export const useUserLocalPosts = (userAddress?: string) => {
   const posts = useRecoilValue(localPosts);
   return useMemo(
-    () => (userAddress ? posts[userAddress] ?? [] : []).filter(p => !isComment(p)),
+    () => (userAddress ? posts[userAddress] ?? [] : []).filter(p => isRootPost(p)),
     [posts, userAddress],
   );
 };
