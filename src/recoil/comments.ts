@@ -14,11 +14,6 @@ const commentsAppState = atom<Record<number, Post[]>>({
 export const useComments = (postId: number) => {
   const comments = useRecoilValue(commentsAppState);
   return useMemo(() => {
-    console.log(
-      'useComments',
-      postId,
-      (comments[postId] ?? []).map(p => p.id),
-    );
     return comments[postId] ?? [];
   }, [comments, postId]);
 };

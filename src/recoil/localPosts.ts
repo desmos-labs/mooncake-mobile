@@ -36,9 +36,8 @@ export const useUserLocalComments = (userAddress: string | undefined, parentId: 
   return useMemo(
     () =>
       (userAddress ? posts[userAddress] ?? [] : []).filter(p => {
-        const comment = isCommentTo(p, parentId);
-        console.log('[Recoil] useUserLocalComments filter', p.id, comment);
-        return comment;
+        const isComment = isCommentTo(p, parentId);
+        return isComment;
       }),
     [posts, userAddress, parentId],
   );
@@ -98,7 +97,6 @@ export const useStoreUserLocalPost = () => {
             userPosts[existingPostIndex] = post;
             break;
         }
-        console.log('[Recoil] Store user local post');
         return userPosts;
       });
     },
