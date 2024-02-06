@@ -52,42 +52,6 @@ export const usePostsToSync = (user: string) => {
 };
 
 /**
- * Hook that allows to get a number representing the current difference of the comments for the specified post.
- * The difference is computed by considering:
- * • each locally deleted comment as <code>-1</code>
- * • each locally added comment as <code>+1</code>
- *
- * Here are some difference values examples:
- * • a difference of -2 means that overall there are 2 locally deleted comments
- * • a difference of +1 means that overall there is 1 locally deleted comment
- *
- * This difference can be used to show an updated comments count compared to the current values on the server.
- */
-export const useGetPostCommentsDifference = () => {
-  const posts = useRecoilValue(postsState);
-  return React.useCallback(
-    (user: string, subspaceId: number, postId: number) => {
-      const userPosts = posts[user] ?? [];
-      return userPosts
-        .filter(p => p.subspaceId === subspaceId && isCommentTo(p, postId))
-        .map(p => {
-          switch (p.status) {
-            case PostStatus.CREATED_LOCALLY:
-            case PostStatus.EDITED_LOCALLY:
-              return 1;
-            case PostStatus.DELETED_LOCALLY:
-              return -1;
-            default:
-              return 0;
-          }
-        })
-        .reduce((sum: number, value: number) => sum + value, 0);
-    },
-    [posts],
-  );
-};
-
-/**
  * Hook that allows to get all the comments that are yet to-be-synced for a given user and post.
  * @param user {string} - Address of the user inside which posts' to search for.
  * @param subspaceId {number} - Subspace id of the post.
