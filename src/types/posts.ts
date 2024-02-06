@@ -2,10 +2,24 @@ import { Entities, ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3
 import { DesmosProfile } from 'types/desmos';
 
 export enum PostStatus {
+  /**
+   * The post has been retrieved from the API.
+   */
   SYNCED = 'synced',
-  TO_BE_SYNCED = 'to_be_synced',
+  /**
+   * The post has been created locally and we didn't
+   * fetch it from the API yet.
+   */
   CREATED_LOCALLY = 'created',
+  /**
+   * The post has been edited locally and we didn't
+   * fetch it from the API yet.
+   */
   EDITED_LOCALLY = 'edited',
+  /**
+   * The post has been deleted locally and shouldn't
+   * be displayed to the user if retrieved from the API.
+   */
   DELETED_LOCALLY = 'deleted',
 }
 
