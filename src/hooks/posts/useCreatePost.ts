@@ -131,7 +131,7 @@ const useCreatePost = () => {
       const post: Post = {
         ...createPostState,
         id: -1, // TODO: This should be deleted
-        status: PostStatus.CREATED_LOCALLY,
+        status: PostStatus.BROADCASTING,
         statusUpdateDate: creationDate,
         subspaceId,
         sectionId: createPostState.sectionId ?? parent?.sectionId ?? 0,
@@ -196,6 +196,7 @@ const useCreatePost = () => {
           storeLocalPost(activeProfile.address, {
             ...post,
             id: event.result.postId,
+            status: PostStatus.CREATED_LOCALLY,
           });
 
           showToast({

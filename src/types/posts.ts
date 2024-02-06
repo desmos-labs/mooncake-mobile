@@ -7,6 +7,10 @@ export enum PostStatus {
    */
   SYNCED = 'synced',
   /**
+   * The post creation/deletion or edit is being broadcast to the chain.
+   */
+  BROADCASTING = 'broadcasting',
+  /**
    * The post has been created locally and we didn't
    * fetch it from the API yet.
    */
@@ -180,7 +184,7 @@ export const isCommentReply = (post: Post): boolean => {
 };
 
 export const isPostPending = (post: Post): boolean => {
-  return post.status !== PostStatus.SYNCED;
+  return post.status === PostStatus.BROADCASTING;
 };
 
 export interface PostAttachmentSize {
