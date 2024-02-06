@@ -1,6 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { FontAwesome } from '@expo/vector-icons';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import { emptyPostsIcon } from 'assets/images';
 import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
@@ -14,10 +13,6 @@ import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface PostsSectionProps {
-  /**
-   * Address of the profile related to the posts that will be displayed.
-   */
-  readonly address: string;
   /**
    * Posts to be displayed.
    */
@@ -41,10 +36,7 @@ const PostsSection = (props: PostsSectionProps) => {
   const theme = useTheme();
   const styles = useStyles();
 
-  const { address, onPress, posts, loading: isLoading } = props;
-
-  const activeAddress = useActiveAccountAddress();
-  const isGuestProfile = useMemo(() => address === activeAddress, [activeAddress, address]);
+  const { onPress, posts, loading: isLoading } = props;
 
   const Content = useMemo(() => {
     if (posts.length === 0) {
@@ -58,7 +50,7 @@ const PostsSection = (props: PostsSectionProps) => {
       );
     }
 
-    return <PostCard post={posts[0]} />;
+    return posts.map(post => <PostCard post={post} key={post.externalId} />);
   }, [posts, styles.emptyImage, t, theme.colors.midGrey]);
 
   // -------------------------------------------------------------------------------------
@@ -70,7 +62,7 @@ const PostsSection = (props: PostsSectionProps) => {
       <Typography.Semibold16>{t('posts')}</Typography.Semibold16>
       <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
         {/* Subtitle of the section */}
-        {posts.length !== 0 && !isLoading && !isGuestProfile && (
+        {posts.length !== 0 && !isLoading && (
           <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
             {t('created liked tipped')}
           </Typography.Regular12>

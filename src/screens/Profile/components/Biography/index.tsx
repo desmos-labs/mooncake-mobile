@@ -1,3 +1,7 @@
+import {
+  TypographyConfigRegular14,
+  TypographyConfigSemibold14,
+} from '@desmoslabs/desmos-kit-ui/components/Typography/config';
 import ReadMore from 'components/ReadMore';
 import { makeStyle } from 'config/theme';
 import React from 'react';
@@ -28,12 +32,8 @@ const Biography = ({ text, numberOfLines }: Props) => {
   };
 
   const Style: TextStyle = {
-    fontFamily: 'Poppins_400Regular',
-    fontSize: 14,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 21,
-    textAlign: 'left',
+    ...TypographyConfigRegular14,
+    color: '#34383E',
   };
 
   return (
@@ -49,13 +49,8 @@ const Biography = ({ text, numberOfLines }: Props) => {
 
 const useStyles = makeStyle(theme => ({
   textButton: {
-    fontFamily: 'Poppins_600SemiBold',
-    fontSize: 12,
-    fontStyle: 'normal',
-    fontWeight: '600',
-    lineHeight: 16,
-    textAlign: 'left',
-    color: theme.colors.accentBlue01,
+    ...TypographyConfigSemibold14,
+    color: theme.colors.primary,
   },
   indicator: {
     alignSelf: 'flex-start',

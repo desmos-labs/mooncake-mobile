@@ -73,6 +73,22 @@ export interface DesmosProfile {
    * Date in which the profile was created.
    */
   readonly creationTime: string;
+  /**
+   * Whether the current app user is following this profile.
+   */
+  readonly isUserFollowing: boolean;
+  /**
+   * Whether the current app user has blocked this profile.
+   */
+  readonly isBlockedByUser: boolean;
+  /**
+   * Number of followers of the user
+   */
+  readonly followersCount: number;
+  /**
+   * Number of users that the user follows
+   */
+  readonly followingCount: number;
 }
 
 /**
@@ -85,7 +101,7 @@ export interface PostReaction {
 /**
  * Interface representing a Desmos profile typed as queried from the server.
  */
-interface GqlDesmosProfile {
+export interface GqlDesmosProfile {
   address: string;
   bio: string;
   dtag: string;
@@ -93,6 +109,16 @@ interface GqlDesmosProfile {
   cover_picture: string;
   nickname: string;
   profile_picture: string;
+  is_user_following: boolean;
+  has_user_blocked: boolean;
+  relationships_counters: {
+    followers_count: number;
+    following_count: number;
+  };
+}
+
+export interface GqlDesmosProfiles {
+  profiles: GqlDesmosProfile[];
 }
 
 /**

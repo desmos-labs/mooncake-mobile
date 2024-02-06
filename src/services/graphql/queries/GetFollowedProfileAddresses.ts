@@ -36,7 +36,7 @@ const GetFollowedProfileAddresses = gql`
     $subspaceId: bigint!
     $userAddress: String!
     $counterpartyAddresses: [String!]
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     relationships: user_relationship(
       where: {
         subspace_id: { _eq: $subspaceId }

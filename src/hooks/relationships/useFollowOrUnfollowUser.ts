@@ -118,7 +118,7 @@ const useFollowOrUnfollowUser = () => {
         throw new Error('Trying to follow or unfollow a user, without active user');
       }
 
-      const isUserFollowingCounterparty = await isFollowing(activeAddress, counterparty.address);
+      const isUserFollowingCounterparty = await isFollowing(activeAddress, counterparty);
       if (isUserFollowingCounterparty) {
         return unfollowUser(activeAddress, counterparty);
       } else {

@@ -50,12 +50,11 @@ const useStyles = makeStyleWithProps(
     topViewButton: { justifyContent: 'center', alignItems: 'center' },
     innerContainer: {
       flex: 1,
-      marginTop: props.isActiveAccount ? 36 : 32,
+      marginTop: 32,
     },
     innerTopSection: {
-      flexDirection: 'row',
+      flexDirection: 'column',
       justifyContent: 'space-between',
-      alignItems: 'center',
     },
     organizedEventsIcon: {
       width: 20,
@@ -76,9 +75,9 @@ const useStyles = makeStyleWithProps(
       position: 'absolute',
       right: 0,
     },
-    rightButtonsContainer: {
+    profileConnectionsButtonContainer: {
       flexDirection: 'row',
-      marginTop: props.isActiveAccount ? -120 : -100,
+      gap: theme.spacing.l,
     },
     rightButton: {
       width: 32,
@@ -145,7 +144,7 @@ const useStyles = makeStyleWithProps(
       height: 8,
       backgroundColor: theme.colors.surfaceGrey,
     },
-    flexCenter: { flex: 1, justifyContent: 'center' },
+    flexCenter: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     arrowView: {
       zIndex: 2,
       position: 'absolute',
@@ -166,17 +165,18 @@ const useStyles = makeStyleWithProps(
       alignSelf: 'center',
       maxWidth: '25%',
     },
-    centerLeftSpacingM: {
+    connectionButton: {
+      flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      marginLeft: theme.spacing.m,
+      gap: theme.spacing.xs,
     },
     nickname: {
-      marginTop: 10,
+      marginTop: 6,
     },
     profileDtag: {
       marginVertical: 4,
-      color: theme.colors.darkGrey,
+      color: theme.colors.neutral['700'],
     },
     postCount: {
       justifyContent: 'center',
@@ -207,6 +207,10 @@ const useStyles = makeStyleWithProps(
     tipStyle: {
       paddingHorizontal: theme.spacing.l,
       gap: 4,
+    },
+    walletButton: {
+      alignSelf: 'flex-end',
+      marginTop: 8,
     },
   }),
 );

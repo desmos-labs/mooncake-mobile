@@ -3,7 +3,7 @@ import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import useBlocked from 'hooks/relationships/useBlocked';
+import useBlockedUsers from 'hooks/relationships/useBlockedUsers';
 import { Box, Divider } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +28,7 @@ const BlockedUsers = () => {
     loading,
     refresh: refreshBlocked,
     fetchMore: fetchMoreBlocked,
-  } = useBlocked();
+  } = useBlockedUsers();
 
   // -------------------------------------------------------------------------------------------------------------------
   // --- CALLBACKS

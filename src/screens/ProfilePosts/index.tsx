@@ -98,6 +98,7 @@ const ProfilePosts = () => {
     tabBarInactiveTintColor: theme.colors.grey01,
     tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled,
+    lazy: true,
   };
 
   return (
@@ -119,7 +120,7 @@ const ProfilePosts = () => {
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_LIKED}
           component={UserLikedPostsTab}
-          options={{ tabBarLabel: t('liked') }}
+          options={{ tabBarLabel: t('likes') }}
           initialParams={{ userAddress }}
         />
       </Tab.Navigator>

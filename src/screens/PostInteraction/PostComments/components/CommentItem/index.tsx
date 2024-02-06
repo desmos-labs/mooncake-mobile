@@ -24,7 +24,6 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import useIsBlocked from 'hooks/relationships/useIsBlocked';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
@@ -70,8 +69,7 @@ const CommentItem = (props: CommentItemProps) => {
   // -------------------------------------------------------------------------------------
 
   const { count: commentsCount } = usePostCommentsCount(comment);
-  const { isFollowing } = useIsFollowing(comment.author.address);
-  const { isBlocked } = useIsBlocked(comment.author.address);
+  const isFollowing = useIsFollowing(comment.author);
   const { liked, addOrRemoveLike, likesCount } = useAddOrRemoveLike(comment);
   const isAuthorActiveUser = useIsAuthorActiveUser(comment.author.address);
 
@@ -176,11 +174,11 @@ const CommentItem = (props: CommentItemProps) => {
         icon: hidePost,
       },
       {
-        label: isBlocked
+        label: comment.author.isBlockedByUser
           ? t('unblock', { ns: 'relationships' })
           : t('block', { ns: 'relationships' }),
         onPress: () => handlePressBlock(comment.author),
-        icon: isBlocked ? unblock : block,
+        icon: comment.author.isBlockedByUser ? unblock : block,
       },
     ];
 
@@ -195,7 +193,6 @@ const CommentItem = (props: CommentItemProps) => {
     isFollowing,
     t,
     handlePressBlock,
-    isBlocked,
   ]);
 
   return (

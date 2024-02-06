@@ -5,13 +5,11 @@ import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import useFollowersCount from 'hooks/relationships/useFollowersCount';
-import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConnectionsTabBar from 'screens/ProfileConnections/components/ConnectionsTabBar';
 import { DesmosProfile } from 'types/desmos';
@@ -58,23 +56,17 @@ const ProfileConnections = () => {
   // --- Tab bar labels
   // -------------------------------------------------------------------------------------
 
-  const { count: followingCount, refetch: refreshFollowingCount } = useFollowingCount(
-    profile?.address,
-  );
   const followingTabName = useMemo(() => {
-    return `${formatNumShorthand(followingCount)} ${t('following', {
+    return `${formatNumShorthand(profile?.followingCount!)} ${t('following', {
       ns: 'relationships',
     })}`;
-  }, [followingCount, t]);
+  }, [profile?.followingCount, t]);
 
-  const { count: followersCount, refetch: refreshFollowersCount } = useFollowersCount(
-    profile?.address,
-  );
   const followersTabName = useMemo(() => {
-    return `${formatNumShorthand(followersCount)} ${t('followers', {
+    return `${formatNumShorthand(profile?.followersCount!)} ${t('followers', {
       ns: 'relationships',
     })}`;
-  }, [followersCount, t]);
+  }, [profile?.followersCount, t]);
 
   const CenterElement = useMemo(() => {
     return <Typography.Semibold14>{profile?.nickname || 'no-nickname'}</Typography.Semibold14>;
@@ -90,11 +82,6 @@ const ProfileConnections = () => {
     ),
     [followersTabName, followingTabName],
   );
-
-  useEffect(() => {
-    refreshFollowingCount();
-    refreshFollowersCount();
-  }, [refreshFollowersCount, refreshFollowingCount]);
 
   return (
     <DView

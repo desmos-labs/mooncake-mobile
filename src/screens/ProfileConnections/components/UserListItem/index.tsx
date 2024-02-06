@@ -2,9 +2,8 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import { Image } from 'expo-image';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
@@ -39,23 +38,6 @@ const UserListItem = (props: UserListItemProps) => {
 
   const activeAccountAddress = useActiveAccountAddress();
   const isActiveAccount = activeAccountAddress === profileAddress;
-
-  const { refetch: refreshFollowing } = useIsFollowing(user.address);
-
-  // -------------------------------------------------------------------------------------
-  // --- Actions
-  // -------------------------------------------------------------------------------------
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  useEffect(() => {
-    refreshFollowing();
-
-    // It's fine to disable the exhaustive deps check here because we only want to run this once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
