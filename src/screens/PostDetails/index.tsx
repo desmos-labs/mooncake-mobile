@@ -66,7 +66,6 @@ const PostDetails = () => {
   // --- Loading states
   // -------------------------------------------------------------------------------------
 
-  const [firstLoad, setFirstLoad] = useState(false);
   const [pageRefreshing, setPageRefreshing] = useState(false);
   const [commentPosting, setCommentPosting] = useState(false);
 
@@ -131,13 +130,6 @@ const PostDetails = () => {
     setPageRefreshing(false);
   }, [refreshComments, refreshCommentsCount, refreshPost]);
 
-  const onPullToRefresh = React.useCallback(() => {
-    // set firstLoad to false so the loading indicator will be shown in the event
-    // the user pulls to refresh during the first load.
-    setFirstLoad(false);
-    refreshPage();
-  }, [refreshPage]);
-
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
@@ -200,8 +192,8 @@ const PostDetails = () => {
         estimatedItemSize={110}
         ref={scrollViewRef}
         // Only show the loading indicator on the flatList if the user manually drags down on it
-        refreshing={!firstLoad && pageRefreshing}
-        onRefresh={onPullToRefresh}
+        refreshing={pageRefreshing}
+        onRefresh={refreshPage}
         ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
@@ -210,7 +202,7 @@ const PostDetails = () => {
         // Conditionally render the comment item skeleton here so it seamlessly transitions
         // from a lazy loading to ready state
         ListEmptyComponent={
-          (firstLoad && areCommentsLoading) || areCommentsLoading ? (
+          areCommentsLoading ? (
             <CommentItemSkeleton />
           ) : (
             <EmptyListComponent label={t('no comments yet')} />
