@@ -13,6 +13,7 @@ import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { sortPostsByCreationDate } from 'lib/PostsUtils';
+import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import GetFollowingUsersPosts from 'services/graphql/queries/GetFollowingUsersPosts';
 import GetPosts from 'services/graphql/queries/GetPosts';
@@ -122,9 +123,9 @@ const usePosts = (queryType: PostsQueryType) => {
 
   const posts = useMemo(() => {
     if (queryType === PostsQueryType.DISCOVERY) {
-      return sortPostsByCreationDate([...localPosts, ...discoveryPosts]);
+      return sortPostsByCreationDate(_.uniqBy([...localPosts, ...discoveryPosts], 'externalId'));
     } else {
-      return sortPostsByCreationDate([...localPosts, ...timelinePosts]);
+      return sortPostsByCreationDate(_.uniqBy([...localPosts, ...timelinePosts], 'externalId'));
     }
   }, [queryType, timelinePosts, discoveryPosts, localPosts]);
 

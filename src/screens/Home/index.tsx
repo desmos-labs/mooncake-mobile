@@ -128,7 +128,7 @@ const Home = () => {
   return (
     <View style={styles.homeView} testID="homeView">
       <FlashList
-        keyExtractor={(item, index) => `${index}item+${item.id}`}
+        keyExtractor={(item, index) => `${index}item+${item.externalId}`}
         ref={postListRef}
         data={posts}
         refreshControl={
