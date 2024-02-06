@@ -54,7 +54,7 @@ const usePost = (postId: number, storedPost?: Post) => {
     }
     setLoading(false);
     return apolloResult;
-  }, [onDataFetched]);
+  }, [getLazyQuery, onDataFetched]);
 
   return {
     loading,
