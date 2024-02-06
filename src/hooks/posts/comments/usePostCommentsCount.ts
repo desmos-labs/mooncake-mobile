@@ -1,53 +1,58 @@
-import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import React, { useEffect, useMemo } from 'react';
-import { useQuery } from '@apollo/client';
+import {
+  usePostCommentsCount as useRecoilPostCommentsCount,
+  useSetPostCommentsCount,
+} from '@recoil/commentsCount';
+import { useGetAllUnsyncedPosts } from '@recoil/localPosts';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
+import { useCallback, useEffect, useState } from 'react';
 import GetPostCommentsCount from 'services/graphql/queries/GetPostCommentsCount';
-import { useGetPostCommentsDifference } from '@recoil/localPosts';
+import { isCommentTo, Post } from 'types/posts';
 
 /**
  * Hook that allows to get the count of the comments of a post.
  * @param post {Post} - The post for which to get the count of the comments.
  * */
 const usePostCommentsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
-  const firstEffect = React.useRef(true);
+  const [loading, setLoading] = useState(false);
+
   const address = useActiveAccountAddress();
-  const getCommentsDifference = useGetPostCommentsDifference();
-
+  const getUnsyncedComments = useGetAllUnsyncedPosts(address);
+  const setCommentsCount = useSetPostCommentsCount();
+  const count = useRecoilPostCommentsCount(post.id);
   // Get the comments count from the server
-  const { data, loading, refetch } = useQuery(GetPostCommentsCount, {
+  const [getLazyData] = useCustomLazyQuery(GetPostCommentsCount, {
     fetchPolicy: 'no-cache',
-    variables: {
-      postId: post.id,
-    },
   });
-  const serverCommentsCount = useMemo(() => data?.comments?.aggregate?.count ?? 0, [data]);
 
-  // Get the comments difference that is stored locally
-  const commentsDifference = useMemo(
-    () => (address ? getCommentsDifference(address, post.subspaceId, post.id) : 0),
-    [address, getCommentsDifference, post.id, post.subspaceId],
-  );
+  const getCommentsCount = useCallback(async () => {
+    setLoading(true);
+    const unsyncedPostComments = await getUnsyncedComments().then(result => {
+      return result.filter(p => isCommentTo(p, post.id));
+    });
+    const data = await getLazyData({
+      variables: {
+        postId: post.id,
+        unsyncedCreatedPosts: unsyncedPostComments.map(p => p.id),
+      },
+    });
 
-  // Compute the overall comments count by adding to the server count the local difference
-  const commentsCount = useMemo(
-    () => Math.max(0, serverCommentsCount + commentsDifference),
-    [commentsDifference, serverCommentsCount],
-  );
+    const serverCommentsCount = data?.comments?.aggregate?.count ?? 0;
+    const createdCommentsCount = data?.createdComments?.aggregate?.count ?? 0;
+    const commentsCount = serverCommentsCount + unsyncedPostComments.length - createdCommentsCount;
+    setCommentsCount(post.id, commentsCount);
+    setLoading(false);
+  }, [getLazyData, getUnsyncedComments, post.id, setCommentsCount]);
 
   useEffect(() => {
-    if (!firstEffect.current) {
-      console.log('Triggering refetch of usePostCommentsCount');
-      refetch();
-    } else {
-      firstEffect.current = false;
-    }
-  }, [commentsDifference, refetch]);
+    getCommentsCount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
-    count: commentsCount,
+    count,
     loading,
-    refetch,
+    refetch: getCommentsCount,
   };
 };
 

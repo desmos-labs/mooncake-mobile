@@ -1,4 +1,5 @@
 import { useAppStateValue } from '@recoil/appState';
+import { useSetPostCommentsCount } from '@recoil/commentsCount';
 import { useDeleteUserLocalPost, useStoreUserLocalPost } from '@recoil/localPosts';
 import { useActiveProfile } from '@recoil/profiles';
 import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
@@ -86,7 +87,7 @@ const useCreatePost = () => {
 
   const storeLocalPost = useStoreUserLocalPost();
   const deleteLocalPost = useDeleteUserLocalPost();
-
+  const setPostCommentsCount = useSetPostCommentsCount();
   const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
   // Callback that creates a post
@@ -198,6 +199,10 @@ const useCreatePost = () => {
             id: event.result.postId,
             status: PostStatus.CREATED_LOCALLY,
           });
+
+          if (parent) {
+            setPostCommentsCount(parent.id, count => count + 1);
+          }
 
           showToast({
             toastType: ToastType.success,

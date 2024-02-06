@@ -29,16 +29,17 @@ const Home = () => {
   const { t } = useTranslation('home');
   const styles = useStyles();
   const theme = useTheme();
-
   const { name: routeName } = useRoute<NavProps['route']>();
   const postListState = usePostsListState();
   const setPostListState = useSetPostsListState();
+
   // Reference and state of the post list, to be able to scroll to the top of it
   const postListRef = useRef<FlashList<Post> | null>(null);
   const [, setContentOffset] = useState({
     x: 0,
     y: 0,
   });
+
   // -------------------------------------------------------------------------------------
   // --- Data queries
   // -------------------------------------------------------------------------------------
@@ -61,7 +62,7 @@ const Home = () => {
   // -------------------------------------------------------------------------------------
   // --- Utility functions
   // -------------------------------------------------------------------------------------
-
+  const fetchTimestampRef = useRef<Date>();
   const getPostType = useGetPostType();
 
   useEffect(() => {
@@ -89,13 +90,14 @@ const Home = () => {
           </View>
         );
       }
-      return <PostCard post={item} />;
+      return <PostCard post={item} fetchTimestamp={fetchTimestampRef.current} />;
     },
     [styles.loaderView],
   );
 
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
+    fetchTimestampRef.current = new Date();
     await refreshPosts();
   }, [refreshPosts]);
 

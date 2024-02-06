@@ -1,6 +1,6 @@
 import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import React, { useCallback, useMemo } from 'react';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, useRecoilCallback, useRecoilValue, useSetRecoilState } from 'recoil';
 import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
 
 /**
@@ -155,4 +155,14 @@ export const useGetPostCommentsDifference = () => {
     },
     [posts],
   );
+};
+
+export const useGetAllUnsyncedPosts = (activeAddress: string | undefined) => {
+  return useRecoilCallback(({ snapshot }) => async () => {
+    const allPosts = await snapshot.getPromise(localPosts);
+    if (!activeAddress) {
+      return [];
+    }
+    return allPosts[activeAddress] ?? [];
+  });
 };

@@ -110,9 +110,8 @@ const PostDetails = () => {
 
   // Comment creation
   const onCommentCreated = useCallback(async () => {
-    await refreshCommentsCount();
     setCommentPosting(false);
-  }, [refreshCommentsCount]);
+  }, []);
 
   const handlePressCreateComment = useCallback(async () => {
     if (!post) {
@@ -126,10 +125,11 @@ const PostDetails = () => {
   // Method used to refresh the post data
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
+    await refreshPost();
     await refreshComments();
     await refreshCommentsCount();
     setPageRefreshing(false);
-  }, [refreshComments, refreshCommentsCount]);
+  }, [refreshComments, refreshCommentsCount, refreshPost]);
 
   const onPullToRefresh = React.useCallback(() => {
     // set firstLoad to false so the loading indicator will be shown in the event

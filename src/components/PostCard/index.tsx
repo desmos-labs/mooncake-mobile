@@ -24,6 +24,12 @@ interface PostCardProps {
    * Post that is related to this card.
    */
   post: Post;
+  /**
+   * Timestamp of the last fetch of the post.
+   * If this is provided, this will trigger a re-render of the post
+   * if the post has been re-fetched.
+   */
+  fetchTimestamp?: Date;
 }
 
 /**
@@ -36,8 +42,7 @@ interface PostCardProps {
 const PostCard = (props: PostCardProps) => {
   const styles = useStyles();
   const theme = useTheme();
-
-  const { post } = props;
+  const { post, fetchTimestamp } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -130,7 +135,12 @@ const PostCard = (props: PostCardProps) => {
         {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
         {/* Post bottom bar */}
         {!isPending && (
-          <PostCardBottomBar post={post} onPressComment={onPressComment} onPressShare={sharePost} />
+          <PostCardBottomBar
+            post={post}
+            onPressComment={onPressComment}
+            onPressShare={sharePost}
+            fetchTimestamp={fetchTimestamp}
+          />
         )}
       </TouchableOpacity>
     </Animated.View>
