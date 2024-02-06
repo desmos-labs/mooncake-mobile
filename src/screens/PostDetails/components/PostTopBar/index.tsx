@@ -16,7 +16,6 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useHidePost from 'hooks/posts/useHidePost';
 import useSharePost from 'hooks/posts/useSharePost';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
@@ -35,6 +34,7 @@ import useStyles from './useStyles';
 
 interface Props {
   readonly post: Post;
+  readonly commentsCount: number;
   readonly onBackButtonPress: () => void;
   readonly handlePressMore?: () => void;
 }
@@ -46,7 +46,7 @@ interface Props {
  * @param onBackButtonPress - Handler for pressing the back button
  * @constructor
  */
-const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
+const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('postDetails');
@@ -58,7 +58,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const formatDate = useFormatTimeForPostDetails();
 
   const isFollowing = useIsFollowing(post.author);
-  const { count: commentsCount } = usePostCommentsCount(post);
   const isAuthorActiveUser = useIsAuthorActiveUser(post.author.address);
 
   // -------------------------------------------------------------------------------------

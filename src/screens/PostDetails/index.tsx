@@ -98,7 +98,7 @@ const PostDetails = () => {
     fetchMore: fetchMoreComments,
   } = usePostComments(postData);
 
-  const { refetch: refreshCommentsCount } = usePostCommentsCount(postData);
+  const { count, refetch: refreshCommentsCount } = usePostCommentsCount(postData);
 
   const handleCreateComment = useHandleCreateComment();
 
@@ -194,7 +194,7 @@ const PostDetails = () => {
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
-      topBar={<PostTopBar post={post} onBackButtonPress={goBack} />}>
+      topBar={<PostTopBar post={post} commentsCount={count} onBackButtonPress={goBack} />}>
       {/* List of comments */}
       <FlashList
         estimatedItemSize={110}
