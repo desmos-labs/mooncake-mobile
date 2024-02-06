@@ -196,7 +196,6 @@ const useCreatePost = () => {
           storeLocalPost(activeProfile.address, {
             ...post,
             id: event.result.postId,
-            status: PostStatus.SYNCED,
           });
 
           showToast({
