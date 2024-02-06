@@ -43,6 +43,13 @@ const PostFields = gql`
         count
       }
     }
+    urls {
+      start_index
+      end_index
+      url
+      display_value
+      preview_url
+    }
   }
 `;
 

@@ -17,6 +17,7 @@ import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
 import PostText from 'components/PostText';
+import LinkPreview from 'components/LinkPreview';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -129,6 +130,8 @@ const PostCard = (props: PostCardProps) => {
         {post.text && <PostText style={{ marginTop: theme.spacing.m }}>{post.text}</PostText>}
         {/* Media view */}
         {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
+        {/* Link preview */}
+        <LinkPreview post={post} />
         {/* Post bottom bar */}
         {!isPending && (
           <PostCardBottomBar

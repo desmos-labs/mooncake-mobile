@@ -89,6 +89,11 @@ export interface Post {
   readonly tags: string[];
 
   /**
+   * URLs that are present in the post's text.
+   */
+  readonly urls: PostURL[];
+
+  /**
    * Entities associated to this post.
    */
   readonly entities: Entities | undefined;
@@ -207,11 +212,19 @@ export interface PostMediaAttachment {
 export type PostAttachmentContent = PostMediaAttachment;
 
 export interface PostAttachment {
-  id: number;
-  content: PostAttachmentContent;
-  size: PostAttachmentSize | undefined;
+  readonly id: number;
+  readonly content: PostAttachmentContent;
+  readonly size: PostAttachmentSize | undefined;
 }
 
 export interface PostTransaction {
   readonly hash: string;
+}
+
+export interface PostURL {
+  readonly startIndex: number;
+  readonly endIndex: number;
+  readonly url: string;
+  readonly displayValue?: string;
+  readonly previewUrl?: string;
 }
