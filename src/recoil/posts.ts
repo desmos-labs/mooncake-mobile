@@ -74,6 +74,8 @@ export const usePostCommentsToSync = (
   }, [posts, user, postId]);
 };
 
+// TODO: cleanup this hook
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useCreateStorePost = (recoil: RecoilState<Record<string, Post[]>>) => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
