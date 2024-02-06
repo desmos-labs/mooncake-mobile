@@ -15,7 +15,7 @@ type Params = {
   /**
    * An optional callback to independently process a selected image.
    */
-  onImageSelected?: (imageUri: string) => void;
+  onImageSelected?: (imageUri: string, width: number, height: number, mimeType?: string) => void;
 };
 
 type ReturnValue = {
@@ -44,7 +44,12 @@ const useImageFromDevice = ({ onImageSelected }: Params): ReturnValue => {
       const result = await ImagePicker.launchImageLibraryAsync(DEFAULT_OPTIONS);
       if (result.assets) {
         if (onImageSelected) {
-          onImageSelected(result.assets[0].uri);
+          onImageSelected(
+            result.assets[0].uri,
+            result.assets[0].width,
+            result.assets[0].height,
+            result.assets[0].mimeType,
+          );
         }
         return result.assets[0].uri;
       }

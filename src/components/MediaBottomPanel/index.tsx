@@ -1,3 +1,5 @@
+import { cameraIcon, galleryIcon } from 'assets/images';
+import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import { CameraType } from 'expo-image-picker';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
@@ -7,14 +9,12 @@ import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import { useTheme } from 'native-base';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
-import ImageButton from 'components/ImageButton';
-import { cameraIcon, galleryIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 export type OnImageSelectedCallback = (
   editedPicturePath: string,
   dimensions: { width: number; height: number },
-  mimeType: string,
+  mimeType?: string,
 ) => void;
 
 type MediaBottomPanelProps = {
@@ -72,12 +72,8 @@ const MediaBottomPanel = ({
 
   const { editPostPicture } = useOpenPictureEditor();
   const { imageFromLibrary } = useImageFromDevice({
-    onImageSelected: React.useCallback(
-      (imageUri: string) => {
-        editPostPicture(imageUri, onImageSelected);
-      },
-      [editPostPicture, onImageSelected],
-    ),
+    onImageSelected: (imageUri, width, height, mimeType) =>
+      onImageSelected(imageUri, { width, height }, mimeType),
   });
   const takePhoto = useTakePicture();
 

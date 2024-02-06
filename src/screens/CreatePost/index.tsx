@@ -94,7 +94,7 @@ const CreatePost = () => {
         uri: editedPicturePath,
         width: dimensions.width,
         height: dimensions.height,
-        type: mimeType,
+        type: mimeType ?? '',
       });
     },
     [addPostAttachment],
