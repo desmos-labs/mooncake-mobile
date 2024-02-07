@@ -38,11 +38,8 @@ const FollowingUsersPostsFields = gql`
       hash
     }
     has_user_liked
-    likes_count: likes_aggregate {
-      aggregate {
-        count
-      }
-    }
+    likes_count
+    comments_count
   }
 `;
 
