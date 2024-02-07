@@ -32,5 +32,3 @@ export const useSetPostCommentsCount = () => {
     [setCommentsCount],
   );
 };
-
-export default commentsCount;

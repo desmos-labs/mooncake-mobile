@@ -3,7 +3,7 @@ import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import React from 'react';
 import { atom, RecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
-import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
+import { isRootPost, Post, PostStatus } from 'types/posts';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
@@ -51,29 +51,6 @@ export const usePostsToSync = (user: string) => {
   }, [posts, user]);
 };
 
-/**
- * Hook that allows to get all the comments that are yet to-be-synced for a given user and post.
- * @param user {string} - Address of the user inside which posts' to search for.
- * @param subspaceId {number} - Subspace id of the post.
- * @param postId {number} - ID of the post for which to get the comments.
- */
-export const usePostCommentsToSync = (
-  user: string | undefined,
-  subspaceId: number,
-  postId: number,
-): Post[] => {
-  const posts = useRecoilValue(postsState);
-
-  return React.useMemo(() => {
-    if (!user) {
-      return [];
-    }
-
-    const userPosts = posts[user] ?? [];
-    return userPosts.filter(p => isCommentTo(p, postId) && p.status !== PostStatus.DELETED_LOCALLY);
-  }, [posts, user, postId]);
-};
-
 // TODO: cleanup this hook
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useCreateStorePost = (recoil: RecoilState<Record<string, Post[]>>) => {
@@ -113,7 +90,7 @@ export const useStorePost = () => {
   return useCreateStorePost(postsState);
 };
 
-export const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: string) => {
+const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: string) => {
   const setPosts = useSetRecoilState(recoil);
   return React.useCallback(
     (valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
@@ -179,31 +156,6 @@ export const useStoredFollowingPosts = (user: string, followingAddresses: string
   return React.useMemo(
     () => posts[user]?.filter(post => followingAddresses.includes(post.author.address)) ?? [],
     [followingAddresses, posts, user],
-  );
-};
-
-/**
- * Hook that allows to delete the given pending post from the posts state.
- */
-export const useRemoveStoredPendingPost = () => {
-  const setPosts = useSetRecoilState(postsState);
-  return React.useCallback(
-    (user: string, subspaceId: number, externalId: string) => {
-      setPosts(currentTimeline => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...currentTimeline,
-        };
-
-        // Update the user posts by filtering out the post that has the same subspace id, external id and is not synced
-        const userPosts = updatedPosts[user] ?? [];
-        updatedPosts[user] = userPosts.filter(
-          p => p.externalId !== externalId || p.status === PostStatus.SYNCED,
-        );
-
-        return updatedPosts;
-      });
-    },
-    [setPosts],
   );
 };
 
