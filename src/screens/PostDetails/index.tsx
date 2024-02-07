@@ -9,7 +9,6 @@ import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import usePostComments from 'hooks/posts/comments/usePostComments';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -24,6 +23,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
 import { isCommentReply, Post } from 'types/posts';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
 
@@ -97,7 +97,7 @@ const PostDetails = () => {
     fetchMore: fetchMoreComments,
   } = usePostComments(postData);
 
-  const { count, refetch: refreshCommentsCount } = usePostCommentsCount(postData);
+  const commentsCount = usePostCommentsCount(postData.id);
 
   const handleCreateComment = useHandleCreateComment();
 
@@ -126,9 +126,8 @@ const PostDetails = () => {
     setPageRefreshing(true);
     await refreshPost();
     await refreshComments();
-    await refreshCommentsCount();
     setPageRefreshing(false);
-  }, [refreshComments, refreshCommentsCount, refreshPost]);
+  }, [refreshComments, refreshPost]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -186,7 +185,7 @@ const PostDetails = () => {
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
-      topBar={<PostTopBar post={post} commentsCount={count} onBackButtonPress={goBack} />}>
+      topBar={<PostTopBar post={post} commentsCount={commentsCount} onBackButtonPress={goBack} />}>
       {/* List of comments */}
       <FlashList
         estimatedItemSize={110}

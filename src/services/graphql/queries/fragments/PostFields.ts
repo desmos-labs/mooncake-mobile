@@ -38,11 +38,6 @@ const PostFields = gql`
       hash
     }
     has_user_liked
-    likes_count: likes_aggregate {
-      aggregate {
-        count
-      }
-    }
     urls {
       start_index
       end_index
@@ -50,6 +45,8 @@ const PostFields = gql`
       display_value
       preview_url
     }
+    likes_count
+    comments_count
   }
 `;
 

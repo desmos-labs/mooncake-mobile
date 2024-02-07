@@ -1,6 +1,7 @@
 import { QueryOptions } from '@apollo/client';
 import { OperationVariables } from '@apollo/client/core';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { useSetPostCommentsCount } from '@recoil/commentsCount';
 import { useUserLocalPosts } from '@recoil/localPosts';
 import {
   useStoredFollowingPosts,
@@ -89,6 +90,7 @@ const usePosts = (queryType: PostsQueryType) => {
   const storeFollowingPosts = useStoreFollowingPosts(activeAccountAddress!);
   const localPosts = useUserLocalPosts(activeAccountAddress);
   const syncLocalPosts = useSyncLocalPosts(activeAccountAddress);
+  const setPostCommentsCount = useSetPostCommentsCount();
 
   const convertData = useCallback((data: any): Post[] => {
     return (data?.posts ?? []).map(convertGraphQLPost);
@@ -97,13 +99,14 @@ const usePosts = (queryType: PostsQueryType) => {
   const onDataFetched = useCallback(
     (posts: Post[]) => {
       syncLocalPosts(posts);
+      posts.forEach(p => setPostCommentsCount(p.id, p.commentsCount));
       if (queryType === PostsQueryType.DISCOVERY) {
         storePosts(posts);
       } else {
         storeFollowingPosts(posts);
       }
     },
-    [queryType, syncLocalPosts, storePosts, storeFollowingPosts],
+    [syncLocalPosts, queryType, setPostCommentsCount, storePosts, storeFollowingPosts],
   );
 
   const { loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery({

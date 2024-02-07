@@ -1,5 +1,6 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useComments, useDeleteComments, useSetComments } from '@recoil/comments';
+import { useSetPostCommentsCount } from '@recoil/commentsCount';
 import { useUserLocalComments } from '@recoil/localPosts';
 import useSyncLocalPosts from 'hooks/posts/useSyncLocalPosts';
 import usePaginatedQuery from 'hooks/usePaginatedQuery';
@@ -26,6 +27,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   const syncLocalPosts = useSyncLocalPosts(activeAccountAddress);
   const localComments = useUserLocalComments(activeAccountAddress, post.id);
   const deleteComments = useDeleteComments();
+  const setPostCommentsCount = useSetPostCommentsCount();
 
   const convertData = useCallback((data: any): Post[] => {
     return (data?.comments ?? []).map(convertGraphQLPost);
@@ -35,8 +37,9 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     (comments: Post[]) => {
       syncLocalPosts(comments);
       storeComments(post.id, comments);
+      comments.forEach(c => setPostCommentsCount(c.id, c.commentsCount));
     },
-    [post.id, syncLocalPosts, storeComments],
+    [syncLocalPosts, storeComments, post.id, setPostCommentsCount],
   );
 
   useEffect(() => {

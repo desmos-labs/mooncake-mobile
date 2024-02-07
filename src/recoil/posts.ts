@@ -41,62 +41,69 @@ const followingPostsState = atom<Record<string, Post[]>>({
   ],
 });
 
-// TODO: cleanup this hook
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const useCreateStorePost = (recoil: RecoilState<Record<string, Post[]>>) => {
+/**
+ * Hook that allows to store a given post.
+ */
+export const useStorePost = () => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
     (user: string, post: Post) => {
       setPosts(posts => {
-        const userPosts = [...(posts[user] ?? [])];
+        const userPosts = posts[user] ?? [];
+        let newPosts = userPosts;
         const existingPostIndex = findSamePost(userPosts, post);
         switch (existingPostIndex) {
           case -1:
             // Add the non-existing post
-            userPosts.unshift(post);
+            newPosts = [...userPosts, post];
             break;
           default:
-            // Replace the existing post
-            userPosts[existingPostIndex] = post;
+            // Ensure that the new post is not the same as the existing one.
+            if (post !== newPosts[existingPostIndex]) {
+              // Replace the existing post
+              newPosts = userPosts.slice();
+              newPosts[existingPostIndex] = post;
+            }
             break;
         }
 
-        // Update the value
-        const updatedPosts: Record<string, Post[]> = {
-          ...posts,
-        };
-        updatedPosts[user] = userPosts;
-        return updatedPosts;
+        if (newPosts !== userPosts && userPosts.length > 0) {
+          // Update the value
+          const updatedPosts: Record<string, Post[]> = {
+            ...posts,
+            [user]: newPosts,
+          };
+          return updatedPosts;
+        } else {
+          return posts;
+        }
       });
     },
     [setPosts],
   );
 };
 
-/**
- * Hook that allows to store a given post.
- */
-export const useStorePost = () => {
-  return useCreateStorePost(postsState);
-};
-
 const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: string) => {
   const setPosts = useSetRecoilState(recoil);
+
   return React.useCallback(
     (valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
       setPosts(currentTimeline => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...currentTimeline,
-        };
-
         let posts: Post[];
         if (typeof valOrUpdater === 'function') {
-          posts = valOrUpdater(updatedPosts[user] ?? []);
+          posts = valOrUpdater(currentTimeline[user] ?? []);
         } else {
           posts = valOrUpdater;
         }
 
-        updatedPosts[user] = sortPostsByCreationDate(posts);
+        if (posts === currentTimeline[user]) {
+          return currentTimeline;
+        }
+
+        const updatedPosts: Record<string, Post[]> = {
+          ...currentTimeline,
+          [user]: sortPostsByCreationDate(posts),
+        };
         return updatedPosts;
       });
     },

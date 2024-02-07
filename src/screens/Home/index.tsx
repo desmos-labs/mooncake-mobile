@@ -62,7 +62,6 @@ const Home = () => {
   // -------------------------------------------------------------------------------------
   // --- Utility functions
   // -------------------------------------------------------------------------------------
-  const fetchTimestampRef = useRef<Date>();
   const getPostType = useGetPostType();
 
   useEffect(() => {
@@ -90,14 +89,13 @@ const Home = () => {
           </View>
         );
       }
-      return <PostCard post={item} fetchTimestamp={fetchTimestampRef.current} />;
+      return <PostCard post={item} />;
     },
     [styles.loaderView],
   );
 
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
-    fetchTimestampRef.current = new Date();
     await refreshPosts();
   }, [refreshPosts]);
 

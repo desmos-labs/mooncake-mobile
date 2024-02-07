@@ -2,12 +2,12 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { postLikedIcon, postShareIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import { Image } from 'expo-image';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import { useTheme } from 'native-base';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { isPostPending, Post } from 'types/posts';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import useStyles from './useStyles';
 
 interface PostBottomBarProps {
@@ -23,10 +23,6 @@ interface PostBottomBarProps {
    * Callback that is called when the user presses the share button.
    */
   readonly onPressShare: () => void;
-  /**
-   * Timestamp of the last fetch of the post.
-   */
-  readonly fetchTimestamp?: Date;
 }
 
 /**
@@ -37,13 +33,13 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const { post, onPressComment, onPressShare, fetchTimestamp } = props;
+  const { post, onPressComment, onPressShare } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Utility hooks
   // -------------------------------------------------------------------------------------
 
-  const { count: commentsCount, refetch } = usePostCommentsCount(post);
+  const commentsCount = usePostCommentsCount(post.id);
 
   const { liked, addOrRemoveLike, likesCount } = useAddOrRemoveLike(post);
 
@@ -57,17 +53,6 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
     }
     addOrRemoveLike(post);
   }, [addOrRemoveLike, post]);
-
-  const fetchTimestampString = useMemo(() => {
-    return fetchTimestamp?.toISOString();
-  }, [fetchTimestamp]);
-
-  useEffect(() => {
-    if (fetchTimestampString !== undefined) {
-      refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchTimestampString]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
