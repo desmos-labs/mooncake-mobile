@@ -1,0 +1,49 @@
+import { gql } from '@apollo/client';
+import ProfileFields from 'services/graphql/queries/fragments/ProfilesFields';
+
+const FollowingUsersPostsFields = gql`
+  ${ProfileFields}
+  fragment FollowingUsersPostsFields on following_users_posts {
+    id
+    subspace_id
+    section {
+      id
+    }
+    reply_settings
+    external_id
+    conversation {
+      id
+    }
+    text
+    attachments {
+      id
+      content
+      size {
+        width
+        height
+      }
+    }
+    references {
+      type
+      position_index
+      reference {
+        id
+      }
+    }
+    creation_date
+    author {
+      ...ProfileFields
+    }
+    transactions {
+      hash
+    }
+    has_user_liked
+    likes_count: likes_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export default FollowingUsersPostsFields;

@@ -68,7 +68,6 @@ const makeToastComponent: (config: ToastConfig) => React.FC<ToastProps> = config
         <View style={styles.itemsContainer}>
           {showLoadingAnimation === true && (
             <ThemedLottieView
-              autoSize
               loop
               autoPlay
               source={squaresAnimation}

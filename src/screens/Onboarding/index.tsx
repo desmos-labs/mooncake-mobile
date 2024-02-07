@@ -9,25 +9,24 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
+import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
 import useGetLazyAuthorizationInformation from 'hooks/authorizations/useGetLazyAuthorizationInformation';
+import useErrorModal from 'hooks/modals/useErrorModal';
 import useSetTourGuideStep from 'hooks/tourguide/useSetTourGuideStep';
 import { getSaveProfileAllowance } from 'lib/grantsUtils';
-import { useTheme } from 'native-base';
+import { promiseToResult } from 'lib/NeverThrowUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import { err, ok } from 'neverthrow';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Animated, FlatList, ImageBackground, ListRenderItemInfo, View } from 'react-native';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
+import * as Sentry from 'sentry-expo';
 import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
 import { LoginOnboardingStep } from 'types/tourguide';
-import useTrackOnboardingCompleted from 'hooks/analytics/useTrackOnboardingCompleted';
-import { promiseToResult } from 'lib/NeverThrowUtils';
-import { err, ok } from 'neverthrow';
-import useErrorModal from 'hooks/modals/useErrorModal';
-import * as Sentry from 'sentry-expo';
 import useStyles, { fixedWidth } from './useStyles';
 
 export interface OnboardingParams {
@@ -58,7 +57,6 @@ type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING
  * @constructor
  */
 const Onboarding = () => {
-  const theme = useTheme();
   const styles = useStyles();
   const { t } = useTranslation('onboarding');
 
@@ -210,23 +208,13 @@ const Onboarding = () => {
     if (currentIndex === slides.length) {
       if (requestingFeeGrant) {
         return (
-          <Button
-            size={44}
-            backgroundColor={theme.colors.surfaceBlack}
-            textColor={theme.colors.white}
-            disabled
-            style={styles.button}>
+          <Button height={44} disabled style={styles.button}>
             {t('requesting grant')}
           </Button>
         );
       } else if (feeGrantRequestFailed) {
         return (
-          <Button
-            size={44}
-            backgroundColor={theme.colors.surfaceBlack}
-            textColor={theme.colors.white}
-            onPress={requestGrant}
-            style={styles.button}>
+          <Button height={44} onPress={requestGrant} style={styles.button}>
             {t('request grant')}
           </Button>
         );
@@ -234,12 +222,7 @@ const Onboarding = () => {
     }
 
     return (
-      <Button
-        size={44}
-        backgroundColor={theme.colors.surfaceBlack}
-        textColor={theme.colors.white}
-        onPress={onPressButton}
-        style={styles.button}>
+      <Button height={44} onPress={onPressButton} style={styles.button}>
         {t('next', { ns: 'common' })}
       </Button>
     );
@@ -252,8 +235,6 @@ const Onboarding = () => {
     slides.length,
     styles.button,
     t,
-    theme.colors.surfaceBlack,
-    theme.colors.white,
   ]);
 
   const renderItem = useCallback(

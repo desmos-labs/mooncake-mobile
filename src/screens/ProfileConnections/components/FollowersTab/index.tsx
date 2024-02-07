@@ -25,22 +25,16 @@ const FollowersTab = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const {
-    data: followers,
-    loading,
-    initialLoading: isFirstLoad,
-    fetchMore,
-    refresh: refreshFollowers,
-    refreshing,
-  } = useFollowers(userAddress);
+  const { items, loading, refreshing, refresh, fetchMore, fetchingMore } =
+    useFollowers(userAddress);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
 
   useEffect(() => {
-    refreshFollowers().then(() => sleep(500).then(() => setFirstFocus(false)));
-  }, [refreshFollowers]);
+    refresh().then(() => sleep(500).then(() => setFirstFocus(false)));
+  }, [refresh]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -56,11 +50,11 @@ const FollowersTab = () => {
 
   return (
     <UsersList
-      users={followers}
+      users={items}
       loading={loading}
       fetchMore={fetchMore}
-      fetchingMore={loading && !isFirstLoad}
-      refresh={refreshFollowers}
+      fetchingMore={fetchingMore}
+      refresh={refresh}
       refreshing={refreshing}
       emptyText={t('noFollowers')}
     />

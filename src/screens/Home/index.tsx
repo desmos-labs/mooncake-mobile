@@ -7,14 +7,14 @@ import { emptyListPlaceholder } from 'assets/images';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
+import { Image } from 'expo-image';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import { useTheme } from 'native-base';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Platform, RefreshControl, View } from 'react-native';
+import { Platform, RefreshControl, View } from 'react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
-import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
@@ -29,12 +29,16 @@ const Home = () => {
   const { t } = useTranslation('home');
   const styles = useStyles();
   const theme = useTheme();
-
   const { name: routeName } = useRoute<NavProps['route']>();
   const postListState = usePostsListState();
   const setPostListState = useSetPostsListState();
+
   // Reference and state of the post list, to be able to scroll to the top of it
-  const postListRef = useRef<any>(null);
+  const postListRef = useRef<FlashList<Post> | null>(null);
+  const [, setContentOffset] = useState({
+    x: 0,
+    y: 0,
+  });
 
   // -------------------------------------------------------------------------------------
   // --- Data queries
@@ -50,38 +54,25 @@ const Home = () => {
     posts,
     loading,
     fetchMore: fetchMorePosts,
+    fetchingMore: fetchingMorePosts,
     refresh: refreshPosts,
     refreshing,
   } = usePosts(postsQueryType);
 
   // -------------------------------------------------------------------------------------
-  // --- Notifications
+  // --- Utility functions
   // -------------------------------------------------------------------------------------
+  const fetchTimestampRef = useRef<Date>();
+  const getPostType = useGetPostType();
 
-  useWatchForNewPosts(
-    useCallback(async () => {
-      await refreshPosts();
-      if (postListRef && postListRef.current) {
+  useEffect(() => {
+    if (postListState.scrollToTop) {
+      if (postListRef?.current) {
         postListRef.current.scrollToIndex({
           animated: true,
           index: 0,
         });
       }
-    }, [postListRef, refreshPosts]),
-  );
-
-  // -------------------------------------------------------------------------------------
-  // --- Utility functions
-  // -------------------------------------------------------------------------------------
-
-  const getPostType = useGetPostType();
-
-  useEffect(() => {
-    if (postListState.scrollToTop) {
-      postListRef.current.scrollToIndex({
-        animated: true,
-        index: 0,
-      });
       setPostListState(val => ({ ...val, scrollToTop: false }));
     }
   }, [postListState.scrollToTop, setPostListState]);
@@ -99,18 +90,19 @@ const Home = () => {
           </View>
         );
       }
-      return <PostCard post={item} />;
+      return <PostCard post={item} fetchTimestamp={fetchTimestampRef.current} />;
     },
     [styles.loaderView],
   );
 
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
+    fetchTimestampRef.current = new Date();
     await refreshPosts();
   }, [refreshPosts]);
 
   const footerComponent = useMemo(() => {
-    if (loading) {
+    if (loading || fetchingMorePosts) {
       return (
         <View style={styles.loaderView}>
           <HomePostContentLoader />
@@ -119,25 +111,24 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [styles, loading]);
+  }, [styles, loading, fetchingMorePosts]);
 
   const emptyComponent = useMemo(() => {
-    return !loading && !refreshing ? (
+    return !loading && !refreshing && !fetchingMorePosts ? (
       <View style={styles.emptyView}>
         <Image source={emptyListPlaceholder} style={styles.emptyImage} />
         <Typography.Regular14>{t('no posts to display')}</Typography.Regular14>
       </View>
     ) : null;
-  }, [styles, t, loading, refreshing]);
+  }, [styles, t, loading, refreshing, fetchingMorePosts]);
 
   // -------------------------------------------------------------------------------------
   // --- Component rendering
   // -------------------------------------------------------------------------------------
-
   return (
     <View style={styles.homeView} testID="homeView">
       <FlashList
-        keyExtractor={(item, index) => `${index}item+${item.id}`}
+        keyExtractor={(item, index) => `${index}item+${item.externalId}`}
         ref={postListRef}
         data={posts}
         refreshControl={
@@ -153,10 +144,13 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         ListFooterComponent={footerComponent}
         ListEmptyComponent={emptyComponent}
-        estimatedItemSize={600}
+        estimatedItemSize={400}
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
         getItemType={getPostType}
+        onScroll={event => {
+          setContentOffset(event.nativeEvent.contentOffset);
+        }}
       />
     </View>
   );

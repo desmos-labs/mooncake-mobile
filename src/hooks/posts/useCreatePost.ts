@@ -1,5 +1,6 @@
 import { useAppStateValue } from '@recoil/appState';
-import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
+import { useSetPostCommentsCount } from '@recoil/commentsCount';
+import { useDeleteUserLocalPost, useStoreUserLocalPost } from '@recoil/localPosts';
 import { useActiveProfile } from '@recoil/profiles';
 import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
 import { ToastType } from 'config/toast/toastConfig';
@@ -84,9 +85,9 @@ const useCreatePost = () => {
   const createPostState = useCreatePostState();
   const resetCreatePostState = useResetCreatePostState();
 
-  const storePost = useStorePost();
-  const deletePost = useRemoveStoredPendingPost();
-
+  const storeLocalPost = useStoreUserLocalPost();
+  const deleteLocalPost = useDeleteUserLocalPost();
+  const setPostCommentsCount = useSetPostCommentsCount();
   const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
   // Callback that creates a post
@@ -131,7 +132,7 @@ const useCreatePost = () => {
       const post: Post = {
         ...createPostState,
         id: -1, // TODO: This should be deleted
-        status: PostStatus.CREATED_LOCALLY,
+        status: PostStatus.BROADCASTING,
         statusUpdateDate: creationDate,
         subspaceId,
         sectionId: createPostState.sectionId ?? parent?.sectionId ?? 0,
@@ -158,7 +159,7 @@ const useCreatePost = () => {
       }
 
       // Store the post locally
-      storePost(activeProfile.address, post);
+      storeLocalPost(activeProfile.address, post);
 
       // Start the task to sign and broadcast the transaction
       const taskReference = await scheduleTask(
@@ -188,15 +189,20 @@ const useCreatePost = () => {
             message: t('creating post'),
           });
         })
-        .onComplete(() => {
+        .onComplete(event => {
           if (onProcessCompleted) {
             onProcessCompleted();
           }
 
-          storePost(activeProfile.address, {
+          storeLocalPost(activeProfile.address, {
             ...post,
-            status: PostStatus.SYNCED,
+            id: event.result.postId,
+            status: PostStatus.CREATED_LOCALLY,
           });
+
+          if (parent) {
+            setPostCommentsCount(parent.id, count => count + 1);
+          }
 
           showToast({
             toastType: ToastType.success,
@@ -210,7 +216,7 @@ const useCreatePost = () => {
           }
 
           // Delete the cached post
-          deletePost(activeProfile.address, post.subspaceId, post.externalId);
+          deleteLocalPost(activeProfile.address, post);
 
           showToast({
             toastType: ToastType.error,
@@ -224,11 +230,11 @@ const useCreatePost = () => {
     [
       activeProfile,
       createPostState,
-      deletePost,
+      deleteLocalPost,
       prepareDesmosClientAndWallet,
       resetCreatePostState,
       showToast,
-      storePost,
+      storeLocalPost,
       subspaceId,
       t,
     ],

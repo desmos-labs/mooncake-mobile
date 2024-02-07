@@ -1,12 +1,12 @@
-import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
+import Constants from 'config/Constants';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import React from 'react';
-import { SubspaceParams } from 'types/desmos';
-import { AppStateStatus } from 'react-native';
-import { ButterConfig } from 'types/butter';
 import { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import Constants from 'config/Constants';
+import React from 'react';
+import { AppStateStatus } from 'react-native';
+import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
+import { ButterConfig } from 'types/butter';
+import { SubspaceParams } from 'types/desmos';
 
 /**
  * Contains the overall state of the application.
@@ -85,6 +85,7 @@ const appState = atom<AppState>({
       // so that if we extend the app state the new values will
       // default to the values declared in DefaultAppState.
       ...DefaultAppState,
+      // @ts-ignore
       ...mmkvValue,
     };
   })(),

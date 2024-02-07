@@ -66,7 +66,6 @@ const PostDetails = () => {
   // --- Loading states
   // -------------------------------------------------------------------------------------
 
-  const [firstLoad, setFirstLoad] = useState(false);
   const [pageRefreshing, setPageRefreshing] = useState(false);
   const [commentPosting, setCommentPosting] = useState(false);
 
@@ -92,12 +91,13 @@ const PostDetails = () => {
 
   // Comments data
   const {
-    data: comments,
+    comments,
     loading: areCommentsLoading,
     refresh: refreshComments,
     fetchMore: fetchMoreComments,
   } = usePostComments(postData);
-  const { refetch: refreshCommentsCount } = usePostCommentsCount(postData);
+
+  const { count, refetch: refreshCommentsCount } = usePostCommentsCount(postData);
 
   const handleCreateComment = useHandleCreateComment();
 
@@ -109,10 +109,8 @@ const PostDetails = () => {
 
   // Comment creation
   const onCommentCreated = useCallback(async () => {
-    await refreshComments();
-    await refreshCommentsCount();
     setCommentPosting(false);
-  }, [refreshComments, refreshCommentsCount]);
+  }, []);
 
   const handlePressCreateComment = useCallback(async () => {
     if (!post) {
@@ -131,13 +129,6 @@ const PostDetails = () => {
     await refreshCommentsCount();
     setPageRefreshing(false);
   }, [refreshComments, refreshCommentsCount, refreshPost]);
-
-  const onPullToRefresh = React.useCallback(() => {
-    // set firstLoad to false so the loading indicator will be shown in the event
-    // the user pulls to refresh during the first load.
-    setFirstLoad(false);
-    refreshPage();
-  }, [refreshPage]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -195,14 +186,14 @@ const PostDetails = () => {
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
-      topBar={<PostTopBar post={post} onBackButtonPress={goBack} />}>
+      topBar={<PostTopBar post={post} commentsCount={count} onBackButtonPress={goBack} />}>
       {/* List of comments */}
       <FlashList
-        estimatedItemSize={120}
+        estimatedItemSize={110}
         ref={scrollViewRef}
         // Only show the loading indicator on the flatList if the user manually drags down on it
-        refreshing={!firstLoad && pageRefreshing}
-        onRefresh={onPullToRefresh}
+        refreshing={pageRefreshing}
+        onRefresh={refreshPage}
         ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
@@ -211,7 +202,7 @@ const PostDetails = () => {
         // Conditionally render the comment item skeleton here so it seamlessly transitions
         // from a lazy loading to ready state
         ListEmptyComponent={
-          (firstLoad && areCommentsLoading) || areCommentsLoading ? (
+          areCommentsLoading ? (
             <CommentItemSkeleton />
           ) : (
             <EmptyListComponent label={t('no comments yet')} />

@@ -15,6 +15,7 @@ const hiddenPostsState = atom<number[]>({
 /**
  * A hook that checks if a given postID is in the list of local hidden posts.
  */
+// ts-prune-ignore-next
 export const useIsPostHiddenLocally = () => {
   const localHiddenPosts = useRecoilValue(hiddenPostsState);
 

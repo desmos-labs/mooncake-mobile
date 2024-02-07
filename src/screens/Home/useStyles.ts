@@ -36,7 +36,6 @@ const useStyles = makeStyle(theme => ({
   emptyImage: {
     width: 72,
     height: 72,
-    resizeMode: 'cover',
     marginBottom: theme.spacing.s,
   },
   emptyView: {

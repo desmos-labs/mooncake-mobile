@@ -18,7 +18,6 @@ import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { ToastType } from 'config/toast/toastConfig';
 import useCreatePost from 'hooks/posts/useCreatePost';
-import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useToast from 'hooks/toasts/useToast';
 import useKeyboardVisibility from 'hooks/useKeyboardVisibility';
@@ -74,7 +73,6 @@ const CreatePost = () => {
 
   const { params: postsParams } = usePostsParams();
   const resetCreatePostState = useResetCreatePostState();
-  const { refresh } = usePosts(PostsQueryType.DISCOVERY);
   const createPost = useCreatePost();
   const setPostsListState = useSetPostsListState();
 
@@ -112,7 +110,7 @@ const CreatePost = () => {
   // Callback used when the user wants to create the post
   const handleCreatePost = React.useCallback(async () => {
     setLoading(true);
-    const result = await createPost({ parent, onProcessCompleted: refresh });
+    const result = await createPost({ parent });
     setLoading(false);
 
     if (result.isErr()) {
@@ -130,7 +128,7 @@ const CreatePost = () => {
     }
 
     navigation.goBack();
-  }, [createPost, navigation, parent, refresh, setPostsListState, showToast, t]);
+  }, [createPost, navigation, parent, setPostsListState, showToast, t]);
 
   const onCreatePostPressWrapper = useCallback(() => {
     requestAnimationFrame(async () => {

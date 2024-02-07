@@ -1,14 +1,12 @@
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import React from 'react';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, RecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
-import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
+import { isRootPost, Post, PostStatus } from 'types/posts';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
- * This also contains all the posts that have been created by the user but are
- * still waiting to be broadcast on-chain.
  * It's cached using MMKV so that the user can see the last post before they went offline.
  * We use a Record<String, Post[]> in order to be able to save multiple user's timeline if
  * the application user has multiple profiles.
@@ -26,6 +24,24 @@ const postsState = atom<Record<string, Post[]>>({
 });
 
 /**
+ * Atom that holds all the posts moda from the users that the user follows.
+ * It's cached using MMKV so that the user can see the last post before they went offline.
+ * We use a Record<String, Post[]> in order to be able to save multiple user's timeline if
+ * the application user has multiple profiles.
+ */
+const followingPostsState = atom<Record<string, Post[]>>({
+  key: 'followingPostsState',
+  default: getMMKV(MMKVKEYS.FOLLOWING_POSTS) ?? {},
+  effects: [
+    ({ onSet }) => {
+      onSet(posts => {
+        setMMKV(MMKVKEYS.FOLLOWING_POSTS, posts);
+      });
+    },
+  ],
+});
+
+/**
  * Hook that allows to get all the posts that are yet to-be-synced for a given user.
  */
 export const usePostsToSync = (user: string) => {
@@ -35,68 +51,9 @@ export const usePostsToSync = (user: string) => {
   }, [posts, user]);
 };
 
-/**
- * Hook that allows to get a number representing the current difference of the comments for the specified post.
- * The difference is computed by considering:
- * • each locally deleted comment as <code>-1</code>
- * • each locally added comment as <code>+1</code>
- *
- * Here are some difference values examples:
- * • a difference of -2 means that overall there are 2 locally deleted comments
- * • a difference of +1 means that overall there is 1 locally deleted comment
- *
- * This difference can be used to show an updated comments count compared to the current values on the server.
- */
-export const useGetPostCommentsDifference = () => {
-  const posts = useRecoilValue(postsState);
-  return React.useCallback(
-    (user: string, subspaceId: number, postId: number) => {
-      const userPosts = posts[user] ?? [];
-      return userPosts
-        .filter(p => p.subspaceId === subspaceId && isCommentTo(p, postId))
-        .map(p => {
-          switch (p.status) {
-            case PostStatus.CREATED_LOCALLY:
-            case PostStatus.EDITED_LOCALLY:
-              return 1;
-            case PostStatus.DELETED_LOCALLY:
-              return -1;
-            default:
-              return 0;
-          }
-        })
-        .reduce((sum: number, value: number) => sum + value, 0);
-    },
-    [posts],
-  );
-};
-
-/**
- * Hook that allows to get all the comments that are yet to-be-synced for a given user and post.
- * @param user {string} - Address of the user inside which posts' to search for.
- * @param subspaceId {number} - Subspace id of the post.
- * @param postId {number} - ID of the post for which to get the comments.
- */
-export const usePostCommentsToSync = (
-  user: string | undefined,
-  subspaceId: number,
-  postId: number,
-): Post[] => {
-  const posts = useRecoilValue(postsState);
-
-  return React.useMemo(() => {
-    if (!user) {
-      return [];
-    }
-
-    const userPosts = posts[user] ?? [];
-    return userPosts.filter(p => isCommentTo(p, postId) && p.status !== PostStatus.DELETED_LOCALLY);
-  }, [posts, user, postId]);
-};
-/**
- * Hook that allows to store a given post.
- */
-export const useStorePost = () => {
+// TODO: cleanup this hook
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const useCreateStorePost = (recoil: RecoilState<Record<string, Post[]>>) => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
     (user: string, post: Post) => {
@@ -127,15 +84,14 @@ export const useStorePost = () => {
 };
 
 /**
- * Hook that allows to set the posts related to a user.
- *
- * <b>Note</b>
- * It should be responsibility of the caller of this hook to properly merge all the
- * synced and not-synced posts appropriately. By calling this method, the current timeline
- * will be entirely replaced with the given value.
+ * Hook that allows to store a given post.
  */
-export const useStorePosts = (user: string) => {
-  const setPosts = useSetRecoilState(postsState);
+export const useStorePost = () => {
+  return useCreateStorePost(postsState);
+};
+
+const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: string) => {
+  const setPosts = useSetRecoilState(recoil);
   return React.useCallback(
     (valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
       setPosts(currentTimeline => {
@@ -159,6 +115,30 @@ export const useStorePosts = (user: string) => {
 };
 
 /**
+ * Hook that allows to set the posts related to a user.
+ *
+ * <b>Note</b>
+ * It should be responsibility of the caller of this hook to properly merge all the
+ * synced and not-synced posts appropriately. By calling this method, the current timeline
+ * will be entirely replaced with the given value.
+ */
+export const useStorePosts = (user: string) => {
+  return useMakeStorePosts(postsState, user);
+};
+
+/**
+ * Hook that allows to set the posts created by the users followed by a user.
+ *
+ * <b>Note</b>
+ * It should be responsibility of the caller of this hook to properly merge all the
+ * synced and not-synced posts appropriately. By calling this method, the current timeline
+ * will be entirely replaced with the given value.
+ */
+export const useStoreFollowingPosts = (user: string) => {
+  return useMakeStorePosts(followingPostsState, user);
+};
+
+/**
  * Hook that allows to get the stored root posts for the user having the given address.
  * A root post is defined as a post that has <code>conversationId</code> equals to <code>0</code>.
  */
@@ -172,35 +152,10 @@ export const useStoredRootPosts = (user: string) => {
  * created by either one of the addresses provided inside the <code>users</code> array.
  */
 export const useStoredFollowingPosts = (user: string, followingAddresses: string[]) => {
-  const posts = useRecoilValue(postsState);
+  const posts = useRecoilValue(followingPostsState);
   return React.useMemo(
     () => posts[user]?.filter(post => followingAddresses.includes(post.author.address)) ?? [],
     [followingAddresses, posts, user],
-  );
-};
-
-/**
- * Hook that allows to delete the given pending post from the posts state.
- */
-export const useRemoveStoredPendingPost = () => {
-  const setPosts = useSetRecoilState(postsState);
-  return React.useCallback(
-    (user: string, subspaceId: number, externalId: string) => {
-      setPosts(currentTimeline => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...currentTimeline,
-        };
-
-        // Update the user posts by filtering out the post that has the same subspace id, external id and is not synced
-        const userPosts = updatedPosts[user] ?? [];
-        updatedPosts[user] = userPosts.filter(
-          p => p.externalId !== externalId || p.status === PostStatus.SYNCED,
-        );
-
-        return updatedPosts;
-      });
-    },
-    [setPosts],
   );
 };
 
