@@ -37,6 +37,7 @@ import {
 } from 'screens/PostDetails/hooks';
 import { isPostPending, Post } from 'types/posts';
 import { usePostCommentsCount } from '@recoil/commentsCount';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
