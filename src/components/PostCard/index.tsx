@@ -1,4 +1,3 @@
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import {
   useHandlePressBlock,
   useHandlePressComments,
@@ -9,7 +8,6 @@ import {
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useSharePost from 'hooks/posts/useSharePost';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
@@ -17,6 +15,8 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
+import PostText from 'components/PostText';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -106,11 +106,13 @@ const PostCard = (props: PostCardProps) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
-  const { MediaAttachment } = useRenderMediaAttachment(post.attachments, {
-    useAutoSize: true,
-    horizontalPaddingWithAutoSize: 32,
-    imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
-    resizeMode: 'contain',
+  const { Attachment } = useRenderPostAttachment(post, {
+    media: {
+      useAutoSize: true,
+      horizontalPaddingWithAutoSize: 32,
+      imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
+      resizeMode: 'contain',
+    },
   });
 
   return (
@@ -126,13 +128,9 @@ const PostCard = (props: PostCardProps) => {
           onPressBlock={onPressBlock}
         />
         {/* Post text */}
-        {post.text && (
-          <Typography.Regular16 style={{ marginTop: theme.spacing.m }}>
-            {post.text}
-          </Typography.Regular16>
-        )}
-        {/* Media view */}
-        {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
+        {post.text && <PostText style={{ marginTop: theme.spacing.m }}>{post.text}</PostText>}
+        {/* Attachment */}
+        {Attachment && <View style={styles.attachmentContainer}>{Attachment}</View>}
         {/* Post bottom bar */}
         {!isPending && (
           <PostCardBottomBar
