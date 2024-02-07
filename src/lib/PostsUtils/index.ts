@@ -216,3 +216,33 @@ export const mergePosts = (
   // Order the posts to store based on their creation date descending
   return [sortPostsByCreationDate(postsToStore), postsUpdates];
 };
+
+export interface PostPreviewURL {
+  readonly url: string;
+  readonly previewUrl: string;
+  readonly text: string;
+}
+
+/**
+ * Returns the URL to preview of the given post, if any.
+ * @param post {Post} - The post to get the URL preview from
+ * @return The URL to preview, if any
+ */
+export const getPostURLPreview = (post: Post): PostPreviewURL | undefined => {
+  const urlToPreview = post.urls.find(url => url.previewUrl !== undefined);
+  if (!urlToPreview) {
+    return undefined;
+  }
+
+  const regex = /^(https?:\/\/)?(([^:/?#]*)([^/?#]*))/;
+  const match = urlToPreview.url.match(regex);
+  if (match === null) {
+    return undefined;
+  }
+
+  return {
+    url: urlToPreview.url,
+    previewUrl: urlToPreview.previewUrl!,
+    text: `${match[1]}${match[2]}`,
+  };
+};

@@ -8,7 +8,6 @@ const useStyles = makeStyle(theme => {
 
   return {
     containerStyle: {
-      marginTop: 10,
       width: imageWidth,
       height: imageHeight,
     },

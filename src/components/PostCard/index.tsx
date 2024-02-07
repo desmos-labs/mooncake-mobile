@@ -8,7 +8,6 @@ import {
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useSharePost from 'hooks/posts/useSharePost';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
@@ -17,7 +16,7 @@ import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
 import PostText from 'components/PostText';
-import LinkPreview from 'components/LinkPreview';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -107,11 +106,13 @@ const PostCard = (props: PostCardProps) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
-  const { MediaAttachment } = useRenderMediaAttachment(post.attachments, {
-    useAutoSize: true,
-    horizontalPaddingWithAutoSize: 32,
-    imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
-    resizeMode: 'contain',
+  const { Attachment } = useRenderPostAttachment(post, {
+    media: {
+      useAutoSize: true,
+      horizontalPaddingWithAutoSize: 32,
+      imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
+      resizeMode: 'contain',
+    },
   });
 
   return (
@@ -128,10 +129,8 @@ const PostCard = (props: PostCardProps) => {
         />
         {/* Post text */}
         {post.text && <PostText style={{ marginTop: theme.spacing.m }}>{post.text}</PostText>}
-        {/* Media view */}
-        {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
-        {/* Link preview */}
-        <LinkPreview post={post} />
+        {/* Attachment */}
+        {Attachment && <View style={styles.attachmentContainer}>{Attachment}</View>}
         {/* Post bottom bar */}
         {!isPending && (
           <PostCardBottomBar

@@ -1,11 +1,11 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import CommonStyles from 'config/theme/CommonStyles';
-import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import { useTheme } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
 import { Post } from 'types/posts';
 import PostText from 'components/PostText';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useStyles from './useStyles';
 
 type Props = {
@@ -30,27 +30,32 @@ const PostComponent = (props: Props) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
-  const { MediaAttachment } = useRenderMediaAttachment(post.attachments, {
-    resizeMode: 'contain',
-    useAutoSize: true,
+  const { Attachment } = useRenderPostAttachment(post, {
+    media: {
+      resizeMode: 'contain',
+      useAutoSize: true,
+    },
   });
 
   const Content = React.useMemo(() => {
-    if (post.text && post.attachments?.length === 0) {
+    if (post.text && !Attachment) {
+      // The post only has text
       return <PostText style={styles.textContainer}>{post.text}</PostText>;
-    } else if (!post.text && post.attachments?.length !== 0) {
-      return <View style={CommonStyles.flex[1]}>{MediaAttachment}</View>;
+    } else if (!post.text && Attachment) {
+      // The post only has an attachment
+      return <View style={CommonStyles.flex[1]}>{Attachment}</View>;
     } else {
+      // The post has both text and an attachment
       return (
         <View>
           <Typography.Regular16 style={{ margin: theme.spacing.m }}>
             {post.text}
           </Typography.Regular16>
-          {MediaAttachment}
+          {Attachment}
         </View>
       );
     }
-  }, [MediaAttachment, post.attachments?.length, post.text, styles.textContainer, theme.spacing.m]);
+  }, [Attachment, post.attachments?.length, post.text, styles.textContainer, theme.spacing.m]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering

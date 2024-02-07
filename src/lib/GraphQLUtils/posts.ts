@@ -15,9 +15,6 @@ import {
   PostTransaction,
   PostURL,
 } from 'types/posts';
-import linkifyit from 'linkify-it';
-
-const linkify = linkifyit();
 
 /**
  * Format an incoming posts params data from the server into a format that is easier to parse by the app.
@@ -81,7 +78,6 @@ const convertGraphQLPostTransaction = (transaction: any): PostTransaction => {
 };
 
 const convertGraphQLPostURL = (url: any): PostURL => {
-  console.log(url);
   return {
     startIndex: url.start_index,
     endIndex: url.end_index,
