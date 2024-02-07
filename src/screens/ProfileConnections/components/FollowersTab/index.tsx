@@ -1,12 +1,9 @@
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
 import { useRoute } from '@react-navigation/native';
-import StyledSpinner from 'components/StyledSpinner';
 import useFollowers from 'hooks/relationships/useFollowers';
-import sleep from 'lib/sleep';
-import { Center } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import UsersList from '../UsersList';
 
@@ -20,33 +17,12 @@ const FollowersTab = () => {
   const { t } = useTranslation('relationships');
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
-  const [firstFocus, setFirstFocus] = useState(true);
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
   const { items, loading, refreshing, refresh, fetchMore, fetchingMore } =
     useFollowers(userAddress);
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  useEffect(() => {
-    refresh().then(() => sleep(500).then(() => setFirstFocus(false)));
-  }, [refresh]);
-
-  // -------------------------------------------------------------------------------------
-  // --- Screen rendering
-  // -------------------------------------------------------------------------------------
-
-  if (firstFocus) {
-    return (
-      <Center flex={1} flexGrow={1} backgroundColor="white">
-        <StyledSpinner />
-      </Center>
-    );
-  }
 
   return (
     <UsersList

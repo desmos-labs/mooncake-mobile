@@ -6,6 +6,7 @@ import React, { useCallback } from 'react';
 import { Platform, RefreshControl, View } from 'react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
+import Loading from 'screens/ProfileConnections/components/Loading';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
@@ -14,6 +15,10 @@ interface UserPostsListProps {
    * List of posts to render.
    */
   posts: Post[];
+  /**
+   * Whether the list is loading or not.
+   */
+  loading: boolean;
   /**
    * Action to be performed when the user scrolls to the end of the list.
    */
@@ -44,7 +49,15 @@ const UserPostsList = (props: UserPostsListProps) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const { posts, fetchMore, refreshPosts, refreshing, emptyListText, emptyListButtonText } = props;
+  const {
+    posts,
+    loading,
+    fetchMore,
+    refreshPosts,
+    refreshing,
+    emptyListText,
+    emptyListButtonText,
+  } = props;
 
   // const navigateToPost = useNavigateToPost();
 
@@ -53,11 +66,6 @@ const UserPostsList = (props: UserPostsListProps) => {
   // -------------------------------------------------------------------------------------
 
   const getPostType = useGetPostType();
-
-  // Function called when the user manually refreshes the list
-  const onRefresh = useCallback(async () => {
-    await refreshPosts();
-  }, [refreshPosts]);
 
   // -------------------------------------------------------------------------------------
   // --- Children components
@@ -68,8 +76,11 @@ const UserPostsList = (props: UserPostsListProps) => {
   }, []);
 
   const emptyComponent = useCallback(() => {
+    if (loading) {
+      return <Loading />;
+    }
     return <EmptyPostComponent textLabel={emptyListText} buttonLabel={emptyListButtonText} />;
-  }, [emptyListButtonText, emptyListText]);
+  }, [emptyListButtonText, emptyListText, loading]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -84,7 +95,7 @@ const UserPostsList = (props: UserPostsListProps) => {
           <RefreshControl
             tintColor={theme.colors.surfaceBlack}
             enabled
-            onRefresh={onRefresh}
+            onRefresh={refreshPosts}
             refreshing={refreshing}
             progressViewOffset={Platform.OS === 'android' ? 30 : 0}
           />

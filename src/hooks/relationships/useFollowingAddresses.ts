@@ -6,7 +6,7 @@ import React from 'react';
  * user is following.
  */
 const useFollowingAddresses = () => {
-  const { data: following } = useFollowing();
+  const { items: following } = useFollowing();
   return React.useMemo(() => following.map(user => user.address), [following]);
 };
 

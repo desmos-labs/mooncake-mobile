@@ -3,7 +3,7 @@ import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import React from 'react';
 import { atom, RecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
-import { isRootPost, Post, PostStatus } from 'types/posts';
+import { isRootPost, Post } from 'types/posts';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
@@ -40,16 +40,6 @@ const followingPostsState = atom<Record<string, Post[]>>({
     },
   ],
 });
-
-/**
- * Hook that allows to get all the posts that are yet to-be-synced for a given user.
- */
-export const usePostsToSync = (user: string) => {
-  const posts = useRecoilValue(postsState);
-  return React.useMemo(() => {
-    return posts[user]?.filter(post => post.status !== PostStatus.SYNCED) ?? [];
-  }, [posts, user]);
-};
 
 // TODO: cleanup this hook
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

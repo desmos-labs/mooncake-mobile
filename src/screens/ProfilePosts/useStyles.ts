@@ -39,6 +39,9 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
     borderRadius: 4,
     marginLeft: 9,
   },
+  tabContainerStyle: {
+    backgroundColor: theme.colors.white,
+  },
 }));
 
 export default useStyles;

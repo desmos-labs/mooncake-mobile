@@ -1,6 +1,7 @@
-import React from 'react';
 import usePostsCreatedByAddress from 'hooks/posts/usePostsCreatedByAddress';
 import usePostsLikedByAddress from 'hooks/posts/usePostsLikedByAddress';
+import { sortPostsByCreationDate } from 'lib/PostsUtils';
+import React from 'react';
 
 /**
  * Hook that returns the list of all the posts created, liked and tipped by a user.
@@ -9,13 +10,13 @@ import usePostsLikedByAddress from 'hooks/posts/usePostsLikedByAddress';
  */
 const usePostsByAddress = (address: string, postsLimit: number = 10) => {
   const {
-    posts: postsCreated,
+    items: postsCreated,
     loading: arePostsCreatedLoading,
-    refetch: refetchPostsCreated,
+    refresh: refetchPostsCreated,
   } = usePostsCreatedByAddress(address, postsLimit);
 
   const {
-    data: postsLiked,
+    items: postsLiked,
     loading: arePostsLikedLoading,
     refresh: refetchPostsLiked,
   } = usePostsLikedByAddress(address, postsLimit);
@@ -26,8 +27,8 @@ const usePostsByAddress = (address: string, postsLimit: number = 10) => {
   }, [refetchPostsCreated, refetchPostsLiked]);
 
   const posts = React.useMemo(() => {
-    return [...postsCreated, ...postsLiked].slice(0, postsLimit);
-  }, [postsCreated, postsLiked, postsLimit]);
+    return sortPostsByCreationDate([...postsCreated, ...postsLiked]);
+  }, [postsCreated, postsLiked]);
 
   return {
     posts,

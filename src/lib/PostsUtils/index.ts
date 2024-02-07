@@ -7,7 +7,7 @@ import {
 import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v3/msgs';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
 import Long from 'long';
-import { Post, PostAttachment, PostAttachmentType, PostReference, PostStatus } from 'types/posts';
+import { Post, PostAttachment, PostAttachmentType, PostReference } from 'types/posts';
 
 /**
  * Gets the conversation id to be used when creating a post.
@@ -50,7 +50,7 @@ const convertPostReference = (reference: PostReference): DesmJSPostReference => 
 };
 
 /**
- * Converts the given {@param post} into a {@link MsgCreatePostEncodeObject} object
+ * Converts the given {@param post} into a {@link Posts.v3.MsgCreatePostEncodeObject} object
  * that can be used to create a transaction.
  */
 export const convertPostToMsgCreatePost = (post: Post): Posts.v3.MsgCreatePostEncodeObject => {
@@ -97,126 +97,6 @@ export const sortPostsByCreationDate = (posts: Post[]): Post[] => {
   return [...posts].sort((a, b) => b.creationDate.localeCompare(a.creationDate));
 };
 
-enum PostUpdateType {
-  CREATE,
-  REPLACE,
-  DELETE,
-}
-
-interface PostCreatedUpdate {
-  readonly type: PostUpdateType.CREATE;
-  readonly post: Post;
-}
-
-interface PostUpdatedUpdate {
-  readonly type: PostUpdateType.REPLACE;
-  readonly original: Post;
-  readonly updated: Post;
-}
-
-interface PostDeletedUpdate {
-  readonly type: PostUpdateType.DELETE;
-  readonly post: Post;
-}
-
-type PostUpdate = PostCreatedUpdate | PostUpdatedUpdate | PostDeletedUpdate;
-
-/**
- * Allows to merge two lists of posts together.
- * @param existingPosts {Post[]} - List of posts that already exist.
- * @param externalPosts {Post[]} - List of posts that are coming from an external source.
- * @return A tuple of <code>[]Post</code> representing the new merged posts, and <code>[]PostUpdate</code>
- * representing how the {@param existingPosts} should be updated.
- */
-export const mergePosts = (
-  existingPosts: Post[],
-  externalPosts: Post[],
-): [Post[], PostUpdate[]] => {
-  if (existingPosts.length === 0) {
-    return [externalPosts, []];
-  }
-
-  // Create the array to be stored.
-  // This is copied so that if the object is frozen by someone (i.e. Recoil), we can still edit it
-  const postsToStore = [...existingPosts];
-  const postsUpdates: PostUpdate[] = [];
-
-  // First of all, update all the posts that have either been edited or created
-  externalPosts.forEach(post => {
-    const cachedPostIndex = findSamePost(existingPosts, post);
-    if (cachedPostIndex === -1) {
-      // The post was not cached locally, it means it was created by another user.
-      // For this reason, just add it to the list of posts to store
-      postsUpdates.push({
-        type: PostUpdateType.CREATE,
-        post,
-      });
-      postsToStore.push(post);
-    } else {
-      // The post was cached locally. We now need to act differently based on the
-      // status that it has locally, and was has happened on the chain in the meanwhile
-      const cachedPost = existingPosts[cachedPostIndex];
-      switch (cachedPost.status) {
-        case PostStatus.SYNCED:
-        case PostStatus.CREATED_LOCALLY:
-          // The post was created locally, and now it's on-chain.
-          // Replace the local post data with the new one from the chain
-          postsUpdates.push({
-            type: PostUpdateType.REPLACE,
-            original: postsToStore[cachedPostIndex],
-            updated: post,
-          });
-          postsToStore[cachedPostIndex] = post;
-          break;
-
-        case PostStatus.EDITED_LOCALLY:
-          // TODO: This should be handled by checking the edits that have been made
-          break;
-
-        case PostStatus.DELETED_LOCALLY:
-          // Ignore: this will be handled later
-          break;
-      }
-    }
-  });
-
-  // Check the posts that have been deleted locally.
-  const deletedPosts = postsToStore.filter(p => p.status === PostStatus.DELETED_LOCALLY);
-  deletedPosts.forEach((deletedPost, index) => {
-    const updateDate = Date.parse(deletedPost.statusUpdateDate);
-    if (Date.now() - updateDate < 30 * 1000) {
-      // If the post was updated locally less than 30 seconds ago, do nothing.
-      // The operation might be still being carried out on-chain, or there might be some delays
-      return;
-    }
-
-    // The post was updated more than 30 seconds ago, now we need to update the cache
-    const onChainIndex = findSamePost(externalPosts, deletedPost);
-    switch (onChainIndex) {
-      case -1:
-        // The post is not found on chain: we can now safely remove it from the cache as well
-        postsUpdates.push({
-          type: PostUpdateType.DELETE,
-          post: deletedPost,
-        });
-        postsToStore.splice(index, 1);
-        break;
-
-      default:
-        // The post is found on chain: we can revert the local changes by overriding them
-        postsUpdates.push({
-          type: PostUpdateType.REPLACE,
-          original: postsToStore[index],
-          updated: externalPosts[onChainIndex],
-        });
-        postsToStore[index] = externalPosts[onChainIndex];
-    }
-  });
-
-  // Order the posts to store based on their creation date descending
-  return [sortPostsByCreationDate(postsToStore), postsUpdates];
-};
-
 export interface PostPreviewURL {
   readonly url: string;
   readonly previewUrl: string;
@@ -229,7 +109,7 @@ export interface PostPreviewURL {
  * @return The URL to preview, if any
  */
 export const getPostURLPreview = (post: Post): PostPreviewURL | undefined => {
-  const urlToPreview = post.urls.find(url => url.previewUrl !== undefined);
+  const urlToPreview = post.urls?.find(url => url.previewUrl !== undefined);
   if (!urlToPreview) {
     return undefined;
   }

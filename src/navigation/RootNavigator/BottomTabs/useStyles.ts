@@ -6,7 +6,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    paddingBottom: Platform.OS === 'android' ? -12 : -22,
+    paddingBottom: Platform.OS === 'android' ? -12 : -26,
     paddingTop: 2,
     paddingHorizontal: theme.spacing.m,
     shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',

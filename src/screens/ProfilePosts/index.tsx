@@ -101,16 +101,24 @@ const ProfilePosts = () => {
     lazy: true,
   };
 
+  const CenterElement = useMemo(() => {
+    return <Typography.Semibold16>{t('posts')}</Typography.Semibold16>;
+  }, [t]);
+
   return (
     <DView
       backgroundColor={theme.colors.white}
-      topBar={<TopBar style={{ backgroundColor: theme.colors.white }} />}
+      topBar={
+        <TopBar style={{ backgroundColor: theme.colors.white }} centerElement={CenterElement} />
+      }
       disableHideKeyboardTouchable={true}
       style={styles.container}
       {...panResponder.panHandlers}
       onTouchStart={disableParentSwipeLeft}>
-      <Typography.Semibold24>{t('posts')}</Typography.Semibold24>
-      <Tab.Navigator screenOptions={screenOptions} initialRouteName={ROUTES.PROFILE_POSTS_POSTS}>
+      <Tab.Navigator
+        screenOptions={screenOptions}
+        initialRouteName={ROUTES.PROFILE_POSTS_POSTS}
+        sceneContainerStyle={styles.tabContainerStyle}>
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_POSTS}
           component={UserPostsTab}

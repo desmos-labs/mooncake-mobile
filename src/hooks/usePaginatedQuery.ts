@@ -24,6 +24,7 @@ export default function usePaginatedQuery<QT, T>({
   const [items, setItems] = useState<T[]>([]);
   const itemsRef = useRef<T[]>([]);
   const [error, setError] = useState<Error>();
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [fetchingMore, setFetchingMore] = useState(false);
 
@@ -39,6 +40,7 @@ export default function usePaginatedQuery<QT, T>({
       setTimeout(() => {
         setItems(itemsRef.current);
         loadingData.current = false;
+        setLoading(false);
       }, 35);
     },
     [convertData, onDataFetched],
@@ -49,11 +51,7 @@ export default function usePaginatedQuery<QT, T>({
     loadingData.current = false;
   }, []);
 
-  const {
-    refetch: refetchData,
-    fetchMore: fetchMoreData,
-    loading,
-  } = useQuery<QT>(query, {
+  const { refetch: refetchData, fetchMore: fetchMoreData } = useQuery<QT>(query, {
     variables: {
       ...variables,
       offset: 0,
