@@ -41,43 +41,56 @@ const followingPostsState = atom<Record<string, Post[]>>({
   ],
 });
 
-// TODO: cleanup this hook
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const useCreateStorePost = (recoil: RecoilState<Record<string, Post[]>>) => {
-  const setPosts = useSetRecoilState(postsState);
-  return React.useCallback(
-    (user: string, post: Post) => {
-      setPosts(posts => {
-        const userPosts = [...(posts[user] ?? [])];
-        const existingPostIndex = findSamePost(userPosts, post);
-        switch (existingPostIndex) {
-          case -1:
-            // Add the non-existing post
-            userPosts.unshift(post);
-            break;
-          default:
-            // Replace the existing post
-            userPosts[existingPostIndex] = post;
-            break;
-        }
-
-        // Update the value
-        const updatedPosts: Record<string, Post[]> = {
-          ...posts,
-        };
-        updatedPosts[user] = userPosts;
-        return updatedPosts;
-      });
-    },
-    [setPosts],
-  );
+/**
+ * Hook that allows to get all the posts that are yet to-be-synced for a given user.
+ */
+export const usePostsToSync = (user: string) => {
+  const posts = useRecoilValue(postsState);
+  return React.useMemo(() => {
+    return posts[user]?.filter(post => post.status !== PostStatus.SYNCED) ?? [];
+  }, [posts, user]);
 };
 
 /**
  * Hook that allows to store a given post.
  */
 export const useStorePost = () => {
-  return useCreateStorePost(postsState);
+  const setPosts = useSetRecoilState(postsState);
+  return React.useCallback(
+    (user: string, post: Post) => {
+      setPosts(posts => {
+        const userPosts = posts[user] ?? [];
+        let newPosts = userPosts;
+        const existingPostIndex = findSamePost(userPosts, post);
+        switch (existingPostIndex) {
+          case -1:
+            // Add the non-existing post
+            newPosts = [...userPosts, post];
+            break;
+          default:
+            // Ensure that the new post is not the same as the existing one.
+            if (post !== newPosts[existingPostIndex]) {
+              // Replace the existing post
+              newPosts = userPosts.slice();
+              newPosts[existingPostIndex] = post;
+            }
+            break;
+        }
+
+        if (newPosts !== userPosts && userPosts.length > 0) {
+          // Update the value
+          const updatedPosts: Record<string, Post[]> = {
+            ...posts,
+            [user]: newPosts,
+          };
+          return updatedPosts;
+        } else {
+          return posts;
+        }
+      });
+    },
+    [setPosts],
+  );
 };
 
 const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: string) => {
