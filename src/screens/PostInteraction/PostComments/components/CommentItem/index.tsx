@@ -22,7 +22,6 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
@@ -37,7 +36,7 @@ import {
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
 import { isPostPending, Post } from 'types/posts';
-import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -68,7 +67,7 @@ const CommentItem = (props: CommentItemProps) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { count: commentsCount } = usePostCommentsCount(comment);
+  const commentsCount = usePostCommentsCount(comment.id);
   const isFollowing = useIsFollowing(comment.author);
   const { liked, addOrRemoveLike, likesCount } = useAddOrRemoveLike(comment);
   const isAuthorActiveUser = useIsAuthorActiveUser(comment.author.address);

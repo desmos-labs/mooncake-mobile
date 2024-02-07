@@ -95,21 +95,25 @@ export const useStorePost = () => {
 
 const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: string) => {
   const setPosts = useSetRecoilState(recoil);
+
   return React.useCallback(
     (valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
       setPosts(currentTimeline => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...currentTimeline,
-        };
-
         let posts: Post[];
         if (typeof valOrUpdater === 'function') {
-          posts = valOrUpdater(updatedPosts[user] ?? []);
+          posts = valOrUpdater(currentTimeline[user] ?? []);
         } else {
           posts = valOrUpdater;
         }
 
-        updatedPosts[user] = sortPostsByCreationDate(posts);
+        if (posts === currentTimeline[user]) {
+          return currentTimeline;
+        }
+
+        const updatedPosts: Record<string, Post[]> = {
+          ...currentTimeline,
+          [user]: sortPostsByCreationDate(posts),
+        };
         return updatedPosts;
       });
     },
