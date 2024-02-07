@@ -117,6 +117,7 @@ export const convertGraphQLPost = (post: any): Post => {
     transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
 
     hasUserLiked: post.has_user_liked ?? false,
-    likesCount: post.likes_count?.aggregate?.count ?? 0,
+    likesCount: post.likes_count ?? 0,
+    commentsCount: post.comments_count ?? 0,
   } as Post;
 };

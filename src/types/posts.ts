@@ -133,6 +133,11 @@ export interface Post {
    * Number of likes that this post has received.
    */
   readonly likesCount: number;
+
+  /**
+   * Number of comments that this post has received.
+   */
+  readonly commentsCount: number;
 }
 
 export enum PostReferenceType {
