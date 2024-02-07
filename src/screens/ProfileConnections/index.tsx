@@ -3,7 +3,6 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabNavigationOptions,
 } from '@react-navigation/material-top-tabs';
-import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
 import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
@@ -20,7 +19,6 @@ import {
   PanResponder,
   PanResponderGestureState,
 } from 'react-native';
-import ConnectionsTabBar from 'screens/ProfileConnections/components/ConnectionsTabBar';
 import { DesmosProfile } from 'types/desmos';
 import FollowersTab from './components/FollowersTab';
 import FollowingTab from './components/FollowingTab';
@@ -80,17 +78,6 @@ const ProfileConnections = () => {
   const CenterElement = useMemo(() => {
     return <Typography.Semibold16>{profile?.nickname || 'no-nickname'}</Typography.Semibold16>;
   }, [profile?.nickname]);
-
-  const renderTabBar = React.useCallback(
-    (props: MaterialTopTabBarProps) => (
-      <ConnectionsTabBar
-        followersTabName={followersTabName}
-        followingTabName={followingTabName}
-        {...props}
-      />
-    ),
-    [followersTabName, followingTabName],
-  );
 
   // -------------------------------------------------------------------------------------
   // --- Gestures handlers

@@ -3,7 +3,7 @@ import { useRoute } from '@react-navigation/native';
 import useFollowers from 'hooks/relationships/useFollowers';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import UsersList from '../UsersList';
 
@@ -23,10 +23,6 @@ const FollowersTab = () => {
 
   const { items, loading, refreshing, refresh, fetchMore, fetchingMore } =
     useFollowers(userAddress);
-
-  useEffect(() => {
-    console.log('FollowersTab: useEffect', loading, items.length);
-  }, [items.length, loading]);
 
   return (
     <UsersList

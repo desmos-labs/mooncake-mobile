@@ -50,7 +50,7 @@ const convertPostReference = (reference: PostReference): DesmJSPostReference => 
 };
 
 /**
- * Converts the given {@param post} into a {@link MsgCreatePostEncodeObject} object
+ * Converts the given {@param post} into a {@link Posts.v3.MsgCreatePostEncodeObject} object
  * that can be used to create a transaction.
  */
 export const convertPostToMsgCreatePost = (post: Post): Posts.v3.MsgCreatePostEncodeObject => {
