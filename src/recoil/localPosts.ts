@@ -1,6 +1,6 @@
 import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
 import { useCallback, useMemo } from 'react';
-import { atom, useRecoilCallback, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { isCommentTo, isRootPost, Post } from 'types/posts';
 
 /**
@@ -117,14 +117,4 @@ export const useDeleteUserLocalPost = () => {
     },
     [setUserPosts],
   );
-};
-
-export const useGetAllUnsyncedPosts = (activeAddress: string | undefined) => {
-  return useRecoilCallback(({ snapshot }) => async () => {
-    const allPosts = await snapshot.getPromise(localPosts);
-    if (!activeAddress) {
-      return [];
-    }
-    return allPosts[activeAddress] ?? [];
-  });
 };

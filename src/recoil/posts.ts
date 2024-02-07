@@ -42,16 +42,6 @@ const followingPostsState = atom<Record<string, Post[]>>({
 });
 
 /**
- * Hook that allows to get all the posts that are yet to-be-synced for a given user.
- */
-export const usePostsToSync = (user: string) => {
-  const posts = useRecoilValue(postsState);
-  return React.useMemo(() => {
-    return posts[user]?.filter(post => post.status !== PostStatus.SYNCED) ?? [];
-  }, [posts, user]);
-};
-
-/**
  * Hook that allows to store a given post.
  */
 export const useStorePost = () => {
