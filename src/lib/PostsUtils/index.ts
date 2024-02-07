@@ -229,7 +229,7 @@ export interface PostPreviewURL {
  * @return The URL to preview, if any
  */
 export const getPostURLPreview = (post: Post): PostPreviewURL | undefined => {
-  const urlToPreview = post.urls.find(url => url.previewUrl !== undefined);
+  const urlToPreview = post.urls?.find(url => url.previewUrl !== undefined);
   if (!urlToPreview) {
     return undefined;
   }

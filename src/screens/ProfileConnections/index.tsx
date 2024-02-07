@@ -1,7 +1,10 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabNavigationOptions,
+} from '@react-navigation/material-top-tabs';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import { useRoute } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -9,8 +12,14 @@ import { formatNumShorthand } from 'lib/FormatUtils';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  GestureResponderEvent,
+  I18nManager,
+  PanResponder,
+  PanResponderGestureState,
+} from 'react-native';
 import ConnectionsTabBar from 'screens/ProfileConnections/components/ConnectionsTabBar';
 import { DesmosProfile } from 'types/desmos';
 import FollowersTab from './components/FollowersTab';
@@ -69,7 +78,7 @@ const ProfileConnections = () => {
   }, [profile?.followersCount, t]);
 
   const CenterElement = useMemo(() => {
-    return <Typography.Semibold14>{profile?.nickname || 'no-nickname'}</Typography.Semibold14>;
+    return <Typography.Semibold16>{profile?.nickname || 'no-nickname'}</Typography.Semibold16>;
   }, [profile?.nickname]);
 
   const renderTabBar = React.useCallback(
@@ -83,20 +92,57 @@ const ProfileConnections = () => {
     [followersTabName, followingTabName],
   );
 
+  // -------------------------------------------------------------------------------------
+  // --- Gestures handlers
+  // -------------------------------------------------------------------------------------
+
+  const [swipeEnabled, setSwipeEnabled] = useState(true);
+
+  // A callback function that is called when the user touches the screen.
+  // It enables the swipe handler of tab view, and prevent the swipe event from bubbling to parent.
+  const disableParentSwipeLeft = useCallback(() => setSwipeEnabled(true), []);
+
+  // Create a pan responder for the root container.
+  const panResponder = useMemo(() => {
+    // A callback function that is called when the user start to swipe left.
+    // It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent
+    const enableParentSwipeLeft = (
+      _: GestureResponderEvent,
+      gestureState: PanResponderGestureState,
+    ) => {
+      const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
+      const focusedRouteName = getFocusedRouteNameFromRoute(route) ?? initialTabRouteName;
+      setSwipeEnabled(focusedRouteName !== ROUTES.PROFILE_POSTS_POSTS || diffX < 0);
+      return false;
+    };
+    return PanResponder.create({
+      onStartShouldSetPanResponderCapture: enableParentSwipeLeft,
+      onMoveShouldSetPanResponderCapture: enableParentSwipeLeft,
+    });
+  }, [route, initialTabRouteName]);
+
+  const screenOptions: MaterialTopTabNavigationOptions = {
+    tabBarStyle: styles.tabBar,
+    tabBarContentContainerStyle: styles.tabBarContentContainer,
+    tabBarLabelStyle: styles.tabBarLabel,
+    tabBarInactiveTintColor: theme.colors.grey01,
+    tabBarIndicatorStyle: styles.tabBarIndicator,
+    swipeEnabled,
+    lazy: true,
+  };
+
   return (
     <DView
       topBar={<TopBar style={styles.topBar} centerElement={CenterElement} />}
       disableHideKeyboardTouchable={true}
       style={styles.container}
       backgroundColor={theme.colors.white}
-      scrollable={false}>
+      scrollable={false}
+      {...panResponder.panHandlers}
+      onTouchStart={disableParentSwipeLeft}>
       <Tab.Navigator
         initialRouteName={initialTabRouteName}
-        screenOptions={{
-          swipeEnabled: false,
-          lazy: true,
-        }}
-        tabBar={renderTabBar}
+        screenOptions={screenOptions}
         sceneContainerStyle={styles.tabContainerStyle}>
         <Tab.Screen
           name={ROUTES.PROFILE_FOLLOWERS}

@@ -1,4 +1,5 @@
 import { makeStyleWithProps } from 'config/theme';
+import { Dimensions } from 'react-native';
 
 const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   container: {
@@ -11,42 +12,35 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
     marginHorizontal: theme.spacing.m,
   },
   tabBar: {
-    backgroundColor: theme.colors.white,
+    borderBottomWidth: 0,
     shadowOpacity: 0,
     elevation: 0,
-    margin: 0,
-    marginBottom: 10,
-    padding: 0,
+    marginBottom: theme.spacing.m,
+    backgroundColor: theme.colors.white,
   },
-  tabBarItem: {
-    margin: 0,
-    padding: 0,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    height: 52,
+  tabBarContentContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabContainerStyle: {
     backgroundColor: 'transparent',
   },
   tabBarLabel: {
-    marginBottom: 10,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins_600SemiBold',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '600',
     lineHeight: 21,
-    letterSpacing: 0.15,
     textAlign: 'left',
     textTransform: 'none',
   },
+
   tabBarIndicator: {
-    backgroundColor: theme.colors.primary,
-    width: 4,
-    maxWidth: 4,
-    height: 4,
-    maxHeight: 4,
+    backgroundColor: theme.colors.surfaceBlack,
+    width: 28,
+    height: 2,
     borderRadius: 4,
-    marginLeft: `${100 / numOfTabs / 2}%`,
+    left: (Dimensions.get('window').width / 2 - 28) / 2,
   },
 }));
 

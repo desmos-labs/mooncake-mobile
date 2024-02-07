@@ -1,33 +1,28 @@
-import usePostsDataByAddress from 'hooks/posts/usePostsDataByAddress';
+import usePaginatedQuery from 'hooks/usePaginatedQuery';
+import { convertGraphQLPost } from 'lib/GraphQLUtils';
+import { useCallback } from 'react';
 import GetPostsCreatedByUser from 'services/graphql/queries/GetPostsCreatedByUser';
-import { usePostsToSync } from '@recoil/posts';
-import { Post, PostStatus } from 'types/posts';
-import React from 'react';
+import { Post } from 'types/posts';
 
 /**
- * Hook that allows to retrieve the posts created by a given address and stored locally.
- * @param address {string} The address of the user to retrieve the posts from.
- */
-const useGetCreatedPosts = (address: string): Post[] => {
-  const posts = usePostsToSync(address);
-  return React.useMemo(
-    () => posts.filter(post => post.status === PostStatus.CREATED_LOCALLY),
-    [posts],
-  );
-};
-
-/**
- * Hook that allows to retrieve the posts created by a given address by querying the GraphQL server.
+ * Hook that allows to retrieve the posts associated to an address by querying the GraphQL server.
  * @param address The address of the user to retrieve the posts from.
- * If undefined, the current user address will be used.
  * @param postsPerPage The number of posts to retrieve per page.
  */
-const usePostsCreatedByAddress = (address?: string, postsPerPage: number = 50) => {
-  return usePostsDataByAddress({
+const usePostsCreatedByAddress = (address: string, postsPerPage: number = 25) => {
+  const convertData = useCallback((data: any): Post[] => {
+    return (data?.posts ?? []).map(convertGraphQLPost);
+  }, []);
+
+  return usePaginatedQuery({
     query: GetPostsCreatedByUser,
-    address,
-    postsPerPage,
-    getInitialPosts: useGetCreatedPosts,
+    queryOptions: {
+      itemsPerPage: postsPerPage,
+    },
+    variables: {
+      user: address,
+    },
+    convertData,
   });
 };
 

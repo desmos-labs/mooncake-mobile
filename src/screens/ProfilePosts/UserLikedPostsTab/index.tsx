@@ -22,7 +22,8 @@ const UserLikedPostsTab = () => {
   // -------------------------------------------------------------------------------------
 
   const {
-    data: posts,
+    items: posts,
+    loading,
     fetchMore,
     refresh: refreshPosts,
     refreshing,
@@ -34,6 +35,7 @@ const UserLikedPostsTab = () => {
 
   return (
     <UserPostsList
+      loading={loading}
       posts={posts}
       fetchMore={fetchMore}
       refreshPosts={refreshPosts}

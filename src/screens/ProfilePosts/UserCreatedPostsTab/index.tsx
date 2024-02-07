@@ -24,9 +24,10 @@ const UserPostsTab = () => {
   // -------------------------------------------------------------------------------------
 
   const {
-    posts,
+    items: posts,
+    loading,
     fetchMore,
-    refetch: refreshPosts,
+    refresh: refreshPosts,
     refreshing,
   } = usePostsCreatedByAddress(userAddress);
 
@@ -36,6 +37,7 @@ const UserPostsTab = () => {
 
   return (
     <UserPostsList
+      loading={loading}
       posts={posts}
       fetchMore={fetchMore}
       refreshPosts={refreshPosts}
