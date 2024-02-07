@@ -13,6 +13,7 @@ import {
   PostReferenceType,
   PostStatus,
   PostTransaction,
+  PostURL,
 } from 'types/posts';
 
 /**
@@ -76,6 +77,16 @@ const convertGraphQLPostTransaction = (transaction: any): PostTransaction => {
   } as PostTransaction;
 };
 
+const convertGraphQLPostURL = (url: any): PostURL => {
+  return {
+    startIndex: url.start_index,
+    endIndex: url.end_index,
+    url: url.url,
+    displayValue: url.display_value,
+    previewUrl: url.preview_url,
+  } as PostURL;
+};
+
 /**
  * Converts a post fetched from the GraphQL API into a format that is easier to parse by the app.
  * @param post The post to convert.
@@ -93,6 +104,7 @@ export const convertGraphQLPost = (post: any): Post => {
     attachments: (post.attachments ?? []).map(convertGraphQLPostAttachment),
     references: (post.references ?? []).map(convertGraphQLPostReference),
     tags: post.tags,
+    urls: (post.urls ?? []).map(convertGraphQLPostURL),
 
     // TODO: Check if these are parsed correctly
     entities: post.entities,

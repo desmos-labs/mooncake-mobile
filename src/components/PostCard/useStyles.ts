@@ -31,7 +31,7 @@ const useStyles = makeStyle(theme => ({
     left: 'auto',
     right: 0,
   },
-  mediaView: {
+  attachmentContainer: {
     alignItems: 'center',
     marginTop: theme.spacing.m,
   },

@@ -25,7 +25,6 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
@@ -38,6 +37,7 @@ import {
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
 import { isPostPending, Post } from 'types/posts';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -84,15 +84,17 @@ const CommentItem = (props: CommentItemProps) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
-  const { MediaAttachment } = useRenderMediaAttachment(comment.attachments, {
-    imageStyle: {
-      marginTop: 8,
-      width: '100%',
-      height: 150,
-      borderRadius: 24,
-      resizeMode: 'contain',
+  const { Attachment } = useRenderPostAttachment(comment, {
+    media: {
+      imageStyle: {
+        marginTop: 8,
+        width: '100%',
+        height: 150,
+        borderRadius: 24,
+        resizeMode: 'contain',
+      },
+      resizeMode: 'cover',
     },
-    resizeMode: 'cover',
   });
 
   // -------------------------------------------------------------------------------------
@@ -227,7 +229,7 @@ const CommentItem = (props: CommentItemProps) => {
             PressMoreComponent
           )}
         </View>
-        {MediaAttachment}
+        {Attachment}
         <Typography.Regular14 style={styles.contentText}>{comment.text}</Typography.Regular14>
         <View style={styles.bottomGroup}>
           <View>
