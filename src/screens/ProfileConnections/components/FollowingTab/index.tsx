@@ -1,12 +1,9 @@
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
 import { useRoute } from '@react-navigation/native';
-import StyledSpinner from 'components/StyledSpinner';
 import useFollowing from 'hooks/relationships/useFollowing';
-import sleep from 'lib/sleep';
-import { Center } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import UsersList from 'screens/ProfileConnections/components/UsersList';
 
@@ -20,48 +17,25 @@ const FollowingTab = () => {
   const { t } = useTranslation('relationships');
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
-  const [firstFocus, setFirstFocus] = useState(true);
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const {
-    data: following,
-    loading,
-    initialLoading: isFirstLoading,
-    fetchMore,
-    refresh: refreshFollowing,
-    refreshing,
-  } = useFollowing(userAddress);
-
-  // -------------------------------------------------------------------------------------
-  // --- Effects
-  // -------------------------------------------------------------------------------------
-
-  useEffect(() => {
-    refreshFollowing().then(() => sleep(500).then(() => setFirstFocus(false)));
-  }, [refreshFollowing]);
+  const { items, loading, fetchMore, refresh, refreshing, fetchingMore } =
+    useFollowing(userAddress);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
-  if (firstFocus) {
-    return (
-      <Center flex={1} flexGrow={1} backgroundColor="white">
-        <StyledSpinner />
-      </Center>
-    );
-  }
-
   return (
     <UsersList
-      users={following}
+      users={items}
       loading={loading}
       fetchMore={fetchMore}
-      fetchingMore={loading && !isFirstLoading}
-      refresh={refreshFollowing}
+      fetchingMore={fetchingMore}
+      refresh={refresh}
       refreshing={refreshing}
       emptyText={t('noFollowers')}
     />

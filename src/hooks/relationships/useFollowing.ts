@@ -1,56 +1,11 @@
-import { useLazyQuery } from '@apollo/client';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import { useSetCachedUserFollowing } from '@recoil/followers';
-import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
+import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
-import React from 'react';
+import React, { useCallback } from 'react';
 import GetAccountFollowing from 'services/graphql/queries/GetAccountFollowing';
 import { DesmosProfile } from 'types/desmos';
-
-/**
- * Hook that provides a function that can be used inside the usePaginatedData
- * hook to fetch a user's following list.
- */
-const useFetchUserFollowing = (address: string | undefined) => {
-  const [fetchFollowing] = useLazyQuery(GetAccountFollowing);
-  const subspaceId = useAppStateValue('subspaceId');
-
-  return React.useCallback<FetchDataFunction<DesmosProfile>>(
-    async (offset: number, limit: number) => {
-      if (!address) {
-        return {
-          data: [],
-          endReached: true,
-        };
-      }
-
-      const { data, error } = await fetchFollowing({
-        fetchPolicy: 'no-cache',
-        variables: {
-          subspaceId,
-          userAddress: address,
-          offset,
-          limit,
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      const following = (data?.following ?? []).map((relationship: any) =>
-        convertGraphQLProfile(relationship.counterparty),
-      );
-
-      return {
-        data: following,
-        endReached: following.length < limit,
-      };
-    },
-    [address, fetchFollowing, subspaceId],
-  );
-};
 
 /**
  * Hook that returns the list of the accounts that the user having the given address is following.
@@ -63,10 +18,23 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   const userAddress = address || activeAccount;
   const setCachedFollowing = useSetCachedUserFollowing();
 
-  return usePaginatedData(useFetchUserFollowing(userAddress), {
-    itemsPerPage: usersPerPage,
-    autoFetchFirstPage: true,
-    onDataChanged: React.useCallback(
+  const convertData = useCallback((data: any): DesmosProfile[] => {
+    return (data?.following ?? []).map((relationship: any) =>
+      convertGraphQLProfile(relationship.counterparty),
+    );
+  }, []);
+
+  return usePaginatedQuery({
+    query: GetAccountFollowing,
+    queryOptions: {
+      itemsPerPage: usersPerPage,
+    },
+    variables: {
+      subspaceId: useAppStateValue('subspaceId'),
+      userAddress,
+    },
+    convertData,
+    onDataFetched: React.useCallback(
       (profiles: DesmosProfile[]) => {
         setCachedFollowing(
           userAddress,

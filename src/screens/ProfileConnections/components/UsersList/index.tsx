@@ -74,13 +74,16 @@ const UsersList = (props: UsersListProps) => {
 
   // Component used to render an empty list
   const EmptyComponent = useMemo(() => {
+    if (loading) {
+      return <Loading />;
+    }
     return (
       <View style={styles.emptyListView}>
         <Image style={styles.emptyListImage} source={emptyListPlaceholder} />
         <Typography.Regular16 style={styles.emptyListText}>{emptyText}</Typography.Regular16>
       </View>
     );
-  }, [emptyText, styles.emptyListImage, styles.emptyListText, styles.emptyListView]);
+  }, [emptyText, loading, styles.emptyListImage, styles.emptyListText, styles.emptyListView]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
@@ -93,7 +96,7 @@ const UsersList = (props: UsersListProps) => {
         refreshing={refreshing}
         onRefresh={refresh}
         renderItem={renderItem}
-        ListEmptyComponent={loading ? null : EmptyComponent}
+        ListEmptyComponent={EmptyComponent}
         ListFooterComponent={fetchingMore ? Loading : undefined}
         onEndReached={fetchMore}
         keyExtractor={item => item.address}
