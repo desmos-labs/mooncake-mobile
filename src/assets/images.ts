@@ -23,6 +23,10 @@ export const backButton = require('./images/backButton.png');
 
 export const magnifyingGlass = require('./images/magnifyingGlass.png');
 
+export const greenCheckIcon = require('./images/greenCheckIcon.png');
+
+export const redCrossIcon = require('./images/redCrossIcon.png');
+
 export const commentLiked = require('./images/commentLiked.png');
 
 export const reportIcon = require('./images/report.png');

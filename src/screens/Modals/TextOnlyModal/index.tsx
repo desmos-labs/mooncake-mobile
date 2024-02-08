@@ -39,8 +39,8 @@ const TextOnlyModal = () => {
       <TouchableOpacity onPress={goBack} activeOpacity={1} style={StyleSheet.absoluteFillObject} />
       <View style={styles.innerContainer}>
         {image && <Image source={image} style={styles.image} />}
-        <Typography.Semibold18 style={bodyStyle}>{title}</Typography.Semibold18>
-        <Typography.Regular14 style={[styles.subtitleText, bodyStyle]}>{body}</Typography.Regular14>
+        <Typography.H6 style={bodyStyle}>{title}</Typography.H6>
+        <Typography.Regular16 style={[styles.subtitleText, bodyStyle]}>{body}</Typography.Regular16>
       </View>
     </View>
   );

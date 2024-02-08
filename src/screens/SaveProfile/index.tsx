@@ -1,12 +1,21 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { backButton, defaultBanner, defaultProfilePic, editProfilePic } from 'assets/images';
+import {
+  backButton,
+  defaultBanner,
+  defaultProfilePic,
+  editProfilePic,
+  greenCheckIcon,
+  redCrossIcon,
+} from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
+import { Image } from 'expo-image';
 import { CameraType } from 'expo-image-picker';
 import { Formik } from 'formik';
 import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePicture';
@@ -34,6 +43,7 @@ import {
   SaveProfileFormState,
   useGetImageBackground,
   useInitialFormState,
+  useIsDTagAvailable,
   useSubmitForm,
   useValidationSchema,
 } from './hooks';
@@ -133,7 +143,8 @@ const SaveProfile = (props: NavProps) => {
 
   const initialFormState = useInitialFormState(profile);
   const validationSchema = useValidationSchema(profileParams);
-
+  const [dtagAvailable, setDtagAvailable] = useState<boolean>(true);
+  const checkDtagAvailability = useIsDTagAvailable();
   // -------------------------------------------------------------------------------------
   // --- Callbacks
   // -------------------------------------------------------------------------------------
@@ -147,6 +158,13 @@ const SaveProfile = (props: NavProps) => {
   });
   const { editProfilePicture, editCoverPicture } = useOpenPictureEditor();
   const takePhoto = useTakePicture();
+
+  const useOpenInfoModal = useCallback(() => {
+    navigate(ROUTES.TEXTONLY_MODAL, {
+      title: t('handle title'),
+      body: t('handle description'),
+    });
+  }, [navigate, t]);
 
   const handleSelectProfilePicture = useCallback(async () => {
     navigate(ROUTES.SELECT_IMAGE_MODAL, {
@@ -213,10 +231,7 @@ const SaveProfile = (props: NavProps) => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <DView
-      style={styles.container}
-      backgroundImage={coverPictureBackground}
-      backgroundColor={theme.colors.white}>
+    <DView style={styles.container} backgroundColor={theme.colors.white}>
       <View style={styles.headerButtonGroup}>
         <ProfileHeaderButton image={backButton} style={styles.topButton} onPress={goBack} />
         <ProfileHeaderButton
@@ -225,10 +240,16 @@ const SaveProfile = (props: NavProps) => {
           onPress={handleSelectCoverPicture}
         />
       </View>
+      <Image source={coverPictureBackground} style={styles.coverPicBackground} transition={250} />
       <CreateAvatar avatar={profilePicBackground} handlePressEdit={handleSelectProfilePicture} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.kbView}>
+        <View style={styles.headerText}>
+          <Typography.Semibold20>
+            {isOnboarding ? t('header') : t('header edit')}
+          </Typography.Semibold20>
+        </View>
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
@@ -240,11 +261,10 @@ const SaveProfile = (props: NavProps) => {
                 style={styles.scrollView}
                 contentContainerStyle={styles.card}>
                 <View style={styles.scrollContainer} onStartShouldSetResponder={() => true}>
-                  <Typography.Semibold16 style={styles.inputLabel}>
+                  <Typography.Regular16 style={styles.inputLabel}>
                     {t('nickname')}
-                  </Typography.Semibold16>
+                  </Typography.Regular16>
                   <DTextInput
-                    style={styles.inputStyle}
                     inputRef={nicknameInputRef}
                     value={values.nickname}
                     placeholder={t('enter nickname')}
@@ -267,19 +287,36 @@ const SaveProfile = (props: NavProps) => {
                     </View>
                   )}
                   <>
-                    <Typography.Semibold16 style={styles.inputLabel}>
-                      {t('handle')}
-                    </Typography.Semibold16>
+                    <View style={styles.dtagView}>
+                      <Typography.Regular16>{t('handle')}</Typography.Regular16>
+                      <AntDesign
+                        name="exclamationcircleo"
+                        size={19}
+                        color={theme.colors.surfaceBlack}
+                        onPress={useOpenInfoModal}
+                      />
+                    </View>
+
                     <DTextInput
-                      style={styles.inputStyle}
                       value={values.dTag}
                       placeholder={t('enter handle')}
-                      onChangeText={value => {
+                      onChangeText={async value => {
                         setFieldValue('dTag', value, true);
+                        const available = await checkDtagAvailability(value);
+                        setDtagAvailable(available);
                       }}
                       error={!!errors.dTag}
                       inputRef={dTagInputRef}
                       autoCapitalize="none"
+                      rightElement={
+                        values.dTag &&
+                        !errors.dTag && (
+                          <Image
+                            source={dtagAvailable ? greenCheckIcon : redCrossIcon}
+                            style={styles.icon}
+                          />
+                        )
+                      }
                     />
                   </>
                   {errors.dTag && (
@@ -295,9 +332,7 @@ const SaveProfile = (props: NavProps) => {
                       />
                     </View>
                   )}
-                  <Typography.Semibold16 style={styles.inputLabel}>
-                    {t('bio')}
-                  </Typography.Semibold16>
+                  <Typography.Regular16 style={styles.inputLabel}>{t('bio')}</Typography.Regular16>
                   <DTextInput
                     onFocus={() => {
                       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 500);
@@ -312,7 +347,6 @@ const SaveProfile = (props: NavProps) => {
                       setFieldValue('bio', value, true);
                     }}
                     error={!!errors.bio}
-                    style={styles.bioDTextInput}
                   />
                   {errors.bio && (
                     <Typography.Regular12 style={styles.errorText}>
@@ -330,7 +364,10 @@ const SaveProfile = (props: NavProps) => {
                 </View>
               </ScrollView>
               <View style={{ padding: theme.spacing.m }}>
-                <Button disabled={!values.dTag} height={44} onPress={handleSubmit as any}>
+                <Button
+                  disabled={!values.dTag || !dtagAvailable}
+                  height={44}
+                  onPress={handleSubmit as any}>
                   {t('confirm', { ns: 'common' })}
                 </Button>
               </View>

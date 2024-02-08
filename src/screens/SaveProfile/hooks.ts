@@ -1,12 +1,14 @@
 import { useActiveAccount } from '@recoil/accounts';
-import { useStoreProfile } from '@recoil/profiles';
+import { useActiveProfile, useStoreProfile } from '@recoil/profiles';
+import useCustomLazyQuery from 'hooks/graphql/useCustomLazyQuery';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import { err, ok } from 'neverthrow';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import SearchProfiles from 'services/graphql/queries/SearchProfiles';
 import { AccountWithWallet } from 'types/account';
-import { DesmosProfile, ProfileParams } from 'types/desmos';
+import { DesmosProfile, GqlDesmosProfile, GqlDesmosProfiles, ProfileParams } from 'types/desmos';
 import * as Yup from 'yup';
 
 /**
@@ -17,6 +19,25 @@ export interface SaveProfileFormState {
   readonly nickname: string | undefined;
   readonly bio: string | undefined;
 }
+
+/**
+ * Hook that allows to check whether the given DTag is available or not.
+ */
+export const useIsDTagAvailable = () => {
+  const [getLazyData] = useCustomLazyQuery<GqlDesmosProfiles>(SearchProfiles, {});
+  const activeProfile = useActiveProfile();
+  return React.useCallback(
+    async (inputDTag: string) => {
+      const data = await getLazyData({ variables: { search: inputDTag, offset: 0, limit: 1 } });
+      if (!data || !data?.profiles) return true;
+      return (
+        data.profiles.filter((profile: GqlDesmosProfile) => profile.dtag !== activeProfile?.dTag)
+          .length === 0
+      );
+    },
+    [activeProfile?.dTag, getLazyData],
+  );
+};
 
 /**
  * Hook that returns the initial state of the form that allows
@@ -150,6 +171,10 @@ export const useSubmitForm = (
         coverPicture: coverPic,
         address: profileAddress,
         creationTime: profile?.creationTime ?? new Date(Date.now()).toISOString(),
+        followingCount: profile?.followingCount ?? 0,
+        followersCount: profile?.followersCount ?? 0,
+        isBlockedByUser: profile?.isBlockedByUser ?? false,
+        isUserFollowing: profile?.isUserFollowing ?? false,
       };
 
       // Store the profile locally by replacing the values with the previous ones (if undefined)
@@ -186,12 +211,7 @@ export const useSubmitForm = (
       isOnboarding,
       onCompleteOrError,
       onProfileSaved,
-      profile?.bio,
-      profile?.coverPicture,
-      profile?.creationTime,
-      profile?.dTag,
-      profile?.nickname,
-      profile?.profilePicture,
+      profile,
       saveProfile,
       storeProfile,
       t,

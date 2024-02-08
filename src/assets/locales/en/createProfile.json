@@ -1,5 +1,6 @@
 {
-  "header": "Create a profile",
+  "header": "Create profile",
+  "header edit": "Save profile",
   "description": "Create your decentralized profiles",
   "nickname": "Nickname",
   "handle": "Handle*",
@@ -15,5 +16,7 @@
   "profile saved": "Your profile has been saved",
   "invalid handle": "Invalid handle",
   "max bio length exceeded": "The bio must be at most {{numChars}} characters long",
-  "enter nickname": "Enter your nickname"
+  "enter nickname": "Enter your nickname",
+  "handle title": "What is a handle?",
+  "handle description": "Think of it as your special online name. It's unique to you and makes it possible for others to find and tag you. Just like your username, it's the part that comes after the @ sign."
 }

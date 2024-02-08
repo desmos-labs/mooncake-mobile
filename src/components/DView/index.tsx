@@ -1,10 +1,10 @@
 import LoadingOverlay from 'components/LoadingOverlay';
 import CommonStyles from 'config/theme/CommonStyles';
+import { ImageBackground } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import {
   ColorValue,
-  ImageBackground,
   Keyboard,
   RefreshControl,
   ScrollView,
