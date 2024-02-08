@@ -5,10 +5,12 @@ import {
   PrivateKeyAccount,
   SerializableAccount,
   SerializablePrivateKeyAccount,
+  SerializableWalletConnectAccount,
   SerializableWeb3AuthAccount,
+  WalletConnectAccount,
   Web3AuthAccount,
 } from 'types/account';
-import { WalletType } from 'types/wallet';
+import { WalletConnectWalletApp, WalletType } from 'types/wallet';
 
 const serializeWeb3AuthAccount = (account: Web3AuthAccount): SerializableWeb3AuthAccount => ({
   version: AccountSerializationVersion.Web3Auth,
@@ -35,12 +37,39 @@ const serializePrivateKeyAuthAccount = (
   creationDate: account.creationDate,
 });
 
+/**
+ * Function to convert a [WalletConnectAccount] into a [SerializableWalletConnectAccount].
+ * @param account - The account to convert.
+ */
+const serializeWalletConnectAccount = (
+  account: WalletConnectAccount,
+): SerializableWalletConnectAccount => {
+  switch (account.walletApp) {
+    case WalletConnectWalletApp.DPM:
+      return {
+        version: AccountSerializationVersion.WalletConnectDPM,
+        walletType: WalletType.WalletConnect,
+        address: account.address,
+        pubKey: account.pubKey,
+        algo: account.algo,
+        creationDate: account.creationDate,
+        walletApp: account.walletApp,
+        sessionTopic: account.sessionTopic,
+        tempWallet: account.tempWallet,
+      };
+    default:
+      throw new Error(`unsupported WalletConnect account ${account.walletApp}`);
+  }
+};
+
 const serializeAccount = (account: Account): SerializableAccount => {
   switch (account.walletType) {
     case WalletType.Web3Auth:
       return serializeWeb3AuthAccount(account);
     case WalletType.PrivateKey:
       return serializePrivateKeyAuthAccount(account);
+    case WalletType.WalletConnect:
+      return serializeWalletConnectAccount(account);
     default:
       // @ts-ignore
       throw new Error(`invalid account type ${account.walletType}`);

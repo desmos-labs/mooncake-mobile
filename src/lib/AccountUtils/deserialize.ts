@@ -5,10 +5,12 @@ import {
   PrivateKeyAccount,
   SerializableAccount,
   SerializablePrivateKeyAccount,
+  SerializableWalletConnectAccount,
   SerializableWeb3AuthAccount,
+  WalletConnectAccount,
   Web3AuthAccount,
 } from 'types/account';
-import { WalletType } from 'types/wallet';
+import { WalletConnectWalletApp, WalletType } from 'types/wallet';
 
 const ACCOUNT_ALGOS = ['secp256k1', 'ed25519', 'sr25519'];
 
@@ -91,6 +93,63 @@ const deserializePrivateKeyAccount = (
   };
 };
 
+/**
+ * Function to deserialize a JSON serialized [SerializableWalletConnectAccount].
+ * @param account - The JSON object from which we try to deserialize
+ * a [SerializableWalletConnectAccount] instance.
+ */
+const deserializeWalletConnectAccount = (
+  account: Partial<SerializableWalletConnectAccount>,
+): WalletConnectAccount => {
+  if (
+    account.version === undefined ||
+    account.address === undefined ||
+    account.walletType === undefined ||
+    account.algo === undefined ||
+    account.pubKey === undefined ||
+    account.creationDate === undefined ||
+    account.sessionTopic === undefined ||
+    account.walletApp === undefined
+  ) {
+    throw new Error('invalid WalletConnect account');
+  }
+
+  if (account.walletType !== WalletType.WalletConnect) {
+    throw new Error(`invalid WalletConnect account type ${account.walletType}`);
+  }
+
+  if (ACCOUNT_ALGOS.indexOf(account.algo) === -1) {
+    throw new Error(`invalid account algo ${account.algo}`);
+  }
+
+  if (account.tempWallet) {
+    if (
+      account.tempWallet.address === undefined ||
+      account.tempWallet.pubKey === undefined ||
+      account.tempWallet.authorizedMessages === undefined ||
+      account.tempWallet.authorizationExpiration === undefined
+    ) {
+      throw new Error('invalid WalletConnect tempWallet');
+    }
+  }
+
+  switch (account.walletApp) {
+    case WalletConnectWalletApp.DPM:
+      return {
+        walletType: WalletType.WalletConnect,
+        address: account.address,
+        pubKey: account.pubKey,
+        algo: account.algo,
+        creationDate: account.creationDate,
+        sessionTopic: account.sessionTopic,
+        walletApp: WalletConnectWalletApp.DPM,
+        tempWallet: account.tempWallet,
+      };
+    default:
+      throw new Error(`unsupported WalletConnect wallet app ${account.walletApp}`);
+  }
+};
+
 const deserializeAccount = (account: Partial<SerializableAccount>): Account => {
   if (account.walletType === undefined) {
     throw new Error('invalid account');
@@ -101,6 +160,8 @@ const deserializeAccount = (account: Partial<SerializableAccount>): Account => {
       return deserializeWeb3AuthAccount(account);
     case WalletType.PrivateKey:
       return deserializePrivateKeyAccount(account);
+    case WalletType.WalletConnect:
+      return deserializeWalletConnectAccount(account);
     default:
       throw new Error(`unknown account type ${account.walletType}`);
   }
