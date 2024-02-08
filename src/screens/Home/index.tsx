@@ -109,7 +109,7 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [styles, loading, fetchingMorePosts]);
+  }, [styles, fetchingMorePosts]);
 
   const emptyComponent = useMemo(() => {
     if (loading) {
