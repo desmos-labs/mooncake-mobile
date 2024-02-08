@@ -100,7 +100,7 @@ const Home = () => {
   }, [refreshPosts]);
 
   const footerComponent = useMemo(() => {
-    if (loading || fetchingMorePosts) {
+    if (fetchingMorePosts) {
       return (
         <View style={styles.loaderView}>
           <HomePostContentLoader />
@@ -112,6 +112,13 @@ const Home = () => {
   }, [styles, loading, fetchingMorePosts]);
 
   const emptyComponent = useMemo(() => {
+    if (loading) {
+      return (
+        <View style={styles.loaderView}>
+          <HomePostContentLoader />
+        </View>
+      );
+    }
     return !loading && !refreshing && !fetchingMorePosts ? (
       <View style={styles.emptyView}>
         <Image source={emptyListPlaceholder} style={styles.emptyImage} />
