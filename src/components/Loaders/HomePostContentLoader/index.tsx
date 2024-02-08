@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
 import { Center, HStack, Skeleton, useTheme, VStack } from 'native-base';
+import React, { memo } from 'react';
 
 const HomePostContentLoader = () => {
   const theme = useTheme();
