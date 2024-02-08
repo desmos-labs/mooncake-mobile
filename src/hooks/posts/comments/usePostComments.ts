@@ -34,9 +34,14 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   }, []);
 
   const onDataFetched = useCallback(
-    (comments: Post[]) => {
+    (comments: Post[], refreshing: boolean) => {
       syncLocalPosts(comments);
-      storeComments(post.id, comments);
+      storeComments(post.id, currentComments => {
+        if (refreshing) {
+          return comments;
+        }
+        return [...comments, ...currentComments];
+      });
       comments.forEach(c => setPostCommentsCount(c.id, c.commentsCount));
     },
     [syncLocalPosts, storeComments, post.id, setPostCommentsCount],
