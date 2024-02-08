@@ -1,6 +1,6 @@
-import { sortPostsByCreationDate } from 'lib/PostsUtils';
-import React, { useCallback, useMemo } from 'react';
-import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilRecordItemWithKey } from 'lib/ReocilUitils';
+import { useCallback, useMemo } from 'react';
+import { atom, useRecoilValue } from 'recoil';
 import { Post } from 'types/posts';
 
 /**
@@ -19,27 +19,7 @@ export const useComments = (postId: number) => {
 };
 
 export const useSetComments = () => {
-  const setComments = useSetRecoilState(commentsAppState);
-  return React.useCallback(
-    (postId: number, valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
-      setComments(currentComments => {
-        const updatedComments: Record<number, Post[]> = {
-          ...currentComments,
-        };
-
-        let posts: Post[];
-        if (typeof valOrUpdater === 'function') {
-          posts = valOrUpdater(updatedComments[postId] ?? []);
-        } else {
-          posts = valOrUpdater;
-        }
-
-        updatedComments[postId] = sortPostsByCreationDate(posts);
-        return updatedComments;
-      });
-    },
-    [setComments],
-  );
+  return useSetRecoilRecordItemWithKey(commentsAppState, []);
 };
 
 export const useDeleteComments = () => {

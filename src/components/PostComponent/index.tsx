@@ -55,7 +55,7 @@ const PostComponent = (props: Props) => {
         </View>
       );
     }
-  }, [Attachment, post.attachments?.length, post.text, styles.textContainer, theme.spacing.m]);
+  }, [Attachment, post.text, styles.textContainer, theme.spacing.m]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering

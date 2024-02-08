@@ -2,6 +2,7 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import { useActiveProfile } from '@recoil/profiles';
 import { FlashList } from '@shopify/flash-list';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
@@ -23,7 +24,6 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
 import { isCommentReply, Post } from 'types/posts';
-import { usePostCommentsCount } from '@recoil/commentsCount';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
 
@@ -198,6 +198,7 @@ const PostDetails = () => {
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={comments}
+        onEndReachedThreshold={0.2}
         // Conditionally render the comment item skeleton here so it seamlessly transitions
         // from a lazy loading to ready state
         ListEmptyComponent={

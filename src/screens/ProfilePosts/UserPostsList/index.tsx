@@ -107,6 +107,7 @@ const UserPostsList = (props: UserPostsListProps) => {
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMore}
         getItemType={getPostType}
+        onEndReachedThreshold={0.2}
       />
     </View>
   );

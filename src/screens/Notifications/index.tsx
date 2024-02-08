@@ -176,6 +176,7 @@ const Notifications = () => {
         ListFooterComponent={FooterComponent}
         estimatedItemSize={70}
         stickyHeaderIndices={stickyHeaderIndices}
+        onEndReachedThreshold={0.2}
         getItemType={item => {
           return typeof item === 'string' ? 'sectionHeader' : 'row';
         }}
