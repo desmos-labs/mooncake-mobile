@@ -36,7 +36,7 @@ export default function usePaginatedQuery<QT, T>({
       } else {
         itemsRef.current = [...itemsRef.current, ...convertedData];
       }
-      onDataFetched?.(itemsRef.current, refresh ?? false);
+      onDataFetched?.(convertedData, refresh ?? false);
       setTimeout(() => {
         setItems(itemsRef.current);
         loadingData.current = false;

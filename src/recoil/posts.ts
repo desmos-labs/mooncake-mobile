@@ -4,6 +4,7 @@ import React from 'react';
 import { atom, RecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
 import { isRootPost, Post } from 'types/posts';
+import _ from 'lodash';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
@@ -123,6 +124,18 @@ export const useStorePosts = (user: string) => {
   return useMakeStorePosts(postsState, user);
 };
 
+export const useAppendPosts = (user: string) => {
+  const setPosts = useStorePosts(user);
+  return React.useCallback(
+    (posts: Post[]) => {
+      setPosts((currPosts: Post[]) => {
+        return _.uniqBy([...currPosts, ...posts], 'externalId');
+      });
+    },
+    [setPosts],
+  );
+};
+
 /**
  * Hook that allows to set the posts created by the users followed by a user.
  *
@@ -133,6 +146,18 @@ export const useStorePosts = (user: string) => {
  */
 export const useStoreFollowingPosts = (user: string) => {
   return useMakeStorePosts(followingPostsState, user);
+};
+
+export const useAppendFollowingPosts = (user: string) => {
+  const setPosts = useStoreFollowingPosts(user);
+  return React.useCallback(
+    (posts: Post[]) => {
+      setPosts((currPosts: Post[]) => {
+        return _.uniqBy([...currPosts, ...posts], 'externalId');
+      });
+    },
+    [setPosts],
+  );
 };
 
 /**

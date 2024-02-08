@@ -4,6 +4,8 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { useSetPostCommentsCount } from '@recoil/commentsCount';
 import { useUserLocalPosts } from '@recoil/localPosts';
 import {
+  useAppendFollowingPosts,
+  useAppendPosts,
   useStoredFollowingPosts,
   useStoredRootPosts,
   useStoreFollowingPosts,
@@ -86,8 +88,13 @@ const usePosts = (queryType: PostsQueryType) => {
   const followingAddresses = useFollowingAddresses();
   const queryParams = useQueryParams(queryType);
   const queryData = useQueryData(queryParams);
+
   const storePosts = useStorePosts(activeAccountAddress!);
+  const appendPosts = useAppendPosts(activeAccountAddress!);
+
   const storeFollowingPosts = useStoreFollowingPosts(activeAccountAddress!);
+  const appendFollowingPosts = useAppendFollowingPosts(activeAccountAddress!);
+
   const localPosts = useUserLocalPosts(activeAccountAddress);
   const syncLocalPosts = useSyncLocalPosts(activeAccountAddress);
   const setPostCommentsCount = useSetPostCommentsCount();
@@ -97,16 +104,25 @@ const usePosts = (queryType: PostsQueryType) => {
   }, []);
 
   const onDataFetched = useCallback(
-    (posts: Post[]) => {
+    (posts: Post[], isRefresh: boolean) => {
       syncLocalPosts(posts);
       posts.forEach(p => setPostCommentsCount(p.id, p.commentsCount));
+
       if (queryType === PostsQueryType.DISCOVERY) {
-        storePosts(posts);
+        isRefresh ? storePosts(posts) : appendPosts(posts);
       } else {
-        storeFollowingPosts(posts);
+        isRefresh ? storeFollowingPosts(posts) : appendFollowingPosts(posts);
       }
     },
-    [syncLocalPosts, queryType, setPostCommentsCount, storePosts, storeFollowingPosts],
+    [
+      syncLocalPosts,
+      queryType,
+      setPostCommentsCount,
+      storePosts,
+      appendPosts,
+      storeFollowingPosts,
+      appendFollowingPosts,
+    ],
   );
 
   const { loading, refresh, refreshing, fetchMore, fetchingMore, error } = usePaginatedQuery({
