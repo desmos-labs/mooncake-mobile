@@ -154,7 +154,6 @@ const Home = () => {
         onEndReached={fetchMorePosts}
         getItemType={getPostType}
         scrollEventThrottle={16}
-        onEndReachedThreshold={10}
         onScroll={event => {
           setContentOffset(event.nativeEvent.contentOffset);
         }}
