@@ -153,7 +153,7 @@ const Home = () => {
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
         getItemType={getPostType}
-        scrollEventThrottle={16}
+        onEndReachedThreshold={0.2}
         onScroll={event => {
           setContentOffset(event.nativeEvent.contentOffset);
         }}
