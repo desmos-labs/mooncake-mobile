@@ -1,7 +1,7 @@
 import { makeStyleWithProps } from 'config/theme';
 import { RefObject } from 'react';
-import { TextInput } from 'react-native';
-import { verticalScale } from 'react-native-size-matters';
+import { Dimensions, TextInput } from 'react-native';
+import { PROFILE_HEADER_HEIGHT } from 'screens/Profile/useStyles';
 
 type Props = {
   nicknameInputRef: RefObject<TextInput>;
@@ -14,20 +14,27 @@ const useStyles = makeStyleWithProps(
     container: {
       flex: 1,
     },
+    headerText: {
+      marginTop: 60,
+      textAlign: 'center',
+      alignItems: 'center',
+      paddingBottom: theme.spacing.xs,
+    },
     headerButtonGroup: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: theme.spacing.m,
+      zIndex: 2,
     },
-    bannerImage: {
-      width: '100%',
-      height: verticalScale(230),
-      resizeMode: 'cover',
+    coverPicBackground: {
+      height: PROFILE_HEADER_HEIGHT,
       position: 'absolute',
-      top: 0,
+      width: Dimensions.get('window').width,
+      zIndex: 1,
     },
+    icon: { width: 24, height: 24 },
+
     scrollView: {
-      backgroundColor: theme.colors.white,
       borderTopLeftRadius: 32,
       borderTopRightRadius: 32,
     },
@@ -49,22 +56,20 @@ const useStyles = makeStyleWithProps(
       height: 32,
       resizeMode: 'contain',
     },
-    inputStyle: {
-      borderWidth: 1,
-      borderColor: theme.colors.lightGrey01,
-    },
     kbView: {
       flex: 1,
       borderTopLeftRadius: 32,
       borderTopRightRadius: 32,
       backgroundColor: theme.colors.white,
+      zIndex: 2,
+      marginTop: 60,
     },
     scrollContainer: {
       flex: 1,
-      marginTop: 60,
+      marginTop: theme.spacing.xs,
     },
     bioInput: {
-      height: 160,
+      height: 180,
       alignSelf: 'flex-start',
       textAlignVertical: 'top',
       paddingTop: 8,

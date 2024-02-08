@@ -1,5 +1,6 @@
 {
-  "header": "Create a profile",
+  "header": "Create profile",
+  "header edit": "Save profile",
   "description": "Create your decentralized profiles",
   "nickname": "Nickname",
   "handle": "Handle*",

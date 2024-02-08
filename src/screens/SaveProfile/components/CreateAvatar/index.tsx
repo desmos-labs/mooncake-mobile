@@ -1,7 +1,8 @@
-import React from 'react';
-import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native';
 import { editProfilePic } from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import { Image } from 'expo-image';
+import React from 'react';
+import { ImageSourcePropType, StyleSheet, View } from 'react-native';
 
 type Props = {
   avatar: ImageSourcePropType;
@@ -12,7 +13,7 @@ type Props = {
 const CreateAvatar = ({ avatar, handlePressEdit }: Props) => {
   return (
     <View style={styles.container}>
-      <Image style={styles.avatar} source={avatar} />
+      <Image style={styles.avatar} source={avatar} transition={250} />
 
       <ImageButton
         onPress={handlePressEdit}
@@ -34,8 +35,12 @@ const styles = StyleSheet.create({
   },
   container: {
     alignSelf: 'center',
-    bottom: -45,
-    zIndex: 2,
+    borderColor: 'white',
+    borderRadius: 50,
+    borderWidth: 2,
+    position: 'absolute',
+    top: 90,
+    zIndex: 3,
   },
   editProfileButton: {
     bottom: -5,
