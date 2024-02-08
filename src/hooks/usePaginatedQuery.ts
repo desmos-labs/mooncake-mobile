@@ -31,12 +31,13 @@ export default function usePaginatedQuery<QT, T>({
   const onCompleted = useCallback(
     (data: QT, refresh?: boolean) => {
       const convertedData = convertData(data);
+      const firstFetch = itemsRef.current.length === 0;
       if (refresh) {
         itemsRef.current = convertedData;
       } else {
         itemsRef.current = [...itemsRef.current, ...convertedData];
       }
-      onDataFetched?.(convertedData, refresh ?? false);
+      onDataFetched?.(convertedData, refresh ?? firstFetch);
       setTimeout(() => {
         setItems(itemsRef.current);
         loadingData.current = false;
