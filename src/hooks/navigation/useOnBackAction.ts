@@ -12,6 +12,7 @@ type BackCallback = (event: BeforeRemoveEventArgs) => any | (() => any);
  */
 const useOnBackAction = (onBack: BackCallback, deps: DependencyList) => {
   const navigation = useNavigation();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedBackCallback = useCallback(onBack, [...deps]);
 
   const currentScreen = useMemo(() => {

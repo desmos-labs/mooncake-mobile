@@ -233,6 +233,7 @@ const useCreatePost = () => {
       deleteLocalPost,
       prepareDesmosClientAndWallet,
       resetCreatePostState,
+      setPostCommentsCount,
       showToast,
       storeLocalPost,
       subspaceId,
