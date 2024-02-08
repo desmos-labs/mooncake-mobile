@@ -1,4 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -158,6 +159,13 @@ const SaveProfile = (props: NavProps) => {
   const { editProfilePicture, editCoverPicture } = useOpenPictureEditor();
   const takePhoto = useTakePicture();
 
+  const useOpenInfoModal = useCallback(() => {
+    navigate(ROUTES.TEXTONLY_MODAL, {
+      title: t('handle title'),
+      body: t('handle description'),
+    });
+  }, [navigate, t]);
+
   const handleSelectProfilePicture = useCallback(async () => {
     navigate(ROUTES.SELECT_IMAGE_MODAL, {
       onPressSelectImage: () =>
@@ -279,9 +287,16 @@ const SaveProfile = (props: NavProps) => {
                     </View>
                   )}
                   <>
-                    <Typography.Regular16 style={styles.inputLabel}>
-                      {t('handle')}
-                    </Typography.Regular16>
+                    <View style={styles.dtagView}>
+                      <Typography.Regular16>{t('handle')}</Typography.Regular16>
+                      <AntDesign
+                        name="exclamationcircleo"
+                        size={19}
+                        color={theme.colors.surfaceBlack}
+                        onPress={useOpenInfoModal}
+                      />
+                    </View>
+
                     <DTextInput
                       value={values.dTag}
                       placeholder={t('enter handle')}

@@ -16,5 +16,7 @@
   "profile saved": "Your profile has been saved",
   "invalid handle": "Invalid handle",
   "max bio length exceeded": "The bio must be at most {{numChars}} characters long",
-  "enter nickname": "Enter your nickname"
+  "enter nickname": "Enter your nickname",
+  "handle title": "What is a handle?",
+  "handle description": "Think of it as your special online name. It's unique to you and makes it simple for others to find you. Just like your username, it's the part that comes after the @ sign."
 }

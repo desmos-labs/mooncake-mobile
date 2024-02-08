@@ -48,6 +48,12 @@ const useStyles = makeStyleWithProps(
     inputLabel: {
       marginVertical: theme.spacing.s,
     },
+    dtagView: {
+      marginVertical: theme.spacing.s,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
     descriptionText: {
       marginBottom: theme.spacing.m,
     },
