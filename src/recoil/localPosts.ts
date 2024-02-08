@@ -1,4 +1,4 @@
-import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
+import { findSamePost } from 'lib/PostsUtils';
 import { useCallback, useMemo } from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { isCommentTo, isRootPost, Post } from 'types/posts';
@@ -68,7 +68,7 @@ export const useSetUserLocalPosts = () => {
           posts = valOrUpdater;
         }
 
-        updatedPosts[userAddress] = sortPostsByCreationDate(posts);
+        updatedPosts[userAddress] = posts;
         return updatedPosts;
       });
     },

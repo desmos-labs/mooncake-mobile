@@ -1,5 +1,5 @@
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { findSamePost, sortPostsByCreationDate } from 'lib/PostsUtils';
+import { findSamePost } from 'lib/PostsUtils';
 import React from 'react';
 import { atom, RecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
@@ -103,7 +103,7 @@ const useMakeStorePosts = (recoil: RecoilState<Record<string, Post[]>>, user: st
 
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
-          [user]: sortPostsByCreationDate(posts),
+          [user]: posts,
         };
         return updatedPosts;
       });
@@ -124,6 +124,9 @@ export const useStorePosts = (user: string) => {
   return useMakeStorePosts(postsState, user);
 };
 
+/**
+ * Hook that allows to append posts to the current user's timeline.
+ */
 export const useAppendPosts = (user: string) => {
   const setPosts = useStorePosts(user);
   return React.useCallback(
@@ -148,6 +151,9 @@ export const useStoreFollowingPosts = (user: string) => {
   return useMakeStorePosts(followingPostsState, user);
 };
 
+/**
+ * Hook that allows to append posts to the list of posts for users that a user is following.
+ */
 export const useAppendFollowingPosts = (user: string) => {
   const setPosts = useStoreFollowingPosts(user);
   return React.useCallback(
