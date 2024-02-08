@@ -2,6 +2,7 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import { useActiveProfile } from '@recoil/profiles';
 import { FlashList } from '@shopify/flash-list';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
@@ -14,7 +15,7 @@ import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
@@ -23,7 +24,6 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
 import { isCommentReply, Post } from 'types/posts';
-import { usePostCommentsCount } from '@recoil/commentsCount';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
 
@@ -42,14 +42,13 @@ export interface PostDetailsParams {
    */
   readonly focusCommentBox?: boolean;
   /**
-   * ID of the post to be focused within the list of comments.
-   * TODO: Implement the scrolling of the list to this post
-   */
-  readonly focusPostId?: number;
-  /**
    * Pre-loaded post data passed in via the home screen to reduce load times.
    */
   readonly initialPostData?: Post;
+  /**
+   * ID of the comment to be focused within the list of comments.
+   */
+  readonly commentId?: number;
 }
 
 const PostDetails = () => {
@@ -59,7 +58,7 @@ const PostDetails = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
-  const { postId, initialPostData } = params;
+  const { postId, commentId, initialPostData } = params;
   const postData = { id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
   // -------------------------------------------------------------------------------------
@@ -129,16 +128,42 @@ const PostDetails = () => {
     setPageRefreshing(false);
   }, [refreshComments, refreshPost]);
 
+  useEffect(() => {
+    if (commentId && comments.length > 0) {
+      const commentIndex = comments.findIndex(comment => comment.id === commentId);
+      /**
+       * We need to wait a little bit before scrolling to the comment because the list
+       * of comments is not yet rendered when the component is mounted.
+       */
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToIndex({
+          index: commentIndex,
+          animated: true,
+          viewOffset: theme.spacing.l,
+        });
+      }, 300);
+    }
+  }, [commentId, comments, comments.length, theme.spacing.l, theme.spacing.m]);
+
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
 
   // Function uses to render the items inside the list of comments
-  const renderItem = React.useCallback((info: ListRenderItemInfo<Post>) => {
-    const { item } = info;
-    const disabled = isCommentReply(item);
-    return <CommentItem comment={item} disableInnerComment={disabled} />;
-  }, []);
+  const renderItem = React.useCallback(
+    (info: ListRenderItemInfo<Post>) => {
+      const { item } = info;
+      const disabled = isCommentReply(item);
+      return (
+        <CommentItem
+          comment={item}
+          disableInnerComment={disabled}
+          highlighted={item.id === commentId}
+        />
+      );
+    },
+    [commentId],
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
@@ -146,7 +171,7 @@ const PostDetails = () => {
 
   if (!initialPostData) {
     // If the post is loading, show the loading screen
-    if (isPostLoading) {
+    if (!post && isPostLoading) {
       return (
         <DView
           disableHideKeyboardTouchable={true}

@@ -42,6 +42,7 @@ interface Props {
 /**
  * Component that renders the top bar for the post details screen.
  * @param post - Post to render
+ * @param commentsCount - Number of comments of the post
  * @param handlePressMore - Handler for pressing the more button
  * @param onBackButtonPress - Handler for pressing the back button
  * @constructor

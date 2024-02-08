@@ -1,4 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import { squaresAnimation } from 'assets/animations';
 import {
   block,
@@ -24,6 +25,7 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
@@ -36,17 +38,23 @@ import {
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
 import { isPostPending, Post } from 'types/posts';
-import { usePostCommentsCount } from '@recoil/commentsCount';
-import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
   readonly comment: Post;
+  /**
+   * Whether the CommentItem is being rendered as a comment to another comment.
+   */
   readonly disableInnerComment?: boolean;
   /**
    * Whether the CommentItem is being rendered as the main post (at the top).
    */
   readonly renderedAsMainPost?: boolean;
+  /**
+   * Whether the comment should be highlighted.
+   */
+  readonly highlighted?: boolean;
+
   // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
   // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
   readonly handlePressMore?: () => void;
@@ -62,7 +70,7 @@ const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
 
-  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost } = props;
+  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost, highlighted } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -198,7 +206,7 @@ const CommentItem = (props: CommentItemProps) => {
   ]);
 
   return (
-    <View style={[styles.container, styles.flexRow]}>
+    <View style={[styles.container, styles.flexRow, highlighted && styles.highlighted]}>
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image
           source={getProfilePicture(comment.author)}

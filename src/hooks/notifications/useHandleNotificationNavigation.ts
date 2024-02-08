@@ -37,7 +37,7 @@ const useHandleNotificationNavigation = () => {
         case NotificationType.PostComment:
           navigation.navigate(ROUTES.POST_DETAILS, {
             postId: parseInt(notificationData.post_id, 10),
-            focusPostId: parseInt(notificationData.comment_id, 10),
+            commentId: parseInt(notificationData.comment_id, 10),
           });
           break;
 

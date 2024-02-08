@@ -29,6 +29,7 @@ const usePost = (postId: number, storedPost?: Post) => {
         const convertedPost = convertGraphQLPost(fetchedPost);
         storePost(activeAddress, convertedPost);
         setPostCommentsCount(convertedPost.id, convertedPost.commentsCount);
+        setLoading(false);
       }
     },
     [activeAddress, setPostCommentsCount, storePost],
@@ -46,9 +47,8 @@ const usePost = (postId: number, storedPost?: Post) => {
     setLoading(true);
     const apolloResult = await getLazyQuery();
     if (apolloResult.error === undefined) {
-      onDataFetched(apolloResult.data);
+      await onDataFetched(apolloResult);
     }
-    setLoading(false);
     return apolloResult;
   }, [getLazyQuery, onDataFetched]);
 
@@ -57,6 +57,7 @@ const usePost = (postId: number, storedPost?: Post) => {
       cachedRefetch();
     } else {
       storePost(activeAddress, storedPost);
+      setLoading(false);
     }
   }, [storedPost, activeAddress, cachedRefetch, storePost]);
 
