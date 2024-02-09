@@ -4,6 +4,7 @@ import { Post } from 'types/posts';
 import PostText from 'components/PostText';
 import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import { AttachmentRenderOptions } from 'hooks/rendering/types';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
  * @constructor
  */
 const PostData = (props: Props) => {
+  const theme = useTheme();
   const styles = useStyles();
 
   const { post, attachmentRenderOptions } = props;
@@ -28,15 +30,15 @@ const PostData = (props: Props) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
-  const { Attachment } = useRenderPostAttachment(
-    post,
-    attachmentRenderOptions || {
-      media: {
-        useAutoSize: true,
-        resizeMode: 'contain',
-      },
+  const { Attachment } = useRenderPostAttachment(post, {
+    media: {
+      useAutoSize: true,
+      resizeMode: 'contain',
+      horizontalPaddingWithAutoSize: 32,
+      imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
+      ...attachmentRenderOptions?.media,
     },
-  );
+  });
 
   // -------------------------------------------------------------------------------------
   // --- Rendering

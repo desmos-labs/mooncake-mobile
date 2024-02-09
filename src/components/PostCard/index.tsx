@@ -8,7 +8,6 @@ import {
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useSharePost from 'hooks/posts/useSharePost';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
@@ -34,7 +33,6 @@ interface PostCardProps {
  */
 const PostCard = (props: PostCardProps) => {
   const styles = useStyles();
-  const theme = useTheme();
   const { post } = props;
 
   // -------------------------------------------------------------------------------------
@@ -113,17 +111,7 @@ const PostCard = (props: PostCardProps) => {
         />
 
         {/* Post data */}
-        <PostData
-          post={post}
-          attachmentRenderOptions={{
-            media: {
-              useAutoSize: true,
-              resizeMode: 'contain',
-              horizontalPaddingWithAutoSize: 32,
-              imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
-            },
-          }}
-        />
+        <PostData post={post} />
 
         {/* Post bottom bar */}
         {!isPending && (
