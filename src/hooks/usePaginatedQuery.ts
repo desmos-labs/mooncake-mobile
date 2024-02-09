@@ -10,7 +10,8 @@ interface PaginatedQueryParams<QT, T> {
     readonly fetchPolicy?: FetchPolicy;
   };
   readonly variables?: Record<any, any>;
-  readonly onDataFetched?: (items: T[], isRefresh: boolean) => any;
+  readonly fetchMoreVariables?: Record<any, any>;
+  readonly onDataFetched?: (items: T[], isRefresh: boolean, isFirstFetch: boolean) => any;
 }
 
 export default function usePaginatedQuery<QT, T>({
@@ -18,6 +19,7 @@ export default function usePaginatedQuery<QT, T>({
   convertData,
   queryOptions,
   variables,
+  fetchMoreVariables,
   onDataFetched,
 }: PaginatedQueryParams<QT, T>) {
   const loadingData = useRef(true);
@@ -29,7 +31,7 @@ export default function usePaginatedQuery<QT, T>({
   const [fetchingMore, setFetchingMore] = useState(false);
 
   const onCompleted = useCallback(
-    (data: QT, refresh?: boolean) => {
+    async (data: QT, refresh?: boolean) => {
       const convertedData = convertData(data);
       const firstFetch = itemsRef.current.length === 0;
       if (refresh) {
@@ -37,7 +39,7 @@ export default function usePaginatedQuery<QT, T>({
       } else {
         itemsRef.current = [...itemsRef.current, ...convertedData];
       }
-      onDataFetched?.(convertedData, refresh ?? firstFetch);
+      await onDataFetched?.(convertedData, refresh ?? firstFetch, firstFetch);
       setTimeout(() => {
         setItems(itemsRef.current);
         loadingData.current = false;
@@ -76,6 +78,7 @@ export default function usePaginatedQuery<QT, T>({
   }, [onCompleted, onError, refetchData]);
 
   const fetchMore = useCallback(async () => {
+    console.log('fetchMore');
     if (loadingData.current) {
       return;
     }
@@ -84,6 +87,7 @@ export default function usePaginatedQuery<QT, T>({
     setFetchingMore(true);
     const { data, error: fetchMoreError } = await fetchMoreData({
       variables: {
+        ...fetchMoreVariables,
         offset: itemsRef.current.length,
       },
     });
@@ -93,7 +97,7 @@ export default function usePaginatedQuery<QT, T>({
       onCompleted(data);
     }
     setFetchingMore(false);
-  }, [fetchMoreData, onCompleted, onError]);
+  }, [fetchMoreData, fetchMoreVariables, onCompleted, onError]);
 
   return {
     items,

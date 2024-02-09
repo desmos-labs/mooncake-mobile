@@ -12,11 +12,6 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     backgroundColor: theme.colors.white,
     padding: theme.spacing.s,
   },
-  highlighted: {
-    backgroundColor: theme.colors.butterOrange05,
-    margin: -theme.spacing.m,
-    padding: theme.spacing.m,
-  },
   flexRow: {
     flexDirection: 'row',
   },

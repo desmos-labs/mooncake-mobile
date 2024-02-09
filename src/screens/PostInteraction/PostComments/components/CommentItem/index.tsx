@@ -29,9 +29,19 @@ import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import React, { useCallback } from 'react';
+import { useTheme } from 'native-base';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  interpolateColor,
+  Layout,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import {
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
@@ -69,7 +79,7 @@ export interface CommentItemProps {
 const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
-
+  const theme = useTheme();
   const { comment, handlePressMore, disableInnerComment, renderedAsMainPost, highlighted } = props;
 
   // -------------------------------------------------------------------------------------
@@ -151,6 +161,27 @@ const CommentItem = (props: CommentItemProps) => {
     handleHidePost(comment.id);
   }, [comment, handleHidePost, renderedAsMainPost, returnToRootPost]);
 
+  // Animations
+  const progress = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        [theme.colors.butterOrange05, theme.colors.white],
+      ),
+      marginHorizontal: -theme.spacing.m,
+      paddingHorizontal: theme.spacing.l,
+    };
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      progress.value = withTiming(1, { duration: 500 });
+    }, 2000);
+  }, [progress]);
+
   // -------------------------------------------------------------------------------------
   // --- Conditional Rendering
   // -------------------------------------------------------------------------------------
@@ -206,7 +237,11 @@ const CommentItem = (props: CommentItemProps) => {
   ]);
 
   return (
-    <View style={[styles.container, styles.flexRow, highlighted && styles.highlighted]}>
+    <Animated.View
+      entering={FadeIn.duration(250)}
+      exiting={FadeOut.duration(250)}
+      style={[styles.container, styles.flexRow, highlighted && animatedStyle]}
+      layout={Layout.duration(250).delay(250)}>
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image
           source={getProfilePicture(comment.author)}
@@ -275,7 +310,7 @@ const CommentItem = (props: CommentItemProps) => {
           </View>
         </View>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 

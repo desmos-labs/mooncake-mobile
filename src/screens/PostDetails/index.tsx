@@ -27,6 +27,8 @@ import { isCommentReply, Post } from 'types/posts';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
 
+const COMMENTS_PER_PAGE = 10;
+
 export type NavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList, ROUTES.POST_DETAILS>,
   BottomTabScreenProps<BottomTabsParamList>
@@ -94,7 +96,12 @@ const PostDetails = () => {
     loading: areCommentsLoading,
     refresh: refreshComments,
     fetchMore: fetchMoreComments,
-  } = usePostComments(postData);
+    fetchingMore: fetchingMoreComments,
+  } = usePostComments({
+    post: postData,
+    commentId,
+    commentsPerPage: COMMENTS_PER_PAGE,
+  });
 
   const commentsCount = usePostCommentsCount(postData.id);
 
@@ -129,7 +136,7 @@ const PostDetails = () => {
   }, [refreshComments, refreshPost]);
 
   useEffect(() => {
-    if (commentId && comments.length > 0) {
+    if (commentId && comments.length === COMMENTS_PER_PAGE) {
       const commentIndex = comments.findIndex(comment => comment.id === commentId);
       /**
        * We need to wait a little bit before scrolling to the comment because the list
@@ -143,7 +150,7 @@ const PostDetails = () => {
         });
       }, 300);
     }
-  }, [commentId, comments, comments.length, theme.spacing.l, theme.spacing.m]);
+  }, [commentId, comments, theme.spacing.l]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -213,7 +220,7 @@ const PostDetails = () => {
       topBar={<PostTopBar post={post} commentsCount={commentsCount} onBackButtonPress={goBack} />}>
       {/* List of comments */}
       <FlashList
-        estimatedItemSize={110}
+        estimatedItemSize={140}
         ref={scrollViewRef}
         // Only show the loading indicator on the flatList if the user manually drags down on it
         refreshing={pageRefreshing}
@@ -235,6 +242,7 @@ const PostDetails = () => {
         }
         keyboardDismissMode="on-drag"
         onEndReached={fetchMoreComments}
+        ListFooterComponent={fetchingMoreComments ? <CommentItemSkeleton /> : null}
       />
       {/* Bottom bar allowing to create a new comment */}
       <EnterCommentBottomBar
