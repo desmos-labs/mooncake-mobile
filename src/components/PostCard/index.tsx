@@ -73,8 +73,8 @@ const PostCard = (props: PostCardProps) => {
   }, [handlePressReport, post]);
 
   const onPressHide = React.useCallback(() => {
-    handlePressHidePost(post.id);
-  }, [handlePressHidePost, post.id]);
+    handlePressHidePost(post);
+  }, [handlePressHidePost, post]);
 
   const onPressComment = React.useCallback(() => {
     if (isPostPending(post)) {

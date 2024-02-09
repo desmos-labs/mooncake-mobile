@@ -8,7 +8,7 @@ const RefreshSession = async (): Promise<Result<string, Error>> => {
   return ResultAsync.fromPromise(
     axiosInstance.post('/session'),
     (e: any) => e ?? Error('Error refreshing the session'),
-  );
+  ).map(response => response.data);
 };
 
 export default RefreshSession;

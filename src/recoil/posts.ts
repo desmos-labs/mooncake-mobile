@@ -5,7 +5,7 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
 import { isRootPost, Post } from 'types/posts';
 import _ from 'lodash';
-import { useSetRecoilRecordItem } from 'lib/ReocilUitils';
+import { useSetRecoilRecordItem } from 'lib/RecoilUtils';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
