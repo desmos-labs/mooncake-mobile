@@ -1,8 +1,8 @@
-import React from 'react';
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
-import { NotificationData } from 'types/notifications';
-import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
+import useToast from 'hooks/toasts/useToast';
+import React from 'react';
+import { NotificationData } from 'types/notifications';
 import useHandleNotificationNavigation from './useHandleNotificationNavigation';
 import useMarkNotificationAsReaded from './useMarkNotificationAsReaded';
 
@@ -34,7 +34,7 @@ const useShowNotificationToast = () => {
 const useParseNotificationAndNavigate = () => {
   const navigate = useHandleNotificationNavigation();
   const showToast = useShowNotificationToast();
-  const markNotificationAsReaded = useMarkNotificationAsReaded();
+  const markNotificationAsRead = useMarkNotificationAsReaded();
 
   return React.useCallback(
     (
@@ -52,7 +52,7 @@ const useParseNotificationAndNavigate = () => {
         console.log('[Firebase]: Data', data);
       }
 
-      markNotificationAsReaded(data.notification_id);
+      markNotificationAsRead(data.notification_id);
 
       if (!onAppVisible) {
         navigate(data);
@@ -60,7 +60,7 @@ const useParseNotificationAndNavigate = () => {
         showToast(data);
       }
     },
-    [markNotificationAsReaded, navigate, showToast],
+    [markNotificationAsRead, navigate, showToast],
   );
 };
 

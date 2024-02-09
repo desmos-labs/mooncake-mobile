@@ -15,7 +15,7 @@ import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
@@ -26,6 +26,8 @@ import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components
 import { isCommentReply, Post } from 'types/posts';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
+
+const COMMENTS_PER_PAGE = 10;
 
 export type NavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList, ROUTES.POST_DETAILS>,
@@ -42,14 +44,13 @@ export interface PostDetailsParams {
    */
   readonly focusCommentBox?: boolean;
   /**
-   * ID of the post to be focused within the list of comments.
-   * TODO: Implement the scrolling of the list to this post
-   */
-  readonly focusPostId?: number;
-  /**
    * Pre-loaded post data passed in via the home screen to reduce load times.
    */
   readonly initialPostData?: Post;
+  /**
+   * ID of the comment to be focused within the list of comments.
+   */
+  readonly commentId?: number;
 }
 
 const PostDetails = () => {
@@ -59,7 +60,7 @@ const PostDetails = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
-  const { postId, initialPostData } = params;
+  const { postId, commentId, initialPostData } = params;
   const postData = { id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
   // -------------------------------------------------------------------------------------
@@ -95,7 +96,12 @@ const PostDetails = () => {
     loading: areCommentsLoading,
     refresh: refreshComments,
     fetchMore: fetchMoreComments,
-  } = usePostComments(postData);
+    fetchingMore: fetchingMoreComments,
+  } = usePostComments({
+    post: postData,
+    commentId,
+    commentsPerPage: COMMENTS_PER_PAGE,
+  });
 
   const commentsCount = usePostCommentsCount(postData.id);
 
@@ -129,16 +135,42 @@ const PostDetails = () => {
     setPageRefreshing(false);
   }, [refreshComments, refreshPost]);
 
+  useEffect(() => {
+    if (commentId && comments.length === COMMENTS_PER_PAGE) {
+      const commentIndex = comments.findIndex(comment => comment.id === commentId);
+      /**
+       * We need to wait a little bit before scrolling to the comment because the list
+       * of comments is not yet rendered when the component is mounted.
+       */
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToIndex({
+          index: commentIndex,
+          animated: true,
+          viewOffset: theme.spacing.l,
+        });
+      }, 300);
+    }
+  }, [commentId, comments, theme.spacing.l]);
+
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
 
   // Function uses to render the items inside the list of comments
-  const renderItem = React.useCallback((info: ListRenderItemInfo<Post>) => {
-    const { item } = info;
-    const disabled = isCommentReply(item);
-    return <CommentItem comment={item} disableInnerComment={disabled} />;
-  }, []);
+  const renderItem = React.useCallback(
+    (info: ListRenderItemInfo<Post>) => {
+      const { item } = info;
+      const disabled = isCommentReply(item);
+      return (
+        <CommentItem
+          comment={item}
+          disableInnerComment={disabled}
+          highlighted={item.id === commentId}
+        />
+      );
+    },
+    [commentId],
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
@@ -146,7 +178,7 @@ const PostDetails = () => {
 
   if (!initialPostData) {
     // If the post is loading, show the loading screen
-    if (isPostLoading) {
+    if (!post && isPostLoading) {
       return (
         <DView
           disableHideKeyboardTouchable={true}
@@ -188,7 +220,7 @@ const PostDetails = () => {
       topBar={<PostTopBar post={post} commentsCount={commentsCount} onBackButtonPress={goBack} />}>
       {/* List of comments */}
       <FlashList
-        estimatedItemSize={110}
+        estimatedItemSize={140}
         ref={scrollViewRef}
         // Only show the loading indicator on the flatList if the user manually drags down on it
         refreshing={pageRefreshing}
@@ -210,6 +242,7 @@ const PostDetails = () => {
         }
         keyboardDismissMode="on-drag"
         onEndReached={fetchMoreComments}
+        ListFooterComponent={fetchingMoreComments ? <CommentItemSkeleton /> : null}
       />
       {/* Bottom bar allowing to create a new comment */}
       <EnterCommentBottomBar

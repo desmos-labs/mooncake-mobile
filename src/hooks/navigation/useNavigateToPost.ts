@@ -1,8 +1,8 @@
-import { useCallback } from 'react';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { StackScreenProps } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import { useCallback } from 'react';
 import { Post } from 'types/posts';
 
 /**
@@ -14,9 +14,9 @@ interface NavigateToPostOptions {
    */
   readonly focusCommentBox?: boolean;
   /**
-   * The id of the post to focus on when navigating to the post details screen.
+   * The id of the comment to focus when navigating to the post details screen.
    */
-  readonly focusPostId?: number;
+  readonly commentId?: number;
   /**
    * The navigation method to use when navigating to the post details screen.
    */
@@ -45,13 +45,13 @@ const useNavigateToPost = () => {
         ? push(ROUTES.POST_DETAILS, {
             postId,
             focusCommentBox: options?.focusCommentBox,
-            focusPostId: options?.focusPostId,
+            commentId: options?.commentId,
             initialPostData: options?.initialPostData,
           })
         : navigate(ROUTES.POST_DETAILS, {
             postId,
             focusCommentBox: options?.focusCommentBox,
-            focusPostId: options?.focusPostId,
+            commentId: options?.commentId,
             initialPostData: options?.initialPostData,
           });
     },

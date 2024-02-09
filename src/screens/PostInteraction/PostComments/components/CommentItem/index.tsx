@@ -1,4 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import { squaresAnimation } from 'assets/animations';
 import {
   block,
@@ -24,29 +25,46 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import React, { useCallback } from 'react';
+import { useTheme } from 'native-base';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  interpolateColor,
+  Layout,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import {
   useHandlePressShowCommentDetails,
   useHandlePressShowCommentDetailsWithFocus,
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
 import { isPostPending, Post } from 'types/posts';
-import { usePostCommentsCount } from '@recoil/commentsCount';
-import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
   readonly comment: Post;
+  /**
+   * Whether the CommentItem is being rendered as a comment to another comment.
+   */
   readonly disableInnerComment?: boolean;
   /**
    * Whether the CommentItem is being rendered as the main post (at the top).
    */
   readonly renderedAsMainPost?: boolean;
+  /**
+   * Whether the comment should be highlighted.
+   */
+  readonly highlighted?: boolean;
+
   // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
   // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
   readonly handlePressMore?: () => void;
@@ -61,8 +79,8 @@ export interface CommentItemProps {
 const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
-
-  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost } = props;
+  const theme = useTheme();
+  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost, highlighted } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -143,6 +161,27 @@ const CommentItem = (props: CommentItemProps) => {
     handleHidePost(comment.id);
   }, [comment, handleHidePost, renderedAsMainPost, returnToRootPost]);
 
+  // Animations
+  const progress = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        [theme.colors.butterOrange05, theme.colors.white],
+      ),
+      marginHorizontal: -theme.spacing.m,
+      paddingHorizontal: theme.spacing.l,
+    };
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      progress.value = withTiming(1, { duration: 500 });
+    }, 2000);
+  }, [progress]);
+
   // -------------------------------------------------------------------------------------
   // --- Conditional Rendering
   // -------------------------------------------------------------------------------------
@@ -198,7 +237,11 @@ const CommentItem = (props: CommentItemProps) => {
   ]);
 
   return (
-    <View style={[styles.container, styles.flexRow]}>
+    <Animated.View
+      entering={FadeIn.duration(250)}
+      exiting={FadeOut.duration(250)}
+      style={[styles.container, styles.flexRow, highlighted && animatedStyle]}
+      layout={Layout.duration(250).delay(250)}>
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image
           source={getProfilePicture(comment.author)}
@@ -233,7 +276,7 @@ const CommentItem = (props: CommentItemProps) => {
         <Typography.Regular14 style={styles.contentText}>{comment.text}</Typography.Regular14>
         <View style={styles.bottomGroup}>
           <View>
-            <Typography.Regular12 style={styles.subTextStyle}>
+            <Typography.Regular12 style={styles.dateTextStyle}>
               {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : formattedDate}
             </Typography.Regular12>
           </View>
@@ -246,7 +289,7 @@ const CommentItem = (props: CommentItemProps) => {
                   source={postToCommentIcon}
                   style={[styles.buttonImage, styles.interactionImage]}
                 />
-                <Typography.Semibold14 style={styles.textStyle}>
+                <Typography.Semibold14 style={styles.subTextStyle}>
                   {formatNumShorthand(commentsCount)}
                 </Typography.Semibold14>
               </TouchableOpacity>
@@ -260,14 +303,14 @@ const CommentItem = (props: CommentItemProps) => {
                   styles.interactionImage,
                 ]}
               />
-              <Typography.Semibold14 style={liked ? styles.orangeText : styles.textStyle}>
+              <Typography.Semibold14 style={liked ? styles.orangeText : styles.subTextStyle}>
                 {formatNumShorthand(likesCount)}
               </Typography.Semibold14>
             </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 

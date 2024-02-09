@@ -59,11 +59,7 @@ import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePi
 import Biography from 'screens/Profile/components/Biography';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
-import useStyles, {
-  PROFILE_HEADER_HEIGHT,
-  PROFILE_HEADER_HEIGHT_COMPACT,
-  PROFILE_HEADER_HEIGHT_EXPANDED,
-} from './useStyles';
+import useStyles, { PROFILE_HEADER_HEIGHT, PROFILE_HEADER_HEIGHT_COMPACT } from './useStyles';
 
 const AnimatedView = Reanimated.createAnimatedComponent(View);
 const AnimatedScrollView = Reanimated.createAnimatedComponent(ScrollView);
@@ -136,36 +132,27 @@ const Profile = () => {
   // --- Effects
   // -------------------------------------------------------------------------------------
 
-  // Callback to refresh the data
+  /**
+   * Function to refresh the page
+   */
   const refreshPage = useCallback(async () => {
     setPageRefreshing(true);
-    await refreshProfile();
-    await refreshPosts();
-    setPageRefreshing(false);
-  }, [refreshPosts, refreshProfile]);
-
-  // Refresh the data when using pull to refresh gesture. Please note, this trick is needed because
-  // we need to manage animations in a smooth way.
-  // If we use a classic pull to refresh technique, the animation will look weird lagging and behaving badly
-  // Interaction Manager is used to manage the animation in a smooth way waiting for the end of all the previous interactions
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (pageRefreshing) {
-        InteractionManager.runAfterInteractions(() => {
-          refreshPage().finally(() => setTimeout(() => setPageRefreshing(false), 500));
+    requestAnimationFrame(async () => {
+      setTimeout(async () => {
+        await refreshProfile().then(() => {
+          refreshPosts();
         });
-      }
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [pageRefreshing, refreshPage]);
+        InteractionManager.runAfterInteractions(() => {
+          setPageRefreshing(false);
+        });
+      }, 250);
+    });
+  }, [refreshPosts, refreshProfile]);
 
   // -------------------------------------------------------------------------------------
   // --- Animations
   // -------------------------------------------------------------------------------------
-
   const opacity = useSharedValue(0);
-  const scrollOffset = useSharedValue(40 + PROFILE_HEADER_HEIGHT_EXPANDED);
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
@@ -175,7 +162,6 @@ const Profile = () => {
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: scrollEvent => {
       const { contentOffset } = scrollEvent;
-      scrollOffset.value = 40 + PROFILE_HEADER_HEIGHT_EXPANDED - contentOffset.y;
       scrollY.value = contentOffset.y;
     },
   });
@@ -367,7 +353,6 @@ const Profile = () => {
       <AnimatedProfilePicture
         picture={getProfilePicture(profile)}
         scrollY={scrollY}
-        scrollOffset={scrollOffset}
         cachePolicy="memory-disk"
         onPress={() => setFullscreenImage({ image: getProfilePicture(profile), isVisible: true })}
       />
@@ -386,7 +371,7 @@ const Profile = () => {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.contentContainerStyle}
         showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}>
+        scrollEventThrottle={1}>
         <View style={styles.contentView}>
           <View style={styles.innerContainer}>
             {/* Posts, following and followers counters */}

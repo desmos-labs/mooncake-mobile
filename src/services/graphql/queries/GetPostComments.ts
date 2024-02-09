@@ -3,10 +3,12 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostComments = gql`
   ${PostFields}
-  query GetPostComments($postId: bigint, $offset: Int, $limit: Int) @api(name: butter) {
+  query GetPostComments($postId: bigint, $commentIdToExclude: bigint, $offset: Int, $limit: Int)
+  @api(name: butter) {
     comments: post(
       order_by: { creation_date: desc }
       where: {
+        id: { _neq: $commentIdToExclude }
         references: {
           type: { _eq: "POST_REFERENCE_TYPE_REPLY" }
           reference: { id: { _eq: $postId } }

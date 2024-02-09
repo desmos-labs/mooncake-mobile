@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Edge, SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
@@ -76,7 +77,10 @@ const DView: React.FC<Props> = props => {
 
   const content = useMemo(() => {
     return (
-      <>
+      <Animated.View
+        style={CommonStyles.flex['1']}
+        entering={FadeIn.duration(250)}
+        exiting={FadeOut.duration(250)}>
         <TouchableWithoutFeedback
           touchSoundDisabled
           disabled={disableHideKeyboardTouchable}
@@ -123,7 +127,7 @@ const DView: React.FC<Props> = props => {
           </SafeAreaView>
         </TouchableWithoutFeedback>
         <LoadingOverlay isVisible={showLoadingOverlay ?? false} />
-      </>
+      </Animated.View>
     );
   }, [
     backgroundColor,
