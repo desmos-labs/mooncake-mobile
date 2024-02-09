@@ -8,6 +8,7 @@ import {
   SENTRY_DSN,
   WEB3_AUTH_CLIENT_ID_MAINNET,
   WEB3_AUTH_CLIENT_ID_TESTNET,
+  WALLET_CONNECT_PROJECT_ID,
 } from '@env';
 
 const EnvConfig = {
@@ -18,6 +19,7 @@ const EnvConfig = {
   WEB3_AUTH_CLIENT_ID_TESTNET,
   POSTHOG_API_KEY,
   GIPHY_API_KEY,
+  WALLET_CONNECT_PROJECT_ID,
 };
 
 export default EnvConfig;
