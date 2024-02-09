@@ -2,6 +2,7 @@ import usePostsCreatedByAddress from 'hooks/posts/usePostsCreatedByAddress';
 import usePostsLikedByAddress from 'hooks/posts/usePostsLikedByAddress';
 import { sortPostsByCreationDate } from 'lib/PostsUtils';
 import React from 'react';
+import _ from 'lodash';
 
 /**
  * Hook that returns the list of all the posts created, liked and tipped by a user.
@@ -27,8 +28,12 @@ const usePostsByAddress = (address: string, postsLimit: number = 10) => {
   }, [refetchPostsCreated, refetchPostsLiked]);
 
   const posts = React.useMemo(() => {
-    return sortPostsByCreationDate([...postsCreated, ...postsLiked]);
-  }, [postsCreated, postsLiked]);
+    // Make sure to remove duplicates (posts that are both created and liked by the user)
+    const uniquePosts = _.uniqBy([...postsCreated, ...postsLiked], 'externalId');
+
+    // Sort the posts by creation date and return the first `postsLimit` posts
+    return sortPostsByCreationDate(uniquePosts).slice(0, postsLimit);
+  }, [postsCreated, postsLiked, postsLimit]);
 
   return {
     posts,
