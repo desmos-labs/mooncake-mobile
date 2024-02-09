@@ -121,3 +121,6 @@ export const settingsLockIcon = require('./images/settings/settingsLock.png');
 export const settingsFaceIdIcon = require('./images/settings/settingsFaceId.png');
 export const settingsDataIcon = require('./images/settings/settingsData.png');
 export const settingsAnalyticsIcon = require('./images/settings/settingsAnalytics.png');
+
+// Apps 
+export const dpmIcon = require('./images/dpmIcon.png');

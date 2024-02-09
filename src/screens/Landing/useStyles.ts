@@ -32,6 +32,30 @@ const useStyles = makeStyle(theme => ({
     width: 40,
     height: 40,
   },
+  signinWithContainer: {
+    flexDirection: 'row',
+    marginTop: 24,
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+  signinWithDivider: {
+    flex: 1,
+    backgroundColor: theme.colors.neutral['100'],
+    height: 1,
+  },
+  signinWithText: {
+    marginHorizontal: 23.5,
+    color: theme.colors.neutral['100'],
+  },
+  appsContainer: {
+    flexDirection: 'row',
+    marginTop: 24,
+  },
+  appButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+  },
 }));
 
 export default useStyles;

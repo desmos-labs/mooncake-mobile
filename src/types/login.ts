@@ -1,5 +1,6 @@
 import { Web3AuthLoginProvider } from 'types/web3auth';
 import { Account } from './account';
+import { WalletConnectWalletApp } from './wallet';
 
 /**
  * Login methods supported by the application.
@@ -7,6 +8,7 @@ import { Account } from './account';
 export enum LoginMethodType {
   PrivateKey = 'PrivateKey',
   Web3Auth = 'Web3Auth',
+  WalletConnect = 'WalletConnect',
 }
 
 export interface LoginMethodPrivateKey {
@@ -18,7 +20,12 @@ interface LoginMethodWeb3Auth {
   provider: Web3AuthLoginProvider;
 }
 
-export type LoginMethod = LoginMethodPrivateKey | LoginMethodWeb3Auth;
+interface LoginMethodWalletConnect {
+  readonly type: LoginMethodType.WalletConnect;
+  readonly app: WalletConnectWalletApp;
+}
+
+export type LoginMethod = LoginMethodPrivateKey | LoginMethodWeb3Auth | LoginMethodWalletConnect;
 
 export const LoginMethodPrivateKey: LoginMethodPrivateKey = {
   type: LoginMethodType.PrivateKey,

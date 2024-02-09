@@ -2,7 +2,7 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { mooncakeAnimationWhite } from 'assets/animations';
-import { appleLoginIcon, googleLoginIcon, mooncakeTextWhite } from 'assets/images';
+import { appleLoginIcon, dpmIcon, googleLoginIcon, mooncakeTextWhite } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -13,15 +13,17 @@ import useIsLoginFlowUncompleted from 'hooks/login/useIsLoginFlowUncompleted';
 import useResumeLoginFlow from 'hooks/login/useResumeLoginFlow';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import {
   LoginMethod,
   LoginMethodPrivateKey,
+  LoginMethodType,
   LoginMethodWeb3AuthApple,
   LoginMethodWeb3AuthGoogle,
 } from 'types/login';
+import { WalletConnectWalletApp } from 'types/wallet';
 import { useIsLoginWithPrivateKeyEnabled } from './hooks';
 import useStyles from './useStyles';
 
@@ -58,6 +60,13 @@ const Landing = () => {
     },
     [navigate],
   );
+
+  const signUpWithDpm = useCallback(() => {
+    onSignUp({
+      type: LoginMethodType.WalletConnect,
+      app: WalletConnectWalletApp.DPM,
+    });
+  }, [onSignUp]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -148,6 +157,20 @@ const Landing = () => {
             )}
           </>
         )}
+        {/* Sign-in with WalletConnect wallets */}
+        <View style={styles.signinWithContainer}>
+          <View style={styles.signinWithDivider} />
+          <Typography.Regular16 style={styles.signinWithText}>
+            {t('or sign in with')}
+          </Typography.Regular16>
+          <View style={styles.signinWithDivider} />
+        </View>
+        {/* Apps buttons */}
+        <View style={styles.appsContainer}>
+          <TouchableOpacity onPress={signUpWithDpm}>
+            <Image source={dpmIcon} style={styles.appButton} />
+          </TouchableOpacity>
+        </View>
       </View>
     </DView>
   );
