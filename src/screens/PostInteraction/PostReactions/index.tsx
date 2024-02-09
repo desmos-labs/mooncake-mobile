@@ -97,7 +97,8 @@ const PostReactions = () => {
           ListEmptyComponent={renderEmptyComponent}
           onEndReached={fetchMore}
           ListFooterComponent={renderFooterComponent}
-          estimatedItemSize={63}
+          estimatedItemSize={70}
+          onEndReachedThreshold={0.2}
         />
       </View>
     </BottomUpModalWrapper>

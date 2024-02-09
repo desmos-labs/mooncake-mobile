@@ -18,8 +18,7 @@ const useSyncLocalPosts = (userAddress: string | undefined) => {
   return useCallback(
     (posts: Post[]) => {
       setUserLocalPosts(userAddress, localPosts => {
-        const toRemoveLocalPosts = _.intersectionBy(localPosts, posts, p => p.externalId);
-        return _.differenceBy(localPosts, toRemoveLocalPosts, p => p.externalId);
+        return _.differenceBy(localPosts, posts, p => p.externalId);
       });
     },
     [setUserLocalPosts, userAddress],

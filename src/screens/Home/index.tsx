@@ -100,7 +100,7 @@ const Home = () => {
   }, [refreshPosts]);
 
   const footerComponent = useMemo(() => {
-    if (loading || fetchingMorePosts) {
+    if (fetchingMorePosts) {
       return (
         <View style={styles.loaderView}>
           <HomePostContentLoader />
@@ -109,9 +109,16 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [styles, loading, fetchingMorePosts]);
+  }, [styles, fetchingMorePosts]);
 
   const emptyComponent = useMemo(() => {
+    if (loading) {
+      return (
+        <View style={styles.loaderView}>
+          <HomePostContentLoader />
+        </View>
+      );
+    }
     return !loading && !refreshing && !fetchingMorePosts ? (
       <View style={styles.emptyView}>
         <Image source={emptyListPlaceholder} style={styles.emptyImage} />
@@ -146,6 +153,7 @@ const Home = () => {
         ItemSeparatorComponent={HomeItemSeparatorComponent}
         onEndReached={fetchMorePosts}
         getItemType={getPostType}
+        onEndReachedThreshold={0.2}
         onScroll={event => {
           setContentOffset(event.nativeEvent.contentOffset);
         }}

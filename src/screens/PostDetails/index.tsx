@@ -223,6 +223,7 @@ const PostDetails = () => {
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={comments}
+        onEndReachedThreshold={0.2}
         // Conditionally render the comment item skeleton here so it seamlessly transitions
         // from a lazy loading to ready state
         ListEmptyComponent={

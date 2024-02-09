@@ -1,5 +1,5 @@
 import React from 'react';
-import PostComponent from 'components/PostComponent';
+import PostData from 'components/PostData';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import Spacer from 'components/Spacer';
 import { Divider } from 'native-base';
@@ -45,7 +45,7 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
       {/* Top Component */}
       {isRootPost(post) ? (
         <>
-          <PostComponent post={post!} />
+          <PostData post={post!} />
           <PostActionButtonsBar
             postLiked={liked}
             handleLikePress={() => addOrRemoveLike(post!)}

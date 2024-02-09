@@ -8,15 +8,13 @@ import {
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useSharePost from 'hooks/posts/useSharePost';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
-import PostText from 'components/PostText';
-import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
+import PostData from 'components/PostData';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -35,7 +33,6 @@ interface PostCardProps {
  */
 const PostCard = (props: PostCardProps) => {
   const styles = useStyles();
-  const theme = useTheme();
   const { post } = props;
 
   // -------------------------------------------------------------------------------------
@@ -100,15 +97,6 @@ const PostCard = (props: PostCardProps) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
-  const { Attachment } = useRenderPostAttachment(post, {
-    media: {
-      useAutoSize: true,
-      horizontalPaddingWithAutoSize: 32,
-      imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
-      resizeMode: 'contain',
-    },
-  });
-
   return (
     <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
       <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={onPressDetails}>
@@ -121,10 +109,10 @@ const PostCard = (props: PostCardProps) => {
           onPressHide={onPressHide}
           onPressBlock={onPressBlock}
         />
-        {/* Post text */}
-        {post.text && <PostText style={{ marginTop: theme.spacing.m }}>{post.text}</PostText>}
-        {/* Attachment */}
-        {Attachment && <View style={styles.attachmentContainer}>{Attachment}</View>}
+
+        {/* Post data */}
+        <PostData post={post} />
+
         {/* Post bottom bar */}
         {!isPending && (
           <PostCardBottomBar post={post} onPressComment={onPressComment} onPressShare={sharePost} />

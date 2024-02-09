@@ -5,13 +5,15 @@ import { makeStyle } from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   textContainer: {
-    flex: 1,
-    paddingVertical: theme.spacing.m,
-    alignSelf: 'flex-start',
+    marginTop: theme.spacing.m,
+  },
+  attachmentContainer: {
+    alignItems: 'center',
+    marginTop: theme.spacing.m,
   },
 }));
 

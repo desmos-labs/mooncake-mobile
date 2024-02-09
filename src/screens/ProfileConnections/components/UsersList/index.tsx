@@ -102,6 +102,7 @@ const UsersList = (props: UsersListProps) => {
         keyExtractor={item => item.address}
         estimatedItemSize={ITEM_HEIGHT}
         contentContainerStyle={styles.contentContainer}
+        onEndReachedThreshold={0.2}
       />
     </View>
   );
