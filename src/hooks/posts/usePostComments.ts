@@ -22,6 +22,7 @@ interface PostCommentsProps {
  * Hook that allows to get the reactions for the given post.
  * The reactions retrieved are all the ones found on chain, plus all the ones that have been created locally.
  * @param post - Post for which to get the reactions.
+ * @param commentId - Comment ID that we want to include in the list of comments.
  * @param reactionsPerPage {number} - Number of reactions to be fetched per page
  */
 /**
@@ -60,7 +61,6 @@ const usePostComments = ({ post, commentId, commentsPerPage = 20 }: PostComments
 
   const onDataFetched = useCallback(
     async (comments: Post[], refreshing: boolean, firstFetch: boolean) => {
-      console.log('onDataFetched');
       /**
        * If the commentId is provided, we need to check if the comment is in the list of comments.
        * If it's not, we need to fetch the comment and add it on top of the list of comments
