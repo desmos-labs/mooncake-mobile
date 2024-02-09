@@ -35,10 +35,13 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     marginRight: theme.spacing.s,
   },
   textStyle: {
-    color: theme.colors.neutral['700'],
+    color: theme.colors.neutral['900'],
   },
   subTextStyle: {
-    color: theme.colors.grey02,
+    color: theme.colors.neutral['700'],
+  },
+  dateTextStyle: {
+    color: theme.colors.neutral['600'],
   },
   buttonImage: {
     width: 20,

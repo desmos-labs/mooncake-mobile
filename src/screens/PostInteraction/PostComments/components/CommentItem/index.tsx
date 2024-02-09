@@ -241,7 +241,7 @@ const CommentItem = (props: CommentItemProps) => {
         <Typography.Regular14 style={styles.contentText}>{comment.text}</Typography.Regular14>
         <View style={styles.bottomGroup}>
           <View>
-            <Typography.Regular12 style={styles.subTextStyle}>
+            <Typography.Regular12 style={styles.dateTextStyle}>
               {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : formattedDate}
             </Typography.Regular12>
           </View>
@@ -254,7 +254,7 @@ const CommentItem = (props: CommentItemProps) => {
                   source={postToCommentIcon}
                   style={[styles.buttonImage, styles.interactionImage]}
                 />
-                <Typography.Semibold14 style={styles.textStyle}>
+                <Typography.Semibold14 style={styles.subTextStyle}>
                   {formatNumShorthand(commentsCount)}
                 </Typography.Semibold14>
               </TouchableOpacity>
@@ -268,7 +268,7 @@ const CommentItem = (props: CommentItemProps) => {
                   styles.interactionImage,
                 ]}
               />
-              <Typography.Semibold14 style={liked ? styles.orangeText : styles.textStyle}>
+              <Typography.Semibold14 style={liked ? styles.orangeText : styles.subTextStyle}>
                 {formatNumShorthand(likesCount)}
               </Typography.Semibold14>
             </TouchableOpacity>

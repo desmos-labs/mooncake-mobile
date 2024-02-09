@@ -7,6 +7,7 @@ import Animated, {
   interpolate,
   SharedValue,
   useAnimatedStyle,
+  useDerivedValue,
 } from 'react-native-reanimated';
 import { PROFILE_HEADER_HEIGHT_EXPANDED } from 'screens/Profile/useStyles';
 
@@ -17,7 +18,6 @@ interface Props {
   picture: string | ImageSource;
   pictureHash?: string | null;
   scrollY: SharedValue<number>;
-  scrollOffset: SharedValue<number>;
   /**
    * Determines whether to cache the image and where: on the disk, in the memory or both.
    *
@@ -40,19 +40,15 @@ interface Props {
  * Animated profile picture
  * @param profile - Profile to get the picture from
  * @param scrollY - Scroll value
- * @param scrollOffset - Scroll offset
  * @param onPress - On press callback
  * @constructor
  */
-const AnimatedProfilePicture = ({
-  picture,
-  pictureHash,
-  scrollY,
-  scrollOffset,
-  cachePolicy,
-  onPress,
-}: Props) => {
+const AnimatedProfilePicture = ({ picture, pictureHash, scrollY, cachePolicy, onPress }: Props) => {
   const styles = useStyles();
+
+  const top = useDerivedValue(() => {
+    return -scrollY.value + 120;
+  });
 
   const animatedProfilePicStyle = useAnimatedStyle(() => {
     const scale = interpolate(scrollY.value, [0, PROFILE_HEADER_HEIGHT_EXPANDED], [1, 0.5], {
@@ -64,8 +60,6 @@ const AnimatedProfilePicture = ({
       extrapolateRight: Extrapolation.CLAMP,
       extrapolateLeft: Extrapolation.CLAMP,
     });
-
-    const top = scrollOffset.value;
     const opacity = interpolate(scrollY.value, [0, PROFILE_HEADER_HEIGHT_EXPANDED], [1, 0], {
       extrapolateRight: Extrapolation.CLAMP,
       extrapolateLeft: Extrapolation.CLAMP,
@@ -73,7 +67,7 @@ const AnimatedProfilePicture = ({
 
     return {
       opacity,
-      top,
+      top: top.value,
       transform: [{ translateY }, { scale }],
     };
   });
