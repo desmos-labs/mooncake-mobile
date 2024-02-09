@@ -9,7 +9,7 @@ import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import MooncakeLoader from 'components/Loaders/MooncakeLoader';
-import usePostComments from 'hooks/posts/comments/usePostComments';
+import usePostComments from 'hooks/posts/usePostComments';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -44,7 +44,12 @@ export interface PostDetailsParams {
    */
   readonly focusCommentBox?: boolean;
   /**
-   * Pre-loaded post data passed in via the home screen to reduce load times.
+   * ID of the post to be focused within the list of comments.
+   * TODO: Implement the scrolling of the list to this post
+   */
+  readonly focusPostId?: number;
+  /**
+   * Preloaded post data passed in via the home screen to reduce load times.
    */
   readonly initialPostData?: Post;
   /**

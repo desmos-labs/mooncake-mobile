@@ -6,7 +6,7 @@ import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { NavProps } from 'screens/Home';
-import { isPostPending, Post } from 'types/posts';
+import { getReplyId, isPostPending, Post } from 'types/posts';
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.
@@ -64,8 +64,8 @@ export const useHandlePressHidePost = () => {
   const hidePost = useHidePost();
 
   return React.useCallback(
-    (postID: number) => {
-      hidePost(postID);
+    (post: Post) => {
+      hidePost(post.id, { parentID: getReplyId(post) });
     },
     [hidePost],
   );

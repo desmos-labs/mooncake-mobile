@@ -4,23 +4,35 @@ import HidePost from 'services/axios/requests/HidePost';
 import { useTranslation } from 'react-i18next';
 import { useRemovePostByID } from '@recoil/posts';
 import { err, ok, Result } from 'neverthrow';
-import { useAddPostToHiddenPosts } from '@recoil/hiddenPosts';
 import useToast from 'hooks/toasts/useToast';
 import { ToastType } from 'config/toast/toastConfig';
+import { useRemoveCommentByID } from '@recoil/comments';
 
 interface SuccessfulHidePost {
   readonly postID: number;
 }
 
+interface HidePostOptions {
+  readonly parentID?: number;
+}
+
+/**
+ * Hook that allows to hide a post.
+ */
 const useHidePost = () => {
-  const activeAccountAddress = useActiveAccountAddress();
   const showToast = useToast();
   const { t } = useTranslation('postOperations');
+
+  const activeAccountAddress = useActiveAccountAddress();
+
   const removePostByID = useRemovePostByID();
-  const addPostToHidden = useAddPostToHiddenPosts();
+  const removeCommentByID = useRemoveCommentByID();
 
   return React.useCallback(
-    async (postID: number): Promise<Result<SuccessfulHidePost, Error>> => {
+    async (
+      postID: number,
+      options?: HidePostOptions,
+    ): Promise<Result<SuccessfulHidePost, Error>> => {
       if (activeAccountAddress === undefined) {
         return err(new Error('No active account'));
       }
@@ -36,11 +48,13 @@ const useHidePost = () => {
         return err(new Error('Error occurred while hiding post'));
       }
 
-      // Remove the hidden post from stored posts
-      removePostByID(activeAccountAddress, postID);
-
-      // Add postID to local hidden posts
-      addPostToHidden(postID);
+      if (options?.parentID) {
+        // Remove the hidden comment from stored comments
+        removeCommentByID(options?.parentID, postID);
+      } else {
+        // Remove the hidden post from stored posts
+        removePostByID(activeAccountAddress, postID);
+      }
 
       showToast({
         toastType: ToastType.success,
@@ -52,7 +66,7 @@ const useHidePost = () => {
         postID,
       });
     },
-    [activeAccountAddress, addPostToHidden, removePostByID, showToast, t],
+    [activeAccountAddress, removeCommentByID, removePostByID, showToast, t],
   );
 };
 

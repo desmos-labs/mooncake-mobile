@@ -30,12 +30,15 @@ interface PostCommentsProps {
  */
 const usePostComments = ({ post, commentId, commentsPerPage = 20 }: PostCommentsProps) => {
   const activeAccountAddress = useActiveAccountAddress();
+
   const cachedComments = useComments(post.id);
+  const localComments = useUserLocalComments(activeAccountAddress, post.id);
+
   const storeComments = useSetComments();
   const syncLocalPosts = useSyncLocalPosts(activeAccountAddress);
-  const localComments = useUserLocalComments(activeAccountAddress, post.id);
-  const deleteComments = useDeleteComments();
   const setPostCommentsCount = useSetPostCommentsCount();
+  const deleteComments = useDeleteComments();
+
   const [commentIdToExclude, setCommentIdToExclude] = useState(-1);
 
   /**

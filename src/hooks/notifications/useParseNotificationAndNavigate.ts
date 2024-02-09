@@ -4,7 +4,7 @@ import useToast from 'hooks/toasts/useToast';
 import React from 'react';
 import { NotificationData } from 'types/notifications';
 import useHandleNotificationNavigation from './useHandleNotificationNavigation';
-import useMarkNotificationAsReaded from './useMarkNotificationAsReaded';
+import useMarkNotificationAsRead from './useMarkNotificationAsRead';
 
 /**
  * Hook that provides a function to display a toast once a notification
@@ -34,7 +34,7 @@ const useShowNotificationToast = () => {
 const useParseNotificationAndNavigate = () => {
   const navigate = useHandleNotificationNavigation();
   const showToast = useShowNotificationToast();
-  const markNotificationAsRead = useMarkNotificationAsReaded();
+  const markNotificationAsRead = useMarkNotificationAsRead();
 
   return React.useCallback(
     (

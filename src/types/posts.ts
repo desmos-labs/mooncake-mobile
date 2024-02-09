@@ -164,7 +164,11 @@ export interface PostReference {
   readonly type: PostReferenceType;
 }
 
-const getReplyId = (post: Post): number | undefined => {
+/**
+ * Returns the ID of the post that the given {@param post} is a reply to.
+ * @param post - Post for which to get the reply ID.
+ */
+export const getReplyId = (post: Post): number | undefined => {
   return post.references.find(r => r.type === PostReferenceType.POST_REFERENCE_TYPE_REPLY)?.postId;
 };
 

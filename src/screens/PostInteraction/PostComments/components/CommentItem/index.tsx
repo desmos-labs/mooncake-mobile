@@ -158,7 +158,7 @@ const CommentItem = (props: CommentItemProps) => {
     if (renderedAsMainPost) {
       returnToRootPost();
     }
-    handleHidePost(comment.id);
+    handleHidePost(comment);
   }, [comment, handleHidePost, renderedAsMainPost, returnToRootPost]);
 
   // Animations
