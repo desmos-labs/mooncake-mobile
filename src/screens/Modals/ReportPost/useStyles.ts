@@ -31,6 +31,7 @@ const useStyles = makeStyle(theme => ({
     height: 120,
     paddingTop: theme.spacing.s,
     paddingBottom: theme.spacing.s,
+    verticalAlign: 'top',
   },
   textInput: {
     borderColor: theme.colors.lightGrey01,
