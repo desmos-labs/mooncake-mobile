@@ -19,6 +19,9 @@ import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
+import useLoginWithWalletConnect from 'hooks/walletconnect/useLoginWithWalletConnect';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -50,6 +53,7 @@ const ServiceAndPolicy = () => {
   // -------------------------------------------------------------------------------------
 
   const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
+  const loginWithWalletConnect = useLoginWithWalletConnect();
   const trackAcceptedLegalTerms = useTrackAcceptedLegalTerms();
   const openTermsAndConditions = useOpenTermsAndConditions();
   const openPrivacyPolicy = useOpenPrivacyPolicy();
@@ -67,9 +71,21 @@ const ServiceAndPolicy = () => {
       return;
     }
 
+    if (params?.loginMethod?.type === LoginMethodType.WalletConnect) {
+      // TODO: Implement login through WalletConnect.
+      await loginWithWalletConnect(params?.loginMethod?.app);
+      return;
+    }
+
     // Otherwise, navigate to the screen that allows to use the private key
     navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
-  }, [loginWithWeb3Auth, navigate, params?.loginMethod, trackAcceptedLegalTerms]);
+  }, [
+    loginWithWalletConnect,
+    loginWithWeb3Auth,
+    navigate,
+    params?.loginMethod,
+    trackAcceptedLegalTerms,
+  ]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
