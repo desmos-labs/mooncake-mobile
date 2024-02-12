@@ -178,7 +178,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
         </>
       );
     }
-  }, [popupMenuItems, isPending, isCurrentUserAuthor, styles.pendingIcon]);
+  }, [popupMenuItems, isPending, isCurrentUserAuthor, styles.pendingIcon, menuOpened]);
 
   return (
     <View style={styles.profileInfoView}>

@@ -142,13 +142,13 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
       </>
     );
   }, [
+    onSetMenuOpened,
     menuOpened,
     setMenuOpened,
     isAuthorActiveUser,
     isFollowing,
     t,
     sharePost,
-    handlePressMore,
     handlePressFollowOrUnfollow,
     post,
     handlePressReport,

@@ -241,12 +241,10 @@ const CommentItem = (props: CommentItemProps) => {
   }, [
     menuOpened,
     setMenuOpened,
-    openPopupMenu,
     isAuthorActiveUser,
     comment,
     handlePressFollow,
     handlePressHidePost,
-    handlePressMore,
     handlePressReport,
     isFollowing,
     t,

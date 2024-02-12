@@ -31,7 +31,7 @@ const PasswordChecksGroup = ({ passwordToCheck, mode, label }: Props) => {
     } else {
       return <PasswordTooltip label={t('strong password')} />;
     }
-  }, [passwordToCheck, t, theme.colors.neutralVariants['900'], theme.spacings.s]);
+  }, [passwordToCheck, t, theme.colors.neutralVariants, theme.spacings.s]);
 
   return mode === 'password' ? (
     <View>{Message}</View>

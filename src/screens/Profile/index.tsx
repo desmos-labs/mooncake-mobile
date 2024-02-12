@@ -291,7 +291,6 @@ const Profile = () => {
     handlePressBlock,
     isActiveAccount,
     profile?.isBlockedByUser,
-    styles.contextButtonStyle,
     t,
   ]);
 
