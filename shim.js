@@ -46,3 +46,16 @@ Promise.allSettled =
 
 // bigint polyfill
 if (typeof BigInt === 'undefined') global.BigInt = require('big-integer');
+
+if (global.DataView.prototype.setBigUint64 === undefined) {
+  global.DataView.prototype.setBigUint64 = function (byteOffset, value, isLE) {
+    const _32n = BigInt(32);
+    const _u32_max = BigInt(0xffffffff);
+    const wh = Number(value.shiftRight(_32n) & _u32_max);
+    const wl = Number(value & _u32_max);
+    const h = isLE ? 4 : 0;
+    const l = isLE ? 0 : 4;
+    this.setUint32(byteOffset + h, wh, isLE);
+    this.setUint32(byteOffset + l, wl, isLE);
+  };
+}
