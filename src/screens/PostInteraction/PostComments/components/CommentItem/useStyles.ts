@@ -47,17 +47,6 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
   interactionImage: {
     marginRight: theme.spacings.xs,
   },
-  attachmentImageStyle: {
-    width: 268,
-    height: 178,
-    resizeMode: 'contain',
-    marginVertical: theme.spacings.m,
-  },
-  contentText: {
-    color: theme.colors.neutralVariants['900'],
-    marginVertical: theme.spacings.m,
-    paddingRight: theme.spacings.m,
-  },
   bottomGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -7,7 +7,13 @@ import {
 import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v3/msgs';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
 import Long from 'long';
-import { Post, PostAttachment, PostAttachmentType, PostReference } from 'types/posts';
+import {
+  Post,
+  PostAttachment,
+  PostAttachmentSize,
+  PostAttachmentType,
+  PostReference,
+} from 'types/posts';
 
 /**
  * Gets the conversation id to be used when creating a post.
@@ -97,6 +103,14 @@ export const sortPostsByCreationDate = (posts: Post[]): Post[] => {
   return [...posts].sort((a, b) => b.creationDate.localeCompare(a.creationDate));
 };
 
+/**
+ * Returns the media attachment of the given post, if any.
+ * @param post
+ */
+const getMediaAttachment = (post: Post): PostAttachment | undefined => {
+  return post.attachments.find(attachment => attachment.content.type === PostAttachmentType.MEDIA);
+};
+
 export interface PostPreviewURL {
   readonly url: string;
   readonly previewUrl: string;
@@ -125,4 +139,48 @@ export const getPostURLPreview = (post: Post): PostPreviewURL | undefined => {
     previewUrl: urlToPreview.previewUrl!,
     text: `${match[1]}${match[2]}`,
   };
+};
+
+enum PostAttachmentDataType {
+  MEDIA = 'MEDIA',
+  URL = 'URL',
+}
+
+interface PostMediaAttachmentData {
+  readonly type: PostAttachmentDataType.MEDIA;
+  readonly attachment: PostAttachment;
+  readonly size?: PostAttachmentSize;
+}
+
+interface PostURLAttachmentData {
+  readonly type: PostAttachmentDataType.URL;
+  readonly url: PostPreviewURL;
+  readonly size?: PostAttachmentSize;
+}
+
+type PostAttachmentData = PostMediaAttachmentData | PostURLAttachmentData;
+
+/**
+ * Returns the attachment data of the given post, if any.
+ * @param post {Post} - The post to get the attachment data from.
+ */
+export const getPostAttachmentData = (post: Post): PostAttachmentData | undefined => {
+  const mediaAttachment = getMediaAttachment(post);
+  if (mediaAttachment) {
+    return {
+      type: PostAttachmentDataType.MEDIA,
+      attachment: mediaAttachment,
+      size: mediaAttachment.size,
+    };
+  }
+
+  const urlAttachment = getPostURLPreview(post);
+  if (urlAttachment) {
+    return {
+      type: PostAttachmentDataType.URL,
+      url: urlAttachment,
+    };
+  }
+
+  return undefined;
 };

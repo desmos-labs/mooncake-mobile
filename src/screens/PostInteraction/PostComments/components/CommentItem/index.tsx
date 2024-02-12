@@ -27,7 +27,6 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
@@ -49,6 +48,7 @@ import {
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
 import { isPostPending, Post } from 'types/posts';
+import PostData from 'components/PostData';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -98,23 +98,6 @@ const CommentItem = (props: CommentItemProps) => {
 
   const formatDate = useFormatTimeForPostDetails();
   const formattedDate = formatDate(comment.creationDate);
-
-  // -------------------------------------------------------------------------------------
-  // --- Child components
-  // -------------------------------------------------------------------------------------
-
-  const { Attachment } = useRenderPostAttachment(comment, {
-    media: {
-      imageStyle: {
-        marginTop: 8,
-        width: '100%',
-        height: 150,
-        borderRadius: 24,
-        resizeMode: 'contain',
-      },
-      resizeMode: 'cover',
-    },
-  });
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -257,6 +240,7 @@ const CommentItem = (props: CommentItemProps) => {
       exiting={FadeOut.duration(250)}
       style={[styles.container, styles.flexRow, highlighted && animatedStyle]}
       layout={LinearTransition.duration(250)}>
+      {/* User profile picture */}
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image
           source={getProfilePicture(comment.author)}
@@ -264,11 +248,14 @@ const CommentItem = (props: CommentItemProps) => {
           recyclingKey={comment.author.address}
         />
       </TouchableOpacity>
+
+      {/* User nickname */}
       <TouchableOpacity
         onPress={handlePress}
         style={styles.flex}
         activeOpacity={renderedAsMainPost ? 1 : 0.2}>
         <View style={styles.contentContainer}>
+          {/* Author nickname or DTag */}
           <TouchableOpacity
             style={styles.flexRow}
             onPress={() => handleNavigateToProfile(comment.author.address)}>
@@ -294,15 +281,33 @@ const CommentItem = (props: CommentItemProps) => {
           )}
         </View>
         {PressMoreComponent}
-        {Attachment}
-        <Typography.Regular14 style={styles.contentText}>{comment.text}</Typography.Regular14>
+        {/* Comment content */}
+        <PostData
+          post={comment}
+          attachmentRenderOptions={{
+            media: {
+              useAutoSize: true,
+              imageStyle: {
+                width: '100%',
+                marginBottom: 8,
+              },
+              resizeMode: 'cover',
+            },
+          }}
+        />
+
+        {/* Bottom bar */}
         <View style={styles.bottomGroup}>
+          {/* Creation date */}
           <View>
             <Typography.Regular12 style={styles.dateTextStyle}>
               {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : formattedDate}
             </Typography.Regular12>
           </View>
+
+          {/* Counters */}
           <View style={styles.interactionButtonGroup}>
+            {/* Comments count */}
             {!disableInnerComment && (
               <TouchableOpacity
                 onPress={handlePressCommentWithFocus}
@@ -316,6 +321,8 @@ const CommentItem = (props: CommentItemProps) => {
                 </Typography.Semibold14>
               </TouchableOpacity>
             )}
+
+            {/* Likes count */}
             <TouchableOpacity onPress={handlePressLike} style={styles.interactionButton}>
               <Image
                 source={liked ? postLikedIcon : postToLikeIcon}

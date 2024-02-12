@@ -12,6 +12,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacings.m,
   },
   attachmentContainer: {
+    width: '100%',
     alignItems: 'center',
     marginTop: theme.spacings.m,
   },

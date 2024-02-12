@@ -29,13 +29,18 @@ const PostData = (props: Props) => {
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
-
   const { Attachment } = useRenderPostAttachment(post, {
     media: {
       useAutoSize: true,
       resizeMode: 'contain',
       horizontalPaddingWithAutoSize: 32,
-      imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutralVariants['300'] },
+      imageStyle: [
+        {
+          borderRadius: 8,
+          backgroundColor: theme.colors.neutralVariants['300'],
+        },
+        attachmentRenderOptions?.media?.imageStyle,
+      ],
       ...attachmentRenderOptions?.media,
     },
   });
