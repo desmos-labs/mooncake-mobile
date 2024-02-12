@@ -4,6 +4,9 @@ import { Wallet } from 'types/wallet';
 const userWalletAppState = atom<Wallet | undefined>({
   key: 'userWallet',
   default: undefined,
+  // This is needed because the Signer inside the WalletConnectWallet
+  // mutates during the app execution.
+  dangerouslyAllowMutability: true,
 });
 
 /**
