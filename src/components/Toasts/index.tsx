@@ -85,7 +85,7 @@ const makeToastComponent: (config: ToastConfig) => React.FC<ToastProps> = config
   };
 };
 
-const useToastStyle = makeStyleWithProps((props: ToastConfig, theme) => ({
+const useToastStyle = makeStyleWithProps((props: ToastConfig) => ({
   root: {
     display: 'flex',
     flexDirection: 'row',

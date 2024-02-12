@@ -1,5 +1,4 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useTheme } from '@react-navigation/native';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
@@ -17,7 +16,6 @@ import useStyles from './useStyles';
  * @constructor
  */
 const ImportAccountPrivateKey = () => {
-  const theme = useTheme();
   const styles = useStyles();
 
   // -------------------------------------------------------------------------------------

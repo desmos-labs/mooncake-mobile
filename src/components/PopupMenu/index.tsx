@@ -45,8 +45,8 @@ const PopupMenu: React.FC<Props> = ({ popupMenuOpened, setPopupMenuOpened, menuI
           value={idx}
           style={styles.menuOptionWithDivider}
           onSelect={item.onPress}
-          key={idx}>
-          <View style={styles.optionView} key={idx}>
+          key={menuItems[idx]?.label}>
+          <View style={styles.optionView} key={menuItems[idx]?.label}>
             <Image source={item.icon} style={styles.icon} />
             <Typography.Regular14>{item.label}</Typography.Regular14>
           </View>
