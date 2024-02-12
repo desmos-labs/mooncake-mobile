@@ -105,7 +105,7 @@ export const signAndBroadcastWithGranter = async (
     memo: options?.memo,
   });
   const { txRaw } = await client.signTx(signerAddress, msgs, {
-    fee: txFee,
+    fee: { ...txFee, granter: options?.feeGranter },
     feeGranter: options?.feeGranter,
     memo: options?.memo,
   });
