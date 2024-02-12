@@ -8,41 +8,68 @@ import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
 import { buildDesmosClient } from 'lib/TxUtils';
 import {
   Authz,
+  EncodeObject,
+  Feegrant,
   Posts,
   PrivateKeySigner,
   Profiles,
   Reactions,
   Relationships,
+  Reports,
   Signer,
   SigningMode,
   TxRaw,
 } from '@desmoslabs/desmjs';
 import { err, ok } from 'neverthrow';
 import { MsgGrant } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/tx';
+import { MsgGrantAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import { BasicAllowance, AllowedMsgAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import { GenericAuthorization } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/authz';
 import { promiseToResult } from 'lib/NeverThrowUtils';
 import elliptic from 'elliptic';
 import useErrorModal from 'hooks/modals/useErrorModal';
+import { generateWalletConnectWallet } from 'lib/WalletUtils';
+import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAndCreateProfile';
+import { AccountWithWallet } from 'types/account';
 import useConnectWalletConnect from './useConnectWalletConnect';
 
 const secp256k1 = new elliptic.ec('secp256k1');
 
 const MooncakeMessages = [
+  // x/posts messages.
   Posts.v3.MsgCreatePostTypeUrl,
-  Posts.v3.MsgDeletePostTypeUrl,
   Posts.v3.MsgEditPostTypeUrl,
+  Posts.v3.MsgDeletePostTypeUrl,
+  Posts.v3.MsgAddPostAttachmentTypeUrl,
+  Posts.v3.MsgRemovePostAttachmentTypeUrl,
   Posts.v3.MsgAnswerPollTypeUrl,
+  Posts.v3.MsgRequestPostOwnerTransferTypeUrl,
+  Posts.v3.MsgCancelPostOwnerTransferRequestTypeUrl,
+  Posts.v3.MsgAcceptPostOwnerTransferRequestTypeUrl,
+  Posts.v3.MsgRefusePostOwnerTransferRequestTypeUrl,
+  // x/profiles message.
   Profiles.v3.MsgSaveProfileTypeUrl,
   Profiles.v3.MsgDeleteProfileTypeUrl,
+  Profiles.v3.MsgRequestDTagTransferTypeUrl,
+  Profiles.v3.MsgCancelDTagTransferRequestTypeUrl,
+  Profiles.v3.MsgAcceptDTagTransferRequestTypeUrl,
+  Profiles.v3.MsgRefuseDTagTransferRequestTypeUrl,
+  // x/reactions messages.
   Reactions.v1.MsgAddReactionTypeUrl,
   Reactions.v1.MsgRemoveReactionTypeUrl,
+  // x/relationships messages.
   Relationships.v1.MsgCreateRelationshipTypeUrl,
   Relationships.v1.MsgDeleteRelationshipTypeUrl,
   Relationships.v1.MsgBlockUserTypeUrl,
   Relationships.v1.MsgUnblockUserTypeUrl,
+  // x/reports
+  Reports.v1.MsgCreateReportTypeUrl,
+  Reports.v1.MsgDeleteReportTypeUrl,
+  // x/wasm messages.
+  '/cosmwasm.wasm.v1.MsgExecuteContract',
 ];
 
-const usePromptAuthzGrantRequest = () => {
+const usePromptGrantsRequest = () => {
   const navigation = useRootNavigator();
   const { t } = useTranslation('landing');
 
@@ -61,7 +88,7 @@ const usePromptAuthzGrantRequest = () => {
   }, [navigation, t]);
 };
 
-const useSignAndBroadcastAuthzGrant = () => {
+const useSignAndBroadcastGrants = () => {
   const chainInfo = useCurrentChainInfo()!;
   const gasPrice = useCurrentChainGasPrice();
 
@@ -77,7 +104,7 @@ const useSignAndBroadcastAuthzGrant = () => {
       const expirationDate = new Date();
       expirationDate.setFullYear(expirationDate.getFullYear() + 1);
 
-      const messages = MooncakeMessages.map(typeUrl => ({
+      const messages: EncodeObject[] = MooncakeMessages.map(typeUrl => ({
         typeUrl: Authz.v1beta1.MsgGrantTypeUrl,
         value: MsgGrant.fromPartial({
           grantee,
@@ -98,7 +125,33 @@ const useSignAndBroadcastAuthzGrant = () => {
         }),
       }));
 
-      // Create sign the transaction with the grant.
+      // Add a Feegrant so that the temporary wallet can broadcast
+      // the transactions using the user's wallet balance.
+      messages.push({
+        typeUrl: Feegrant.v1beta1.MsgGrantAllowanceTypeUrl,
+        value: MsgGrantAllowance.fromPartial({
+          granter,
+          grantee,
+          allowance: {
+            typeUrl: Feegrant.v1beta1.AllowedMsgAllowanceTypeUrl,
+            value: AllowedMsgAllowance.encode(
+              AllowedMsgAllowance.fromPartial({
+                allowance: {
+                  typeUrl: Feegrant.v1beta1.BasicAllowanceTypeUrl,
+                  value: BasicAllowance.encode(
+                    BasicAllowance.fromPartial({
+                      expiration: { seconds: Math.ceil(expirationDate.getTime() / 1000) },
+                    }),
+                  ).finish(),
+                },
+                allowedMessages: MooncakeMessages,
+              }),
+            ).finish(),
+          },
+        }),
+      });
+
+      // Sign the transaction with the grant.
       const signResult = await promiseToResult(
         client.signTx(granter, messages),
         'Unknown error while signing authz grant',
@@ -135,9 +188,10 @@ const useSignAndBroadcastAuthzGrant = () => {
 const useLoginWithWalletConnect = () => {
   const { t } = useTranslation('landing');
   const connectWalletConnectClient = useConnectWalletConnect();
-  const promptAuthzGrantRequest = usePromptAuthzGrantRequest();
-  const signAndBroadcastAuthzGrant = useSignAndBroadcastAuthzGrant();
+  const promptGrantsRequest = usePromptGrantsRequest();
+  const signAndBroadcastGrants = useSignAndBroadcastGrants();
   const showErrorMessage = useErrorModal();
+  const startSaveAccountAndCreateProfileFlow = useSaveAccountAndCreateProfileFlow();
 
   return useCallback(
     async (app: WalletConnectWalletApp) => {
@@ -145,34 +199,27 @@ const useLoginWithWalletConnect = () => {
       const connectionResult = await connectWalletConnectClient();
       if (connectionResult.isErr()) {
         showErrorMessage(connectionResult.error.message);
-        console.error(
-          '[useLoginWithWalletConnect] client initialization failed: ',
-          connectionResult.error,
-        );
         return;
       }
-      console.log('[useLoginWithWalletConnect] Client initialized');
-
-      console.log('[useLoginWithWalletConnect] Generating temp wallet...');
-      // Generate a new private key signer that will be used by the
-      // application to sign the transactions without the need to
-      // open the external wallet.
-      const tempWalletSigner = PrivateKeySigner.fromSecp256k1(
-        secp256k1.genKeyPair().getPrivate('hex'),
-        SigningMode.DIRECT,
-      );
-      console.log('[useLoginWithWalletConnect] Temp wallet generated');
-      await tempWalletSigner.connect();
 
       // Start the session by sending the request to the external wallet.
       const client = connectionResult.value;
-      const sessionInitializationResult = await initWalletConnectSession(client, app);
+      // Check if we have a previously established session.
+      const previousSession = client.session.getAll().find(s => {
+        switch (app) {
+          case WalletConnectWalletApp.DPM:
+            return s.peer.metadata.name === 'Desmos Profile Manager';
+          default:
+            return false;
+        }
+      });
+      const sessionInitializationResult = await initWalletConnectSession(
+        client,
+        app,
+        previousSession,
+      );
       if (sessionInitializationResult.isErr()) {
         showErrorMessage(sessionInitializationResult.error.message);
-        console.error(
-          '[useLoginWithWalletConnect] session initialization failed: ',
-          sessionInitializationResult.error,
-        );
         return;
       }
 
@@ -181,38 +228,62 @@ const useLoginWithWalletConnect = () => {
       const accounts = await signer.getAccounts();
       const [account] = accounts;
       console.log('[useLoginWithWalletConnect] Logged in as: ', account);
+      // TODO: Replace with the session returned by the signer.
+      const walletConnectSessionTopic = client.session.getAll().at(-1)!.topic;
 
       // The session is established, prompt the user to authorize
       // our generated wallet to sign the message on the user
       // behalf.
-      const authorized = await promptAuthzGrantRequest();
-      if (!authorized) {
-        showErrorMessage(t('user rejected the session request'));
-        console.error('[useLoginWithWalletConnect] User rejected the authorization');
-        await signer.disconnect();
-        return;
+      const authorized = await promptGrantsRequest();
+      let walletConnectAccount: AccountWithWallet;
+      if (authorized) {
+        // Generate a new private key signer that will be used by the
+        // application to sign the transactions without the need to
+        // open the external wallet.
+        // TODO: replace it with the PrivateKeySigner.generate() method.
+        const tempWalletSigner = PrivateKeySigner.fromSecp256k1(
+          secp256k1.genKeyPair().getPrivate('hex'),
+          SigningMode.DIRECT,
+        );
+        await tempWalletSigner.connect();
+        // Sign and broadcast the authorization messages.
+        const grantee = await tempWalletSigner
+          .getCurrentAccount()
+          .then(tempWalletAccount => tempWalletAccount!.address);
+        const signResult = await signAndBroadcastGrants(signer, account.address, grantee);
+
+        if (signResult.isErr()) {
+          showErrorMessage(t('grant transaction failed', { message: signResult.error.message }));
+          return;
+        }
+        walletConnectAccount = await generateWalletConnectWallet(
+          app,
+          signer,
+          walletConnectSessionTopic,
+          {
+            signer: tempWalletSigner,
+            authorizations: signResult.value.authorizedMessages,
+            authorizationsExpiration: signResult.value.grantExpiration,
+          },
+        );
+      } else {
+        // We don't have the user authorization, lets create an account without
+        // the temp wallet.
+        walletConnectAccount = await generateWalletConnectWallet(
+          app,
+          signer,
+          walletConnectSessionTopic,
+        );
       }
 
-      // We have the user authorization, lets sign and broadcast the
-      // transaction.
-      const grantee = await tempWalletSigner
-        .getCurrentAccount()
-        .then(tempWalletAccount => tempWalletAccount!.address);
-      const signResult = await signAndBroadcastAuthzGrant(signer, account.address, grantee);
-
-      if (signResult.isErr()) {
-        console.error('[useLoginWithWalletConnect] Authz grant failed: ', signResult.error);
-        signer.disconnect();
-        return;
-      }
-
-      return ok(signResult.value);
+      startSaveAccountAndCreateProfileFlow({ account: walletConnectAccount });
     },
     [
       connectWalletConnectClient,
-      promptAuthzGrantRequest,
+      promptGrantsRequest,
       showErrorMessage,
-      signAndBroadcastAuthzGrant,
+      signAndBroadcastGrants,
+      startSaveAccountAndCreateProfileFlow,
       t,
     ],
   );

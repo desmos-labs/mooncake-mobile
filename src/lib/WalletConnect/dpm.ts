@@ -1,5 +1,6 @@
 import { LocalStorageI, WalletConnectSigner } from '@desmoslabs/desmjs-walletconnect-v2';
 import SignClient from '@walletconnect/sign-client';
+import { SessionTypes } from '@walletconnect/types';
 import { SigningMode } from '@desmoslabs/desmjs';
 import { MMKV } from 'react-native-mmkv';
 import { WalletConnectWalletApp } from 'types/wallet';
@@ -24,7 +25,10 @@ const WalletConnectSessionStorage: LocalStorageI = {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const initDPMWalletConnectSession = async (client: SignClient) => {
+export const initDPMWalletConnectSession = async (
+  client: SignClient,
+  previousSession?: SessionTypes.Struct,
+) => {
   const signer = new WalletConnectSigner(client, {
     chain: 'desmos:desmos-mainnet',
     // Here we use AMINO to support Ledger imported accounts.
@@ -34,7 +38,7 @@ export const initDPMWalletConnectSession = async (client: SignClient) => {
   });
 
   const connectResult = await promiseToResult(
-    signer.connect(),
+    previousSession ? signer.connectToSession(previousSession) : signer.connect(),
     'Unkwonwn error while connecting to the Desmos chain',
   );
 
