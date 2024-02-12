@@ -20,14 +20,14 @@ const usePrepareDesmosClientAndWallet = () => {
   const unlockWallet = useUnlockWallet();
 
   return React.useCallback(
-    async (walletOvveride?: Wallet): Promise<Result<DesmosClientResult, Error>> => {
+    async (walletOverride?: Wallet): Promise<Result<DesmosClientResult, Error>> => {
       if (!chainInfo || !chainGasPrice) {
         return err(Error('Missing chain info or gas price'));
       }
 
       // Get the user's wallet by unlocking it or using the in-memory one
       let wallet: Wallet;
-      if (walletOvveride === undefined) {
+      if (walletOverride === undefined) {
         const walletUnlockResult = await unlockWallet();
         if (walletUnlockResult.isErr()) {
           return err(walletUnlockResult.error);
@@ -35,7 +35,7 @@ const usePrepareDesmosClientAndWallet = () => {
         const { wallet: unlockedWallet } = walletUnlockResult.value;
         wallet = unlockedWallet;
       } else {
-        wallet = walletOvveride;
+        wallet = walletOverride;
       }
 
       // Prepare the desmos client
