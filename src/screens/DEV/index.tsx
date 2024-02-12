@@ -141,7 +141,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const ItemSeparatorComponent = React.useCallback(() => <Spacer paddingVertical={8} />, []);
 
   return (
-    <DView disableHideKeyboardTouchable={true}>
+    <DView disableHideKeyboardTouchable={true} style={{ marginHorizontal: 8 }}>
       <FlatList
         style={CommonStyles.flex[1]}
         contentContainerStyle={styles.flatList}

@@ -75,7 +75,7 @@ const useStyles = makeStyle(theme => ({
       height: 5,
     },
     shadowOpacity: 1,
-    shadowRadius: 20,
+    shadowRadius: 12,
 
     elevation: 10,
   },

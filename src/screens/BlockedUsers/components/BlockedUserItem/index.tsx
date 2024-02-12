@@ -1,9 +1,9 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import AvatarImage from 'components/AvatarImage';
 import Button from 'components/Button';
-import { Image } from 'expo-image';
+import CommonStyles from 'config/theme/CommonStyles';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import { getProfilePicture } from 'lib/ProfileUtils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
@@ -31,7 +31,9 @@ const BlockedUserItem = ({ profile }: Props) => {
         onPress={() => {
           handleBlockOrUnblockUser(profile);
         }}>
-        {profile.isBlockedByUser ? t('unblock') : t('block')}
+        <Typography.Regular12 style={CommonStyles.textWhite}>
+          {profile.isBlockedByUser ? t('unblock') : t('block')}
+        </Typography.Regular12>
       </Button>
     );
   }, [t, handleBlockOrUnblockUser, profile]);
@@ -51,11 +53,11 @@ const BlockedUserItem = ({ profile }: Props) => {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <Image source={getProfilePicture(profile)} style={styles.pic} />
+          <AvatarImage imageSource={profile} size={48} />
           {/* Profile DTag and nickname */}
           <View
             style={{
-              marginLeft: 4,
+              marginLeft: 8,
             }}>
             <Typography.Semibold14 numberOfLines={1} ellipsizeMode="tail">
               {profile.nickname}

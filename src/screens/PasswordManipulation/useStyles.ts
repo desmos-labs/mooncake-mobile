@@ -6,10 +6,14 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    padding: theme.spacings.m,
+    paddingHorizontal: theme.spacings.m,
+    paddingBottom: theme.spacings.s,
   },
   headerText: {
-    marginBottom: theme.spacings.l,
+    marginBottom: theme.spacings.s,
+  },
+  descriptionText: {
+    color: theme.colors.neutralVariants['700'],
   },
   formContainer: {
     flex: 1,

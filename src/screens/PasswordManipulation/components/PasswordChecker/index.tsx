@@ -89,7 +89,7 @@ const useStyles = makeStyle(theme => ({
     height: 4,
     width: 20,
     borderRadius: 4,
-    backgroundColor: theme.colors.neutralVariants['600'],
+    backgroundColor: theme.colors.neutralVariants['300'],
     marginRight: 4,
   },
   extraMargin: {

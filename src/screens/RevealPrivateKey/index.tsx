@@ -1,7 +1,6 @@
 import { toHex } from '@cosmjs/encoding';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import Button from 'components/Button';
@@ -27,7 +26,6 @@ type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.REVEAL_PRI
 
 const RevealPrivateKey: React.FC<NavProps> = () => {
   const { t } = useTranslation('settings');
-  const theme = useTheme();
   const styles = useStyles();
 
   // -------------------------------------------------------------------------------------

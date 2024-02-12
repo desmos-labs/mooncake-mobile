@@ -2,7 +2,8 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   root: {
-    padding: theme.spacings.m,
+    paddingHorizontal: theme.spacings.m,
+    paddingBottom: theme.spacings.s,
   },
   warningContainer: {
     backgroundColor: theme.colors.feedback.errorBg,

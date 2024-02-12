@@ -112,9 +112,7 @@ const ServiceAndPolicy = () => {
         </Spacer>
         <Spacer paddingBottom="xl" />
         <Button
-          bgColor={theme.colors.neutralVariants['900']}
-          textColor={theme.colors.white}
-          size={44}
+          height={44}
           disabled={!conditionAndPolicyAccepted || loginLoading}
           onPress={loginWithSelectedMethod}>
           {t('accept', { ns: 'common' })}

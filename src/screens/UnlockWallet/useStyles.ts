@@ -38,7 +38,7 @@ const useStyles = makeStyle(theme => ({
   },
   textInput: {
     backgroundColor: theme.colors.neutralVariants['100'],
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 8,
   },
 }));

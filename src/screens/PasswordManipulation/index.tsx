@@ -118,7 +118,9 @@ const PasswordManipulation = () => {
       <Typography.H6 style={styles.headerText}>{headerText}</Typography.H6>
       {descriptionText && (
         <Spacer paddingBottom={32}>
-          <Typography.Regular14>{descriptionText}</Typography.Regular14>
+          <Typography.Regular14 style={styles.descriptionText}>
+            {descriptionText}
+          </Typography.Regular14>
         </Spacer>
       )}
       {/* nested ternary to fix next button behavior on small screen devices

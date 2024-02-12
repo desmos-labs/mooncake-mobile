@@ -190,12 +190,13 @@ const EnterCommentBottomBar = (props: Props) => {
                 value={comment}
                 onChangeText={text => setComment(text)}
                 style={styles.textInput}
-                placeholderTextColor={theme.colors.grey02}
+                placeholderTextColor={theme.colors.neutralVariants['600']}
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
                 contextMenuHidden={loading}
                 caretHidden={loading}
                 editable={!loading}
+                blurOnSubmit={true}
               />
             </ScrollView>
             <View

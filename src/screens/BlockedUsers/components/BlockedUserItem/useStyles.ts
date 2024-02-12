@@ -10,7 +10,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.background,
   },
   dTagStyle: {
-    color: theme.colors.grey02,
+    color: theme.colors.neutralVariants['700'],
   },
 }));
 

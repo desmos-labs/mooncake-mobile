@@ -24,8 +24,7 @@ const useStyles = makeStyleWithProps(
       },
       textInputContainer: {
         flex: 1,
-        borderWidth: 1,
-        borderColor: theme.colors.neutralVariants['600'],
+        backgroundColor: theme.colors.neutralVariants['100'],
         borderRadius: 12,
         justifyContent: 'space-between',
         marginLeft: theme.spacings.s,

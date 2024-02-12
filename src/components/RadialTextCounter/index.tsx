@@ -60,12 +60,12 @@ const RadialTextCounter = ({
   const showWarning = React.useMemo(() => remainingChars < 10, [remainingChars]);
 
   const fillColor = React.useMemo(() => {
-    return customFillColor || theme.colors.neutralVariants['600'];
-  }, [customFillColor, theme.colors.neutralVariants['600']]);
+    return customFillColor || theme.colors.neutralVariants['400'];
+  }, [customFillColor, theme.colors.neutralVariants]);
 
   const emptyColor = React.useMemo(() => {
-    return customEmptyColor || theme.colors.neutralVariants['600'];
-  }, [customEmptyColor, theme.colors.neutralVariants['600']]);
+    return customEmptyColor || theme.colors.neutralVariants['400'];
+  }, [customEmptyColor, theme.colors.neutralVariants]);
 
   const warnColor = React.useMemo(() => {
     return customWarnColor || theme.colors.feedback.error;
@@ -86,7 +86,7 @@ const RadialTextCounter = ({
             style={{
               color: showWarning
                 ? theme.colors.feedback.error
-                : theme.colors.neutralVariants['600'],
+                : theme.colors.neutralVariants['400'],
             }}>
             {remainingChars < 10 ? remainingChars : ''}
           </Typography.Semibold12>

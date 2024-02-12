@@ -21,7 +21,7 @@ const useStyles = makeStyle(theme => ({
   },
   loginButton: {
     width: '100%',
-    backgroundColor: theme.colors.butterOrange04,
+    backgroundColor: theme.colors.primaryVariants['200'],
   },
   loginTextWithLogoContainer: {
     display: 'flex',

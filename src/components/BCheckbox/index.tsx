@@ -23,6 +23,17 @@ const BCheckbox = ({ style, value, disabled, onValueChange }: Props) => {
     }
   }, [onValueChange, value]);
 
+  const tintColor = React.useMemo(() => {
+    if (disabled) {
+      return theme.colors.neutralVariants['400'];
+    } else {
+      if (value) {
+        return theme.colors.primary;
+      }
+      return theme.colors.neutralVariants['700'];
+    }
+  }, [disabled, theme.colors.neutralVariants, theme.colors.primary, value]);
+
   return (
     <Pressable
       // Announces "checked" status and "checkbox" as the focused element
@@ -31,9 +42,7 @@ const BCheckbox = ({ style, value, disabled, onValueChange }: Props) => {
       disabled={disabled || onPress === undefined}
       onPress={onPress}>
       <Image
-        tintColor={
-          disabled ? theme.colors.neutralVariants['400'] : theme.colors.neutralVariants['700']
-        }
+        tintColor={tintColor}
         source={value ? check_circle : uncheck_circle}
         style={styles.icon}
       />
