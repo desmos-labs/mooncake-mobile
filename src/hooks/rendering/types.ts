@@ -1,5 +1,6 @@
 import { ImageStyle, StyleProp } from 'react-native';
 import { ImageContentFit } from 'expo-image/src/Image.types';
+import { ImageProps } from 'expo-image';
 
 /**
  * Options for rendering media attachments.
@@ -17,3 +18,5 @@ export interface MediaRenderOptions {
 export interface AttachmentRenderOptions {
   readonly media?: MediaRenderOptions;
 }
+
+export type RenderProps = Pick<ImageProps, 'contentFit' | 'style'>;
