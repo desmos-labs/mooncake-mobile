@@ -1,13 +1,13 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { useTheme } from '@react-navigation/native';
+import { usePostCommentsCount } from '@recoil/commentsCount';
 import { postLikedIcon, postShareIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import { Image } from 'expo-image';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
-import { useTheme } from 'native-base';
 import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { isPostPending, Post } from 'types/posts';
-import { usePostCommentsCount } from '@recoil/commentsCount';
 import useStyles from './useStyles';
 
 interface PostBottomBarProps {
@@ -64,15 +64,15 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
         <View style={styles.leftButtonsGroup}>
           <ImageButton
             onPress={onPressLike}
-            tintColor={liked ? theme.colors.butterOrange01 : theme.colors.neutral['700']}
+            tintColor={liked ? theme.colors.primary : theme.colors.neutralVariants['700']}
             image={liked ? postLikedIcon : postToLikeIcon}
             style={styles.bottomBarIcon}
           />
           <Typography.Regular16
             style={
               liked
-                ? { color: theme.colors.butterOrange01 }
-                : { color: theme.colors.neutral['700'] }
+                ? { color: theme.colors.primary }
+                : { color: theme.colors.neutralVariants['700'] }
             }>
             {likesCount > 0 ? likesCount : ''}
           </Typography.Regular16>
@@ -83,11 +83,11 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
           <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
             <Image
               contentFit="cover"
-              tintColor={theme.colors.neutral['700']}
+              tintColor={theme.colors.neutralVariants['700']}
               source={postToCommentIcon}
               style={styles.bottomBarIcon}
             />
-            <Typography.Regular16 style={{ color: theme.colors.neutral['700'] }}>
+            <Typography.Regular16 style={{ color: theme.colors.neutralVariants['700'] }}>
               {commentsCount > 0 ? commentsCount : ''}
             </Typography.Regular16>
           </TouchableOpacity>
@@ -95,7 +95,7 @@ const PostCardBottomBar = (props: PostBottomBarProps) => {
         <TouchableOpacity onPress={onPressShare}>
           <Image
             contentFit="cover"
-            tintColor={theme.colors.neutral['700']}
+            tintColor={theme.colors.neutralVariants['700']}
             source={postShareIcon}
             style={styles.bottomBarIcon}
           />

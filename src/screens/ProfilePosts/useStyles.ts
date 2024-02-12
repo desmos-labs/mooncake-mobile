@@ -4,7 +4,7 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   container: {
     flexGrow: 1,
     backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   tabBar: {
     borderBottomWidth: 0,
@@ -33,7 +33,7 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
     textTransform: 'none',
   },
   tabBarIndicator: {
-    backgroundColor: theme.colors.surfaceBlack,
+    backgroundColor: theme.colors.neutralVariants['900'],
     width: 28,
     height: 2,
     borderRadius: 4,

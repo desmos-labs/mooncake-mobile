@@ -1,4 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { useTheme } from '@react-navigation/native';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
@@ -6,7 +7,6 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import useHooks from './useHooks';
@@ -70,12 +70,10 @@ const ImportAccountPrivateKey = () => {
                 />
               </ScrollView>
               <Button
-                size={44}
-                backgroundColor={theme.colors.surfaceBlack}
-                textColor={theme.colors.white}
+                height={44}
                 onPress={() => handleSubmit()}
                 style={styles.confirmButton}
-                isLoading={loginLoading}
+                loading={loginLoading}
                 disabled={values.privateKey === '' || loginLoading}>
                 Next
               </Button>

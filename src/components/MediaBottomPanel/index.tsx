@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import { cameraIcon, galleryIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
@@ -6,7 +7,6 @@ import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePi
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
 import useStyles from './useStyles';
@@ -106,7 +106,7 @@ const MediaBottomPanel = ({
               onPress={handlePressGallery}
               image={galleryIcon}
               style={styles.imageButtonStyle}
-              tintColor={theme.colors.darkGrey}
+              tintColor={theme.colors.neutralVariants['700']}
             />
             <ImageButton
               accessibilityLabel="use image from camera"
@@ -115,7 +115,7 @@ const MediaBottomPanel = ({
               onPress={handlePressCamera}
               image={cameraIcon}
               style={styles.imageButtonStyle}
-              tintColor={theme.colors.darkGrey}
+              tintColor={theme.colors.neutralVariants['700']}
             />
           </View>
         )}

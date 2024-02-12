@@ -1,7 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import { makeStyle } from 'config/theme';
 import CommonStyles from 'config/theme/CommonStyles';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { ColorValue } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -29,7 +29,7 @@ const BackButton: React.FC<Props> = ({ disabled, onPress, style, iconColor }) =>
       <FontAwesome
         name="angle-left"
         style={disabled && CommonStyles.opacity['50']}
-        color={iconColor || theme.colors.surfaceBlack}
+        color={iconColor || theme.colors.neutralVariants['900']}
         size={30}
         allowFontScaling
       />

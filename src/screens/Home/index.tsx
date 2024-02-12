@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
@@ -9,7 +9,6 @@ import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
 import { Image } from 'expo-image';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
-import { useTheme } from 'native-base';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -138,7 +137,7 @@ const Home = () => {
         data={posts}
         refreshControl={
           <RefreshControl
-            tintColor={theme.colors.surfaceBlack}
+            tintColor={theme.colors.neutralVariants['900']}
             enabled
             onRefresh={onRefresh}
             refreshing={refreshing}

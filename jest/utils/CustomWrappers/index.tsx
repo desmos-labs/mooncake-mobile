@@ -1,24 +1,20 @@
-import React, {FC, ReactElement} from 'react';
-import {render} from '@testing-library/react-native';
-import {Options} from '@testing-library/react-native/build/render';
-import {NativeBaseProvider} from "native-base";
-import {RecoilRoot} from 'recoil';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {NavigationContainer} from '@react-navigation/native';
-import {MeasureOptions, measurePerformance} from '@callstack/reassure-measure';
-import lightTheme from "config/theme/LightTheme";
+import { MeasureOptions, measurePerformance } from '@callstack/reassure-measure';
+import { NavigationContainer } from '@react-navigation/native';
+import { render } from '@testing-library/react-native';
+import { Options } from '@testing-library/react-native/build/render';
+import React, { FC, ReactElement } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { RecoilRoot } from 'recoil';
 
 /**
  * A custom render function for use in unit tests for components that
  * require a PaperProvider (or any other Provider) context
  */
-const AllTheProviders: FC<{children: React.ReactElement}> = ({children}) => {
+const AllTheProviders: FC<{ children: React.ReactElement }> = ({ children }) => {
   return (
     <RecoilRoot>
       <NavigationContainer>
-        <NativeBaseProvider theme={lightTheme}>
-          <SafeAreaProvider style={{flex: 1}}>{children}</SafeAreaProvider>
-        </NativeBaseProvider>
+        <SafeAreaProvider style={{ flex: 1 }}>{children}</SafeAreaProvider>
       </NavigationContainer>
     </RecoilRoot>
   );
@@ -29,13 +25,13 @@ const ReassureCompatWrapper = (node: React.ReactElement) => {
 };
 
 const customRender = (ui: ReactElement, options?: Omit<Options, 'wrapper'>) =>
-  render(ui, {wrapper: AllTheProviders, ...options});
+  render(ui, { wrapper: AllTheProviders, ...options });
 
 const customMeasurePerformance = (
   ui: React.ReactElement,
   options?: Omit<MeasureOptions, 'wrapper'>,
-) => measurePerformance(ui, {wrapper: ReassureCompatWrapper, ...options});
+) => measurePerformance(ui, { wrapper: ReassureCompatWrapper, ...options });
 
 export * from '@testing-library/react-native';
-export {customRender as render};
-export {customMeasurePerformance as measurePerformance};
+export { customRender as render };
+export { customMeasurePerformance as measurePerformance };

@@ -96,7 +96,7 @@ const useStyles = makeStyle(theme => ({
   content: {
     alignSelf: 'center',
     marginHorizontal: '10%',
-    padding: theme.spacing.xl,
+    padding: theme.spacings.xl,
     borderRadius: 18,
     backgroundColor: theme.colors.white,
   },

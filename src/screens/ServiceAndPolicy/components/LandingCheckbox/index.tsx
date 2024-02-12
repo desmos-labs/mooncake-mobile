@@ -2,7 +2,7 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import BCheckbox from 'components/BCheckbox';
 import { CheckboxProps } from 'expo-checkbox/src/Checkbox.types';
 import * as Haptics from 'expo-haptics';
-import { useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { View } from 'react-native';

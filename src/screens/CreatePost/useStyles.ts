@@ -10,7 +10,7 @@ const useStyles = makeStyle(theme => ({
   },
   container: {
     flex: 1,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   topBar: {
     alignItems: 'center',
@@ -20,13 +20,13 @@ const useStyles = makeStyle(theme => ({
     height: 36,
   },
   contentContainer: {
-    paddingVertical: theme.spacing.m,
-    paddingHorizontal: theme.spacing.s,
+    paddingVertical: theme.spacings.m,
+    paddingHorizontal: theme.spacings.s,
   },
   avatarGroup: {
     alignSelf: 'flex-start',
-    paddingTop: theme.spacing.s,
-    marginRight: theme.spacing.m,
+    paddingTop: theme.spacings.s,
+    marginRight: theme.spacings.m,
   },
   avatar: {
     width: 40,
@@ -34,7 +34,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 20,
   },
   bottomPanel: {
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   postButtonText: {
     color: theme.colors.white,
@@ -45,7 +45,7 @@ const useStyles = makeStyle(theme => ({
     fontStyle: 'normal',
     fontWeight: '400',
     lineHeight: 24,
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['900'],
     minHeight: 100,
   },
 }));

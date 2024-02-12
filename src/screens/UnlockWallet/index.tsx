@@ -1,6 +1,6 @@
 import { SigningMode } from '@desmoslabs/desmjs';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSetting } from '@recoil/settings';
 import Button from 'components/Button';
@@ -15,7 +15,6 @@ import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useClearUserData from 'hooks/useClearUserData';
 import useUnlockWalletWithPassword from 'hooks/wallet/useUnlockWalletWithPassword';
 import { getBiometricPassword } from 'lib/SecureStorage';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { ResultAsync } from 'neverthrow';

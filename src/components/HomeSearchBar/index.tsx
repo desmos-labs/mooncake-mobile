@@ -1,6 +1,6 @@
+import { useTheme } from '@react-navigation/native';
 import { magnifyingGlass } from 'assets/images';
 import { Image } from 'expo-image';
-import { useTheme } from 'native-base';
 import React, { useEffect, useRef } from 'react';
 import { TextInput, View } from 'react-native';
 import useStyles from './useStyles';
@@ -42,7 +42,7 @@ const HomeSearchBar = ({ handleChange, searchPlaceHolder, onFocus, onBlur, focus
         onChangeText={handleChange}
         onFocus={onFocus}
         onBlur={onBlur}
-        placeholderTextColor={theme.colors.grey01}
+        placeholderTextColor={theme.colors.neutralVariants['600']}
         placeholder={searchPlaceHolder}
       />
     </View>

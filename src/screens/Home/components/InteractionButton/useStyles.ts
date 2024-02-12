@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    backgroundColor: theme.colors.butterOrange01,
+    backgroundColor: theme.colors.primary,
   },
   icon: {
     width: 28,
@@ -20,7 +20,7 @@ const useStyles = makeStyle(theme => ({
     tintColor: theme.colors.white,
   },
   countText: {
-    marginTop: theme.spacing.xs,
+    marginTop: theme.spacings.xs,
     color: theme.colors.white,
   },
 }));

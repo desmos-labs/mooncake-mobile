@@ -5,19 +5,19 @@ const useStyles = makeStyle(theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
   },
   label: {
     flex: 1,
   },
   value: {
-    color: theme.colors.grey01,
+    color: theme.colors.neutralVariants['600'],
   },
   icon: {
     height: 24,
     width: 24,
-    marginRight: theme.spacing.s,
-    tintColor: theme.colors.neutral['900'],
+    marginRight: theme.spacings.s,
+    tintColor: theme.colors.neutralVariants['900'],
   },
 }));
 

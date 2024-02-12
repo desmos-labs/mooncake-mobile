@@ -1,4 +1,5 @@
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useTheme } from '@react-navigation/native';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useActiveProfile } from '@recoil/profiles';
@@ -19,7 +20,6 @@ import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import useHandleUriAction from 'hooks/dynamicLinks/useHandleUriAction';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { Box, useTheme } from 'native-base';
 import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import SearchTabs, { SearchTabsParams } from 'navigation/RootNavigator/SearchTabs';
 import ROUTES from 'navigation/routes';
@@ -133,7 +133,7 @@ const BottomTabBar = (props: Props) => {
 
   const OverlayComponent = useMemo(() => {
     if (notificationsCount && notificationsCount > 0) {
-      return <PingAnimation size={8} color={theme.colors.butterOrange01} />;
+      return <PingAnimation size={8} color={theme.colors.primary} />;
     }
     return undefined; // or alternate "no ping" state
   }, [notificationsCount, theme]);
@@ -209,7 +209,7 @@ const BottomTabBar = (props: Props) => {
             <ImageButton
               overlayComponent={route.name === ROUTES.NOTIFICATIONS && OverlayComponent}
               onPress={onPress}
-              tintColor={isFocused ? theme.colors.butterOrange01 : theme.colors.lightGrey02}
+              tintColor={isFocused ? theme.colors.primary : theme.colors.neutralVariants['500']}
               image={isFocused ? getCorrectFilledImage(route.name) : getCorrectImage(route.name)}
               style={styles.imageButton}
             />
@@ -227,6 +227,7 @@ const BottomTabBar = (props: Props) => {
  * @constructor
  */
 const BottomTabsNavigator = () => {
+  const theme = useTheme();
   const handleUriAction = useHandleUriAction();
   const uriAction = useUriAction();
   const setUriAction = useSetUriAction();
@@ -243,7 +244,11 @@ const BottomTabsNavigator = () => {
   }, [handleUriAction, setUriAction, uriAction]);
 
   return (
-    <Box flex={1} backgroundColor="white">
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.white,
+      }}>
       <Tab.Navigator
         tabBar={renderTabBar}
         initialRouteName={ROUTES.HOME_TABS}
@@ -256,7 +261,7 @@ const BottomTabsNavigator = () => {
         <Tab.Screen name={ROUTES.NOTIFICATIONS} component={Notifications} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
       </Tab.Navigator>
-    </Box>
+    </View>
   );
 };
 

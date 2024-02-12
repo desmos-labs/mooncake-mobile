@@ -1,9 +1,8 @@
-import React from 'react';
-import useParseErrorMessage from 'hooks/useParseErrorMessage';
-import { RecoilRoot } from 'recoil';
-import { NativeBaseProvider, Text } from 'native-base';
 import { render } from '@testing-library/react-native';
-import lightTheme from 'config/theme/LightTheme';
+import useParseErrorMessage from 'hooks/useParseErrorMessage';
+import React from 'react';
+import { Text } from 'react-native';
+import { RecoilRoot } from 'recoil';
 
 const getErrorMessage = (error: string) => {
   // This component is needed to test the hook.
@@ -16,9 +15,7 @@ const getErrorMessage = (error: string) => {
   // Render the test component
   const { getByTestId } = render(
     <RecoilRoot>
-      <NativeBaseProvider theme={lightTheme}>
-        <TestComponent />
-      </NativeBaseProvider>
+      <TestComponent />
     </RecoilRoot>,
   );
 

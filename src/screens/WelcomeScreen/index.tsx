@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { mooncakeAnimationOrange } from 'assets/animations';
@@ -10,11 +10,11 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import CommonStyles from 'config/theme/CommonStyles';
 import useTrackUser from 'hooks/analytics/useTrackUser';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
-import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 import useStyles from './useStyles';
 
 export interface WelcomePageParams {
@@ -67,7 +67,7 @@ const WelcomePage = () => {
 
   return (
     <DView style={styles.root}>
-      <Box flex={1} style={styles.container}>
+      <View style={styles.container}>
         <ThemedLottieView
           source={mooncakeAnimationOrange}
           style={styles.image}
@@ -75,19 +75,19 @@ const WelcomePage = () => {
           autoPlay
         />
         <Spacer paddingTop={46} />
-        <Box alignItems="center">
+        <View style={CommonStyles.center}>
           <Typography.H6>{t('welcomeTitle')}</Typography.H6>
-          <Spacer paddingTop={theme.spacing.s} />
+          <Spacer paddingTop={theme.spacings.s} />
           <Typography.Regular14 style={CommonStyles.textAlign.center}>
             {t('welcomeSubtitle')}
           </Typography.Regular14>
-        </Box>
+        </View>
         <Spacer paddingTop={60} />
         <Button height={44} style={styles.button} onPress={resetToHome}>
           {t('explore now')}
         </Button>
-        <Spacer paddingTop={theme.spacing.m} />
-      </Box>
+        <Spacer paddingTop={theme.spacings.m} />
+      </View>
     </DView>
   );
 };

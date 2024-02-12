@@ -1,6 +1,6 @@
-import React from 'react';
-import { Center } from 'native-base';
 import StyledSpinner from 'components/StyledSpinner';
+import React from 'react';
+import { View } from 'react-native';
 
 /**
  * Component that renders a loading indicator.
@@ -8,9 +8,9 @@ import StyledSpinner from 'components/StyledSpinner';
  */
 const Loading = () => {
   return (
-    <Center flexGrow={1} backgroundColor="white" py="50px">
+    <View>
       <StyledSpinner />
-    </Center>
+    </View>
   );
 };
 

@@ -2,20 +2,19 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import { CompositeScreenProps, useRoute } from '@react-navigation/native';
+import { CompositeScreenProps, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import HomeSearchBar from 'components/HomeSearchBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { EventEmitter } from 'events';
-import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import SearchTabBar from 'navigation/RootNavigator/SearchTabs/components/SearchTabBar';
 import ROUTES from 'navigation/routes';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dimensions, StatusBar, TouchableOpacity } from 'react-native';
+import { Dimensions, StatusBar, TouchableOpacity, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -130,9 +129,9 @@ const SearchTabs = () => {
   );
 
   return (
-    <Box
-      flex={1}
+    <View
       style={{
+        flex: 1,
         backgroundColor: theme.colors.white,
         paddingTop: Math.max(24, top),
       }}>
@@ -182,7 +181,7 @@ const SearchTabs = () => {
           }}
         />
       </Tab.Navigator>
-    </Box>
+    </View>
   );
 };
 

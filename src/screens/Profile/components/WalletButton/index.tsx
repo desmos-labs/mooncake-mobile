@@ -27,7 +27,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: theme.colors.butterOrange05,
+    backgroundColor: theme.colors.primaryVariants['400'],
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,

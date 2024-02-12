@@ -1,6 +1,6 @@
 import LottieView from 'lottie-react-native';
 import React, { useMemo } from 'react';
-import { useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 
 type Props = Omit<React.ComponentProps<typeof LottieView>, 'source'> & {
   source: LottieAnimation;

@@ -4,7 +4,7 @@ import { verticalScale } from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
     paddingHorizontal: 20,
   },
   innerView: {

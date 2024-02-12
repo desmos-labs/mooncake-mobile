@@ -20,7 +20,7 @@ const useStyles = makeStyle(theme => ({
     width: 72,
     height: 72,
     resizeMode: 'contain',
-    marginVertical: theme.spacing.m,
+    marginVertical: theme.spacings.m,
     alignSelf: 'center',
   },
   emptyListText: {

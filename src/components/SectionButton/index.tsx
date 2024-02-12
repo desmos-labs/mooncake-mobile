@@ -1,6 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { FontAwesome } from '@expo/vector-icons';
-import { useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { Image, ImageProps, TouchableOpacity } from 'react-native';
 import useStyles from './useStyles';
@@ -32,7 +32,7 @@ const SectionButton: React.FC<Props> = props => {
       <Typography.Regular16 style={styles.label}>{label}</Typography.Regular16>
       <FontAwesome
         name={rightIconName || 'angle-right'}
-        color={theme.colors.surfaceBlack}
+        color={theme.colors.neutralVariants['900']}
         size={24}
         allowFontScaling
       />

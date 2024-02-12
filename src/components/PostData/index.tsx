@@ -1,10 +1,10 @@
+import { useTheme } from '@react-navigation/native';
+import PostText from 'components/PostText';
+import { AttachmentRenderOptions } from 'hooks/rendering/types';
+import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
 import React from 'react';
 import { View } from 'react-native';
 import { Post } from 'types/posts';
-import PostText from 'components/PostText';
-import useRenderPostAttachment from 'hooks/rendering/useRenderPostAttachment';
-import { AttachmentRenderOptions } from 'hooks/rendering/types';
-import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {
@@ -35,7 +35,7 @@ const PostData = (props: Props) => {
       useAutoSize: true,
       resizeMode: 'contain',
       horizontalPaddingWithAutoSize: 32,
-      imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutral['300'] },
+      imageStyle: { borderRadius: 8, backgroundColor: theme.colors.neutralVariants['300'] },
       ...attachmentRenderOptions?.media,
     },
   });

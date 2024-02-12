@@ -1,25 +1,27 @@
-import { Center, HStack, Skeleton, useTheme, VStack } from 'native-base';
-import React, { memo } from 'react';
+import { useTheme } from '@react-navigation/native';
+import Spacer from 'components/Spacer';
+import { Skeleton } from 'moti/skeleton';
+import React from 'react';
+import { View } from 'react-native';
 
 const HomePostContentLoader = () => {
   const theme = useTheme();
 
   return (
-    <Center marginTop={theme.spacing.s}>
-      <HStack space="12px" rounded={theme.roundness} paddingX={theme.spacing.xs}>
-        <Skeleton w="48px" h="48px" rounded="full" />
-        <VStack space="1.5" flex={1}>
-          <Skeleton width="200px" height="10px" mt="1" rounded={theme.roundness} />
-          <Skeleton width="100px" height="8px" mt="1" rounded={theme.roundness} />
-        </VStack>
-      </HStack>
-      <VStack space="1.5" alignSelf="flex-start" paddingX={theme.spacing.xs} marginTop="16px">
-        <Skeleton width="350px" height="10px" mt="1" rounded={theme.roundness} />
-        <Skeleton width="330px" height="10px" mt="1" rounded={theme.roundness} />
-        <Skeleton width="200px" height="10px" mt="1" rounded={theme.roundness} />
-      </VStack>
-    </Center>
+    <Spacer paddingHorizontal="m" paddingVertical="m">
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <Skeleton height={48} width={48} radius="round" colorMode={theme.dark ? 'dark' : 'light'} />
+        <View style={{ flex: 1, justifyContent: 'center', gap: 4 }}>
+          <Skeleton height={14} width={140} colorMode={theme.dark ? 'dark' : 'light'} />
+          <Skeleton height={14} width={250} colorMode={theme.dark ? 'dark' : 'light'} />
+        </View>
+      </View>
+      <Spacer paddingBottom="s" />
+      <Skeleton height={16} width={360} colorMode={theme.dark ? 'dark' : 'light'} />
+      <Spacer paddingBottom="s" />
+      <Skeleton height={16} width={340} colorMode={theme.dark ? 'dark' : 'light'} />
+    </Spacer>
   );
 };
 
-export default memo(HomePostContentLoader);
+export default HomePostContentLoader;

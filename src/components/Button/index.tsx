@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { useTheme } from '@react-navigation/native';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image, ImageSource } from 'expo-image';
-import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { ActivityIndicator, Platform, Pressable, PressableProps, View } from 'react-native';
 import Reanimated, {

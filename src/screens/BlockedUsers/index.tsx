@@ -1,10 +1,10 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
+import Divider from 'components/Divider';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import useBlockedUsers from 'hooks/relationships/useBlockedUsers';
-import { Box, Divider } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
@@ -57,19 +57,20 @@ const BlockedUsers = () => {
     }
   }, [loading, blocked.length, styles.emptyView, styles.emptyImage, t]);
 
-  const ItemSeparatorComponent = React.useCallback(
-    () => <Divider my="s" color="dividerGrey" />,
-    [],
-  );
+  const ItemSeparatorComponent = React.useCallback(() => <Divider />, []);
 
   return (
     <DView
       topBar={<TopBar style={styles.topBar} />}
       backgroundColor="white"
       disableHideKeyboardTouchable>
-      <Box ml="20px" mb="l">
+      <View
+        style={{
+          marginLeft: 20,
+          marginBottom: 16,
+        }}>
         <Typography.Semibold24>{t('blocked users')}</Typography.Semibold24>
-      </Box>
+      </View>
       <FlashList
         scrollEnabled
         refreshing={loading}

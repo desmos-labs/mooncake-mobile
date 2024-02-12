@@ -6,7 +6,6 @@ import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
 import CommonStyles from 'config/theme/CommonStyles';
 import { usePaginatedData } from 'hooks/usePaginatedData';
-import { Center } from 'native-base';
 import { SearchTabsParamList } from 'navigation/RootNavigator/SearchTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect } from 'react';
@@ -63,9 +62,9 @@ const SearchPostsTab = () => {
       return (
         <View style={CommonStyles.flex['1']}>
           <Spacer paddingTop={120} />
-          <Center>
+          <View style={CommonStyles.center}>
             <MooncakeLoader speed={3} />
-          </Center>
+          </View>
         </View>
       );
     }

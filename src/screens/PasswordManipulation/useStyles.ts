@@ -6,16 +6,16 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
   },
   headerText: {
-    marginBottom: theme.spacing.l,
+    marginBottom: theme.spacings.l,
   },
   formContainer: {
     flex: 1,
   },
   bottomLabel: {
-    marginVertical: theme.spacing.s,
+    marginVertical: theme.spacings.s,
   },
   inputLabel: {
     borderRadius: 12,
@@ -25,25 +25,25 @@ const useStyles = makeStyle(theme => ({
     lineHeight: 30,
   },
   errorText: {
-    marginTop: theme.spacing.xs,
-    color: theme.colors.pink01,
+    marginTop: theme.spacings.xs,
+    color: theme.colors.feedback.error,
   },
   labelGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: theme.spacing.s,
+    marginVertical: theme.spacings.s,
   },
   weakPw: {
-    color: theme.colors.accentRed01,
+    color: theme.colors.feedback.error,
   },
   mediumPw: {
-    color: theme.colors.accentYellow01,
+    color: theme.colors.feedback.warning,
   },
   strongPw: {
-    color: theme.colors.accentGreen01,
+    color: theme.colors.feedback.success,
   },
-  marginXs: { marginTop: theme.spacing.xs },
+  marginXs: { marginTop: theme.spacings.xs },
 }));
 
 export default useStyles;

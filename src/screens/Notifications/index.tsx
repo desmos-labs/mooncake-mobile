@@ -1,13 +1,13 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useTheme } from '@react-navigation/native';
 import { useSetAppStateValue } from '@recoil/appState';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { emptyListPlaceholder } from 'assets/images';
+import Divider from 'components/Divider';
 import DView from 'components/DView';
 import StyledSpinner from 'components/StyledSpinner';
 import useHandleNotificationNavigation from 'hooks/notifications/useHandleNotificationNavigation';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
-import { Divider, useTheme } from 'native-base';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Platform, RefreshControl, View } from 'react-native';
@@ -119,7 +119,7 @@ const Notifications = () => {
   // Component shown at the bottom tof the page
   const FooterComponent = useMemo(() => {
     if (!refreshing && loading) {
-      return <StyledSpinner p="m" />;
+      return <StyledSpinner />;
     } else {
       return null;
     }
@@ -153,8 +153,8 @@ const Notifications = () => {
       style={styles.container}>
       <View
         style={{
-          paddingHorizontal: theme.spacing.m,
-          paddingBottom: theme.spacing.m,
+          paddingHorizontal: theme.spacings.m,
+          paddingBottom: theme.spacings.m,
         }}>
         <Typography.Semibold24>{t('notifications')}</Typography.Semibold24>
       </View>
@@ -162,7 +162,7 @@ const Notifications = () => {
       <FlashList
         refreshControl={
           <RefreshControl
-            tintColor={theme.colors.surfaceBlack}
+            tintColor={theme.colors.neutralVariants['900']}
             enabled
             onRefresh={refreshNotifications}
             refreshing={refreshing}

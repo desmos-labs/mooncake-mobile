@@ -7,17 +7,17 @@ import { verticalScale } from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   headerText: {
-    marginVertical: theme.spacing.m,
+    marginVertical: theme.spacings.m,
   },
   formContainer: {
     flex: 1,
   },
   bottomLabel: {
-    marginTop: theme.spacing.m,
-    marginBottom: theme.spacing.s,
+    marginTop: theme.spacings.m,
+    marginBottom: theme.spacings.s,
   },
   inputLabel: {
     borderRadius: 12,
@@ -26,24 +26,24 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   errorText: {
-    marginTop: theme.spacing.xs,
+    marginTop: theme.spacings.xs,
     color: theme.colors.error,
   },
   labelGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: theme.spacing.s,
+    marginVertical: theme.spacings.s,
   },
-  marginXs: { marginTop: theme.spacing.xs },
+  marginXs: { marginTop: theme.spacings.xs },
   confirmButton: {
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
   messageView: { justifyContent: 'flex-end', alignItems: 'center', height: 300 },
   mnemonicInput: {
     borderWidth: 1,
-    borderColor: theme.colors.lightGrey01,
-    paddingTop: theme.spacing.s,
+    borderColor: theme.colors.neutralVariants['600'],
+    paddingTop: theme.spacings.s,
     textAlignVertical: 'top',
     height: verticalScale(160),
   },

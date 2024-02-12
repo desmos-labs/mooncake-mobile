@@ -1,7 +1,8 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { emptyListPlaceholder } from 'assets/images';
+import Divider from 'components/Divider';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
@@ -12,7 +13,6 @@ import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatCoins, formatCurrencyAmount } from 'lib/FormatUtils';
-import { Center, Divider, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo } from 'react';
@@ -135,10 +135,10 @@ const ProfileOperations = () => {
     }
 
     return (
-      <Center flex={1}>
+      <View style={[CommonStyles.flex['1'], CommonStyles.center]}>
         <Image contentFit="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
         <Typography.Regular14>{t('no operations')}</Typography.Regular14>
-      </Center>
+      </View>
     );
   }, [balanceLoading, isDataLoading, styles.emptyIcon, t]);
 
@@ -149,9 +149,11 @@ const ProfileOperations = () => {
     }
 
     return (
-      <Center my="s">
-        <StyledSpinner />
-      </Center>
+      <View style={[CommonStyles.flex['1'], CommonStyles.center]}>
+        <Spacer paddingVertical="s">
+          <StyledSpinner />
+        </Spacer>
+      </View>
     );
   }, [fetchingMore]);
 
@@ -182,7 +184,7 @@ const ProfileOperations = () => {
             {formatCurrencyAmount(fiatAmount)}
           </Typography.Semibold30>
         )}
-        <Spacer paddingVertical={theme.spacing.m} />
+        <Spacer paddingVertical={theme.spacings.m} />
         {/* Past operations section title */}
         <Typography.H5 style={styles.subtitle}>{t('operations')}</Typography.H5>
         {/* Loading indicator */}

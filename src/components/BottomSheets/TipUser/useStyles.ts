@@ -2,10 +2,10 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   root: {
-    paddingBottom: theme.spacing.m,
+    paddingBottom: theme.spacings.m,
   },
   header: {
-    marginTop: theme.spacing.l,
+    marginTop: theme.spacings.l,
     alignSelf: 'center',
   },
   subtitle: {
@@ -19,20 +19,20 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   quickSelectButtonText: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['900'],
   },
   inputContainer: {
     backgroundColor: '#F7F7F7',
-    paddingHorizontal: theme.spacing.s,
-    paddingVertical: theme.spacing.m,
+    paddingHorizontal: theme.spacings.s,
+    paddingVertical: theme.spacings.m,
   },
   availableText: {
     marginTop: 12,
-    color: theme.colors.accentGreen01,
+    color: theme.colors.feedback.success,
   },
   errorText: {
     marginTop: 12,
-    color: theme.colors.accentRed01,
+    color: theme.colors.feedback.error,
   },
 }));
 

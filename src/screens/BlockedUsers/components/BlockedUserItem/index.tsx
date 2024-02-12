@@ -4,10 +4,9 @@ import { Image } from 'expo-image';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { HStack, VStack } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
@@ -28,11 +27,7 @@ const BlockedUserItem = ({ profile }: Props) => {
   const BlockOrUnblockButton = React.useMemo(() => {
     return (
       <Button
-        mt="s"
-        backgroundColor={profile.isBlockedByUser ? 'surfaceBlack' : 'surfaceGrey'}
-        textColor={profile.isBlockedByUser ? 'white' : 'surfaceBlack'}
-        minWidth="80px"
-        size={32}
+        height={32}
         onPress={() => {
           handleBlockOrUnblockUser(profile);
         }}>
@@ -43,22 +38,35 @@ const BlockedUserItem = ({ profile }: Props) => {
 
   return (
     <TouchableOpacity onPress={() => navigateToProfile(profile.address)}>
-      <HStack px="m" alignItems="center" justifyContent="space-between">
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingHorizontal: 12,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
         {/* Profile picture */}
-        <HStack alignItems="center">
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
           <Image source={getProfilePicture(profile)} style={styles.pic} />
           {/* Profile DTag and nickname */}
-          <VStack ml="s">
+          <View
+            style={{
+              marginLeft: 4,
+            }}>
             <Typography.Semibold14 numberOfLines={1} ellipsizeMode="tail">
               {profile.nickname}
             </Typography.Semibold14>
             <Typography.Regular12 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
               @{profile.dTag}
             </Typography.Regular12>
-          </VStack>
-        </HStack>
+          </View>
+        </View>
         {BlockOrUnblockButton}
-      </HStack>
+      </View>
     </TouchableOpacity>
   );
 };

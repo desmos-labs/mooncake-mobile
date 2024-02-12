@@ -4,10 +4,10 @@ import { Props } from './index';
 const useStyles = makeStyleWithProps((props: Props, theme) => ({
   root: {
     height: props.height || 44,
-    // We fall back to `lightTheme.spacings.roundness` in case the theme.spacings is undefined.
+    // We fall back to `lightTheme.spacings.roundness` in case the theme.spacingss is undefined.
     // This is needed when this component is used outside the <ThemeProvider>.
     borderRadius: 12,
-    paddingHorizontal: theme.spacing?.m ?? theme.spacing.m,
+    paddingHorizontal: theme.spacings?.m ?? theme.spacings.m,
   },
   innerView: {
     flex: 1,

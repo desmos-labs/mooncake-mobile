@@ -2,16 +2,16 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   title: {
-    paddingVertical: theme.spacing.s,
+    paddingVertical: theme.spacings.s,
   },
   container: {
-    borderRadius: theme.roundness,
+    borderRadius: 12,
     backgroundColor: theme.colors.background,
   },
   innerContainer: {
     backgroundColor: theme.colors.white,
-    borderRadius: theme.roundness,
-    padding: theme.spacing.m,
+    borderRadius: 12,
+    padding: theme.spacings.m,
   },
 }));
 

@@ -2,7 +2,7 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   input: {
-    backgroundColor: theme.colors.neutral['100'],
+    backgroundColor: theme.colors.neutralVariants['100'],
   },
   error: {
     borderColor: theme.colors.fedback.error,

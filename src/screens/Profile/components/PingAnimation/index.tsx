@@ -1,6 +1,6 @@
+import CommonStyles from 'config/theme/CommonStyles';
 import React from 'react';
 import { ColorValue, View } from 'react-native';
-import { Center } from 'native-base';
 import AnimatedRing from './AnimatedRing';
 
 interface PingAnimationProps {
@@ -23,7 +23,7 @@ const PingAnimation = (props: PingAnimationProps) => {
   const { size, color } = props;
 
   return (
-    <Center>
+    <View style={[CommonStyles.flex['1'], CommonStyles.center]}>
       <AnimatedRing {...props} delay={0} />
       <AnimatedRing {...props} delay={1000} />
       <View
@@ -34,7 +34,7 @@ const PingAnimation = (props: PingAnimationProps) => {
           borderRadius: size / 2,
         }}
       />
-    </Center>
+    </View>
   );
 };
 

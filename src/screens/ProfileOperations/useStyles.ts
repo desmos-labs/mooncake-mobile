@@ -3,7 +3,7 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   flexCenter: {
     flex: 1,
@@ -13,13 +13,13 @@ const useStyles = makeStyle(theme => ({
   sectionHeader: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingTop: theme.spacing.m,
-    paddingBottom: theme.spacing.s,
+    paddingTop: theme.spacings.m,
+    paddingBottom: theme.spacings.s,
   },
   emptyIcon: {
     width: 72,
     height: 72,
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
   emptyView: {
     flex: 1,
@@ -27,15 +27,15 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   subtitle: {
-    paddingBottom: theme.spacing.s,
+    paddingBottom: theme.spacings.s,
   },
   divider: {
     height: 1,
-    backgroundColor: theme.colors.dividerGrey,
+    backgroundColor: theme.colors.neutralVariants['200'],
     paddingHorizontal: -200,
   },
   paddingHorizontalM: {
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
 }));
 

@@ -8,28 +8,28 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     zIndex: 2,
     paddingBottom: 10,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   followIcon: {
     zIndex: 1,
     width: 24,
     height: 24,
-    tintColor: theme.colors.surfaceBlack,
+    tintColor: theme.colors.neutralVariants['900'],
   },
   moreIcon: {
     width: 24,
     height: 24,
-    marginLeft: theme.spacing.m,
+    marginLeft: theme.spacings.m,
   },
   middleTextContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
-    marginLeft: theme.spacing.s,
+    marginLeft: theme.spacings.s,
     minWidth: 160,
   },
   rightContainer: { flexDirection: 'row', alignItems: 'center' },
   divider: {
-    borderColor: theme.colors.dividerGrey,
+    borderColor: theme.colors.neutralVariants['300'],
     borderWidth: 0.5,
     marginHorizontal: -30,
   },
@@ -37,15 +37,15 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.m,
-    paddingVertical: theme.spacing.s,
+    paddingHorizontal: theme.spacings.m,
+    paddingVertical: theme.spacings.s,
   },
   customTopBarInnerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   subtitle: {
-    color: theme.colors.grey02,
+    color: theme.colors.neutralVariants['600'],
   },
 }));
 

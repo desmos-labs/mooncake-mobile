@@ -4,7 +4,7 @@ import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import { Image } from 'expo-image';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';

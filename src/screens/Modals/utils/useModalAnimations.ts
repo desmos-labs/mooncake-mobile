@@ -1,9 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import { useTheme } from 'native-base';
 import {
   Extrapolate,
+  Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
@@ -70,20 +70,20 @@ const useModalAnimations = (modalThreshold?: number) => {
       yOffset.value,
       [0, modalThreshold! || 100],
       [0, toRad(30)],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const marginTop = interpolate(
       yOffset.value,
       [0, modalThreshold! || 100],
       [2, 6],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const backgroundColor = interpolateColor(
       yOffset.value,
       [0, modalThreshold! || 100],
-      [theme.colors.tabIconGrey, theme.colors.iconGrey],
+      [theme.colors.neutralVariants['300'], theme.colors.neutralVariants['600']],
     );
     return {
       backgroundColor,
@@ -104,20 +104,20 @@ const useModalAnimations = (modalThreshold?: number) => {
       yOffset.value,
       [0, modalThreshold! || 100],
       [0, toRad(-30)],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const marginTop = interpolate(
       yOffset.value,
       [0, modalThreshold! || 100],
       [2, 6],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const backgroundColor = interpolateColor(
       yOffset.value,
       [0, modalThreshold! || 100],
-      [theme.colors.tabIconGrey, theme.colors.iconGrey],
+      [theme.colors.neutralVariants['300'], theme.colors.neutralVariants['600']],
     );
     return {
       backgroundColor,

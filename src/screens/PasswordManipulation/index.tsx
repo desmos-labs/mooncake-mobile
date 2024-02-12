@@ -1,17 +1,15 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, useRoute } from '@react-navigation/native';
+import { CompositeScreenProps, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import PasswordChecksGroup from 'components/PasswordChecksGroup';
 import Spacer from 'components/Spacer';
-import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik, FormikErrors, FormikValues } from 'formik';
-import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
@@ -190,19 +188,14 @@ const PasswordManipulation = () => {
                     <PasswordChecksGroup label={errors.confirmPassword} mode="error" />
                   )}
                 </ScrollView>
-                {loading ? (
-                  <Box alignItems="center" py="m">
-                    <StyledSpinner />
-                  </Box>
-                ) : (
-                  <Button
-                    height={44}
-                    type="solid"
-                    onPress={() => handleSubmit()}
-                    disabled={isButtonDisabled(values, errors)}>
-                    {t(buttonLabel as any)}
-                  </Button>
-                )}
+                <Button
+                  height={44}
+                  type="solid"
+                  loading={loading}
+                  onPress={() => handleSubmit()}
+                  disabled={isButtonDisabled(values, errors)}>
+                  {t(buttonLabel as any)}
+                </Button>
               </>
             );
           }}

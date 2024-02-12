@@ -3,7 +3,7 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
   },
   avatar: {
     width: 40,
@@ -14,7 +14,7 @@ const useStyles = makeStyle(theme => ({
     width: '50%',
   },
   profileView: {
-    marginLeft: theme.spacing.s,
+    marginLeft: theme.spacings.s,
     flexDirection: 'column',
     justifyContent: 'center',
     maxWidth: '57%',

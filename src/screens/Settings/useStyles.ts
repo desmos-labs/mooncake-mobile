@@ -6,13 +6,13 @@ import CommonStyles from 'config/theme/CommonStyles';
  */
 const useStyles = makeStyle(theme => ({
   root: {
-    paddingHorizontal: theme.spacing.m,
-    paddingBottom: theme.spacing.xl,
+    paddingHorizontal: theme.spacings.m,
+    paddingBottom: theme.spacings.xl,
   },
   scrollview: {
     marginTop: -16,
     marginHorizontal: -16,
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacings.m,
   },
   scrollViewContent: {
     paddingTop: 16,
@@ -22,7 +22,7 @@ const useStyles = makeStyle(theme => ({
     marginBottom: 24,
   },
   buttonContainer: {
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacings.m,
   },
   innerButton: {
     backgroundColor: theme.colors.background,
@@ -34,7 +34,7 @@ const useStyles = makeStyle(theme => ({
   },
   bottomText: {
     textAlign: 'center',
-    marginVertical: theme.spacing.m,
+    marginVertical: theme.spacings.m,
   },
 }));
 

@@ -15,7 +15,7 @@ const useStyles = makeStyle(theme => {
       width: '100%',
       height: '100%',
       borderRadius: 8,
-      backgroundColor: theme.colors.neutral['300'],
+      backgroundColor: theme.colors.neutralVariants['300'],
     },
     text: {
       position: 'absolute',

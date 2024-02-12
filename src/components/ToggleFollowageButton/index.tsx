@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { useTheme } from '@react-navigation/native';
 import Button from 'components/Button';
 import commonStyles from 'config/theme/CommonStyles';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleProp, View, ViewStyle } from 'react-native';
@@ -30,7 +30,9 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const buttonContent = React.useMemo(() => {
     if (updatingFollow) {
       return (
-        <ActivityIndicator color={following ? theme.colors.surfaceBlack : theme.colors.white} />
+        <ActivityIndicator
+          color={following ? theme.colors.neutralVariants['900'] : theme.colors.white}
+        />
       );
     }
     return (
@@ -38,7 +40,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
         {following ? t('following') : t('follow')}
       </Typography.Regular14>
     );
-  }, [following, t, theme.colors.surfaceBlack, theme.colors.white, updatingFollow]);
+  }, [following, t, theme.colors.neutralVariants['900'], theme.colors.white, updatingFollow]);
 
   return (
     <View style={[styles.buttonView, style]}>

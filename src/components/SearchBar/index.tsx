@@ -1,7 +1,7 @@
+import { useTheme } from '@react-navigation/native';
 import { magnifyingGlass } from 'assets/images';
 import React from 'react';
 import { Image, TextInput, View } from 'react-native';
-import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {
@@ -19,7 +19,7 @@ const SearchBar = ({ handleChange, searchPlaceHolder }: Props) => {
       <TextInput
         style={styles.input}
         onChangeText={handleChange}
-        placeholderTextColor={theme.colors.grey02}
+        placeholderTextColor={theme.colors.neutralVariants['600']}
         placeholder={searchPlaceHolder}
       />
     </View>

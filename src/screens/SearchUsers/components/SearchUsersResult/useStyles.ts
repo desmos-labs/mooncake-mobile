@@ -7,12 +7,12 @@ const useStyles = makeStyle(theme => ({
     width: scale(42),
     borderRadius: scale(21),
     backgroundColor: theme.colors.backgroundGrey,
-    marginRight: theme.spacing.s,
+    marginRight: theme.spacings.s,
   },
   container: {
     flex: 1,
     flexDirection: 'row',
-    marginBottom: theme.spacing.l,
+    marginBottom: theme.spacings.l,
   },
   textContainer: {
     flex: 1,

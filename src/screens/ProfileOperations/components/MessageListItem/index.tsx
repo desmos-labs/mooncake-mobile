@@ -3,7 +3,6 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Image, ImageSource } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatCoins } from 'lib/FormatUtils';
-import { HStack } from 'native-base';
 import React, { memo, ReactNode } from 'react';
 import { View } from 'react-native';
 import useStyles from './useStyles';
@@ -47,7 +46,7 @@ const MessageListItem = (props: MessageListItemProps) => {
 
   return (
     <View style={styles.container}>
-      <HStack alignItems="center">
+      <View style={{ alignItems: 'center' }}>
         <Image style={styles.avatar} source={image} />
         <View style={styles.profileView}>
           <Typography.Semibold14>{title}</Typography.Semibold14>
@@ -58,7 +57,7 @@ const MessageListItem = (props: MessageListItemProps) => {
             -{formatCoins(fees, ', ')}
           </Typography.Semibold14>
         )}
-      </HStack>
+      </View>
     </View>
   );
 };

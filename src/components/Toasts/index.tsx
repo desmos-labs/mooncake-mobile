@@ -3,7 +3,7 @@ import { squaresAnimation } from 'assets/animations';
 import Button from 'components/Button';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { makeStyleWithProps } from 'config/theme';
-import lightTheme from 'config/theme/LightTheme';
+import { lightTheme } from 'config/theme/customTheme';
 import React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 
@@ -106,7 +106,7 @@ const useToastStyle = makeStyleWithProps((props: ToastConfig, theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginLeft: theme.spacing.xs,
+    marginLeft: 4,
   },
   loadingAnimation: {
     width: 32,

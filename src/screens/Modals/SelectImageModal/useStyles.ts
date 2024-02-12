@@ -7,8 +7,8 @@ const useStyles = makeStyle(theme => ({
   },
   contentView: {
     backgroundColor: theme.colors.white,
-    padding: theme.spacing.l,
-    margin: theme.spacing.l,
+    padding: theme.spacings.l,
+    margin: theme.spacings.l,
     borderRadius: 16,
   },
   header: { textAlign: 'center' },
@@ -19,7 +19,7 @@ const useStyles = makeStyle(theme => ({
   image: {
     width: 60,
     height: 60,
-    marginRight: theme.spacing.m,
+    marginRight: theme.spacings.m,
   },
   pressable: {
     flexDirection: 'row',

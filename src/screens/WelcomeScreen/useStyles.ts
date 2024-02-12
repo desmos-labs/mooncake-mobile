@@ -6,12 +6,12 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   root: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
   },
   container: {
     flex: 1,
     marginTop: 100,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   image: { width: 120, height: 120, alignSelf: 'center' },
   button: {

@@ -9,13 +9,13 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   topBar: {
     backgroundColor: theme.colors.white,
     shadowOpacity: 0,
-    marginHorizontal: theme.spacing.m,
+    marginHorizontal: theme.spacings.m,
   },
   tabBar: {
     borderBottomWidth: 0,
     shadowOpacity: 0,
     elevation: 0,
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacings.m,
     backgroundColor: theme.colors.white,
   },
   tabBarContentContainer: {
@@ -36,7 +36,7 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   },
 
   tabBarIndicator: {
-    backgroundColor: theme.colors.surfaceBlack,
+    backgroundColor: theme.colors.neutralVariants['900'],
     width: 28,
     height: 2,
     borderRadius: 4,

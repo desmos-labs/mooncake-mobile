@@ -1,6 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
+import { CompositeScreenProps, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { usePostCommentsCount } from '@recoil/commentsCount';
 import { useActiveProfile } from '@recoil/profiles';
@@ -8,10 +8,10 @@ import { FlashList } from '@shopify/flash-list';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
+import CommentContentLoader from 'components/Loaders/CommentContentLoader';
 import MooncakeLoader from 'components/Loaders/MooncakeLoader';
 import usePostComments from 'hooks/posts/usePostComments';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
@@ -22,7 +22,6 @@ import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import CommentItemSkeleton from 'screens/PostInteraction/PostComments/components/CommentItem/index.skeleton';
 import { isCommentReply, Post } from 'types/posts';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
@@ -151,11 +150,11 @@ const PostDetails = () => {
         scrollViewRef.current?.scrollToIndex({
           index: commentIndex,
           animated: true,
-          viewOffset: theme.spacing.l,
+          viewOffset: theme.spacings.l,
         });
       }, 300);
     }
-  }, [commentId, comments, theme.spacing.l]);
+  }, [commentId, comments, theme.spacings.l]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -240,14 +239,14 @@ const PostDetails = () => {
         // from a lazy loading to ready state
         ListEmptyComponent={
           areCommentsLoading ? (
-            <CommentItemSkeleton />
+            <CommentContentLoader />
           ) : (
             <EmptyListComponent label={t('no comments yet')} />
           )
         }
         keyboardDismissMode="on-drag"
         onEndReached={fetchMoreComments}
-        ListFooterComponent={fetchingMoreComments ? <CommentItemSkeleton /> : null}
+        ListFooterComponent={fetchingMoreComments ? <CommentContentLoader /> : null}
       />
       {/* Bottom bar allowing to create a new comment */}
       <EnterCommentBottomBar

@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { Switch, useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
-import { Image, ImageSourcePropType, View } from 'react-native';
+import { Image, ImageSourcePropType, Switch, View } from 'react-native';
 import useStyles from './useStyles';
 
 type Props = {
@@ -39,11 +39,11 @@ const SectionSwitch: React.FC<Props> = props => {
         {label}
       </Typography.Regular16>
       <Switch
-        isChecked={value}
-        trackColor={{ true: theme.colors.butterOrange01 }}
+        value={value}
+        trackColor={{ true: theme.colors.primary }}
         thumbColor="white"
-        isDisabled={disabled}
-        onToggle={onValueChange}
+        disabled={disabled}
+        onChange={onValueChange}
       />
     </View>
   );

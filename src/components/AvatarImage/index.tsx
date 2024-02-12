@@ -1,8 +1,9 @@
 import { makeStyleWithProps } from 'config/theme';
 import { Image } from 'expo-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { Skeleton, View } from 'native-base';
+import { Skeleton } from 'moti/skeleton';
 import React from 'react';
+import { View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 
 interface AvatarImageProps {
@@ -85,7 +86,9 @@ const AvatarImage: React.FC<AvatarImageProps> = ({
   return (
     <View>
       {(loading || imageSourceLoading) && (
-        <Skeleton style={styles.skeleton} size={imageSize / 4} rounded="full" />
+        <View style={styles.skeleton}>
+          <Skeleton height={imageSize} width={imageSize} radius="round" colorMode="light" />
+        </View>
       )}
       {!imageSourceLoading ? (
         <Image

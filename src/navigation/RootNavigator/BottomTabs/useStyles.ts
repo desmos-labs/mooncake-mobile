@@ -8,7 +8,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     paddingBottom: Platform.OS === 'android' ? -12 : -26,
     paddingTop: 2,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
     shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
     shadowOffset: {
       width: 0,
@@ -21,7 +21,7 @@ const useStyles = makeStyle(theme => ({
   middleButtonView: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.s,
+    paddingHorizontal: theme.spacings.s,
     paddingBottom: 6,
   },
   buttonView: {

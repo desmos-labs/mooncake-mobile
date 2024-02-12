@@ -67,7 +67,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     borderRadius: 12,
     padding: 12,
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacings.m,
     backgroundColor: theme.colors.background,
     shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
     shadowOffset: {
@@ -86,6 +86,6 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.lightGrey02,
   },
   neutral700: {
-    color: theme.colors.neutral['700'],
+    color: theme.colors.neutralVariants['700'],
   },
 }));

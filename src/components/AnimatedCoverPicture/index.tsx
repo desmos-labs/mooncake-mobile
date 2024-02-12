@@ -120,7 +120,7 @@ const useStyles = makeStyleWithProps((heightFixed: number, theme) => ({
     zIndex: 0,
     width: Dimensions.get('window').width,
     height: heightFixed,
-    backgroundColor: theme.colors.lightGrey01,
+    backgroundColor: theme.colors.neutralVariants['300'],
   },
   bannerBlur: {
     ...StyleSheet.absoluteFillObject,
