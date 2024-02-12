@@ -26,14 +26,11 @@ import { MsgGrantAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 import { BasicAllowance, AllowedMsgAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import { GenericAuthorization } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/authz';
 import { promiseToResult } from 'lib/NeverThrowUtils';
-import elliptic from 'elliptic';
 import useErrorModal from 'hooks/modals/useErrorModal';
 import { generateWalletConnectWallet } from 'lib/WalletUtils';
 import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAndCreateProfile';
 import { AccountWithWallet } from 'types/account';
 import useConnectWalletConnect from './useConnectWalletConnect';
-
-const secp256k1 = new elliptic.ec('secp256k1');
 
 const MooncakeMessages = [
   // x/posts messages.
@@ -215,8 +212,6 @@ const useLoginWithWalletConnect = () => {
       const accounts = await signer.getAccounts();
       const [account] = accounts;
       console.log('[useLoginWithWalletConnect] Logged in as: ', account);
-      // TODO: Replace with the session returned by the signer.
-      const walletConnectSessionTopic = client.session.getAll().at(-1)!.topic;
 
       // The session is established, prompt the user to authorize
       // our generated wallet to sign the message on the user
@@ -227,11 +222,7 @@ const useLoginWithWalletConnect = () => {
         // Generate a new private key signer that will be used by the
         // application to sign the transactions without the need to
         // open the external wallet.
-        // TODO: replace it with the PrivateKeySigner.generate() method.
-        const tempWalletSigner = PrivateKeySigner.fromSecp256k1(
-          secp256k1.genKeyPair().getPrivate('hex'),
-          SigningMode.DIRECT,
-        );
+        const tempWalletSigner = PrivateKeySigner.generate(SigningMode.AMINO);
         await tempWalletSigner.connect();
         // Sign and broadcast the authorization messages.
         const grantee = await tempWalletSigner
@@ -246,7 +237,7 @@ const useLoginWithWalletConnect = () => {
         walletConnectAccount = await generateWalletConnectWallet(
           app,
           signer,
-          walletConnectSessionTopic,
+          signer.session.topic,
           {
             signer: tempWalletSigner,
             authorizations: signResult.value.authorizedMessages,
@@ -256,11 +247,7 @@ const useLoginWithWalletConnect = () => {
       } else {
         // We don't have the user authorization, lets create an account without
         // the temp wallet.
-        walletConnectAccount = await generateWalletConnectWallet(
-          app,
-          signer,
-          walletConnectSessionTopic,
-        );
+        walletConnectAccount = await generateWalletConnectWallet(app, signer, signer.session.topic);
       }
 
       startSaveAccountAndCreateProfileFlow({ account: walletConnectAccount });
