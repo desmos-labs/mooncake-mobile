@@ -12,12 +12,13 @@ const useErrorModal = () => {
   const navigation = useRootNavigator();
 
   return React.useCallback(
-    (message: string, retryAction: () => void) => {
+    (message: string, retryAction?: () => void) => {
       navigation.navigate(ROUTES.CONFIRM_MODAL, {
         title: t('error'),
         subtitle: message,
-        primaryButtonLabel: t('retry'),
+        primaryButtonLabel: retryAction ? t('retry') : t('ok'),
         onPressPrimary: retryAction,
+        removeModalAfterButtonPress: true,
       });
     },
     [navigation, t],

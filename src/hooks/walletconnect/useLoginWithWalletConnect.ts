@@ -22,6 +22,7 @@ import { MsgGrant } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/tx';
 import { GenericAuthorization } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/authz';
 import { promiseToResult } from 'lib/NeverThrowUtils';
 import elliptic from 'elliptic';
+import useErrorModal from 'hooks/modals/useErrorModal';
 import useConnectWalletConnect from './useConnectWalletConnect';
 
 const secp256k1 = new elliptic.ec('secp256k1');
@@ -132,16 +133,18 @@ const useSignAndBroadcastAuthzGrant = () => {
  * login through WalletConnect.
  */
 const useLoginWithWalletConnect = () => {
+  const { t } = useTranslation('landing');
   const connectWalletConnectClient = useConnectWalletConnect();
   const promptAuthzGrantRequest = usePromptAuthzGrantRequest();
   const signAndBroadcastAuthzGrant = useSignAndBroadcastAuthzGrant();
+  const showErrorMessage = useErrorModal();
 
   return useCallback(
     async (app: WalletConnectWalletApp) => {
       // Initialize the WalletConnect client.
       const connectionResult = await connectWalletConnectClient();
       if (connectionResult.isErr()) {
-        // TODO: Show error message to the user
+        showErrorMessage(connectionResult.error.message);
         console.error(
           '[useLoginWithWalletConnect] client initialization failed: ',
           connectionResult.error,
@@ -150,7 +153,7 @@ const useLoginWithWalletConnect = () => {
       }
       console.log('[useLoginWithWalletConnect] Client initialized');
 
-      console.log('[useLoginWithWalletConnect] Generating temp wallet');
+      console.log('[useLoginWithWalletConnect] Generating temp wallet...');
       // Generate a new private key signer that will be used by the
       // application to sign the transactions without the need to
       // open the external wallet.
@@ -165,7 +168,7 @@ const useLoginWithWalletConnect = () => {
       const client = connectionResult.value;
       const sessionInitializationResult = await initWalletConnectSession(client, app);
       if (sessionInitializationResult.isErr()) {
-        // TODO: Show error message to the user
+        showErrorMessage(sessionInitializationResult.error.message);
         console.error(
           '[useLoginWithWalletConnect] session initialization failed: ',
           sessionInitializationResult.error,
@@ -177,11 +180,6 @@ const useLoginWithWalletConnect = () => {
       const signer = sessionInitializationResult.value;
       const accounts = await signer.getAccounts();
       const [account] = accounts;
-      if (account === undefined) {
-        // TODO: Show error message to the user
-        console.error('[useLoginWithWalletConnect] No account found');
-        return;
-      }
       console.log('[useLoginWithWalletConnect] Logged in as: ', account);
 
       // The session is established, prompt the user to authorize
@@ -189,8 +187,9 @@ const useLoginWithWalletConnect = () => {
       // behalf.
       const authorized = await promptAuthzGrantRequest();
       if (!authorized) {
-        // TODO: Show error message to the user
+        showErrorMessage(t('user rejected the session request'));
         console.error('[useLoginWithWalletConnect] User rejected the authorization');
+        await signer.disconnect();
         return;
       }
 
@@ -202,14 +201,20 @@ const useLoginWithWalletConnect = () => {
       const signResult = await signAndBroadcastAuthzGrant(signer, account.address, grantee);
 
       if (signResult.isErr()) {
-        // TODO: Show error message to the user
         console.error('[useLoginWithWalletConnect] Authz grant failed: ', signResult.error);
+        signer.disconnect();
         return;
       }
 
       return ok(signResult.value);
     },
-    [connectWalletConnectClient, promptAuthzGrantRequest, signAndBroadcastAuthzGrant],
+    [
+      connectWalletConnectClient,
+      promptAuthzGrantRequest,
+      showErrorMessage,
+      signAndBroadcastAuthzGrant,
+      t,
+    ],
   );
 };
 
