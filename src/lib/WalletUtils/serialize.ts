@@ -7,7 +7,6 @@ import {
   SerializableWeb3AuthWallet,
   Wallet,
   WalletConnectWallet,
-  WalletConnectWalletApp,
   WalletSerializationVersion,
   WalletType,
   Web3AuthWallet,
@@ -45,20 +44,15 @@ const serializePrivateKeyWallet = (wallet: PrivateKeyWallet): SerializablePrivat
 function serializeWalletConnectWallet(
   wallet: WalletConnectWallet,
 ): SerializableWalletConnectWallet {
-  switch (wallet.walletApp) {
-    case WalletConnectWalletApp.DPM:
-      return {
-        version: WalletSerializationVersion.WalletConnectDPM,
-        type: WalletType.WalletConnect,
-        addressPrefix: wallet.addressPrefix,
-        address: wallet.address,
-        walletApp: wallet.walletApp,
-        sessionTopic: wallet.sessionTopic,
-        tempWallet: wallet.tempWallet,
-      };
-    default:
-      throw new Error(`can't serialize WalletConnect wallet with wallet app ${wallet.walletApp}`);
-  }
+  return {
+    type: WalletType.WalletConnect,
+    version: WalletSerializationVersion.WalletConnect,
+    addressPrefix: wallet.addressPrefix,
+    address: wallet.address,
+    walletApp: wallet.walletApp,
+    sessionTopic: wallet.sessionTopic,
+    tempWallet: wallet.tempWallet,
+  };
 }
 
 /**

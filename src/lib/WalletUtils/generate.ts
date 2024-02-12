@@ -95,10 +95,6 @@ export const generateWalletConnectWallet = async (
     authorizationsExpiration: Date;
   },
 ): Promise<AccountWithWallet> => {
-  if (walletApp !== WalletConnectWalletApp.DPM) {
-    throw new Error(`Unsupoprted walletApp ${walletApp}`);
-  }
-
   const [externalWalletAccount] = await externalWalletSigner.getAccounts();
   let walletTempWallet: WalletConnectWallet['tempWallet'];
   let accountTempWallet: WalletConnectAccount['tempWallet'];

@@ -5,7 +5,7 @@ import { Wallet, WalletConnectWalletApp, WalletType } from 'types/wallet';
 export enum AccountSerializationVersion {
   Web3Auth = 1,
   PrivateKey = 1,
-  WalletConnectDPM = 1,
+  WalletConnect = 1,
 }
 
 /**
@@ -68,12 +68,11 @@ export type SerializablePrivateKeyAccount = PrivateKeyAccount & {
 /**
  * Interface representing an account imported through WalletConnect.
  */
-interface BaseWalletConnectAccount<C extends WalletConnectWalletApp>
-  extends BaseAccount<WalletType.WalletConnect> {
+export interface WalletConnectAccount extends BaseAccount<WalletType.WalletConnect> {
   /**
    * WalletConnect wallet used to import this account.
    */
-  readonly walletApp: C;
+  readonly walletApp: WalletConnectWalletApp;
   /**
    * WalletConnect session used to import this account.
    */
@@ -109,27 +108,19 @@ interface BaseWalletConnectAccount<C extends WalletConnectWalletApp>
 }
 
 /**
- * Type that represents an account imported through DPM.
- */
-type DPMWalletConnectAccount = BaseWalletConnectAccount<WalletConnectWalletApp.DPM>;
-
-/**
- * Type that represents a [DPMWalletConnectAccount] that can be serialized
+ * Type that represents a [WalletConnectAccount] that can be serialized
  * into JSON and stored in the device's storage.
  */
-type SerializableDPMWalletConnectAccount = DPMWalletConnectAccount & {
-  readonly version: AccountSerializationVersion.WalletConnectDPM;
+export type SerializableWalletConnectAccount = WalletConnectAccount & {
+  readonly version: AccountSerializationVersion.WalletConnect;
 };
 
-export type WalletConnectAccount = DPMWalletConnectAccount;
 export type Account = Web3AuthAccount | PrivateKeyAccount | WalletConnectAccount;
 
 export interface AccountWithWallet {
   readonly account: Account;
   readonly wallet: Wallet;
 }
-
-export type SerializableWalletConnectAccount = SerializableDPMWalletConnectAccount;
 
 export type SerializableAccount =
   | SerializableWeb3AuthAccount

@@ -3,7 +3,7 @@ import { Signer } from '@desmoslabs/desmjs';
 export enum WalletSerializationVersion {
   Web3Auth = 1,
   PrivateKey = 1,
-  WalletConnectDPM = 1,
+  WalletConnect = 1,
 }
 
 /**
@@ -115,12 +115,11 @@ export type SerializablePrivateKeyWallet = Omit<PrivateKeyWallet, 'signer' | 'pr
 /**
  * Interface representing a wallet imported through WalletConnect.
  */
-interface BaseWalletConnectWallet<C extends WalletConnectWalletApp>
-  extends BaseWallet<WalletType.WalletConnect> {
+export interface WalletConnectWallet extends BaseWallet<WalletType.WalletConnect> {
   /**
    * The application used to import this wallet.
    */
-  readonly walletApp: C;
+  readonly walletApp: WalletConnectWalletApp;
   /**
    * The WalletConnect session topic that has
    * been used to connect to the external wallet app.
@@ -158,26 +157,9 @@ interface BaseWalletConnectWallet<C extends WalletConnectWalletApp>
 /**
  * Type representing an instance of [WalletConnectWallet] that can be serialized to JSON.
  */
-type BaseSerializableWalletConnectWallet<C extends WalletConnectWalletApp> = Omit<
-  BaseWalletConnectWallet<C>,
-  'signer'
->;
-
-/**
- * Type that represents a WalletConnect wallet imported through DPM.
- */
-export type DPMWalletConnectWallet = BaseWalletConnectWallet<WalletConnectWalletApp.DPM>;
-
-/**
- * Interface representing a [DPMWalletConnectWallet] that can be serialized to JSON.
- */
-export interface SerializableDPMWalletConnectWallet
-  extends BaseSerializableWalletConnectWallet<WalletConnectWalletApp.DPM> {
-  readonly version: WalletSerializationVersion.WalletConnectDPM;
-}
-
-export type WalletConnectWallet = DPMWalletConnectWallet;
-export type SerializableWalletConnectWallet = SerializableDPMWalletConnectWallet;
+export type SerializableWalletConnectWallet = Omit<WalletConnectWallet, 'signer'> & {
+  readonly version: WalletSerializationVersion.WalletConnect;
+};
 
 /**
  * Type representing all the supported wallets.

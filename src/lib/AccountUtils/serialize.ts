@@ -10,7 +10,7 @@ import {
   WalletConnectAccount,
   Web3AuthAccount,
 } from 'types/account';
-import { WalletConnectWalletApp, WalletType } from 'types/wallet';
+import { WalletType } from 'types/wallet';
 
 const serializeWeb3AuthAccount = (account: Web3AuthAccount): SerializableWeb3AuthAccount => ({
   version: AccountSerializationVersion.Web3Auth,
@@ -44,22 +44,17 @@ const serializePrivateKeyAuthAccount = (
 const serializeWalletConnectAccount = (
   account: WalletConnectAccount,
 ): SerializableWalletConnectAccount => {
-  switch (account.walletApp) {
-    case WalletConnectWalletApp.DPM:
-      return {
-        version: AccountSerializationVersion.WalletConnectDPM,
-        walletType: WalletType.WalletConnect,
-        address: account.address,
-        pubKey: account.pubKey,
-        algo: account.algo,
-        creationDate: account.creationDate,
-        walletApp: account.walletApp,
-        sessionTopic: account.sessionTopic,
-        tempWallet: account.tempWallet,
-      };
-    default:
-      throw new Error(`unsupported WalletConnect account ${account.walletApp}`);
-  }
+  return {
+    version: AccountSerializationVersion.WalletConnect,
+    walletType: WalletType.WalletConnect,
+    address: account.address,
+    pubKey: account.pubKey,
+    algo: account.algo,
+    creationDate: account.creationDate,
+    walletApp: account.walletApp,
+    sessionTopic: account.sessionTopic,
+    tempWallet: account.tempWallet,
+  };
 };
 
 const serializeAccount = (account: Account): SerializableAccount => {
