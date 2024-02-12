@@ -8,13 +8,13 @@ import {
   Signer,
   TxRaw,
 } from '@desmoslabs/desmjs';
-import { err, ok, Result } from 'neverthrow';
-import PostHog from 'posthog-react-native';
-import * as Sentry from 'sentry-expo';
-import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
-import { TransactionOptions } from 'types/transactions';
+import * as Sentry from '@sentry/react-native';
 import { promiseToResult } from 'lib/NeverThrowUtils';
 import { captureFailedTxError } from 'lib/PostHogUtils';
+import { err, ok, Result } from 'neverthrow';
+import PostHog from 'posthog-react-native';
+import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import { TransactionOptions } from 'types/transactions';
 
 /**
  * Creates a {@link DesmosClient} instance with the optimal configurations
@@ -120,7 +120,7 @@ export const signAndBroadcastWithGranter = async (
 
   if (broadcastResult.isErr()) {
     // Capture the transaction error.
-    Sentry.Native.captureException(broadcastResult.error);
+    Sentry.captureException(broadcastResult.error);
     captureFailedTxError(posthog, {
       error: broadcastResult.error,
       fees: txFee,

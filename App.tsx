@@ -1,15 +1,15 @@
+import * as Sentry from '@sentry/react-native';
 import BProvider from 'components/BProvider';
 import EnvConfig from 'config/EnvConfig';
 import { PostHogProvider } from 'posthog-react-native';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
-import * as Sentry from 'sentry-expo';
 import { DefaultPosthogFeatureFlags } from 'types/appFeatureFlags';
 
 Sentry.init({
   dsn: EnvConfig.SENTRY_DSN,
-  enableInExpoDevelopment: false,
+  debug: false,
   tracesSampleRate: 1.0,
 });
 

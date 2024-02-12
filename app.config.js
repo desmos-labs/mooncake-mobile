@@ -55,6 +55,8 @@ export default {
     },
     scheme: ['mooncakeweb3auth', 'mooncake'],
     plugins: [
+      'expo-font',
+      'expo-secure-store',
       [
         '@config-plugins/react-native-branch',
         {
@@ -62,7 +64,13 @@ export default {
           iosAppDomain: 'mooncake.app.link',
         },
       ],
-      ['sentry-expo'],
+      [
+        '@sentry/react-native/expo',
+        {
+          organization: 'desmos-labs',
+          project: 'mooncake',
+        },
+      ],
       ['expo-localization'],
       [
         'expo-build-properties',
@@ -132,17 +140,6 @@ export default {
       '@react-native-firebase/messaging',
       './plugins/withBackgroundActions',
     ],
-    hooks: {
-      postPublish: [
-        {
-          file: 'sentry-expo/upload-sourcemaps',
-          config: {
-            organization: 'desmos-labs',
-            project: 'mooncake',
-          },
-        },
-      ],
-    },
     extra: {
       eas: {
         projectId: '43a55d00-d274-46be-8bc8-f09e1373e573',

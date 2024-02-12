@@ -1,6 +1,6 @@
+import * as Sentry from '@sentry/react-native';
 import React from 'react';
 import { NativeModules, Platform } from 'react-native';
-import * as Sentry from 'sentry-expo';
 import SetLanguage from 'services/axios/requests/SetLanguage';
 
 /**
@@ -21,7 +21,7 @@ const useSetUserLanguage = () => {
   return React.useCallback(async () => {
     const serverRequestResult = await SetLanguage(languageIsoCode);
     if (serverRequestResult.isErr()) {
-      Sentry.Native.captureException(serverRequestResult.error);
+      Sentry.captureException(serverRequestResult.error);
     }
   }, [languageIsoCode]);
 };

@@ -4,7 +4,7 @@ module.exports = {
       plugins: ['transform-remove-console'],
     },
   },
-  presets: ['module:metro-react-native-babel-preset'],
+  presets: ['module:babel-preset-expo'],
   plugins: [
     ['module:react-native-dotenv'],
     [
@@ -40,6 +40,5 @@ module.exports = {
         },
       },
     ],
-    'react-native-reanimated/plugin',
   ],
 };

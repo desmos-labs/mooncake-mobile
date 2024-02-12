@@ -1,10 +1,10 @@
+import { useSetCachedFeatureFlags } from '@recoil/featureFlags';
+import * as Sentry from '@sentry/react-native';
+import { convertPostHogFeatureFlags } from 'lib/FeatureFlagsUtils';
+import { promiseToResult } from 'lib/NeverThrowUtils';
 import { usePostHog } from 'posthog-react-native';
 import React from 'react';
-import * as Sentry from 'sentry-expo';
-import { useSetCachedFeatureFlags } from '@recoil/featureFlags';
-import { convertPostHogFeatureFlags } from 'lib/FeatureFlagsUtils';
 import { PostHogFeatureFlags } from 'types/appFeatureFlags';
-import { promiseToResult } from 'lib/NeverThrowUtils';
 
 /**
  * Hook that provides a function to fetch the application feature flags.
@@ -29,7 +29,7 @@ const useFetchAppFeatureFlags = () => {
         convertPostHogFeatureFlags(posthog.getFeatureFlagPayloads() as PostHogFeatureFlags),
       );
     } else {
-      Sentry.Native.captureException(featureFlagsFetchResult.error);
+      Sentry.captureException(featureFlagsFetchResult.error);
     }
 
     return featureFlagsFetchResult.isOk();

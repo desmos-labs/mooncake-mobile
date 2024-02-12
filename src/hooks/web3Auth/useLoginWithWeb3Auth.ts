@@ -1,11 +1,11 @@
 import { PrivateKeyProviderStatus } from '@desmoslabs/desmjs';
 import { Web3AuthKeyProvider } from '@desmoslabs/desmjs-web3auth-mobile';
+import * as Sentry from '@sentry/react-native';
 import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAndCreateProfile';
 import sleep from 'lib/sleep';
 import { generateWeb3AuthWallet } from 'lib/WalletUtils';
 import { newWeb3AuthClient, web3AuthLoginParams } from 'lib/Web3AuthUtils';
 import { useCallback, useState } from 'react';
-import * as Sentry from 'sentry-expo';
 import { SupportedChain } from 'types/chains';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
@@ -57,7 +57,7 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
       try {
         privateKey = await keyProvider.getPrivateKey();
       } catch (e) {
-        Sentry.Native.captureException(e);
+        Sentry.captureException(e);
         // TODO: Show this error in a toast
         // showToast({
         //   toastType: ToastType.error,
@@ -73,7 +73,7 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
       console.log('[WEB3 WALLET ADDRESS]', account.wallet.address);
       const result = await startSaveAccountAndCreateProfileFlow({ account });
       if (result.isErr()) {
-        Sentry.Native.captureException(result.error);
+        Sentry.captureException(result.error);
         // TODO: Show this error in a toast
         // showToast({
         //   toastType: ToastType.error,

@@ -1,6 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import * as Sentry from '@sentry/react-native';
 import { bgonboarding, onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -22,7 +23,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Animated, FlatList, ImageBackground, ListRenderItemInfo, View } from 'react-native';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
-import * as Sentry from 'sentry-expo';
 import GetFeeGrant from 'services/axios/requests/GetFeeGrant';
 import { AccountWithWallet } from 'types/account';
 import { DesmosProfile } from 'types/desmos';
@@ -177,7 +177,7 @@ const Onboarding = () => {
     const signUpResult = await signUp();
     if (signUpResult.isErr()) {
       setFeeGrantRequestFailed(true);
-      Sentry.Native.captureException(signUpResult.error);
+      Sentry.captureException(signUpResult.error);
       showErrorModal(
         t('an error occurred while requesting the fee grant', {
           error: signUpResult.error.message,

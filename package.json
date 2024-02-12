@@ -150,7 +150,6 @@
     "readable-stream": "^1.0.33",
     "recoil": "^0.7.7",
     "rn-nodeify": "^10.3.0",
-    "sentry-expo": "^7.1.1",
     "stream-browserify": "^1.0.0",
     "subscriptions-transport-ws": "^0.11.0",
     "util": "^0.12.4",
