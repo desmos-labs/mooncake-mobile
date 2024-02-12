@@ -78,7 +78,6 @@ export default function usePaginatedQuery<QT, T>({
   }, [onCompleted, onError, refetchData]);
 
   const fetchMore = useCallback(async () => {
-    console.log('fetchMore');
     if (loadingData.current) {
       return;
     }

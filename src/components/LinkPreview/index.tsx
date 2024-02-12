@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import { Image } from 'expo-image';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { Linking, TouchableOpacity } from 'react-native';
+import { ImageStyle, Linking, StyleProp, TouchableOpacity } from 'react-native';
 import { PostPreviewURL } from 'lib/PostsUtils';
 import useStyles from './useStyles';
 
 interface LinkPreviewProps {
   readonly url: PostPreviewURL;
+  readonly previewStyle?: StyleProp<ImageStyle>;
 }
 
 /**
@@ -15,7 +16,7 @@ interface LinkPreviewProps {
  */
 const LinkPreview = (props: LinkPreviewProps) => {
   const styles = useStyles();
-  const { url } = props;
+  const { url, previewStyle } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -30,7 +31,10 @@ const LinkPreview = (props: LinkPreviewProps) => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <TouchableOpacity style={styles.containerStyle} activeOpacity={0.6} onPress={onPressPreview}>
+    <TouchableOpacity
+      style={[styles.containerStyle, previewStyle]}
+      activeOpacity={0.6}
+      onPress={onPressPreview}>
       <Image
         transition={250}
         recyclingKey={url.previewUrl}
