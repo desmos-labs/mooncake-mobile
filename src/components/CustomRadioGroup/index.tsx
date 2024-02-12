@@ -41,7 +41,7 @@ const CustomRadioGroup = (props: Props) => {
     <View>
       {values.map((value, index) => {
         return (
-          <View style={{ flex: 1, flexDirection: 'row' }} key={`${value.value}`}>
+          <View style={{ flexDirection: 'row' }} key={`${value.value}`}>
             <RadioButtonInput
               accessibilityLabel={`${value.value}-radio-button`}
               buttonStyle={{ marginBottom: theme.spacings.m }}

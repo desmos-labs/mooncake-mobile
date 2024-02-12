@@ -83,7 +83,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   disabledText: {
-    color: theme.colors.lightGrey02,
+    color: theme.colors.neutralVariants['300'],
   },
   neutral700: {
     color: theme.colors.neutralVariants['700'],

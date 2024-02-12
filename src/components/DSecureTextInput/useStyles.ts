@@ -5,8 +5,8 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.neutralVariants['100'],
   },
   error: {
-    borderColor: theme.colors.fedback.error,
-    backgroundColor: theme.colors.fedback.errorBg,
+    borderColor: theme.colors.feedback.error,
+    backgroundColor: theme.colors.feedback.errorBg,
   },
   icon: {
     width: 24,

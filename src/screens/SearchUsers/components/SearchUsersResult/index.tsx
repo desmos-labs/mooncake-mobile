@@ -1,10 +1,9 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useActiveAccountAddress } from '@recoil/accounts';
-import ToggleFollowageButton from 'components/ToggleFollowageButton';
-import { Image } from 'expo-image';
-import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
-import { getProfilePicture } from 'lib/ProfileUtils';
 import { useTheme } from '@react-navigation/native';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import AvatarImage from 'components/AvatarImage';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
@@ -33,10 +32,10 @@ const SearchUsersResult = ({ profile }: Props) => {
     <TouchableOpacity
       style={styles.container}
       onPress={() => navigateToProfile(isActiveAddress ? undefined : profile.address)}>
-      <Image source={getProfilePicture(profile)} contentFit="cover" style={styles.avatar} />
+      <AvatarImage imageSource={profile} size={48} />
       <View style={styles.textContainer}>
         <Typography.Semibold14>{profile.nickname || 'no-nickname'}</Typography.Semibold14>
-        <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
+        <Typography.Regular12 style={{ color: theme.colors.neutralVariants['700'] }}>
           @{profile.dTag}
         </Typography.Regular12>
       </View>

@@ -7,7 +7,7 @@ const useStyles = makeStyle(() => ({
     justifyContent: 'center',
   },
   button: {
-    borderRadius: 6,
+    borderRadius: 8,
     justifyContent: 'center',
     alignSelf: 'stretch',
   },

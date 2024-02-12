@@ -56,7 +56,7 @@ const BottomUpModalWrapper: React.FC<Props> = props => {
               styles.innerContainer,
               {
                 paddingHorizontal: paddingHorizontal || theme.spacings.l,
-                paddingTop: paddingTop || 10,
+                paddingTop: paddingTop || 16,
                 paddingBottom: paddingBottom || theme.spacings.l,
               },
             ]}>
