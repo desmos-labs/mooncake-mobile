@@ -204,20 +204,7 @@ const useLoginWithWalletConnect = () => {
 
       // Start the session by sending the request to the external wallet.
       const client = connectionResult.value;
-      // Check if we have a previously established session.
-      const previousSession = client.session.getAll().find(s => {
-        switch (app) {
-          case WalletConnectWalletApp.DPM:
-            return s.peer.metadata.name === 'Desmos Profile Manager';
-          default:
-            return false;
-        }
-      });
-      const sessionInitializationResult = await initWalletConnectSession(
-        client,
-        app,
-        previousSession,
-      );
+      const sessionInitializationResult = await initWalletConnectSession(client, app);
       if (sessionInitializationResult.isErr()) {
         showErrorMessage(sessionInitializationResult.error.message);
         return;
