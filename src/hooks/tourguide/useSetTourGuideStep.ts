@@ -1,6 +1,6 @@
-import React from 'react';
-import * as Sentry from 'sentry-expo';
 import { useSetCachedTourGuide } from '@recoil/tourguide';
+import * as Sentry from '@sentry/react-native';
+import React from 'react';
 import SetTourGuideStep from 'services/axios/requests/SetTourStep';
 import { TourGuideState } from 'types/tourguide';
 
@@ -21,7 +21,7 @@ const useSetTourGuideStep = () => {
       if (onlyLocal !== true) {
         const serverRequestResult = await SetTourGuideStep(newState);
         if (serverRequestResult.isErr()) {
-          Sentry.Native.captureException(serverRequestResult.error);
+          Sentry.captureException(serverRequestResult.error);
         }
       }
     },

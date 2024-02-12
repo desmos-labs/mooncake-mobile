@@ -1,6 +1,6 @@
 import { useCachedTourGuide, useSetCachedTourGuide } from '@recoil/tourguide';
+import * as Sentry from '@sentry/react-native';
 import React from 'react';
-import * as Sentry from 'sentry-expo';
 import GetUserData from 'services/axios/requests/GetUserData';
 
 /**
@@ -22,7 +22,7 @@ const useFetchTourGuidesState = () => {
       };
       setTourGuide(tourGuide);
     } else {
-      Sentry.Native.captureException(accountInfoResult.error);
+      Sentry.captureException(accountInfoResult.error);
     }
     return tourGuide;
   }, [cachedTourGuide, setTourGuide]);
