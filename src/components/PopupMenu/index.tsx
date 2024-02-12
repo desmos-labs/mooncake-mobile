@@ -40,11 +40,17 @@ const PopupMenu: React.FC<Props> = ({ popupMenuOpened, setPopupMenuOpened, menuI
       if (!item) {
         return null;
       }
+
+      const onSelectItem = () => {
+        setPopupMenuOpened(false);
+        item.onPress();
+      };
+
       return (
         <MenuOption
           value={idx}
           style={styles.menuOptionWithDivider}
-          onSelect={item.onPress}
+          onSelect={onSelectItem}
           key={menuItems[idx]?.label}>
           <View style={styles.optionView} key={menuItems[idx]?.label}>
             <Image source={item.icon} style={styles.icon} />
