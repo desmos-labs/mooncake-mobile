@@ -1,4 +1,4 @@
-import { LocalStorageI, WalletConnectSigner } from '@desmoslabs/desmjs-walletconnect-v2';
+import { LocalStorageI } from '@desmoslabs/desmjs-walletconnect-v2';
 import SignClient from '@walletconnect/sign-client';
 import { SessionTypes } from '@walletconnect/types';
 import { SigningMode } from '@desmoslabs/desmjs';
@@ -7,6 +7,7 @@ import { WalletConnectWalletApp } from 'types/wallet';
 import { promiseToResult } from 'lib/NeverThrowUtils';
 import { err, ok } from 'neverthrow';
 import { WalletConnectModalController } from './modalController';
+import WalletConnectSigner from './signer';
 
 const MMKVLocalStorage = new MMKV({
   id: 'mmkw-localstorage',
@@ -29,7 +30,7 @@ export const initDPMWalletConnectSession = async (
   client: SignClient,
   previousSession?: SessionTypes.Struct,
 ) => {
-  const signer = new WalletConnectSigner(client, {
+  const signer = new WalletConnectSigner(WalletConnectWalletApp.DPM, client, {
     chain: 'desmos:desmos-mainnet',
     // Here we use AMINO to support Ledger imported accounts.
     signingMode: SigningMode.AMINO,
