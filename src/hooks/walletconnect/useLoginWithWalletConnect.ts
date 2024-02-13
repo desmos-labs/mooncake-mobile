@@ -80,6 +80,10 @@ const usePromptGrantsRequest = () => {
         secondaryButtonLabel: t('cancel', { ns: 'common' }),
         onPressSecondary: () => resolve(false),
         removeModalAfterButtonPress: true,
+        onDismiss: () => {
+          navigation.goBack();
+          resolve(false);
+        },
       });
     });
   }, [navigation, t]);
