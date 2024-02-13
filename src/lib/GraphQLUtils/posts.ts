@@ -55,11 +55,12 @@ const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentConten
   }
 };
 
-const convertGraphQLPostAttachment = (attachment: any): PostAttachment => {
+export const convertGraphQLPostAttachment = (attachment: any): PostAttachment => {
   return {
     id: attachment.id,
     content: convertGraphQLPostAttachmentContent(attachment.content),
     size: convertGraphQLPostAttachmentSize(attachment.size),
+    contentHash: attachment?.content_hash?.length > 0 ? attachment.content_hash[0].hash : undefined,
   } as PostAttachment;
 };
 

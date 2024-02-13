@@ -16,6 +16,9 @@ const PostFields = gql`
     }
     text
     attachments {
+      content_hash {
+        hash
+      }
       id
       content
       size {
