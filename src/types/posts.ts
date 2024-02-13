@@ -15,16 +15,6 @@ export enum PostStatus {
    * fetch it from the API yet.
    */
   CREATED_LOCALLY = 'created',
-  /**
-   * The post has been edited locally and we didn't
-   * fetch it from the API yet.
-   */
-  EDITED_LOCALLY = 'edited',
-  /**
-   * The post has been deleted locally and shouldn't
-   * be displayed to the user if retrieved from the API.
-   */
-  DELETED_LOCALLY = 'deleted',
 }
 
 export interface Post {
@@ -207,8 +197,7 @@ export interface PostAttachmentSize {
 }
 
 export enum PostAttachmentType {
-  MEDIA,
-  POLL,
+  MEDIA = 0,
 }
 
 export interface PostMediaAttachment {

@@ -395,7 +395,7 @@ const Profile = () => {
                 <Typography.Semibold20 style={styles.nickname} numberOfLines={1}>
                   {profile.nickname}
                 </Typography.Semibold20>
-                {/* Profile Dtag */}
+                {/* Profile DTag */}
                 <Typography.Regular12 style={styles.profileDtag} numberOfLines={1}>
                   @{profile.dTag}
                 </Typography.Regular12>
