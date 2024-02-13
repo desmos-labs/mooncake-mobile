@@ -1,0 +1,12 @@
+{
+  "entry": [
+    "index.{js,ts}",
+    "src/index.{js,ts}"
+  ],
+  "project": [
+    "**/*.{js,ts,jsx,tsx}"
+  ],
+  "ignore": [
+    "app.config.js"
+  ]
+}
