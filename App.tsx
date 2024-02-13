@@ -12,6 +12,7 @@ Sentry.init({
   dsn: EnvConfig.SENTRY_DSN,
   debug: false,
   tracesSampleRate: 1.0,
+  enabled: !__DEV__,
 });
 
 GiphySDK.configure({
