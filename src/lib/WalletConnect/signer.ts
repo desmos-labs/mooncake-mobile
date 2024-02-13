@@ -1,13 +1,32 @@
 import {
   SignClient,
   WalletConnectSigner as DesmJSWalletConnectSigner,
-  WalletConnectSignerOptions,
+  LocalStorageI,
 } from '@desmoslabs/desmjs-walletconnect-v2';
 import { SignDoc } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import { DirectSignResponse } from '@cosmjs/proto-signing';
 import { AminoSignResponse, StdSignDoc } from '@cosmjs/amino';
 import { WalletConnectWalletApp } from 'types/wallet';
 import { Linking } from 'react-native';
+import { SigningMode } from '@desmoslabs/desmjs';
+import { MMKV } from 'react-native-mmkv';
+import { WalletConnectModalController } from './modalController';
+
+const MMKVLocalStorage = new MMKV({
+  id: 'mmkw-localstorage',
+});
+
+const WalletConnectSessionStorage: LocalStorageI = {
+  getItem: (key: string) => {
+    return MMKVLocalStorage.getString(key) ?? null;
+  },
+  setItem: (key: string, value: string) => {
+    return MMKVLocalStorage.set(key, value);
+  },
+  removeItem: (key: string) => {
+    return MMKVLocalStorage.delete(key);
+  },
+};
 
 /**
  * Extension of the {@link DesmJSWalletConnectSigner} that will
@@ -17,12 +36,14 @@ import { Linking } from 'react-native';
 export default class WalletConnectSigner extends DesmJSWalletConnectSigner {
   private readonly app: WalletConnectWalletApp;
 
-  constructor(
-    app: WalletConnectWalletApp,
-    client: SignClient,
-    options: WalletConnectSignerOptions,
-  ) {
-    super(client, options);
+  constructor(app: WalletConnectWalletApp, client: SignClient) {
+    super(client, {
+      chain: 'desmos:desmos-mainnet',
+      // Here we use AMINO to support Ledger imported accounts.
+      signingMode: SigningMode.AMINO,
+      qrCodeModalController: new WalletConnectModalController(app),
+      sessionsCacheStorage: WalletConnectSessionStorage,
+    });
     this.app = app;
   }
 
