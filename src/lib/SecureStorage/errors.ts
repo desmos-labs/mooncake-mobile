@@ -1,10 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
 enum SecureStorageErrorType {
-  CorruptedData,
-  WrongPassword,
-  WalletNotFound,
-  InvalidPassword,
-  Unknown,
+  CorruptedData = 'SecureStorageErrorType.CorruptedData',
+  WrongPassword = 'SecureStorageErrorType.WrongPassword',
+  WalletNotFound = 'SecureStorageErrorType.WalletNotFound',
+  InvalidPassword = 'SecureStorageErrorType.InvalidPassword',
+  Unknown = 'SecureStorageErrorType.Unknown',
 }
 
 /**
@@ -21,6 +21,14 @@ export class WrongPasswordError extends Error {
 }
 
 /**
+ * Checks if the provided error is a {@link WrongPasswordError}.
+ */
+export function isWrongPasswordError(error: Error): error is WrongPasswordError {
+  const { type } = error as WrongPasswordError;
+  return type === SecureStorageErrorType.WrongPassword;
+}
+
+/**
  * Secure storage error raised if the data present in the
  * storage is corrupted.
  */
@@ -31,6 +39,14 @@ export class CorruptedDataError extends Error {
     super(message);
     this.type = SecureStorageErrorType.CorruptedData;
   }
+}
+
+/**
+ * Checks if the provided error is a {@link CorruptedDataError}.
+ */
+export function isCorruptedDataError(error: Error): error is CorruptedDataError {
+  const { type } = error as CorruptedDataError;
+  return type === SecureStorageErrorType.CorruptedData;
 }
 
 export class WalletNotFoundError extends Error {
@@ -46,15 +62,11 @@ export class WalletNotFoundError extends Error {
 }
 
 /**
- * Secure storage error raised if the provided password is invalid.
+ * Checks if the provided error is a {@link WalletNotFoundError}.
  */
-export class InvalidPasswordError extends Error {
-  readonly type: SecureStorageErrorType.InvalidPassword;
-
-  constructor() {
-    super();
-    this.type = SecureStorageErrorType.InvalidPassword;
-  }
+export function isWalletNotFoundError(error: Error): error is WalletNotFoundError {
+  const { type } = error as WalletNotFoundError;
+  return type === SecureStorageErrorType.WalletNotFound;
 }
 
 /**
@@ -78,5 +90,4 @@ export type SecureStorageError =
   | WrongPasswordError
   | CorruptedDataError
   | WalletNotFoundError
-  | InvalidPasswordError
   | UnknownError;

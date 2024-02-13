@@ -1,0 +1,4 @@
+{
+  "session expired": "Session expired",
+  "session with external wallet expired, would you like to reconnect": "This account has been imported through WalletConnect, and the session with the external wallet has expired.\nTo perform operations with this account, an active session is required.\nWould you like to reconnect?",
+}

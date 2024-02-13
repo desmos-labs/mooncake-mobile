@@ -4,12 +4,44 @@ import { useCallback } from 'react';
 import { SerializableWalletConnectWallet, WalletConnectWallet, WalletType } from 'types/wallet';
 import WalletConnectSigner from 'lib/WalletConnect/signer';
 import { promiseToResult } from 'lib/NeverThrowUtils';
+import useRootNavigator from 'hooks/navigation/useRootNavigator';
+import ROUTES from 'navigation/routes';
+import { CanceledOperationError } from 'types/error';
+import { useTranslation } from 'react-i18next';
 import useConnectWalletConnect from './useConnectWalletConnect';
 
+const useRequestWalletReinitialization = () => {
+  const { t } = useTranslation('walletconnect');
+  const navigation = useRootNavigator();
+
+  return useCallback((): Promise<boolean> => {
+    return new Promise(resolve => {
+      navigation.navigate(ROUTES.CONFIRM_MODAL, {
+        title: t('session expired'),
+        subtitle: t('session with external wallet expired, would you like to reconnect'),
+        primaryButtonLabel: t('yes', { ns: 'common' }),
+        onPressPrimary: () => resolve(true),
+        secondaryButtonLabel: t('cancel', { ns: 'common' }),
+        onPressSecondary: () => resolve(false),
+        removeModalAfterButtonPress: true,
+        onDismiss: () => {
+          navigation.goBack();
+          resolve(false);
+        },
+      });
+    });
+  }, [navigation, t]);
+};
+
+/**
+ * Hook that provides a function to reconnect a wallet imported
+ * through WalletConnect.
+ */
 const useReconnectWalletConnectWallet = () => {
   const getAccount = useGetStoredAccount();
   const storeAccount = useStoreAccount();
   const connectWalletConnect = useConnectWalletConnect();
+  const requestReinitialization = useRequestWalletReinitialization();
 
   return useCallback(
     async (
@@ -39,8 +71,10 @@ const useReconnectWalletConnectWallet = () => {
       const session = client.session.getAll().find(s => s.topic === account.sessionTopic);
 
       if (session === undefined) {
-        // TODO: The session has expired or has been closed by the user, ask the user if wants
-        // to re-connect.
+        const reinitialize = await requestReinitialization();
+        if (!reinitialize) {
+          return err(new CanceledOperationError());
+        }
 
         const connectResult = await promiseToResult(
           signer.connect(),
@@ -78,7 +112,7 @@ const useReconnectWalletConnectWallet = () => {
         tempWallet: serializedWallet.tempWallet,
       });
     },
-    [connectWalletConnect, getAccount, storeAccount],
+    [connectWalletConnect, getAccount, requestReinitialization, storeAccount],
   );
 };
 

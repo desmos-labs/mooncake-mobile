@@ -2,7 +2,6 @@ import * as SecureStore from 'expo-secure-store';
 import { decryptData, encryptData, EncryptedData } from 'lib/EncryptionUtils';
 import {
   CorruptedDataError,
-  InvalidPasswordError,
   SecureStorageError,
   UnknownError,
   WalletNotFoundError,
@@ -222,7 +221,7 @@ export const storeBiometricAuthorization = async (
   if (validationPassword) {
     const isPasswordValid = await checkUserPassword(password);
     if (!isPasswordValid) {
-      return err(new InvalidPasswordError());
+      return err(new WrongPasswordError());
     }
   }
   try {
