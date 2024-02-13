@@ -385,7 +385,7 @@ const Profile = () => {
         keyboardShouldPersistTaps="always"
         contentContainerStyle={styles.contentContainerStyle}
         showsVerticalScrollIndicator={false}
-        scrollEventThrottle={1}>
+        scrollEventThrottle={16}>
         <View style={styles.contentView}>
           <View style={styles.innerContainer}>
             {/* Posts, following and followers counters */}
