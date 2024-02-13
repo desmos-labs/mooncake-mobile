@@ -52,4 +52,11 @@ describe('useParseErrorMessage', () => {
     );
     expect(result).toEqual('You are already following this user');
   });
+
+  it('post length exceeded', () => {
+    const result = getErrorMessage(
+      "Query failed with (6): rpc error: code = Unknown desc = failed to execute message; message index: 0: text exceeded max length allowed: invalid post [desmos-labs/desmos/v6/x/posts/keeper/posts.go:120] With gas wanted: '100000000' and gas used: '83636' : unknown request",
+    );
+    expect(result).toEqual('Your post is too long');
+  });
 });

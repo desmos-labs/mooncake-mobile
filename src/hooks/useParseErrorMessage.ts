@@ -31,6 +31,11 @@ const useParseErrorMessage = () => {
         }
       }
 
+      // Posts errors
+      if (error.includes('text exceeded max length')) {
+        return t('your post is too long');
+      }
+
       if (error) {
         // Generic error: return the error capitalizing the first letter
         return error.charAt(0).toUpperCase() + error.slice(1);
