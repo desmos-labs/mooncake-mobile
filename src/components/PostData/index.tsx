@@ -32,7 +32,6 @@ const PostData = (props: Props) => {
   const { Attachment } = useRenderPostAttachment(post, {
     media: {
       useAutoSize: true,
-      resizeMode: 'contain',
       horizontalPaddingWithAutoSize: 32,
       imageStyle: [
         {

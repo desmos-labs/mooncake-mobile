@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
+import { RenderProps } from 'hooks/rendering/types';
 import React from 'react';
 import { Post, PostAttachmentType } from 'types/posts';
-import { RenderProps } from 'hooks/rendering/types';
 
 /**
  * A hook to serve as a singular point to handle rendering of post media attachments
@@ -26,6 +26,8 @@ const useRenderMediaAttachment = (post: Post, renderProps: RenderProps) => {
           recyclingKey={attachment.content.uri}
           contentFit={renderProps?.contentFit ?? 'cover'}
           source={{ uri: attachment.content.uri }}
+          placeholder={attachment.contentHash}
+          placeholderContentFit={renderProps?.contentFit ?? 'cover'}
           // @ts-ignore
           style={renderProps?.style}
         />
