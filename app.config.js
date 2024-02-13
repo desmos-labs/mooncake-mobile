@@ -118,14 +118,7 @@ export default {
         'expo-image-picker',
         {
           photosPermission:
-            'By allowing the application to access your photos, you can set profile pictures and preserve event memories.',
-        },
-      ],
-      [
-        'expo-barcode-scanner',
-        {
-          cameraPermission:
-            'By allowing the application to access the camera, you can set your profile picture and capture event memories',
+            'Granting the application access to your photos enables you to utilize them within your posts, as well as for your profile picture and cover photo.',
         },
       ],
       [
