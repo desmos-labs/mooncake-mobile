@@ -1,0 +1,20 @@
+{
+  "entry": [
+    "index.{js,ts}",
+    "src/index.{js,ts}"
+  ],
+  "project": [
+    "**/*.{js,ts,jsx,tsx}"
+  ],
+  "ignore": [
+    "**/*.d.tsx",
+    "app.config.js",
+    "metro.config.js",
+    "plugins/**"
+  ],
+  "exclude": [
+    "dependencies",
+    "unlisted",
+    "binaries"
+  ]
+}

@@ -18,9 +18,7 @@ const followersState = atom<Record<string, string[]>>({
  * NOTE: The list will be erased when the application closes.
  * @param user - The user address, if undefined this hook will always return an empty list.
  */
-// Ignore ts-prune error since we may need this in the future.
-// ts-prune-ignore-next
-export const useCachedUserFollowing = (user: string | undefined) => {
+const useCachedUserFollowing = (user: string | undefined) => {
   const followers = useRecoilValue(followersState);
   return React.useMemo(() => {
     if (user === undefined) {

@@ -3,8 +3,6 @@ import { LoginOnboardingStep } from 'types/tourguide';
 import { Wallet, WalletType } from 'types/wallet';
 
 export enum AccountSerializationVersion {
-  Mnemonic = 1,
-  Ledger = 1,
   Web3Auth = 1,
   PrivateKey = 1,
 }
@@ -82,7 +80,7 @@ export type SerializableAccount = SerializableWeb3AuthAccount | SerializablePriv
  * Interface that represents the information
  * about the user's account that can be updated.
  */
-export interface UpdatableAccountInfo {
+interface UpdatableAccountInfo {
   readonly loginTourLastStep: LoginOnboardingStep;
   readonly languageIsoCode: string;
 }
