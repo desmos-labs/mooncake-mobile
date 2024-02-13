@@ -14,7 +14,7 @@ const useStyles = makeStyle(theme => ({
   root: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   contentView: {
     flex: 1,
@@ -28,7 +28,7 @@ const useStyles = makeStyle(theme => ({
   },
   textView: {
     marginTop: 40,
-    paddingHorizontal: theme.spacing.xl,
+    paddingHorizontal: theme.spacings.xl,
     alignItems: 'center',
   },
   slide: {
@@ -37,7 +37,7 @@ const useStyles = makeStyle(theme => ({
     width: fixedWidth,
   },
   button: {
-    marginHorizontal: theme.spacing.m,
+    marginHorizontal: theme.spacings.m,
   },
   paginationView: { alignSelf: 'center', marginTop: -80, marginBottom: 40 },
 }));

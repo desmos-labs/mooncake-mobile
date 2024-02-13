@@ -22,7 +22,7 @@ const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton
         <Typography.Regular14 style={styles.textStyle}>{label}</Typography.Regular14>
       </View>
       {additionalButton && handleButton && (
-        <Button size={44} textColor="white" onPress={handleButton} mt="xl" mx="80px">
+        <Button height={44} onPress={handleButton}>
           {buttonLabel}
         </Button>
       )}
@@ -33,27 +33,27 @@ const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
   },
   contentContainer: {
     alignItems: 'center',
   },
   textStyle: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['900'],
     textAlign: 'center',
   },
   imageStyle: {
     width: 120,
     height: 120,
     resizeMode: 'contain',
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacings.m,
   },
   buttonStyle: {
-    marginTop: theme.spacing.l,
+    marginTop: theme.spacings.l,
   },
   additionalButton: {
     marginHorizontal: 100,
-    marginTop: theme.spacing.l,
+    marginTop: theme.spacings.l,
   },
 }));
 

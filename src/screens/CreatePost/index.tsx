@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
   useAddCreatePostAttachment,
@@ -21,7 +21,6 @@ import useCreatePost from 'hooks/posts/useCreatePost';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useToast from 'hooks/toasts/useToast';
 import useKeyboardVisibility from 'hooks/useKeyboardVisibility';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -232,7 +231,7 @@ const CreatePost = () => {
               autoFocus={true}
               maxLength={postsParams.maxTextLength}
               placeholder={parent ? t('your reply') : t('write something')}
-              placeholderTextColor={theme.colors.grey02}
+              placeholderTextColor={theme.colors.neutralVariants['600']}
               value={postText}
               onChangeText={setPostText}
               multiline

@@ -4,7 +4,7 @@ import { Dimensions } from 'react-native';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingTop: theme.spacing.m,
+    paddingTop: theme.spacings.m,
   },
   flexCenter: {
     flex: 1,
@@ -13,25 +13,25 @@ const useStyles = makeStyle(theme => ({
   },
   sectionHeader: {
     backgroundColor: theme.colors.white,
-    paddingTop: theme.spacing.s,
-    paddingHorizontal: theme.spacing.m,
-    paddingBottom: theme.spacing.s,
+    paddingTop: theme.spacings.s,
+    paddingHorizontal: theme.spacings.m,
+    paddingBottom: theme.spacings.s,
   },
   emptyView: {
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
     height: Dimensions.get('window').height / 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   divider: {
     height: 1,
-    marginVertical: theme.spacing.s,
+    marginVertical: theme.spacings.s,
   },
   errorImage: {
     width: 72,
     height: 72,
     resizeMode: 'cover',
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
 }));
 

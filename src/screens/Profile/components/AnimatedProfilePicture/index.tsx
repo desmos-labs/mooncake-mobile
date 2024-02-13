@@ -96,9 +96,9 @@ const useStyles = makeStyle(theme => ({
     height: 100,
     borderRadius: 50,
     borderWidth: 3,
-    left: theme.spacing.m,
+    left: theme.spacings.m,
     borderColor: theme.colors.white,
-    backgroundColor: theme.colors.lightGrey01,
+    backgroundColor: theme.colors.neutralVariants['600'],
   },
   pressable: { zIndex: 5 },
 }));

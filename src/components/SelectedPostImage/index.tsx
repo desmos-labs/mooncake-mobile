@@ -94,12 +94,12 @@ const useStyles = makeStyle(theme => ({
     top: 10,
   },
   image: {
-    backgroundColor: theme.colors.grey01,
+    backgroundColor: theme.colors.neutralVariants['300'],
     borderRadius: 12,
   },
   container: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
   },

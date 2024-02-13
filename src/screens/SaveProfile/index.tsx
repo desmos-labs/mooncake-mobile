@@ -1,6 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
   backButton,
@@ -22,7 +22,6 @@ import useTakePicture, { TakePictureActionResults } from 'hooks/camera/useTakePi
 import useProfileParams from 'hooks/profiles/useProfileParams';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useRef, useState } from 'react';
@@ -292,7 +291,8 @@ const SaveProfile = (props: NavProps) => {
                       <AntDesign
                         name="exclamationcircleo"
                         size={19}
-                        color={theme.colors.surfaceBlack}
+                        color={theme.colors.neutralVariants['900']}
+                        suppressHighlighting
                         onPress={useOpenInfoModal}
                       />
                     </View>
@@ -363,7 +363,7 @@ const SaveProfile = (props: NavProps) => {
                   )}
                 </View>
               </ScrollView>
-              <View style={{ padding: theme.spacing.m }}>
+              <View style={{ padding: theme.spacings.m }}>
                 <Button
                   disabled={!values.dTag || !dtagAvailable}
                   height={44}

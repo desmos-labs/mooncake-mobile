@@ -1,8 +1,8 @@
+import { useTheme } from '@react-navigation/native';
 import { eyeClosed, eyeOpen } from 'assets/images';
 import DTextInput, { Props as DTextInputProps } from 'components/DTextInput';
 import React, { useState } from 'react';
-import { Pressable, useTheme } from 'native-base';
-import { Image } from 'react-native';
+import { Image, Pressable } from 'react-native';
 import useStyles from './useStyles';
 
 const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur, ...rest }) => {
@@ -12,9 +12,9 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur
   const styles = useStyles();
   const [hideText, setHideText] = useState(true);
   const iconColor = () => {
-    if (focused && !rest.error) return theme.colors.surfaceBlack;
-    if (rest.error) return theme.colors.pink01;
-    return theme.colors.grey01;
+    if (focused && !rest.error) return theme.colors.neutralVariants['900'];
+    if (rest.error) return theme.colors.feedback.error;
+    return theme.colors.neutralVariants['600'];
   };
 
   const a11yLabel = rest.accessibilityLabel;

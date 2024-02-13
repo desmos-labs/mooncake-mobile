@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { useTheme } from '@react-navigation/native';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image, ImageSource } from 'expo-image';
-import { useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { ActivityIndicator, Platform, Pressable, PressableProps, View } from 'react-native';
 import Reanimated, {
@@ -115,18 +115,15 @@ const Button = (props: Props) => {
   // Reanimated
   const buttonScale = useSharedValue(1);
 
-  const animatedButtonStyle = useAnimatedStyle(
-    () => ({
-      transform: [{ scale: buttonScale.value }],
-      opacity: disabled ? 0.5 : interpolate(buttonScale.value, [0.9, 1], [0.5, 1]),
-    }),
-    [disabled],
-  );
+  const animatedButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: buttonScale.value }],
+    opacity: disabled ? 0.3 : interpolate(buttonScale.value, [0.9, 1], [0.5, 1]),
+  }));
 
   return (
     <ReanimatedPressable
       disabled={disabled}
-      style={[animatedButtonStyle, styles.root, buttonStyle, disabled && styles.disabled, style]}
+      style={[animatedButtonStyle, styles.root, buttonStyle, style]}
       onPressIn={() => {
         buttonScale.value = withTiming(0.9, { duration: 200 });
       }}

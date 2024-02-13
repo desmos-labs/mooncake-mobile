@@ -1,4 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { Entypo } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { squaresAnimation } from 'assets/animations';
 import {
@@ -19,8 +21,7 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { Center, HStack, useTheme, VStack } from 'native-base';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import { isPostPending, Post } from 'types/posts';
@@ -44,7 +45,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const theme = useTheme();
   const styles = useStyles();
   const { t } = useTranslation('home');
-
+  const [menuOpened, setMenuOpened] = useState(false);
   const {
     post,
     onPressAuthor,
@@ -160,9 +161,24 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
     if (isPending) {
       return <ThemedLottieView source={squaresAnimation} autoPlay style={styles.pendingIcon} />;
     } else if (!isCurrentUserAuthor) {
-      return <PopupMenu menuItems={popupMenuItems} />;
+      return (
+        <>
+          <Entypo
+            name="dots-three-horizontal"
+            size={24}
+            color="black"
+            suppressHighlighting
+            onPress={() => setMenuOpened(prev => !prev)}
+          />
+          <PopupMenu
+            popupMenuOpened={menuOpened}
+            setPopupMenuOpened={setMenuOpened}
+            menuItems={popupMenuItems}
+          />
+        </>
+      );
     }
-  }, [popupMenuItems, isPending, isCurrentUserAuthor, styles.pendingIcon]);
+  }, [popupMenuItems, isPending, isCurrentUserAuthor, styles.pendingIcon, menuOpened]);
 
   return (
     <View style={styles.profileInfoView}>
@@ -172,23 +188,30 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
           style={styles.profilePic}
           recyclingKey={post.author.address}
         />
-        <VStack>
+        <View style={{ flexDirection: 'column' }}>
           <Typography.Semibold14>{post.author.nickname}</Typography.Semibold14>
-          <HStack>
-            <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <Typography.Regular12 style={{ color: theme.colors.neutralVariants['700'] }}>
               @{post.author.dTag}
             </Typography.Regular12>
             <Typography.Regular12
               style={{
-                color: theme.colors.midGrey,
-                marginLeft: theme.spacing.xs,
+                color: theme.colors.neutralVariants['700'],
+                marginLeft: theme.spacings.xs,
               }}>
               {!isPending && `· ${calculatedCreationDate}`}
             </Typography.Regular12>
-          </HStack>
-        </VStack>
+          </View>
+        </View>
       </TouchableOpacity>
-      <Center justifyContent="flex-start">{PendingIndicator}</Center>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+        }}>
+        {PendingIndicator}
+      </View>
     </View>
   );
 };

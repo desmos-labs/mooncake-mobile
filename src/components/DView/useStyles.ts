@@ -29,7 +29,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     flexGrow: 1,
   },
   paddingHorizontal: {
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
 }));
 

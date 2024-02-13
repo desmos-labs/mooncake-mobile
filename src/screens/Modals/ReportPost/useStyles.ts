@@ -11,34 +11,34 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 4,
     // this is a different gray as the gray used in design is not
     // in the theme colors
-    backgroundColor: theme.colors.iconGrey,
+    backgroundColor: theme.colors.neutralVariants['300'],
     alignSelf: 'center',
   },
   headerText: {
     textAlign: 'center',
-    marginBottom: theme.spacing.m,
-    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacings.m,
+    marginTop: theme.spacings.xl,
   },
   innerContainer: {
     backgroundColor: theme.colors.background,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    paddingHorizontal: theme.spacing.l,
-    paddingBottom: theme.spacing.l,
+    paddingHorizontal: theme.spacings.l,
+    paddingBottom: theme.spacings.l,
     paddingTop: 10,
   },
   messageInput: {
     height: 120,
-    paddingTop: theme.spacing.s,
-    paddingBottom: theme.spacing.s,
+    paddingTop: theme.spacings.s,
+    paddingBottom: theme.spacings.s,
     verticalAlign: 'top',
   },
   textInput: {
-    borderColor: theme.colors.lightGrey01,
+    borderColor: theme.colors.neutralVariants['600'],
   },
   loadingView: {
     alignItems: 'center',
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
   },
   successfulReport: {
     alignItems: 'center',

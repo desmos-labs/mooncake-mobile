@@ -1,11 +1,12 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { FontAwesome } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import { emptyPostsIcon } from 'assets/images';
 import PostCard from 'components/PostCard';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
+import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
-import { Center, useTheme } from 'native-base';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
@@ -41,17 +42,17 @@ const PostsSection = (props: PostsSectionProps) => {
   const Content = useMemo(() => {
     if (posts.length === 0) {
       return (
-        <Center flex={1}>
+        <View style={[CommonStyles.flex['1'], CommonStyles.center]}>
           <Image contentFit="contain" source={emptyPostsIcon} style={styles.emptyImage} />
-          <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
+          <Typography.Regular12 style={{ color: theme.colors.neutralVariants['600'] }}>
             {t('no posts')}
           </Typography.Regular12>
-        </Center>
+        </View>
       );
     }
 
     return posts.map(post => <PostCard post={post} key={post.externalId} />);
-  }, [posts, styles.emptyImage, t, theme.colors.midGrey]);
+  }, [posts, styles.emptyImage, t, theme.colors.neutralVariants]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -60,10 +61,10 @@ const PostsSection = (props: PostsSectionProps) => {
   return (
     <View style={styles.container}>
       <Typography.Semibold16>{t('posts')}</Typography.Semibold16>
-      <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
+      <Spacer paddingBottom={theme.spacings.m} paddingTop={theme.spacings.xs}>
         {/* Subtitle of the section */}
         {posts.length !== 0 && !isLoading && (
-          <Typography.Regular12 style={{ color: theme.colors.midGrey }}>
+          <Typography.Regular12 style={{ color: theme.colors.neutralVariants['600'] }}>
             {t('created liked tipped')}
           </Typography.Regular12>
         )}
@@ -81,17 +82,12 @@ const PostsSection = (props: PostsSectionProps) => {
         <TouchableOpacity style={styles.button} onPress={onPress}>
           <Typography.Regular14
             style={{
-              marginRight: theme.spacing.s,
-              color: theme.colors.butterOrange01,
+              marginRight: theme.spacings.s,
+              color: theme.colors.primary,
             }}>
             {t('see more')}
           </Typography.Regular14>
-          <FontAwesome
-            name="angle-right"
-            color={theme.colors.butterOrange01}
-            size={22}
-            allowFontScaling
-          />
+          <FontAwesome name="angle-right" color={theme.colors.primary} size={22} allowFontScaling />
         </TouchableOpacity>
       )}
     </View>

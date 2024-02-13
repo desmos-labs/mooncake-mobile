@@ -10,7 +10,7 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
   },
   container: {
     backgroundColor: theme.colors.white,
-    padding: theme.spacing.s,
+    padding: theme.spacings.s,
   },
   flexRow: {
     flexDirection: 'row',
@@ -27,25 +27,25 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     height: 40,
     resizeMode: 'cover',
     borderRadius: 20,
-    marginRight: theme.spacing.s,
+    marginRight: theme.spacings.s,
   },
   textStyle: {
-    color: theme.colors.neutral['900'],
+    color: theme.colors.neutralVariants['900'],
   },
   subTextStyle: {
-    color: theme.colors.neutral['700'],
+    color: theme.colors.neutralVariants['700'],
   },
   dateTextStyle: {
-    color: theme.colors.neutral['600'],
+    color: theme.colors.neutralVariants['600'],
   },
   buttonImage: {
     width: 20,
     height: 20,
-    tintColor: theme.colors.neutral['700'],
+    tintColor: theme.colors.neutralVariants['700'],
     resizeMode: 'contain',
   },
   interactionImage: {
-    marginRight: theme.spacing.xs,
+    marginRight: theme.spacings.xs,
   },
   bottomGroup: {
     flexDirection: 'row',
@@ -67,10 +67,10 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     height: 24,
   },
   orangeText: {
-    color: theme.colors.butterOrange01,
+    color: theme.colors.primary,
   },
   orangeIcon: {
-    tintColor: theme.colors.butterOrange01,
+    tintColor: theme.colors.primary,
   },
 }));
 

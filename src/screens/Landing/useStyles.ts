@@ -4,7 +4,7 @@ import { verticalScale } from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
     paddingHorizontal: 20,
   },
   innerView: {
@@ -21,7 +21,7 @@ const useStyles = makeStyle(theme => ({
   },
   loginButton: {
     width: '100%',
-    backgroundColor: theme.colors.butterOrange04,
+    backgroundColor: theme.colors.primaryVariants['200'],
   },
   loginTextWithLogoContainer: {
     display: 'flex',

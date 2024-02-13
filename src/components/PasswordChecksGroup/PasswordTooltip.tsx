@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { AntDesign } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import { makeStyle } from 'config/theme';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -18,7 +18,7 @@ const PasswordTooltip = ({ label }: Props) => {
       <AntDesign
         name="exclamationcircleo"
         size={19}
-        color={theme.colors.pink01}
+        color={theme.colors.feedback.error}
         style={styles.icon}
       />
       <Typography.Regular14 style={[styles.tooltipText]}>{label}</Typography.Regular14>
@@ -30,16 +30,16 @@ const useStyles = makeStyle(theme => ({
   tooltipGroup: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginVertical: theme.spacing.s,
+    marginVertical: theme.spacings.s,
   },
   check: {
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    marginRight: theme.spacing.xs,
+    marginRight: theme.spacings.xs,
   },
   tooltipText: {
-    color: theme.colors.pink01,
+    color: theme.colors.feedback.error,
     marginLeft: 6,
   },
   icon: {

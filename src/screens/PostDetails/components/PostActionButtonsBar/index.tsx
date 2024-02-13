@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { postLikedIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
+import Divider from 'components/Divider';
 import Spacer from 'components/Spacer';
-import { Divider } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';

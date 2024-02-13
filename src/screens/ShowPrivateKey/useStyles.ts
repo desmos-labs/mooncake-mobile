@@ -5,13 +5,13 @@ import { makeStyle } from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   root: {
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
   },
   input: {
-    marginTop: theme.spacing.m,
-    padding: theme.spacing.s,
+    marginTop: theme.spacings.m,
+    padding: theme.spacings.s,
     borderWidth: 0.5,
-    borderColor: theme.colors.lightGrey01,
+    borderColor: theme.colors.neutralVariants['600'],
   },
 }));
 

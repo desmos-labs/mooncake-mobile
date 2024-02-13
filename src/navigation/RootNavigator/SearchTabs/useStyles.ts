@@ -2,14 +2,14 @@ import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   cancelIconContainer: {
-    marginLeft: theme.spacing.m,
+    marginLeft: theme.spacings.m,
     position: 'absolute',
     left: 'auto',
     right: 14,
   },
   container: {
-    marginTop: theme.spacing.xs,
-    paddingBottom: theme.spacing.s,
+    marginTop: theme.spacings.xs,
+    paddingBottom: theme.spacings.s,
     paddingHorizontal: 12,
     backgroundColor: theme.colors.white,
   },
@@ -20,7 +20,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   tabContainer: {
-    marginTop: theme.spacing.xs,
+    marginTop: theme.spacings.xs,
     justifyContent: 'center',
   },
   rightButton: {
@@ -28,7 +28,7 @@ const useStyles = makeStyle(theme => ({
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: theme.spacing.xs,
+    marginLeft: theme.spacings.xs,
   },
   icon: {
     width: 36,

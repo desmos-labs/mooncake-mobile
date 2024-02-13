@@ -6,13 +6,13 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
     justifyContent: 'center',
   },
   innerContainer: {
     justifyContent: 'center',
     paddingHorizontal: 40,
-    paddingVertical: theme.spacing.xl,
+    paddingVertical: theme.spacings.xl,
     backgroundColor: theme.colors.background,
     borderRadius: 12,
   },
@@ -32,22 +32,22 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   secondaryButtonText: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['900'],
   },
   primaryButton: {
     alignSelf: 'stretch',
-    backgroundColor: theme.colors.surfaceBlack,
+    backgroundColor: theme.colors.neutralVariants['900'],
   },
   secondaryButton: {
     alignSelf: 'stretch',
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
   imageStyle: {
     width: 150,
     height: 180,
     resizeMode: 'cover',
     alignSelf: 'center',
-    paddingBottom: theme.spacing.xl,
+    paddingBottom: theme.spacings.xl,
   },
   buttonsRow: {
     flexDirection: 'row',

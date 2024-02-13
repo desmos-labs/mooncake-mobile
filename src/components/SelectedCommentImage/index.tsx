@@ -11,7 +11,7 @@ import {
 import { deleteButton } from 'assets/images';
 import { makeStyle } from 'config/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import CommonStyles from 'config/theme/CommonStyles';
 import { UploadAssetType } from 'types/media';
 
@@ -36,7 +36,7 @@ const SelectedCommentImage = (props: Props) => {
     <KeyboardAvoidingView
       // 116 is the width of this component with vertical margin (100 + 8 + 8)
       keyboardVerticalOffset={
-        Platform.OS === 'ios' ? bottom + (theme.spacing.m as number) * 2 + COMPONENT_SIZE : 0
+        Platform.OS === 'ios' ? bottom + (theme.spacings.m as number) * 2 + COMPONENT_SIZE : 0
       }
       behavior={Platform.OS === 'ios' ? 'position' : undefined}>
       {/* Invisible view acts as a placeholder, otherwise the component will appear */}
@@ -74,7 +74,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 12,
     height: COMPONENT_SIZE,
     width: COMPONENT_SIZE,
-    marginHorizontal: theme.spacing.m,
+    marginHorizontal: theme.spacings.m,
     zIndex: 2,
   },
   imageStyle: {

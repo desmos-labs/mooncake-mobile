@@ -6,7 +6,6 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Formik } from 'formik';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import useHooks from './useHooks';
@@ -17,7 +16,6 @@ import useStyles from './useStyles';
  * @constructor
  */
 const ImportAccountPrivateKey = () => {
-  const theme = useTheme();
   const styles = useStyles();
 
   // -------------------------------------------------------------------------------------
@@ -70,12 +68,10 @@ const ImportAccountPrivateKey = () => {
                 />
               </ScrollView>
               <Button
-                size={44}
-                backgroundColor={theme.colors.surfaceBlack}
-                textColor={theme.colors.white}
+                height={44}
                 onPress={() => handleSubmit()}
                 style={styles.confirmButton}
-                isLoading={loginLoading}
+                loading={loginLoading}
                 disabled={values.privateKey === '' || loginLoading}>
                 Next
               </Button>

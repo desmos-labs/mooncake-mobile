@@ -1,17 +1,17 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import BackButton from 'components/BackButton';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
-import { useTheme } from 'native-base';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
-import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
-import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import useStyles from './useStyles';
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.ABOUT>;
@@ -42,7 +42,7 @@ const About: React.FC<NavProps> = ({ navigation }) => {
         <Typography.Semibold14>{t('about mooncake', { ns: 'about' })}</Typography.Semibold14>
         <BackButton
           style={{ transform: [{ rotate: '180deg' }] }}
-          iconColor={theme.colors.surfaceBlack}
+          iconColor={theme.colors.neutralVariants['900']}
         />
       </TouchableOpacity>
       <Spacer paddingTop="m" />
@@ -50,7 +50,7 @@ const About: React.FC<NavProps> = ({ navigation }) => {
         <Typography.Semibold14>{t('privacy policy', { ns: 'legal' })}</Typography.Semibold14>
         <BackButton
           style={{ transform: [{ rotate: '180deg' }] }}
-          iconColor={theme.colors.surfaceBlack}
+          iconColor={theme.colors.neutralVariants['900']}
         />
       </TouchableOpacity>
       <Spacer paddingTop="m" />
@@ -58,7 +58,7 @@ const About: React.FC<NavProps> = ({ navigation }) => {
         <Typography.Semibold14>{t('terms of service', { ns: 'legal' })}</Typography.Semibold14>
         <BackButton
           style={{ transform: [{ rotate: '180deg' }] }}
-          iconColor={theme.colors.surfaceBlack}
+          iconColor={theme.colors.neutralVariants['900']}
         />
       </TouchableOpacity>
     </DView>

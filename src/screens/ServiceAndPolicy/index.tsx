@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
@@ -9,8 +9,9 @@ import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import { DesmosChain } from 'config/LinkableChains';
 import useTrackAcceptedLegalTerms from 'hooks/analytics/useTrackAcceptedLegalTerms';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
 import useLoginWithWeb3Auth from 'hooks/web3Auth/useLoginWithWeb3Auth';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useState } from 'react';
@@ -18,8 +19,6 @@ import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
-import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
-import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -88,14 +87,14 @@ const ServiceAndPolicy = () => {
           <Typography.Regular16>{t('terms of service')}</Typography.Regular16>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
-            iconColor={theme.colors.surfaceBlack}
+            iconColor={theme.colors.neutralVariants['900']}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={openPrivacyPolicy}>
           <Typography.Regular16>{t('privacy policy')}</Typography.Regular16>
           <BackButton
             style={{ transform: [{ rotate: '180deg' }] }}
-            iconColor={theme.colors.surfaceBlack}
+            iconColor={theme.colors.neutralVariants['900']}
           />
         </TouchableOpacity>
       </View>
@@ -113,9 +112,7 @@ const ServiceAndPolicy = () => {
         </Spacer>
         <Spacer paddingBottom="xl" />
         <Button
-          bgColor={theme.colors.surfaceBlack}
-          textColor={theme.colors.white}
-          size={44}
+          height={44}
           disabled={!conditionAndPolicyAccepted || loginLoading}
           onPress={loginWithSelectedMethod}>
           {t('accept', { ns: 'common' })}

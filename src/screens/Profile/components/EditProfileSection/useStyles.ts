@@ -4,7 +4,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacings.m,
   },
   editButton: {
     backgroundColor: '#E8E8E8',
@@ -14,7 +14,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   connectButton: {
-    backgroundColor: theme.colors.surfaceGrey,
+    backgroundColor: theme.colors.neutralVariants['600'],
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

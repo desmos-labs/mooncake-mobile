@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { HStack, useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { View } from 'react-native';
 import { RadioButtonInput } from 'react-native-simple-radio-button';
@@ -41,10 +41,10 @@ const CustomRadioGroup = (props: Props) => {
     <View>
       {values.map((value, index) => {
         return (
-          <HStack key={`${value.value}`}>
+          <View style={{ flexDirection: 'row' }} key={`${value.value}`}>
             <RadioButtonInput
               accessibilityLabel={`${value.value}-radio-button`}
-              buttonStyle={{ marginBottom: theme.spacing.m }}
+              buttonStyle={{ marginBottom: theme.spacings.m }}
               obj={value}
               index={index}
               onPress={() => onSelect(index, value.value)}
@@ -52,17 +52,15 @@ const CustomRadioGroup = (props: Props) => {
               buttonSize={12}
               // @ts-ignore
               borderWidth={1}
-              buttonInnerColor={
-                selectedValue === index ? theme.colors.butterOrange01 : theme.colors.white
-              }
+              buttonInnerColor={selectedValue === index ? theme.colors.primary : theme.colors.white}
               buttonOuterColor={
-                selectedValue === index ? theme.colors.butterOrange01 : theme.colors.surfaceBlack
+                selectedValue === index ? theme.colors.primary : theme.colors.neutralVariants['900']
               }
             />
-            <Typography.Regular16 style={{ marginLeft: theme.spacing.m }}>
+            <Typography.Regular16 style={{ marginLeft: theme.spacings.m }}>
               {value.label}
             </Typography.Regular16>
-          </HStack>
+          </View>
         );
       })}
     </View>

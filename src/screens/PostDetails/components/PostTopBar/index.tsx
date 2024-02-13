@@ -1,4 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { Entypo } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import {
   block,
   followBlackIcon,
@@ -21,8 +23,7 @@ import useSharePost from 'hooks/posts/useSharePost';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
-import { useTheme } from 'native-base';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import {
@@ -55,7 +56,7 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
-
+  const [menuOpened, setMenuOpened] = useState(false);
   const formatDate = useFormatTimeForPostDetails();
 
   const isFollowing = useIsFollowing(post.author);
@@ -75,6 +76,11 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
   // -------------------------------------------------------------------------------------
   // --- Popup menu
   // -------------------------------------------------------------------------------------
+
+  const onSetMenuOpened = useCallback(() => {
+    setMenuOpened(prevState => !prevState);
+    handlePressMore && handlePressMore();
+  }, [handlePressMore]);
 
   const PressMoreComponent = React.useMemo(() => {
     // Hide the context menu if the user is the author of the post
@@ -119,13 +125,30 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
       },
     ];
 
-    return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
+    return (
+      <>
+        <Entypo
+          name="dots-three-horizontal"
+          size={24}
+          color="black"
+          suppressHighlighting
+          onPress={onSetMenuOpened}
+        />
+        <PopupMenu
+          menuItems={menuItems}
+          popupMenuOpened={menuOpened}
+          setPopupMenuOpened={setMenuOpened}
+        />
+      </>
+    );
   }, [
+    onSetMenuOpened,
+    menuOpened,
+    setMenuOpened,
     isAuthorActiveUser,
     isFollowing,
     t,
     sharePost,
-    handlePressMore,
     handlePressFollowOrUnfollow,
     post,
     handlePressReport,
@@ -157,7 +180,7 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
     <View style={styles.customTopBarContainer}>
       <View style={styles.customTopBarInnerContainer}>
         <BackButton onPress={onBackButtonPress} />
-        <Spacer paddingLeft={theme.spacing.m} />
+        <Spacer paddingLeft={theme.spacings.m} />
         <View style={styles.rightContainer}>
           <ProfileHeaderButton
             profile={post!.author}

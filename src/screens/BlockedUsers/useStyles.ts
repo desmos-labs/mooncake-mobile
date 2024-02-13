@@ -5,18 +5,18 @@ const useStyles = makeStyle(theme => ({
     width: 72,
     height: 72,
     resizeMode: 'cover',
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
   emptyView: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
     marginTop: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   topBar: {
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
 }));
 

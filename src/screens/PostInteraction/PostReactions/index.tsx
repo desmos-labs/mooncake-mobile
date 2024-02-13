@@ -7,7 +7,6 @@ import StyledSpinner from 'components/StyledSpinner';
 import usePostReactions from 'hooks/reactions/usePostReactions';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import { formatNumShorthand } from 'lib/FormatUtils';
-import { Center } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
@@ -71,9 +70,9 @@ const PostReactions = () => {
   const renderFooterComponent = React.useCallback(() => {
     if (loading) {
       return (
-        <Center>
+        <View>
           <StyledSpinner />
-        </Center>
+        </View>
       );
     }
   }, [loading]);

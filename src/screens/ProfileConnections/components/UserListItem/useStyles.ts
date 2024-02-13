@@ -7,7 +7,7 @@ const useStyles = makeStyle(theme => ({
     flexWrap: 'nowrap',
     alignItems: 'center',
     height: 60,
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
   pic: {
     margin: 5,

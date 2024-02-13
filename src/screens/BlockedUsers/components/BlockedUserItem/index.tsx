@@ -1,13 +1,12 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import AvatarImage from 'components/AvatarImage';
 import Button from 'components/Button';
-import { Image } from 'expo-image';
+import CommonStyles from 'config/theme/CommonStyles';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import { getProfilePicture } from 'lib/ProfileUtils';
-import { HStack, VStack } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
@@ -28,37 +27,48 @@ const BlockedUserItem = ({ profile }: Props) => {
   const BlockOrUnblockButton = React.useMemo(() => {
     return (
       <Button
-        mt="s"
-        backgroundColor={profile.isBlockedByUser ? 'surfaceBlack' : 'surfaceGrey'}
-        textColor={profile.isBlockedByUser ? 'white' : 'surfaceBlack'}
-        minWidth="80px"
-        size={32}
+        height={32}
         onPress={() => {
           handleBlockOrUnblockUser(profile);
         }}>
-        {profile.isBlockedByUser ? t('unblock') : t('block')}
+        <Typography.Regular12 style={CommonStyles.textWhite}>
+          {profile.isBlockedByUser ? t('unblock') : t('block')}
+        </Typography.Regular12>
       </Button>
     );
   }, [t, handleBlockOrUnblockUser, profile]);
 
   return (
     <TouchableOpacity onPress={() => navigateToProfile(profile.address)}>
-      <HStack px="m" alignItems="center" justifyContent="space-between">
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingHorizontal: 12,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
         {/* Profile picture */}
-        <HStack alignItems="center">
-          <Image source={getProfilePicture(profile)} style={styles.pic} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <AvatarImage imageSource={profile} size={48} />
           {/* Profile DTag and nickname */}
-          <VStack ml="s">
+          <View
+            style={{
+              marginLeft: 8,
+            }}>
             <Typography.Semibold14 numberOfLines={1} ellipsizeMode="tail">
               {profile.nickname}
             </Typography.Semibold14>
             <Typography.Regular12 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
               @{profile.dTag}
             </Typography.Regular12>
-          </VStack>
-        </HStack>
+          </View>
+        </View>
         {BlockOrUnblockButton}
-      </HStack>
+      </View>
     </TouchableOpacity>
   );
 };

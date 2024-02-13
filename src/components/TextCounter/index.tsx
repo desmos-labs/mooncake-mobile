@@ -1,6 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { HStack, useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
+import { View } from 'react-native';
 
 type Props = {
   maxChar: number;
@@ -15,12 +16,19 @@ type Props = {
 const TextCounter = ({ maxChar, textToCount }: Props) => {
   const theme = useTheme();
   return (
-    <HStack mt="xs" alignSelf="flex-end">
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        marginTop: 12,
+      }}>
       <Typography.Regular12
         style={{
-          color: textToCount.length > maxChar ? theme.colors.error : theme.colors.grey02,
+          color:
+            textToCount.length > maxChar ? theme.colors.error : theme.colors.neutralVariants['600'],
         }}>{`${textToCount.length}/${maxChar}`}</Typography.Regular12>
-    </HStack>
+    </View>
   );
 };
 

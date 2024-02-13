@@ -3,13 +3,13 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     alignSelf: 'center',
-    marginTop: theme.spacing.xl,
+    marginTop: theme.spacings.xl,
     backgroundColor: theme.colors.white,
   },
   emptyImage: {
     height: 72,
     resizeMode: 'contain',
-    marginVertical: theme.spacing.m,
+    marginVertical: theme.spacings.m,
     alignSelf: 'center',
   },
   text: { textAlign: 'center' },

@@ -5,7 +5,7 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: 20,
   },
   neutral700: {
-    color: theme.colors.neutral['700'],
+    color: theme.colors.neutralVariants['700'],
   },
   listWrapper: { flex: 1, marginHorizontal: -20, marginVertical: 20 },
   contentContainerStyle: { paddingHorizontal: 20, paddingVertical: 20 },

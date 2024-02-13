@@ -104,6 +104,11 @@ const textWhite = {
   color: '#fff',
 };
 
+const center = {
+  justifyContent: 'center',
+  alignItems: 'center',
+} as ViewStyle;
+
 const CommonStyles = {
   flex,
   flexGrow,
@@ -116,6 +121,7 @@ const CommonStyles = {
   textPrimary,
   textWhite,
   textBlack,
+  center,
 };
 
 export default CommonStyles;

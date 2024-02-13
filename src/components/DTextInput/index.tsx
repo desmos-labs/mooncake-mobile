@@ -1,4 +1,4 @@
-import { useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React, { MutableRefObject } from 'react';
 import { ColorValue, StyleProp, TextInput, TextStyle, View, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
@@ -34,7 +34,7 @@ const DTextInput: React.FC<Props> = props => {
         ref={inputRef}
         {...props}
         style={[styles.input, inputStyle]}
-        placeholderTextColor={placeHolderColor || theme.colors.neutral['600']}
+        placeholderTextColor={placeHolderColor || theme.colors.neutralVariants['600']}
       />
       <View style={styles.right}>{rightElement}</View>
     </View>

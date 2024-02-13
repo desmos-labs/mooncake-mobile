@@ -1,17 +1,16 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import { CompositeScreenProps, useRoute } from '@react-navigation/native';
+import { CompositeScreenProps, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import useRefreshSession from 'hooks/apis/useRefreshSession';
-import { Box, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Home from 'screens/Home';
 
@@ -70,9 +69,9 @@ const HomeTabs = () => {
   );
 
   return (
-    <Box
-      flex={1}
+    <View
       style={{
+        flex: 1,
         backgroundColor: theme.colors.white,
         paddingTop: Math.max(24, top),
       }}>
@@ -100,7 +99,7 @@ const HomeTabs = () => {
           }}
         />
       </Tab.Navigator>
-    </Box>
+    </View>
   );
 };
 

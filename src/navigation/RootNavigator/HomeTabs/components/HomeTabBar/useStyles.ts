@@ -6,18 +6,18 @@ const useStyles = makeStyle(theme => ({
     height: 36,
     borderRadius: 18,
     resizeMode: 'cover',
-    marginRight: theme.spacing.xs,
+    marginRight: theme.spacings.xs,
   },
   butterFlyImageContainer: { position: 'absolute', left: 0, right: 'auto' },
   inviteIconContainer: { position: 'absolute', left: 'auto', right: 0 },
   cancelIconContainer: {
-    marginLeft: theme.spacing.m,
+    marginLeft: theme.spacings.m,
     position: 'absolute',
     left: 'auto',
     right: 0,
   },
   container: {
-    marginTop: theme.spacing.xs,
+    marginTop: theme.spacings.xs,
     paddingHorizontal: 12,
     backgroundColor: theme.colors.white,
   },
@@ -28,7 +28,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   tabContainer: {
-    marginTop: theme.spacing.xs,
+    marginTop: theme.spacings.xs,
     justifyContent: 'center',
   },
   rightButton: {
@@ -36,7 +36,7 @@ const useStyles = makeStyle(theme => ({
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: theme.spacing.xs,
+    marginLeft: theme.spacings.xs,
   },
   icon: {
     width: 36,

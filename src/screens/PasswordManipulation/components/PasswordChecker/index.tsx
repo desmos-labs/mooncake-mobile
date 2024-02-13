@@ -89,29 +89,29 @@ const useStyles = makeStyle(theme => ({
     height: 4,
     width: 20,
     borderRadius: 4,
-    backgroundColor: theme.colors.lightGrey01,
+    backgroundColor: theme.colors.neutralVariants['300'],
     marginRight: 4,
   },
   extraMargin: {
     marginRight: 8,
   },
   dotWeak: {
-    backgroundColor: theme.colors.pink01,
+    backgroundColor: theme.colors.feedback.error,
   },
   dotMedium: {
-    backgroundColor: theme.colors.butterOrange01,
+    backgroundColor: theme.colors.primary,
   },
   dotStrong: {
-    backgroundColor: theme.colors.accentGreen01,
+    backgroundColor: theme.colors.feedback.success,
   },
   textWeak: {
-    color: theme.colors.pink01,
+    color: theme.colors.feedback.error,
   },
   textMedium: {
-    color: theme.colors.butterOrange01,
+    color: theme.colors.primary,
   },
   textStrong: {
-    color: theme.colors.accentGreen01,
+    color: theme.colors.feedback.success,
   },
 }));
 

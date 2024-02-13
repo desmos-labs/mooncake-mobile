@@ -9,11 +9,10 @@ import { ToastType } from 'config/toast/toastConfig';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useToast from 'hooks/toasts/useToast';
 import { clearMMKV } from 'lib/MMKVStorage';
-import { Box, HStack, VStack } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { FC } from 'react';
-import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { Alert, FlatList, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 
 // Add the ROUTE enum of the screens that should be rendered here
@@ -142,7 +141,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const ItemSeparatorComponent = React.useCallback(() => <Spacer paddingVertical={8} />, []);
 
   return (
-    <DView disableHideKeyboardTouchable={true}>
+    <DView disableHideKeyboardTouchable={true} style={{ marginHorizontal: 8 }}>
       <FlatList
         style={CommonStyles.flex[1]}
         contentContainerStyle={styles.flatList}
@@ -151,8 +150,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
       <Spacer paddingVertical={4} />
-      <Box mx="s">
-        <Box></Box>
+      <View>
         <Button height={44} onPress={() => navigate(ROUTES.LANDING)}>
           Continue to Landing screen
         </Button>
@@ -161,8 +159,8 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           Continue to Home screen
         </Button>
         <Spacer paddingVertical={4} />
-        <HStack>
-          <VStack flex={0.5}>
+        <View>
+          <View>
             <Button onPress={showToastSuccess} height={32}>
               Show toast success
             </Button>
@@ -172,9 +170,9 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             <Button onPress={showToastError} height={32}>
               Show toast error
             </Button>
-          </VStack>
+          </View>
           <Spacer paddingHorizontal={4} />
-          <VStack flex={0.5}>
+          <View>
             <Button
               height={32}
               onPress={() => {
@@ -196,10 +194,10 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               }}>
               Reset MMKV storage & Secure Storage
             </Button>
-          </VStack>
-        </HStack>
+          </View>
+        </View>
         <Spacer paddingVertical={4} />
-      </Box>
+      </View>
     </DView>
   );
 };

@@ -13,7 +13,7 @@ const useStyles = makeStyle(theme => ({
     borderColor: theme.colors.primary,
   },
   mainTextColor: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['700'],
   },
 }));
 

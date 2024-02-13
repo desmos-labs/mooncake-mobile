@@ -9,7 +9,7 @@ const useStyles = makeStyle(theme => ({
     width: 48,
     alignSelf: 'center',
     borderRadius: 24,
-    marginRight: theme.spacing.s,
+    marginRight: theme.spacings.s,
     backgroundColor: theme.colors.background,
   },
   profileInfoView: {

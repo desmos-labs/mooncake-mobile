@@ -27,6 +27,8 @@ import TopBar from 'components/TopBar';
 import useDisableBiometrics from 'hooks/biometrics/useDisableBiometrics';
 import useEnableBiometrics from 'hooks/biometrics/useEnableBiometrics';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
+import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
+import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -39,8 +41,6 @@ import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHook
 import useStyles from 'screens/Settings/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
-import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
-import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import {
   useDeleteAccountData,
   useDeleteProfile,
@@ -180,10 +180,12 @@ const Settings = (props: NavProps) => {
   return (
     <DView
       style={styles.root}
-      topBar={<TopBar />}
+      topBar={
+        <TopBar centerElement={<Typography.Semibold16>{t('settings')}</Typography.Semibold16>} />
+      }
       showLoadingOverlay={signOutLoading}
       disableHideKeyboardTouchable={true}>
-      <Typography.Semibold24 style={styles.title}>{t('settings')}</Typography.Semibold24>
+      <Spacer paddingBottom="xl" />
       <ScrollView
         style={styles.scrollview}
         showsVerticalScrollIndicator={false}

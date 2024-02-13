@@ -28,22 +28,22 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   unselected: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['900'],
     opacity: 0.5,
   },
   selected: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['900'],
   },
   gradient: {
     flex: 1,
   },
   selectedIndicator: {
-    top: theme.spacing.xs,
+    top: theme.spacings.xs,
     width: 28,
     height: 2,
     alignSelf: 'center',
     borderRadius: 4,
-    backgroundColor: theme.colors.surfaceBlack,
+    backgroundColor: theme.colors.neutralVariants['900'],
   },
 }));
 

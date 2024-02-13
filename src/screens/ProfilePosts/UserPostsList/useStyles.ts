@@ -7,7 +7,7 @@ const useStyles = makeStyle(theme => ({
   },
   loaderView: {
     flex: 1,
-    marginBottom: theme.spacing.l,
+    marginBottom: theme.spacings.l,
   },
 }));
 

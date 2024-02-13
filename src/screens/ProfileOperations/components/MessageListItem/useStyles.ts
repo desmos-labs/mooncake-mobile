@@ -4,7 +4,7 @@ import { scale } from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacings.m,
   },
   avatar: {
     width: scale(40),
@@ -12,14 +12,14 @@ const useStyles = makeStyle(theme => ({
     borderRadius: scale(20),
   },
   profileView: {
-    marginLeft: theme.spacing.s,
+    marginLeft: theme.spacings.s,
     flexDirection: 'column',
     justifyContent: 'center',
     maxWidth: '50%',
   },
   formattedDate: {
     color: theme.colors.grey02,
-    marginTop: theme.spacing.s,
+    marginTop: theme.spacings.s,
   },
   feesText: {
     right: 0,

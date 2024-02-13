@@ -1,16 +1,16 @@
-import React from 'react';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { dotsAnimation } from 'assets/animations';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
+import ThemedLottieView from 'components/ThemedLottieView';
+import { makeStyle } from 'config/theme';
+import { isGoBackEvent } from 'lib/EventUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import ThemedLottieView from 'components/ThemedLottieView';
-import { dotsAnimation } from 'assets/animations';
-import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { Center } from 'native-base';
-import Spacer from 'components/Spacer';
-import { makeStyle } from 'config/theme';
+import React from 'react';
+import { View } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { isGoBackEvent } from 'lib/EventUtils';
 
 export interface LoadingScreenParams {
   /**
@@ -48,14 +48,14 @@ const LoadingScreen: React.FC<NavProps> = ({
 
   return (
     <DView disableHideKeyboardTouchable>
-      <Center>
+      <View style={{ alignItems: 'center' }}>
         <Spacer paddingTop={scale(127)} />
         <ThemedLottieView style={styles.loadingAnimation} source={dotsAnimation} autoPlay loop />
         <Spacer paddingTop={20} />
         <Typography.H4>{title}</Typography.H4>
         <Spacer paddingTop="s" />
         <Typography.Regular16>{message}</Typography.Regular16>
-      </Center>
+      </View>
     </DView>
   );
 };

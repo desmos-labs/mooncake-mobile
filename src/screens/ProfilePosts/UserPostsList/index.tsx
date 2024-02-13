@@ -1,7 +1,7 @@
+import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import PostCard from 'components/PostCard';
 import { useGetPostType } from 'components/PostCard/hooks';
-import { useTheme } from 'native-base';
 import React, { useCallback } from 'react';
 import { Platform, RefreshControl, View } from 'react-native';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -93,7 +93,7 @@ const UserPostsList = (props: UserPostsListProps) => {
         data={posts}
         refreshControl={
           <RefreshControl
-            tintColor={theme.colors.surfaceBlack}
+            tintColor={theme.colors.neutralVariants['900']}
             enabled
             onRefresh={refreshPosts}
             refreshing={refreshing}

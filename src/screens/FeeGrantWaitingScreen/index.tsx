@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useActiveAccount } from '@recoil/accounts';
 import { useSetLoginFlowState } from '@recoil/login';
@@ -13,7 +13,6 @@ import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import { hasSaveProfileAllowance } from 'lib/grantsUtils';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -127,9 +126,9 @@ const FeeGrantWaitingScreen = () => {
         )}
         <Spacer paddingBottom={80} />
         <Typography.H6 style={CommonStyles.textAlign.center}>{title}</Typography.H6>
-        <Spacer paddingBottom={theme.spacing.l} />
+        <Spacer paddingBottom={theme.spacings.l} />
         <Typography.Regular14 style={styles.subtitle}>{subtitle}</Typography.Regular14>
-        <Spacer paddingBottom={theme.spacing.xl} />
+        <Spacer paddingBottom={theme.spacings.xl} />
         <Button onPress={createDesmosProfile} disabled={!feeGrantReady}>
           Create a Desmos Profile
         </Button>

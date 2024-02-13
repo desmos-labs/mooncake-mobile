@@ -18,12 +18,12 @@ const useStyles = makeStyleWithProps(
       marginTop: 60,
       textAlign: 'center',
       alignItems: 'center',
-      paddingBottom: theme.spacing.xs,
+      paddingBottom: theme.spacings.xs,
     },
     headerButtonGroup: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingHorizontal: theme.spacing.m,
+      paddingHorizontal: theme.spacings.m,
       zIndex: 2,
     },
     coverPicBackground: {
@@ -39,23 +39,23 @@ const useStyles = makeStyleWithProps(
       borderTopRightRadius: 32,
     },
     card: {
-      paddingHorizontal: theme.spacing.m,
+      paddingHorizontal: theme.spacings.m,
     },
     buttonGroup: {
       flex: 1,
       justifyContent: 'flex-end',
     },
     inputLabel: {
-      marginVertical: theme.spacing.s,
+      marginVertical: theme.spacings.s,
     },
     dtagView: {
-      marginVertical: theme.spacing.s,
+      marginVertical: theme.spacings.s,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 6,
     },
     descriptionText: {
-      marginBottom: theme.spacing.m,
+      marginBottom: theme.spacings.m,
     },
     topButton: {
       width: 32,
@@ -72,7 +72,7 @@ const useStyles = makeStyleWithProps(
     },
     scrollContainer: {
       flex: 1,
-      marginTop: theme.spacing.xs,
+      marginTop: theme.spacings.xs,
     },
     bioInput: {
       height: 180,
@@ -82,10 +82,10 @@ const useStyles = makeStyleWithProps(
     },
     bioDTextInput: {
       borderWidth: 1,
-      borderColor: theme.colors.lightGrey01,
+      borderColor: theme.colors.neutralVariants['600'],
     },
     errorText: {
-      color: theme.colors.pink01,
+      color: theme.colors.feedback.error,
       flex: 1,
     },
     nickname: {

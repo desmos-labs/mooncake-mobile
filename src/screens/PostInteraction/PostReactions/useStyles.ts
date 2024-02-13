@@ -7,17 +7,17 @@ import { Dimensions } from 'react-native';
 const useStyles = makeStyle(theme => ({
   container: {
     height: Dimensions.get('window').height * 0.7,
-    paddingTop: theme.spacing.l,
+    paddingTop: theme.spacings.l,
   },
   header: {
     alignSelf: 'center',
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacings.m,
   },
   countText: {
     color: theme.colors.midGrey,
-    paddingHorizontal: theme.spacing.m,
-    marginTop: theme.spacing.s,
-    marginBottom: theme.spacing.l,
+    paddingHorizontal: theme.spacings.m,
+    marginTop: theme.spacings.s,
+    marginBottom: theme.spacings.l,
   },
   contentContainerStyle: {
     flexGrow: 1,

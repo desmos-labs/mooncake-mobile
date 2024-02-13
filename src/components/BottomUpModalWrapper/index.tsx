@@ -1,7 +1,13 @@
+import { useTheme } from '@react-navigation/native';
 import { makeStyle } from 'config/theme';
-import { HStack, useTheme } from 'native-base';
 import React, { useState } from 'react';
-import { DimensionValue, Keyboard, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import {
+  DimensionValue,
+  Keyboard,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
@@ -49,15 +55,15 @@ const BottomUpModalWrapper: React.FC<Props> = props => {
             style={[
               styles.innerContainer,
               {
-                paddingHorizontal: paddingHorizontal || theme.spacing.l,
-                paddingTop: paddingTop || 10,
-                paddingBottom: paddingBottom || theme.spacing.l,
+                paddingHorizontal: paddingHorizontal || theme.spacings.l,
+                paddingTop: paddingTop || 16,
+                paddingBottom: paddingBottom || theme.spacings.l,
               },
             ]}>
-            <HStack justifyContent="center">
+            <View style={styles.verticalCenter}>
               <Animated.View style={[styles.tabIconLeft, tabAnimatedStyleLeft]} />
               <Animated.View style={[styles.tabIconRight, tabAnimatedStyleRight]} />
-            </HStack>
+            </View>
             {children}
           </TouchableOpacity>
         </Animated.View>
@@ -89,14 +95,19 @@ const useStyles = makeStyle(theme => ({
   },
   headerText: {
     textAlign: 'left',
-    marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.s,
+    marginTop: theme.spacings.xl,
+    marginBottom: theme.spacings.s,
     alignSelf: 'center',
   },
   innerContainer: {
     backgroundColor: theme.colors.white,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
+  },
+  verticalCenter: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 

@@ -5,40 +5,40 @@ import { makeStyle } from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   container: {
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
     backgroundColor: theme.colors.white,
     flex: 1,
   },
   headerText: {
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacings.m,
   },
   formContainer: {
     flex: 1,
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacings.m,
   },
   inputLabel: {
     textTransform: 'capitalize',
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
   optionalBody: {
-    marginTop: theme.spacing.m,
-    marginBottom: theme.spacing.l,
+    marginTop: theme.spacings.m,
+    marginBottom: theme.spacings.l,
   },
   buttonGroup: {
     flex: 1,
     justifyContent: 'flex-end',
   },
   forgotPwButton: {
-    marginTop: theme.spacing.s,
+    marginTop: theme.spacings.s,
     alignItems: 'center',
   },
   errorText: {
-    marginTop: theme.spacing.s,
-    color: theme.colors.pink01,
+    marginTop: theme.spacings.s,
+    color: theme.colors.feedback.error,
   },
   textInput: {
-    backgroundColor: theme.colors.neutral['100'],
-    borderRadius: 8,
+    backgroundColor: theme.colors.neutralVariants['100'],
+    borderRadius: 12,
     padding: 8,
   },
 }));

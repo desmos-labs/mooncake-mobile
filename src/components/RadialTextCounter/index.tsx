@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useTheme } from 'native-base';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
@@ -22,13 +22,13 @@ type Props = {
 
   /**
    * Override default empty color.
-   * @default theme.colors.lightGrey01
+   * @default theme.colors.neutralVariants['600']
    */
   customEmptyColor?: string;
 
   /**
    * Override default warn color.
-   * @default theme.colors.pink01
+   * @default theme.colors.feedback.error
    */
   customWarnColor?: string;
 
@@ -60,16 +60,16 @@ const RadialTextCounter = ({
   const showWarning = React.useMemo(() => remainingChars < 10, [remainingChars]);
 
   const fillColor = React.useMemo(() => {
-    return customFillColor || theme.colors.iconGrey;
-  }, [customFillColor, theme.colors.iconGrey]);
+    return customFillColor || theme.colors.neutralVariants['400'];
+  }, [customFillColor, theme.colors.neutralVariants]);
 
   const emptyColor = React.useMemo(() => {
-    return customEmptyColor || theme.colors.lightGrey01;
-  }, [customEmptyColor, theme.colors.lightGrey01]);
+    return customEmptyColor || theme.colors.neutralVariants['400'];
+  }, [customEmptyColor, theme.colors.neutralVariants]);
 
   const warnColor = React.useMemo(() => {
-    return customWarnColor || theme.colors.pink01;
-  }, [customWarnColor, theme.colors.pink01]);
+    return customWarnColor || theme.colors.feedback.error;
+  }, [customWarnColor, theme.colors.feedback.error]);
 
   return (
     <AnimatedCircularProgress
@@ -84,7 +84,9 @@ const RadialTextCounter = ({
         return (
           <Typography.Semibold12
             style={{
-              color: showWarning ? theme.colors.pink01 : theme.colors.iconGrey,
+              color: showWarning
+                ? theme.colors.feedback.error
+                : theme.colors.neutralVariants['400'],
             }}>
             {remainingChars < 10 ? remainingChars : ''}
           </Typography.Semibold12>

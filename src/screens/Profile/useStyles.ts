@@ -31,13 +31,13 @@ const useStyles = makeStyleWithProps(
       position: 'absolute',
       marginTop: Platform.OS === 'ios' ? props.insets.top : props.insets.top + 8,
       flexDirection: 'row',
-      paddingHorizontal: theme.spacing.m,
+      paddingHorizontal: theme.spacings.m,
       zIndex: 5,
     },
     contentView: {
       flex: 1,
-      marginTop: theme.spacing.s,
-      paddingHorizontal: theme.spacing.m,
+      marginTop: theme.spacings.s,
+      paddingHorizontal: theme.spacings.m,
       backgroundColor: theme.colors.background,
       paddingBottom: PROFILE_HEADER_HEIGHT_COMPACT + verticalScale(10),
     },
@@ -45,7 +45,7 @@ const useStyles = makeStyleWithProps(
     contentContainer: {
       justifyContent: 'flex-end',
       flexDirection: 'row',
-      paddingTop: theme.spacing.s,
+      paddingTop: theme.spacings.s,
     },
     topViewButton: { justifyContent: 'center', alignItems: 'center' },
     innerContainer: {
@@ -66,6 +66,7 @@ const useStyles = makeStyleWithProps(
     topButtonsContainer: {
       flex: 1,
       flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     topButton: {
       width: 32,
@@ -77,7 +78,7 @@ const useStyles = makeStyleWithProps(
     },
     profileConnectionsButtonContainer: {
       flexDirection: 'row',
-      gap: theme.spacing.l,
+      gap: theme.spacings.l,
     },
     rightButton: {
       width: 32,
@@ -140,9 +141,9 @@ const useStyles = makeStyleWithProps(
     },
     topBarImage: { height: 32, width: 32 },
     divider: {
-      marginHorizontal: -theme.spacing.m,
+      marginHorizontal: -theme.spacings.m,
       height: 8,
-      backgroundColor: theme.colors.surfaceGrey,
+      backgroundColor: theme.colors.neutralVariants['200'],
     },
     flexCenter: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     arrowView: {
@@ -169,14 +170,14 @@ const useStyles = makeStyleWithProps(
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      gap: theme.spacing.xs,
+      gap: theme.spacings.xs,
     },
     nickname: {
       marginTop: 6,
     },
     profileDtag: {
       marginVertical: 4,
-      color: theme.colors.neutral['700'],
+      color: theme.colors.neutralVariants['700'],
     },
     postCount: {
       justifyContent: 'center',
@@ -186,11 +187,11 @@ const useStyles = makeStyleWithProps(
       right: 20,
     },
     linkText: {
-      color: theme.colors.accentBlue01,
+      color: theme.colors.primary,
     },
     followUnfollowSection: {
       flexDirection: 'row',
-      marginTop: theme.spacing.s,
+      marginTop: theme.spacings.s,
     },
     tipUserIcon: {
       width: 24,
@@ -199,13 +200,13 @@ const useStyles = makeStyleWithProps(
       marginRight: 5,
     },
     btStyle: {
-      backgroundColor: theme.colors.neutral['300'],
+      backgroundColor: theme.colors.neutralVariants['300'],
       borderRadius: 4,
       alignItems: 'center',
       justifyContent: 'center',
     },
     tipStyle: {
-      paddingHorizontal: theme.spacing.l,
+      paddingHorizontal: theme.spacings.l,
       gap: 4,
     },
     walletButton: {

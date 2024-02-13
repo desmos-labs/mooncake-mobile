@@ -2,15 +2,15 @@ import { makeStyle } from 'config/theme';
 import { verticalScale } from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
-  container: { flex: 1, paddingTop: theme.spacing.m },
+  container: { flex: 1, paddingTop: theme.spacings.m },
   button: {
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacings.m,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
   },
-  emptyImage: { height: 80, width: 80, marginBottom: theme.spacing.s },
+  emptyImage: { height: 80, width: 80, marginBottom: theme.spacings.s },
   tweetsListContainer: {
     alignItems: 'center',
     flexGrow: 1,

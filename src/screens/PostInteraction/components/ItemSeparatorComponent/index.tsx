@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => {
   return {
     root: {
       height: 1,
-      backgroundColor: theme.colors.neutral['200'],
+      backgroundColor: theme.colors.neutralVariants['200'],
       right: -16,
       left: 56,
     },

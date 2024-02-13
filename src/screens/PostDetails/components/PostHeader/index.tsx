@@ -1,13 +1,13 @@
-import React from 'react';
+import Divider from 'components/Divider';
 import PostData from 'components/PostData';
-import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import Spacer from 'components/Spacer';
-import { Divider } from 'native-base';
-import { isRootPost, Post } from 'types/posts';
-import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
+import React from 'react';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
+import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import { useHandlePressCounters } from 'screens/PostDetails/hooks';
+import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import { isRootPost, Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface Props {

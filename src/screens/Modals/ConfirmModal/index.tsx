@@ -1,12 +1,11 @@
 // dismiss button
 // import {iconCross} from 'assets/images';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import CommonStyles from 'config/theme/CommonStyles';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { ReactNode } from 'react';
@@ -212,7 +211,7 @@ const ConfirmModal = () => {
             subtitle
           )}
         </Typography.Regular16>
-        <Spacer paddingTop={theme.spacing.xl} />
+        <Spacer paddingTop={theme.spacings.xl} />
         {buttons}
       </View>
     </View>

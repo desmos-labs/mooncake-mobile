@@ -67,7 +67,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     borderRadius: 12,
     padding: 12,
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacings.m,
     backgroundColor: theme.colors.background,
     shadowColor: Platform.OS === 'ios' ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.5)',
     shadowOffset: {
@@ -75,7 +75,7 @@ const useStyles = makeStyle(theme => ({
       height: 5,
     },
     shadowOpacity: 1,
-    shadowRadius: 20,
+    shadowRadius: 12,
 
     elevation: 10,
   },
@@ -83,9 +83,9 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   disabledText: {
-    color: theme.colors.lightGrey02,
+    color: theme.colors.neutralVariants['300'],
   },
   neutral700: {
-    color: theme.colors.neutral['700'],
+    color: theme.colors.neutralVariants['700'],
   },
 }));

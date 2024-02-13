@@ -1,7 +1,7 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Image } from 'expo-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { Box, Skeleton } from 'native-base';
+import { Skeleton } from 'moti/skeleton';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
@@ -36,13 +36,17 @@ const InteractionCountersBar = (props: Props) => {
 
   return loading ? (
     <View style={styles.container}>
-      <Skeleton h="4" borderRadius="4" />
+      <Skeleton height="4" radius={8} />
     </View>
   ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
         {interactionAuthors[0] && (
-          <Box width={calculatedWidth} height="30px">
+          <View
+            style={{
+              width: calculatedWidth,
+              height: 30,
+            }}>
             {interactionAuthors.map((value, index) => {
               return (
                 <Image
@@ -52,7 +56,7 @@ const InteractionCountersBar = (props: Props) => {
                 />
               );
             })}
-          </Box>
+          </View>
         )}
         <Typography.Regular14 style={styles.text}>
           {t('likes counter', { likesCounter })}

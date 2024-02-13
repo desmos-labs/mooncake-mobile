@@ -1,6 +1,6 @@
+import { useTheme } from '@react-navigation/native';
 import { check_circle, uncheck_circle } from 'assets/images';
 import { makeStyle } from 'config/theme';
-import { useTheme } from 'native-base';
 import React from 'react';
 import { Image, Pressable } from 'react-native';
 
@@ -23,6 +23,17 @@ const BCheckbox = ({ style, value, disabled, onValueChange }: Props) => {
     }
   }, [onValueChange, value]);
 
+  const tintColor = React.useMemo(() => {
+    if (disabled) {
+      return theme.colors.neutralVariants['400'];
+    } else {
+      if (value) {
+        return theme.colors.primary;
+      }
+      return theme.colors.neutralVariants['700'];
+    }
+  }, [disabled, theme.colors.neutralVariants, theme.colors.primary, value]);
+
   return (
     <Pressable
       // Announces "checked" status and "checkbox" as the focused element
@@ -31,7 +42,7 @@ const BCheckbox = ({ style, value, disabled, onValueChange }: Props) => {
       disabled={disabled || onPress === undefined}
       onPress={onPress}>
       <Image
-        tintColor={disabled ? theme.colors.lightGrey02 : theme.colors.neutral['700']}
+        tintColor={tintColor}
         source={value ? check_circle : uncheck_circle}
         style={styles.icon}
       />

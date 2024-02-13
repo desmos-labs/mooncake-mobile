@@ -8,14 +8,14 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
     alignItems: 'center',
   },
   textStyle: {
-    color: theme.colors.surfaceBlack,
+    color: theme.colors.neutralVariants['900'],
   },
   subTextStyle: {
-    color: theme.colors.grey02,
+    color: theme.colors.neutralVariants['600'],
   },
   textGroup: {
     flex: 1,
@@ -24,7 +24,7 @@ const useStyles = makeStyle(theme => ({
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginRight: theme.spacing.s,
+    marginRight: theme.spacings.s,
   },
   buttonContainer: {
     width: scale(83),
@@ -33,7 +33,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   unfollowText: {
-    color: theme.colors.butterOrange01,
+    color: theme.colors.primary,
   },
   followText: {
     color: theme.colors.white,
@@ -42,7 +42,7 @@ const useStyles = makeStyle(theme => ({
     height: scale(24),
     width: scale(24),
     resizeMode: 'contain',
-    tintColor: theme.colors.butterOrange01,
+    tintColor: theme.colors.primary,
   },
 }));
 

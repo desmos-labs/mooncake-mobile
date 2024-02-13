@@ -8,14 +8,14 @@ const useStyles = makeStyle(theme => ({
   container: {
     alignSelf: 'center',
     width: Dimensions.get('window').width,
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
   },
   profilePic: {
     height: 48,
     width: 48,
     alignSelf: 'center',
     borderRadius: 24,
-    marginRight: theme.spacing.s,
+    marginRight: theme.spacings.s,
     backgroundColor: theme.colors.background,
   },
   profileInfoView: {
@@ -32,11 +32,11 @@ const useStyles = makeStyle(theme => ({
     right: 0,
   },
   textContainer: {
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacings.m,
   },
   attachmentContainer: {
     alignItems: 'center',
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacings.m,
   },
 }));
 

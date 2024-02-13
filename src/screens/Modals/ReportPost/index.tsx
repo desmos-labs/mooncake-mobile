@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useAppStateValue } from '@recoil/appState';
 import { reportSuccessIcon } from 'assets/images';
@@ -12,7 +12,6 @@ import StyledSpinner from 'components/StyledSpinner';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useReportPost from 'hooks/reports/useReportPost';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -91,7 +90,7 @@ const ReportPost = () => {
       <View style={styles.successfulReport}>
         <Image source={reportSuccessIcon} style={styles.reportIcon} />
         <Typography.H4 style={styles.headerText}>{t('thanks for reporting')}</Typography.H4>
-        <Spacer paddingBottom={theme.spacing.m} />
+        <Spacer paddingBottom={theme.spacings.m} />
         <Typography.Regular16 style={styles.reportSuccessText}>
           {t('the post has been reported and will be reviewed shortly')}
         </Typography.Regular16>
@@ -103,7 +102,7 @@ const ReportPost = () => {
     styles.reportSuccessText,
     styles.successfulReport,
     t,
-    theme.spacing.m,
+    theme.spacings.m,
   ]);
 
   const alreadyReportedComponent = useMemo(() => {
@@ -111,7 +110,7 @@ const ReportPost = () => {
       <View style={styles.successfulReport}>
         <Image source={reportSuccessIcon} style={styles.reportIcon} />
         <Typography.H4 style={styles.headerText}>{t('post already reported')}</Typography.H4>
-        <Spacer paddingBottom={theme.spacing.m} />
+        <Spacer paddingBottom={theme.spacings.m} />
         <Typography.Regular16 style={styles.reportSuccessText}>
           {t('you have already reported this post')}
         </Typography.Regular16>
@@ -123,7 +122,7 @@ const ReportPost = () => {
     styles.reportSuccessText,
     styles.successfulReport,
     t,
-    theme.spacing.m,
+    theme.spacings.m,
   ]);
 
   const standardComponent = useMemo(() => {
@@ -137,7 +136,7 @@ const ReportPost = () => {
             selectedValue={selectedReport.index}
             onSelect={(index, value) => setSelectedReport({ value: parseInt(value, 10), index })}
           />
-          <Spacer paddingBottom={theme.spacing.s} />
+          <Spacer paddingBottom={theme.spacings.s} />
           <DTextInput
             editable={true}
             inputStyle={styles.messageInput}
@@ -172,7 +171,7 @@ const ReportPost = () => {
     styles.messageInput,
     styles.textInput,
     t,
-    theme.spacing.s,
+    theme.spacings.s,
   ]);
 
   return (

@@ -27,7 +27,7 @@ const useStyles = makeStyle(theme => ({
   },
   border: {
     borderBottomWidth: 1,
-    borderColor: theme.colors.surfaceGrey,
+    borderColor: theme.colors.neutralVariants['300'],
   },
   bottomView: { flex: 1, justifyContent: 'flex-end' },
 }));

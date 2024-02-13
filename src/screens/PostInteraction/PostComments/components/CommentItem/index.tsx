@@ -1,4 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import { Entypo } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import { usePostCommentsCount } from '@recoil/commentsCount';
 import { squaresAnimation } from 'assets/animations';
 import {
@@ -28,15 +30,14 @@ import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { useTheme } from 'native-base';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import Animated, {
   FadeIn,
   FadeOut,
   interpolateColor,
-  Layout,
+  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -101,7 +102,7 @@ const CommentItem = (props: CommentItemProps) => {
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
-
+  const [menuOpened, setMenuOpened] = useState(false);
   const handleNavigateToProfile = useNavigateToProfile();
   const handleShowCommentDetails = useHandlePressShowCommentDetails();
   const handleShowCommentDetailsWithFocus = useHandlePressShowCommentDetailsWithFocus();
@@ -110,6 +111,13 @@ const CommentItem = (props: CommentItemProps) => {
   const handleHidePost = useHandlePressHidePost();
   const returnToRootPost = useReturnToRootPost();
   const handlePressBlock = useHandlePressBlock();
+
+  const openPopupMenu = () => {
+    setMenuOpened(true);
+    if (handlePressMore) {
+      handlePressMore();
+    }
+  };
 
   const handlePressLike = () => {
     if (isPostPending(comment)) {
@@ -152,10 +160,10 @@ const CommentItem = (props: CommentItemProps) => {
       backgroundColor: interpolateColor(
         progress.value,
         [0, 1],
-        [theme.colors.butterOrange05, theme.colors.white],
+        [theme.colors.primaryVariants['100'], theme.colors.white],
       ),
-      marginHorizontal: -theme.spacing.m,
-      paddingHorizontal: theme.spacing.l,
+      marginHorizontal: -theme.spacings.m,
+      paddingHorizontal: theme.spacings.l,
     };
   });
 
@@ -206,13 +214,20 @@ const CommentItem = (props: CommentItemProps) => {
       },
     ];
 
-    return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
+    return (
+      <PopupMenu
+        menuItems={menuItems}
+        popupMenuOpened={menuOpened}
+        setPopupMenuOpened={setMenuOpened}
+      />
+    );
   }, [
+    menuOpened,
+    setMenuOpened,
     isAuthorActiveUser,
     comment,
     handlePressFollow,
     handlePressHidePost,
-    handlePressMore,
     handlePressReport,
     isFollowing,
     t,
@@ -224,7 +239,7 @@ const CommentItem = (props: CommentItemProps) => {
       entering={FadeIn.duration(250)}
       exiting={FadeOut.duration(250)}
       style={[styles.container, styles.flexRow, highlighted && animatedStyle]}
-      layout={Layout.duration(250).delay(250)}>
+      layout={LinearTransition.duration(250)}>
       {/* User profile picture */}
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <Image
@@ -256,10 +271,16 @@ const CommentItem = (props: CommentItemProps) => {
           {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={squaresAnimation} style={styles.loadingAnim} />
           ) : (
-            PressMoreComponent
+            <Entypo
+              name="dots-three-horizontal"
+              size={24}
+              color="black"
+              suppressHighlighting
+              onPress={openPopupMenu}
+            />
           )}
         </View>
-
+        {PressMoreComponent}
         {/* Comment content */}
         <PostData
           post={comment}

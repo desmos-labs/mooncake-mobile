@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import {
   useAddCreatePostAttachment,
   useCreatePostValue,
@@ -18,7 +18,6 @@ import { Image } from 'expo-image';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useKeyboardVisibility from 'hooks/useKeyboardVisibility';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import { useTheme } from 'native-base';
 import React, { RefObject, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
@@ -191,12 +190,13 @@ const EnterCommentBottomBar = (props: Props) => {
                 value={comment}
                 onChangeText={text => setComment(text)}
                 style={styles.textInput}
-                placeholderTextColor={theme.colors.grey02}
+                placeholderTextColor={theme.colors.neutralVariants['600']}
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
                 contextMenuHidden={loading}
                 caretHidden={loading}
                 editable={!loading}
+                blurOnSubmit={true}
               />
             </ScrollView>
             <View

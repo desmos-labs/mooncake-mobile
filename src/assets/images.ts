@@ -31,8 +31,6 @@ export const commentLiked = require('./images/commentLiked.png');
 
 export const reportIcon = require('./images/report.png');
 
-export const moreBlackIcon = require('./images/moreBlackIcon.png');
-
 export const galleryIcon = require('./images/galleryIcon.png');
 
 export const cameraIcon = require('./images/cameraIcon.png');

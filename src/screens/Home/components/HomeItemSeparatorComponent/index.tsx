@@ -1,16 +1,17 @@
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
-import { Box, useTheme } from 'native-base';
+import { View } from 'react-native';
 
 const HomeItemSeparatorComponent = () => {
   const theme = useTheme();
 
   return (
-    <Box
-      height="1px"
+    <View
       style={{
-        paddingHorizontal: -theme.spacing.l,
-        backgroundColor: theme.colors.dividerGrey,
-        marginVertical: theme.spacing.m,
+        paddingHorizontal: -theme.spacings.l,
+        backgroundColor: theme.colors.neutralVariants['200'],
+        marginVertical: theme.spacings.m,
+        height: 1,
       }}
     />
   );

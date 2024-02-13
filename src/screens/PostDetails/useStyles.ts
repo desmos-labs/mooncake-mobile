@@ -8,7 +8,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
   },
   flatListContainer: {
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacings.m,
   },
   emptyView: {
     flex: 1,

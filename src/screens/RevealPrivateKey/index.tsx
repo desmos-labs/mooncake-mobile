@@ -14,7 +14,6 @@ import { Formik, FormikHelpers } from 'formik';
 import useToast from 'hooks/toasts/useToast';
 import useClearUserData from 'hooks/useClearUserData';
 import useUnlockWalletWithPassword from 'hooks/wallet/useUnlockWalletWithPassword';
-import { Center, useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -27,7 +26,6 @@ type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.REVEAL_PRI
 
 const RevealPrivateKey: React.FC<NavProps> = () => {
   const { t } = useTranslation('settings');
-  const theme = useTheme();
   const styles = useStyles();
 
   // -------------------------------------------------------------------------------------
@@ -140,20 +138,18 @@ const RevealPrivateKey: React.FC<NavProps> = () => {
                   <Spacer paddingTop={40} />
                   <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                     <Button
-                      size={44}
-                      backgroundColor={theme.colors.neutral['900']}
-                      textColor={theme.colors.white}
+                      height={44}
                       disabled={!values.password || Object.values(errors).length > 0}
-                      onPress={handleSubmit}>
+                      onPress={handleSubmit as any}>
                       {t('confirm', { ns: 'common' })}
                     </Button>
                     <Spacer paddingTop="m" />
                     <TouchableOpacity onPress={clearUserData}>
-                      <Center>
+                      <View style={[CommonStyles.flex['1'], CommonStyles.center]}>
                         <Typography.Regular14>
                           {t('forgot password', { ns: 'password' })}
                         </Typography.Regular14>
-                      </Center>
+                      </View>
                     </TouchableOpacity>
                   </View>
                 </>

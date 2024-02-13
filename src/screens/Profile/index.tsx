@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import {
@@ -30,7 +30,6 @@ import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
-import { useTheme } from 'native-base';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -120,7 +119,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Local state
   // -------------------------------------------------------------------------------------
-
+  const [popupMenuOpened, setPopupMenuOpened] = useState(false);
   const [pageRefreshing, setPageRefreshing] = useState(false);
   // Fullscreen image
   const [fullscreenImage, setFullscreenImage] = useState({
@@ -282,11 +281,18 @@ const Profile = () => {
     return (
       <PopupMenu
         menuItems={menuItems}
-        menuIcon={profileContextButton}
-        menuIconStyle={styles.contextButtonStyle}
+        popupMenuOpened={popupMenuOpened}
+        setPopupMenuOpened={setPopupMenuOpened}
       />
     );
-  }, [handlePressBlock, isActiveAccount, profile?.isBlockedByUser, styles.contextButtonStyle, t]);
+  }, [
+    popupMenuOpened,
+    setPopupMenuOpened,
+    handlePressBlock,
+    isActiveAccount,
+    profile?.isBlockedByUser,
+    t,
+  ]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -324,17 +330,25 @@ const Profile = () => {
         />
       )}
       <AnimatedView style={[styles.topBarView, animatedStyle]}>
-        <View style={styles.topButtonsContainer}>
-          {!isActiveAccount && (
-            <ProfileHeaderButton
-              image={profileBack}
-              style={styles.topButton}
-              containerStyle={styles.topButton}
-              onPress={goBack}
-            />
-          )}
-        </View>
-        <View>{PopupContextMenu}</View>
+        {!isActiveAccount && (
+          <>
+            <View style={styles.topButtonsContainer}>
+              <ProfileHeaderButton
+                image={profileBack}
+                style={styles.topButton}
+                containerStyle={styles.topButton}
+                onPress={goBack}
+              />
+              <ProfileHeaderButton
+                image={profileContextButton}
+                style={styles.topButton}
+                containerStyle={styles.topButton}
+                onPress={() => setPopupMenuOpened(prev => !prev)}
+              />
+            </View>
+            {PopupContextMenu}
+          </>
+        )}
       </AnimatedView>
       {/* Cover picture fake pressable */}
       <AnimatedPressable

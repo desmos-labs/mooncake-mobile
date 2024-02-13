@@ -4,7 +4,7 @@ const useStyles = makeStyle(theme => ({
   homeView: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingTop: theme.spacing.m,
+    paddingTop: theme.spacings.m,
     zIndex: 1,
   },
   tweetsList: {
@@ -22,7 +22,7 @@ const useStyles = makeStyle(theme => ({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
     backgroundColor: theme.colors.white,
     zIndex: 2,
   },
@@ -31,17 +31,17 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     backgroundColor: theme.colors.white,
   },
-  loaderView: { flex: 1, marginBottom: theme.spacing.l },
+  loaderView: { flex: 1, marginVertical: theme.spacings.l },
   searchView: { flex: 1, zIndex: 2 },
   emptyImage: {
     width: 72,
     height: 72,
-    marginBottom: theme.spacing.s,
+    marginBottom: theme.spacings.s,
   },
   emptyView: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    padding: theme.spacing.m,
+    padding: theme.spacings.m,
     marginTop: 100,
     alignItems: 'center',
     justifyContent: 'center',

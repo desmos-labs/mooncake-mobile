@@ -8,15 +8,15 @@ const useStyles = makeStyle(theme => ({
   bottomBarView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacings.m,
     justifyContent: 'space-between',
   },
-  bottomBarIcon: { height: scale(22), width: scale(22), marginRight: theme.spacing.xs },
+  bottomBarIcon: { height: scale(22), width: scale(22), marginRight: theme.spacings.xs },
   commentButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: theme.spacing.s,
-    marginLeft: theme.spacing.l,
+    marginRight: theme.spacings.s,
+    marginLeft: theme.spacings.l,
   },
   bottomBarInnerView: {
     flex: 1,
@@ -26,7 +26,7 @@ const useStyles = makeStyle(theme => ({
   tipButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: theme.spacing.s,
+    marginHorizontal: theme.spacings.s,
   },
   leftButtonsGroup: {
     flexDirection: 'row',
