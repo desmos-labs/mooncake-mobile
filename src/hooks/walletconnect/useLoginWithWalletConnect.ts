@@ -234,20 +234,15 @@ const useLoginWithWalletConnect = () => {
           showErrorMessage(t('grant transaction failed', { message: signResult.error.message }));
           return;
         }
-        walletConnectAccount = await generateWalletConnectWallet(
-          app,
-          signer,
-          signer.session.topic,
-          {
-            signer: tempWalletSigner,
-            authorizations: signResult.value.authorizedMessages,
-            authorizationsExpiration: signResult.value.grantExpiration,
-          },
-        );
+        walletConnectAccount = await generateWalletConnectWallet(app, signer, {
+          signer: tempWalletSigner,
+          authorizations: signResult.value.authorizedMessages,
+          authorizationsExpiration: signResult.value.grantExpiration,
+        });
       } else {
         // We don't have the user authorization, lets create an account without
         // the temp wallet.
-        walletConnectAccount = await generateWalletConnectWallet(app, signer, signer.session.topic);
+        walletConnectAccount = await generateWalletConnectWallet(app, signer);
       }
 
       startSaveAccountAndCreateProfileFlow({ account: walletConnectAccount });

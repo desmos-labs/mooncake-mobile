@@ -82,8 +82,7 @@ const deserializeWalletConnectWallet = (
     value.type === undefined ||
     value.addressPrefix === undefined ||
     value.address === undefined ||
-    value.walletApp === undefined ||
-    value.sessionTopic === undefined
+    value.walletApp === undefined
   ) {
     throw new Error('invalid serialized WalletConnect wallet');
   }
@@ -106,7 +105,6 @@ const deserializeWalletConnectWallet = (
     addressPrefix: value.addressPrefix,
     address: value.address,
     walletApp: value.walletApp,
-    sessionTopic: value.sessionTopic,
     tempWallet: value.tempWallet,
   };
 };

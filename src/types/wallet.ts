@@ -121,15 +121,10 @@ export interface WalletConnectWallet extends BaseWallet<WalletType.WalletConnect
    */
   readonly walletApp: WalletConnectWalletApp;
   /**
-   * The WalletConnect session topic that has
-   * been used to connect to the external wallet app.
-   */
-  readonly sessionTopic: string;
-  /**
    * The temporary wallet to use to perform the operations
    * without the need to open the external wallet application.
    * If undefined, we should open the external app wallet to
-   * sign the operations.
+   * sign the transaction.
    */
   readonly tempWallet?: {
     /**

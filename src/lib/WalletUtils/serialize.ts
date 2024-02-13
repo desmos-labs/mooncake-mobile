@@ -50,7 +50,6 @@ function serializeWalletConnectWallet(
     addressPrefix: wallet.addressPrefix,
     address: wallet.address,
     walletApp: wallet.walletApp,
-    sessionTopic: wallet.sessionTopic,
     tempWallet: wallet.tempWallet,
   };
 }

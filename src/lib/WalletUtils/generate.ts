@@ -79,8 +79,6 @@ export const generatePrivateKeyWallet = async (
  * Function allowing to generate a WalletConnectWallet.
  * @param walletApp - The application that has been used to import the wallet.
  * @param externalWalletSigner - The signer associated with the external wallet.
- * @param sessionTopic - The WalletConnect session topic that has been used to
- * interact with the external wallet.
  * @param tempWalletOptions - Options to create a temporary wallet that can be used
  * by the application to perform the operations on behalf of the user without leaving
  * the application.
@@ -88,7 +86,6 @@ export const generatePrivateKeyWallet = async (
 export const generateWalletConnectWallet = async (
   walletApp: WalletConnectWalletApp,
   externalWalletSigner: WalletConnectSigner,
-  sessionTopic: string,
   tempWalletOptions?: {
     signer: PrivateKeySigner;
     authorizations: string[];
@@ -122,9 +119,8 @@ export const generateWalletConnectWallet = async (
   const wallet: WalletConnectWallet = {
     type: WalletType.WalletConnect,
     walletApp,
-    address: externalWalletAccount.address,
-    sessionTopic,
     addressPrefix: 'desmos',
+    address: externalWalletAccount.address,
     signer: externalWalletSigner,
     tempWallet: walletTempWallet,
   };
@@ -133,7 +129,7 @@ export const generateWalletConnectWallet = async (
     walletType: WalletType.WalletConnect,
     walletApp,
     address: externalWalletAccount.address,
-    sessionTopic,
+    sessionTopic: externalWalletSigner.session.topic,
     pubKey: externalWalletAccount.pubkey,
     algo: externalWalletAccount.algo,
     tempWallet: accountTempWallet,
