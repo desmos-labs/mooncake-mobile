@@ -7,6 +7,13 @@
     "**/*.{js,ts,jsx,tsx}"
   ],
   "ignore": [
-    "app.config.js"
+    "**/*.d.tsx",
+    "app.config.js",
+    "metro.config.js",
+    "plugins/**"
+  ],
+  "exclude": [
+    "unlisted",
+    "binaries"
   ]
 }
