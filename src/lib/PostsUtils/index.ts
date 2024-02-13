@@ -99,8 +99,15 @@ export const findSamePost = (posts: Post[], post: Post): number =>
 /**
  * Allows sorting the given {@param posts} by creation date, from the most recent to the oldest.
  */
-export const sortPostsByCreationDate = (posts: Post[]): Post[] => {
-  return [...posts].sort((a, b) => b.creationDate.localeCompare(a.creationDate));
+export const sortPostsByCreationDate = (
+  posts: Post[],
+  sorting: 'asc' | 'desc' = 'desc',
+): Post[] => {
+  return [...posts].sort((a, b) =>
+    sorting === 'desc'
+      ? b.creationDate.localeCompare(a.creationDate)
+      : a.creationDate.localeCompare(b.creationDate),
+  );
 };
 
 /**

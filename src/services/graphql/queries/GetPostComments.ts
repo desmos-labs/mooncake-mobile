@@ -6,7 +6,7 @@ const GetPostComments = gql`
   query GetPostComments($postId: bigint, $commentIdToExclude: bigint, $offset: Int, $limit: Int)
   @api(name: butter) {
     comments: post(
-      order_by: { creation_date: desc }
+      order_by: { creation_date: asc }
       where: {
         id: { _neq: $commentIdToExclude }
         references: {

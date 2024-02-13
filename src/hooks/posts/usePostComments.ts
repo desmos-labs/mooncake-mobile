@@ -114,10 +114,10 @@ const usePostComments = ({ post, commentId, commentsPerPage = 20 }: PostComments
 
   const comments = useMemo(() => {
     if (commentToAdd) {
-      const sortedComments = sortPostsByCreationDate([...localComments, ...cachedComments]);
+      const sortedComments = sortPostsByCreationDate([...localComments, ...cachedComments], 'asc');
       return [commentToAdd].concat(sortedComments);
     }
-    return sortPostsByCreationDate([...localComments, ...cachedComments]);
+    return sortPostsByCreationDate([...localComments, ...cachedComments], 'asc');
   }, [localComments, cachedComments, commentToAdd]);
 
   return {
