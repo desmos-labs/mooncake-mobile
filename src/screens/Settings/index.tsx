@@ -41,6 +41,7 @@ import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHook
 import useStyles from 'screens/Settings/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
+import { useStoredAccountInfo } from '@recoil/accountInfo';
 import {
   useDeleteAccountData,
   useDeleteProfile,
@@ -68,6 +69,7 @@ const Settings = (props: NavProps) => {
   // -------------------------------------------------------------------------------------
 
   const activeAccount = useActiveAccount();
+  const accountInfo = useStoredAccountInfo();
   const activeProfile = useActiveProfile();
   const activeAddress = useActiveAccountAddress();
   const accounts = useStoredAccounts();
@@ -77,8 +79,8 @@ const Settings = (props: NavProps) => {
       // TODO: Improve this for guests
       return 'Account not on chain';
     }
-    return formatDateToTZ(activeAccount?.creationDate?.toISOString(), 'MMM dd yyyy');
-  }, [activeAccount, formatDateToTZ]);
+    return formatDateToTZ(accountInfo?.creationTime, 'MMM dd yyyy');
+  }, [accountInfo?.creationTime, activeAccount, formatDateToTZ]);
 
   const { canShowPrivateKey, showPrivateKey } = useShowPrivateKey();
   const postHog = usePostHog();
