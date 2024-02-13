@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
 import useInitTaskContext from 'hooks/tasks/useInitTaskContext';
 import useSetUserLanguage from 'hooks/user/useSetUserLanguage';
+import useRefreshAccountInfo from 'hooks/apis/useRefreshAccountInfo';
 
 /**
  * Hook that allows initializing the application data.
@@ -19,6 +20,7 @@ const useInitializeAppData = () => {
   const { refetch: refreshPostsParams } = usePostsParams();
   const refreshSession = useRefreshSession();
   const setUserLanguage = useSetUserLanguage();
+  const refreshAccountInfo = useRefreshAccountInfo();
 
   // App state setters
   const setDataInitialized = useSetAppStateValue('dataInitialized');
@@ -27,13 +29,20 @@ const useInitializeAppData = () => {
   // Setup Axios
   useInitializeAxios();
 
-  // Init the background tasks context.
+  // Init the background task context.
   useInitTaskContext();
 
   // Not the most elegant way, but it will do for now
   useEffect(() => {
-    refreshSession();
-    setUserLanguage();
+    refreshSession().catch(error => {
+      console.log('Error while refreshing session:', error);
+    });
+    refreshAccountInfo().catch(error => {
+      console.log('Error while refreshing account info', error);
+    });
+    setUserLanguage().catch(error => {
+      console.log('Error while setting user language', error);
+    });
 
     // Refresh the various params
     refreshSubspaceParams();
@@ -44,6 +53,7 @@ const useInitializeAppData = () => {
     setDataInitialized(true);
     setCurrentTimezone(RNLocalize.getTimeZone());
   }, [
+    refreshAccountInfo,
     refreshPostsParams,
     refreshProfileParams,
     refreshSession,
