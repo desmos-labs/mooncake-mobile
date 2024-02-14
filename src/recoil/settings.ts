@@ -46,7 +46,7 @@ const settingState = selectorFamily({
     ({ get }) => {
       const activeAccountAddress = get(activeAccountAddressState);
       if (!activeAccountAddress) {
-        return DefaultAppSettings;
+        return DefaultAppSettings[key];
       }
 
       const settings = get(settingsAppState);
