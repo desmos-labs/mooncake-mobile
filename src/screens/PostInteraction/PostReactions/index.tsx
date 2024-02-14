@@ -45,7 +45,7 @@ const PostReactions = () => {
 
   const { count, refetch: refetchCount } = usePostReactionsCount(post);
   const {
-    data: reactions,
+    items: reactions,
     loading,
     refresh: refetchReactions,
     fetchMore,

@@ -1,44 +1,8 @@
-import { useLazyQuery } from '@apollo/client';
-import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
+import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLReaction } from 'lib/GraphQLUtils/reactions';
-import React from 'react';
+import { useCallback } from 'react';
 import GetPostReactions from 'services/graphql/queries/GetPostReactions';
-import { GqlPostReactions, PostReaction } from 'types/desmos';
-
-/**
- * Hook that provides a function that can be used inside the usePaginatedData
- * hook to fetch the current user's liked events.
- */
-const useFetchPostReactions = (postId: number) => {
-  const [fetchPostReactions] = useLazyQuery<GqlPostReactions>(GetPostReactions);
-
-  return React.useCallback<FetchDataFunction<PostReaction>>(
-    async (offset, limit) => {
-      const { data, error } = await fetchPostReactions({
-        fetchPolicy: 'no-cache',
-        variables: {
-          postId,
-          offset,
-          limit,
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
-      const reactions =
-        data?.reactions?.map(reaction => {
-          return convertGraphQLReaction(reaction);
-        }) ?? [];
-
-      return {
-        data: reactions,
-        endReached: reactions.length < limit,
-      };
-    },
-    [fetchPostReactions, postId],
-  );
-};
+import { GqlPostReactions } from 'types/desmos';
 
 /**
  * Hook that allows to get the reactions for the given post.
@@ -51,14 +15,20 @@ const useFetchPostReactions = (postId: number) => {
  * This hook will also take care of caching the liked events that are fetched.
  */
 const usePostReactions = (postId: number) => {
-  const paginatedDataFields = usePaginatedData(useFetchPostReactions(postId), {
-    itemsPerPage: 20,
-    autoFetchFirstPage: true,
-  });
+  const convertData = useCallback((data?: GqlPostReactions) => {
+    return (data?.reactions ?? []).map(convertGraphQLReaction);
+  }, []);
 
-  return {
-    ...paginatedDataFields,
-  };
+  return usePaginatedQuery({
+    query: GetPostReactions,
+    queryOptions: {
+      itemsPerPage: 10,
+    },
+    variables: {
+      postId,
+    },
+    convertData,
+  });
 };
 
 export default usePostReactions;
