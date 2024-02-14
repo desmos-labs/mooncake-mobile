@@ -45,7 +45,7 @@ const useStyles = makeStyleWithProps(
       paddingHorizontal: theme.spacings.m,
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 10,
+      zIndex: 4,
     },
     contentView: {
       flex: 1,
