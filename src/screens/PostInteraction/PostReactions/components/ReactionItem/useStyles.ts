@@ -10,12 +10,13 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     paddingHorizontal: theme.spacings.m,
     alignItems: 'center',
+    gap: 8,
   },
   textStyle: {
     color: theme.colors.neutralVariants['900'],
   },
   subTextStyle: {
-    color: theme.colors.neutralVariants['600'],
+    color: theme.colors.neutralVariants['700'],
   },
   textGroup: {
     flex: 1,

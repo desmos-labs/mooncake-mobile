@@ -3,6 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
+import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import usePostReactions from 'hooks/reactions/usePostReactions';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
@@ -15,7 +16,6 @@ import { View } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import { PostReaction } from 'types/desmos';
 import { Post } from 'types/posts';
-import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
 
@@ -45,7 +45,7 @@ const PostReactions = () => {
 
   const { count, refetch: refetchCount } = usePostReactionsCount(post);
   const {
-    data: reactions,
+    items: reactions,
     loading,
     refresh: refetchReactions,
     fetchMore,
@@ -80,19 +80,17 @@ const PostReactions = () => {
   return (
     <BottomUpModalWrapper goBack={goBack} paddingHorizontal={0.1}>
       <View style={styles.container}>
-        <Typography.H6 style={styles.header}>{t('likes')}</Typography.H6>
-        {count > 0 && (
-          <Typography.Regular14 style={styles.countText}>
-            {t('likes counter', { likesCounter: formatNumShorthand(count) })}
-          </Typography.Regular14>
-        )}
+        <Typography.Semibold16 style={styles.header}>
+          {formatNumShorthand(count)} {t('likes')}
+        </Typography.Semibold16>
+
         <FlashList
           refreshing={refreshing}
           onRefresh={refetch}
           keyExtractor={(item, index) => `${item.author.address}-${index}`}
           data={reactions}
           renderItem={renderItem}
-          ItemSeparatorComponent={ItemSeparatorComponent}
+          ItemSeparatorComponent={() => <Spacer paddingBottom="l" />}
           ListEmptyComponent={renderEmptyComponent}
           onEndReached={fetchMore}
           ListFooterComponent={renderFooterComponent}

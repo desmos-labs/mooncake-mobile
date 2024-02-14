@@ -36,9 +36,9 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
       );
     }
     return (
-      <Typography.Regular14 style={following ? commonStyles.textBlack : commonStyles.textWhite}>
+      <Typography.Semibold14 style={following ? commonStyles.textBlack : commonStyles.textWhite}>
         {following ? t('following') : t('follow')}
-      </Typography.Regular14>
+      </Typography.Semibold14>
     );
   }, [following, t, theme.colors.neutralVariants, theme.colors.white, updatingFollow]);
 
