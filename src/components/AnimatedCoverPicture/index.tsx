@@ -76,14 +76,6 @@ const AnimatedCoverPicture = ({
     };
   });
 
-  const animatedBlurStyleAndroid = useAnimatedStyle(() => {
-    const opacity = interpolate(scrollY.value, [-50, 0, 25, 60], [0.1, 0, 0, 0.1]);
-
-    return {
-      opacity,
-    };
-  });
-
   return (
     <AnimatedImage
       contentFit="cover"
