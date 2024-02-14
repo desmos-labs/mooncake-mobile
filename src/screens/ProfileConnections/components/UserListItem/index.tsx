@@ -57,7 +57,7 @@ const UserListItem = (props: UserListItemProps) => {
         </Typography.Regular12>
       </View>
       {/* Button to follow or unfollow a user */}
-      {!isActiveAccount && <ToggleFollowageButton user={user} />}
+      {!isActiveAccount && <ToggleFollowageButton user={user} buttonWidth={99} />}
     </TouchableOpacity>
   );
 };

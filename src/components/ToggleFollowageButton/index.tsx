@@ -5,6 +5,7 @@ import commonStyles from 'config/theme/CommonStyles';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleProp, View, ViewStyle } from 'react-native';
+import { DimensionValue } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 import { DesmosProfile } from 'types/desmos';
 import { useToggleFollowage } from './hooks';
 import useStyles from './useStyles';
@@ -12,6 +13,7 @@ import useStyles from './useStyles';
 interface NotificationButtonProps {
   readonly user: DesmosProfile;
   readonly style?: StyleProp<ViewStyle>;
+  readonly buttonWidth?: DimensionValue | undefined;
 }
 
 /**
@@ -24,7 +26,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const styles = useStyles();
   const { t } = useTranslation('relationships');
 
-  const { user, style } = props;
+  const { user, style, buttonWidth } = props;
   const { toggleFollow, following, updatingFollow } = useToggleFollowage(user);
 
   const buttonContent = React.useMemo(() => {
@@ -48,7 +50,11 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
         onPress={toggleFollow}
         height={32}
         type="solid"
-        style={[styles.button, following ? styles.unfollowButton : null]}
+        style={[
+          styles.button,
+          following ? styles.unfollowButton : null,
+          buttonWidth ? { width: buttonWidth } : null,
+        ]}
         disabled={updatingFollow}>
         {buttonContent}
       </Button>

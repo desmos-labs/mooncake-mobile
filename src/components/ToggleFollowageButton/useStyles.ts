@@ -7,10 +7,9 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   button: {
-    borderRadius: 8,
+    borderRadius: 4,
     justifyContent: 'center',
     alignSelf: 'stretch',
-    width: 99,
   },
   unfollowButton: {
     backgroundColor: theme.colors.neutralVariants['200'],

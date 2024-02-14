@@ -39,7 +39,7 @@ const SearchUsersResult = ({ profile }: Props) => {
           @{profile.dTag}
         </Typography.Regular12>
       </View>
-      <ToggleFollowageButton user={profile} />
+      <ToggleFollowageButton user={profile} buttonWidth={99} />
     </TouchableOpacity>
   );
 };
