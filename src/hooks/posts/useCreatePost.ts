@@ -39,6 +39,11 @@ const convertPostImage = (index: number, attachment: ImageMedia): Result<PostAtt
     return err(new Error('Invalid attachment'));
   }
 
+  const size =
+    attachment?.width && attachment?.height
+      ? { width: attachment.width, height: attachment.height }
+      : undefined;
+
   return ok({
     id: index,
     content: {
@@ -46,7 +51,8 @@ const convertPostImage = (index: number, attachment: ImageMedia): Result<PostAtt
       uri,
       mimeType: type,
     },
-    size: undefined,
+    contentHash: undefined,
+    size,
   });
 };
 
