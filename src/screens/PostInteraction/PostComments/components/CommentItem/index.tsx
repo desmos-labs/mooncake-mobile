@@ -21,6 +21,7 @@ import {
   useHandlePressHidePost,
   useHandlePressReport,
 } from 'components/PostCard/hooks';
+import PostData from 'components/PostData';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { Image } from 'expo-image';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
@@ -48,7 +49,6 @@ import {
   useReturnToRootPost,
 } from 'screens/PostDetails/hooks';
 import { isPostPending, Post } from 'types/posts';
-import PostData from 'components/PostData';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -270,7 +270,7 @@ const CommentItem = (props: CommentItemProps) => {
           </TouchableOpacity>
           {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={squaresAnimation} style={styles.loadingAnim} />
-          ) : (
+          ) : !isAuthorActiveUser ? (
             <Entypo
               name="dots-three-horizontal"
               size={24}
@@ -278,7 +278,7 @@ const CommentItem = (props: CommentItemProps) => {
               suppressHighlighting
               onPress={openPopupMenu}
             />
-          )}
+          ) : null}
         </View>
         {PressMoreComponent}
         {/* Comment content */}

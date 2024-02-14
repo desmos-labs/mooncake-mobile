@@ -51,6 +51,7 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: theme.spacings.s,
   },
   interactionButton: {
     flex: 1,
