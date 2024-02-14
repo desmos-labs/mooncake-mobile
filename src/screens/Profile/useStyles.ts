@@ -4,7 +4,8 @@ import { EdgeInsets } from 'react-native-safe-area-context';
 import { verticalScale } from 'react-native-size-matters';
 
 export const PROFILE_HEADER_HEIGHT = (Dimensions.get('window').width * 9) / 20;
-export const PROFILE_HEADER_HEIGHT_COMPACT = verticalScale(80);
+export const PROFILE_HEADER_HEIGHT_COMPACT =
+  Platform.OS === 'ios' ? verticalScale(80) : verticalScale(46);
 export const PROFILE_HEADER_HEIGHT_EXPANDED = PROFILE_HEADER_HEIGHT - PROFILE_HEADER_HEIGHT_COMPACT;
 
 const useStyles = makeStyleWithProps(
@@ -34,12 +35,24 @@ const useStyles = makeStyleWithProps(
       paddingHorizontal: theme.spacings.m,
       zIndex: 5,
     },
+    topBarNameView: {
+      flex: 1,
+      width: '100%',
+      paddingVertical: theme.spacings.s,
+      position: 'absolute',
+      marginTop: Platform.OS === 'ios' ? props.insets.top : props.insets.top + 8,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacings.m,
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 10,
+    },
     contentView: {
       flex: 1,
       marginTop: theme.spacings.s,
       paddingHorizontal: theme.spacings.m,
       backgroundColor: theme.colors.background,
-      paddingBottom: PROFILE_HEADER_HEIGHT_COMPACT + verticalScale(10),
+      paddingBottom: Platform.OS == 'ios' ? verticalScale(80) : verticalScale(116),
     },
     contentContainerStyle: { flexGrow: 1 },
     contentContainer: {
