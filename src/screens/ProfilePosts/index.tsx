@@ -94,8 +94,9 @@ const ProfilePosts = () => {
     tabBarStyle: styles.tabBar,
     tabBarItemStyle: styles.tabBarItem,
     tabBarLabelStyle: styles.tabBarLabel,
-    tabBarInactiveTintColor: theme.colors.grey01,
+    tabBarInactiveTintColor: theme.colors.neutralVariants['600'],
     tabBarIndicatorStyle: styles.tabBarIndicator,
+    tabBarPressColor: 'white',
     swipeEnabled,
     lazy: true,
   };

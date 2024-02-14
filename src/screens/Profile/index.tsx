@@ -29,7 +29,7 @@ import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfi
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
+import { getCoverPicture, getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -47,6 +47,7 @@ import {
 import ImageView from 'react-native-image-viewing';
 import Reanimated, {
   FadeIn,
+  interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -171,6 +172,23 @@ const Profile = () => {
         PROFILE_HEADER_HEIGHT - scrollY.value >= PROFILE_HEADER_HEIGHT_COMPACT
           ? PROFILE_HEADER_HEIGHT - scrollY.value
           : PROFILE_HEADER_HEIGHT_COMPACT,
+    };
+  });
+
+  const animatedText = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollY.value, [0, 100, 200], [0, 0, 1]),
+      transform: [
+        {
+          translateY:
+            scrollY.value > 200
+              ? 0
+              : interpolate(scrollY.value, [0, 100, 200], [20, 20, 0], {
+                  extrapolateRight: 'clamp',
+                  extrapolateLeft: 'clamp',
+                }),
+        },
+      ],
     };
   });
 
@@ -349,6 +367,11 @@ const Profile = () => {
             {PopupContextMenu}
           </>
         )}
+      </AnimatedView>
+      <AnimatedView style={[styles.topBarNameView, animatedText]}>
+        <Typography.Semibold14 style={CommonStyles.textWhite}>
+          {getProfileDisplayName(profile)}
+        </Typography.Semibold14>
       </AnimatedView>
       {/* Cover picture fake pressable */}
       <AnimatedPressable

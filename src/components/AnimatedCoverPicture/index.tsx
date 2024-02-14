@@ -76,14 +76,6 @@ const AnimatedCoverPicture = ({
     };
   });
 
-  const animatedBlurStyleAndroid = useAnimatedStyle(() => {
-    const opacity = interpolate(scrollY.value, [-50, 0, 25, 60], [0.1, 0, 0, 0.1]);
-
-    return {
-      opacity,
-    };
-  });
-
   return (
     <AnimatedImage
       contentFit="cover"
@@ -95,17 +87,7 @@ const AnimatedCoverPicture = ({
       style={[styles.banner, animatedImageBGStyle, Platform.OS === 'android' && { top }]}>
       <Animated.View
         style={[CommonStyles.flex['1'], fixedBlur ? { opacity: 1 } : animatedBlurStyle]}>
-        {Platform.OS === 'ios' ? (
-          <AnimatedBlurView
-            tint="dark"
-            intensity={blurIntensity ?? 96}
-            style={[styles.bannerBlur]}
-          />
-        ) : (
-          <Animated.View
-            style={[styles.bannerBlur, styles.blurViewAndroid, animatedBlurStyleAndroid]}
-          />
-        )}
+        <AnimatedBlurView tint="dark" intensity={blurIntensity ?? 96} style={[styles.bannerBlur]} />
       </Animated.View>
     </AnimatedImage>
   );
