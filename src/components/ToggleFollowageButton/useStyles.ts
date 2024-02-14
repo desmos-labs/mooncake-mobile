@@ -1,6 +1,6 @@
 import { makeStyle } from 'config/theme';
 
-const useStyles = makeStyle(() => ({
+const useStyles = makeStyle(theme => ({
   buttonView: {
     marginLeft: 'auto',
     right: 1,
@@ -10,9 +10,10 @@ const useStyles = makeStyle(() => ({
     borderRadius: 8,
     justifyContent: 'center',
     alignSelf: 'stretch',
+    width: 99,
   },
   unfollowButton: {
-    backgroundColor: '#EDEDED',
+    backgroundColor: theme.colors.neutralVariants['200'],
   },
 }));
 

@@ -1,7 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { commentLiked } from 'assets/images';
-import { Image } from 'expo-image';
-import { getProfilePicture } from 'lib/ProfileUtils';
+import AvatarImage from 'components/AvatarImage';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -22,11 +21,7 @@ const ReactionItem = ({ author }: Props) => {
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <Image
-        source={getProfilePicture(author)}
-        style={styles.avatarStyle}
-        recyclingKey={author.address}
-      />
+      <AvatarImage imageSource={author} size={48} />
       <View style={styles.textGroup}>
         <View>
           <Typography.Semibold14 style={styles.textStyle}>
@@ -35,7 +30,7 @@ const ReactionItem = ({ author }: Props) => {
           <Typography.Regular12 style={styles.subTextStyle}>@{author.dTag}</Typography.Regular12>
         </View>
       </View>
-      <Image source={commentLiked} style={styles.likedIcon} />
+      <ToggleFollowageButton user={author} />
     </View>
   );
 };
