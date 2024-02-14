@@ -46,13 +46,14 @@ const ServiceAndPolicy = () => {
   // --- State
   // -------------------------------------------------------------------------------------
 
+  const [loginLoading, setLoginLoading] = useState(false);
   const [conditionAndPolicyAccepted, setConditionAndPolicyAccepted] = useState(false);
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
+  const loginWithWeb3Auth = useLoginWithWeb3Auth(DesmosChain);
   const loginWithWalletConnect = useLoginWithWalletConnect();
   const trackAcceptedLegalTerms = useTrackAcceptedLegalTerms();
   const openTermsAndConditions = useOpenTermsAndConditions();
@@ -63,22 +64,20 @@ const ServiceAndPolicy = () => {
   // -------------------------------------------------------------------------------------
 
   const loginWithSelectedMethod = useCallback(async () => {
+    setLoginLoading(true);
     trackAcceptedLegalTerms();
 
     // Login the user with the We3Auth method if they selected it.
     if (params?.loginMethod?.type === LoginMethodType.Web3Auth) {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
-      return;
-    }
-
-    if (params?.loginMethod?.type === LoginMethodType.WalletConnect) {
+    } else if (params?.loginMethod?.type === LoginMethodType.WalletConnect) {
       // TODO: Implement login through WalletConnect.
       await loginWithWalletConnect(params?.loginMethod?.app);
-      return;
+    } else {
+      // Otherwise, navigate to the screen that allows to use the private key
+      navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
     }
-
-    // Otherwise, navigate to the screen that allows to use the private key
-    navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
+    setLoginLoading(false);
   }, [
     loginWithWalletConnect,
     loginWithWeb3Auth,
