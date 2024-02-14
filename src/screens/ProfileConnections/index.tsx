@@ -111,10 +111,11 @@ const ProfileConnections = () => {
     tabBarStyle: styles.tabBar,
     tabBarContentContainerStyle: styles.tabBarContentContainer,
     tabBarLabelStyle: styles.tabBarLabel,
-    tabBarInactiveTintColor: theme.colors.grey01,
+    tabBarInactiveTintColor: theme.colors.neutralVariants['600'],
     tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled,
     lazy: true,
+    tabBarPressColor: 'white',
   };
 
   return (
