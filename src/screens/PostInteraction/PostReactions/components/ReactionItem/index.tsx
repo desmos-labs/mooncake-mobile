@@ -30,7 +30,7 @@ const ReactionItem = ({ author }: Props) => {
           <Typography.Regular12 style={styles.subTextStyle}>@{author.dTag}</Typography.Regular12>
         </View>
       </View>
-      <ToggleFollowageButton user={author} />
+      <ToggleFollowageButton user={author} buttonWidth={99} />
     </View>
   );
 };

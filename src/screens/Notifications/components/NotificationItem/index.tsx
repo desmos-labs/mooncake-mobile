@@ -116,7 +116,7 @@ const NotificationItem = (props: NotificationComponentProps) => {
     }
 
     if (notification.type === NotificationType.NewFollower) {
-      return profile && <ToggleFollowageButton user={profile} />;
+      return profile && <ToggleFollowageButton user={profile} buttonWidth={99} />;
     }
 
     return null;
