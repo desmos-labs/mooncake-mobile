@@ -3,7 +3,7 @@ export default {
     name: 'Mooncake',
     slug: 'mooncake',
     owner: 'desmos',
-    version: '1.4.4',
+    version: '1.4.5',
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'light',
