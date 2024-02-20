@@ -46,6 +46,7 @@ const withBackgroundActions = config => {
       newConfig.modResults.manifest.application[0].service.push({
         $: {
           'android:name': 'com.asterinet.react.bgactions.RNBackgroundActionsTask',
+          'android:foregroundServiceType': 'shortService',
         },
       });
     }
