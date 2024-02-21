@@ -59,7 +59,7 @@ const PopupMenu: React.FC<Props> = ({ popupMenuOpened, setPopupMenuOpened, menuI
         </MenuOption>
       );
     });
-  }, [menuItems, styles.icon]);
+  }, [menuItems, styles.icon, setPopupMenuOpened]);
 
   return (
     <Menu
