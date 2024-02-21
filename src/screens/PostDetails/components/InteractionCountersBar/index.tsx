@@ -1,6 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Skeleton } from 'moti/skeleton';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import { DesmosProfile } from 'types/desmos';
@@ -22,16 +22,7 @@ const InteractionCountersBar = (props: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
 
-  const { loading, interactionAuthors, likesCounter, commentsCounter, handlePressCounters } = props;
-
-  const calculatedWidth = useMemo(() => {
-    switch (interactionAuthors.length) {
-      case 0:
-        return 0;
-      default:
-        return 30 + (interactionAuthors.length - 1) * 20;
-    }
-  }, [interactionAuthors.length]);
+  const { loading, likesCounter, commentsCounter, handlePressCounters } = props;
 
   return loading ? (
     <View style={styles.container}>
