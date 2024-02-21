@@ -5,7 +5,6 @@ import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import useCreatePost from 'hooks/posts/useCreatePost';
 import usePost from 'hooks/posts/usePost';
 import useBlockOrUnblockUser from 'hooks/relationships/useBlockOrUnblockUser';
-import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useToast from 'hooks/toasts/useToast';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -14,19 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { NavProps } from 'screens/PostDetails/index';
 import { DesmosProfile } from 'types/desmos';
 import { isCommentReply, Post } from 'types/posts';
-
-/**
- * Hook that allows to follow or unfollow a user.
- */
-export const useHandlePressFollowOrUnfollow = () => {
-  const followOrUnfollow = useFollowOrUnfollowUser();
-  return React.useCallback(
-    async (user: DesmosProfile) => {
-      await followOrUnfollow(user);
-    },
-    [followOrUnfollow],
-  );
-};
 
 /**
  * Hook that allows to follow or unfollow a user.

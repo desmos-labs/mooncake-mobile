@@ -36,8 +36,7 @@ export const useUserLocalComments = (userAddress: string | undefined, parentId: 
   return useMemo(
     () =>
       (userAddress ? posts[userAddress] ?? [] : []).filter(p => {
-        const isComment = isCommentTo(p, parentId);
-        return isComment;
+        return isCommentTo(p, parentId);
       }),
     [posts, userAddress, parentId],
   );
