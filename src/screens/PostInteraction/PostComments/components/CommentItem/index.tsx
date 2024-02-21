@@ -14,6 +14,7 @@ import {
   unblock,
   unfollowBlackIcon,
 } from 'assets/images';
+import AvatarImage from 'components/AvatarImage';
 import PopupMenu from 'components/PopupMenu';
 import {
   useHandlePressBlock,
@@ -24,13 +25,12 @@ import {
 import PostData from 'components/PostData';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { Image } from 'expo-image';
-import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import useTimePassedDate from 'hooks/formatting/useTimePassedDate';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { formatNumShorthand } from 'lib/FormatUtils';
-import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
@@ -96,8 +96,7 @@ const CommentItem = (props: CommentItemProps) => {
   // --- Formatted data
   // -------------------------------------------------------------------------------------
 
-  const formatDate = useFormatTimeForPostDetails();
-  const formattedDate = formatDate(comment.creationDate);
+  const timePassedDate = useTimePassedDate(comment.creationDate);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -242,11 +241,7 @@ const CommentItem = (props: CommentItemProps) => {
       layout={LinearTransition.duration(250)}>
       {/* User profile picture */}
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
-        <Image
-          source={getProfilePicture(comment.author)}
-          style={styles.avatar}
-          recyclingKey={comment.author.address}
-        />
+        <AvatarImage imageSource={comment.author} size={40} />
       </TouchableOpacity>
 
       {/* User nickname */}
@@ -259,7 +254,7 @@ const CommentItem = (props: CommentItemProps) => {
           <TouchableOpacity
             style={styles.flexRow}
             onPress={() => handleNavigateToProfile(comment.author.address)}>
-            <View>
+            <View style={styles.authorInfo}>
               <Typography.Semibold14 style={styles.textStyle}>
                 {comment.author.nickname ? comment.author.nickname : t('no nickname')}
               </Typography.Semibold14>
@@ -301,7 +296,7 @@ const CommentItem = (props: CommentItemProps) => {
           {/* Creation date */}
           <View>
             <Typography.Regular12 style={styles.dateTextStyle}>
-              {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : formattedDate}
+              {isPostPending(comment) ? t('broadcasting', { ns: 'broadcastTx' }) : timePassedDate}
             </Typography.Regular12>
           </View>
 
@@ -316,9 +311,9 @@ const CommentItem = (props: CommentItemProps) => {
                   source={postToCommentIcon}
                   style={[styles.buttonImage, styles.interactionImage]}
                 />
-                <Typography.Semibold14 style={styles.subTextStyle}>
+                <Typography.Regular16 style={styles.subTextStyle}>
                   {formatNumShorthand(commentsCount)}
-                </Typography.Semibold14>
+                </Typography.Regular16>
               </TouchableOpacity>
             )}
 
@@ -332,9 +327,9 @@ const CommentItem = (props: CommentItemProps) => {
                   styles.interactionImage,
                 ]}
               />
-              <Typography.Semibold14 style={liked ? styles.orangeText : styles.subTextStyle}>
+              <Typography.Regular16 style={liked ? styles.orangeText : styles.subTextStyle}>
                 {formatNumShorthand(likesCount)}
-              </Typography.Semibold14>
+              </Typography.Regular16>
             </TouchableOpacity>
           </View>
         </View>

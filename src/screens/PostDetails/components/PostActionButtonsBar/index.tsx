@@ -1,5 +1,5 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { postLikedIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
+import { postLikedIcon, postShareIcon, postToCommentIcon, postToLikeIcon } from 'assets/images';
 import Divider from 'components/Divider';
 import Spacer from 'components/Spacer';
 import React from 'react';
@@ -11,6 +11,7 @@ type Props = {
   postLiked: boolean;
   handleLikePress: () => void;
   handleCommentPress: () => void;
+  handlePressShare: () => void;
 };
 
 /**
@@ -20,7 +21,7 @@ type Props = {
 const PostActionButtonsBar = (props: Props) => {
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
-  const { postLiked, handleLikePress, handleCommentPress } = props;
+  const { postLiked, handleLikePress, handleCommentPress, handlePressShare } = props;
 
   return (
     <>
@@ -32,17 +33,23 @@ const PostActionButtonsBar = (props: Props) => {
             source={postLiked ? postLikedIcon : postToLikeIcon}
             style={[styles.icon, postLiked && styles.orangeIconAndText]}
           />
-          <Typography.Semibold14
+          <Typography.Regular14
             numberOfLines={1}
             style={[styles.text, postLiked && styles.orangeText]}>
             {t('like')}
-          </Typography.Semibold14>
+          </Typography.Regular14>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCommentPress} style={styles.button}>
           <Image source={postToCommentIcon} style={styles.icon} />
-          <Typography.Semibold14 numberOfLines={1} style={styles.text}>
+          <Typography.Regular14 numberOfLines={1} style={styles.text}>
             {t('comment')}
-          </Typography.Semibold14>
+          </Typography.Regular14>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePressShare} style={styles.button}>
+          <Image source={postShareIcon} style={styles.icon} />
+          <Typography.Regular14 numberOfLines={1} style={styles.text}>
+            {t('share')}
+          </Typography.Regular14>
         </TouchableOpacity>
       </View>
       <Divider style={styles.divider} />

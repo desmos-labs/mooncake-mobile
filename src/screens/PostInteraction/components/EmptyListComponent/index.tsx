@@ -4,6 +4,7 @@ import Button from 'components/Button';
 import { makeStyle } from 'config/theme';
 import React from 'react';
 import { Image, View } from 'react-native';
+import { scale } from 'react-native-size-matters';
 
 type Props = {
   label: string;
@@ -43,8 +44,8 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   imageStyle: {
-    width: 120,
-    height: 120,
+    width: scale(80),
+    height: scale(80),
     resizeMode: 'contain',
     marginBottom: theme.spacings.m,
   },

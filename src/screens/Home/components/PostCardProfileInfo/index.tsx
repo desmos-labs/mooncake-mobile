@@ -15,11 +15,9 @@ import {
 import PopupMenu from 'components/PopupMenu';
 import ThemedLottieView from 'components/ThemedLottieView';
 import CommonStyles from 'config/theme/CommonStyles';
-import { parseISO } from 'date-fns';
 import { Image } from 'expo-image';
-import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import useTimePassedDate from 'hooks/formatting/useTimePassedDate';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -61,8 +59,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   // -------------------------------------------------------------------------------------
 
   const activeAddress = useActiveAccountAddress();
-  const formatDate = useFormatTimeForPostDetails();
-
+  const timePassedDate = useTimePassedDate(post.creationDate);
   const isFollowing = useIsFollowing(post.author);
 
   // -------------------------------------------------------------------------------------
@@ -76,38 +73,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
 
   const isPending = useMemo(() => isPostPending(post), [post]);
 
-  const formattedDate = useMemo(
-    () => formatDate(post.creationDate),
-    [formatDate, post.creationDate],
-  );
-
   // TODO: Replace this with https://day.js.org/docs/en/display/from-now
-  const date = Date.now();
-  const calculatedCreationDate = useMemo(() => {
-    const parsedTime = parseISO(`${post.creationDate}Z`);
-    const differenceInUnix = date - parsedTime.getTime();
-    if (differenceInUnix < 0) {
-      return t('now');
-    } else if (differenceInUnix < 59999) {
-      return t('seconds ago', {
-        count: formatMsToHumanReadable(differenceInUnix, 'seconds'),
-      });
-    } else if (differenceInUnix < 3599999) {
-      return t('minutes ago', {
-        count: formatMsToHumanReadable(differenceInUnix, 'minutes'),
-      });
-    } else if (differenceInUnix < 86399999) {
-      return t('hours ago', {
-        count: formatMsToHumanReadable(differenceInUnix, 'hours'),
-      });
-    } else if (differenceInUnix < 31556951999) {
-      return t('days ago', {
-        count: formatMsToHumanReadable(differenceInUnix, 'days'),
-      });
-    } else {
-      return formattedDate;
-    }
-  }, [date, formattedDate, post.creationDate, t]);
 
   const popupMenuItems = useMemo(
     () => [
@@ -199,7 +165,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
                 color: theme.colors.neutralVariants['700'],
                 marginLeft: theme.spacings.xs,
               }}>
-              {!isPending && `· ${calculatedCreationDate}`}
+              {!isPending && `· ${timePassedDate}`}
             </Typography.Regular12>
           </View>
         </View>

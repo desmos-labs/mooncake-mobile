@@ -10,7 +10,10 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
   },
   container: {
     backgroundColor: theme.colors.white,
-    padding: theme.spacings.s,
+    paddingHorizontal: theme.spacings.s,
+    paddingTop: theme.spacings.s,
+    paddingBottom: theme.spacings.l,
+    gap: theme.spacings.s,
   },
   flexRow: {
     flexDirection: 'row',
@@ -39,13 +42,18 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
     color: theme.colors.neutralVariants['600'],
   },
   buttonImage: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     tintColor: theme.colors.neutralVariants['700'],
     resizeMode: 'contain',
   },
   interactionImage: {
     marginRight: theme.spacings.xs,
+  },
+  authorInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacings.s,
   },
   bottomGroup: {
     flexDirection: 'row',
@@ -61,7 +69,7 @@ const useStyles = makeStyleWithProps((props: CommentItemProps, theme) => ({
   },
   interactionButtonGroup: {
     flexDirection: 'row',
-    flex: props.disableInnerComment ? 0.5 : 0.75,
+    flex: 0.55,
   },
   loadingAnim: {
     width: 24,

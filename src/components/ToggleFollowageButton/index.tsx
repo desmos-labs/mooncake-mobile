@@ -13,6 +13,7 @@ import useStyles from './useStyles';
 interface NotificationButtonProps {
   readonly user: DesmosProfile;
   readonly style?: StyleProp<ViewStyle>;
+  readonly buttonStyle?: StyleProp<ViewStyle>;
   readonly buttonWidth?: DimensionValue | undefined;
 }
 
@@ -26,7 +27,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const styles = useStyles();
   const { t } = useTranslation('relationships');
 
-  const { user, style, buttonWidth } = props;
+  const { user, style, buttonWidth, buttonStyle } = props;
   const { toggleFollow, following, updatingFollow } = useToggleFollowage(user);
 
   const buttonContent = React.useMemo(() => {
@@ -54,6 +55,7 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
           styles.button,
           following ? styles.unfollowButton : null,
           buttonWidth ? { width: buttonWidth } : null,
+          buttonStyle,
         ]}
         disabled={updatingFollow}>
         {buttonContent}
