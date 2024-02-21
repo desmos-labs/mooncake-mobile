@@ -1,5 +1,6 @@
+import { GiphyContentType, GiphyDialog } from '@giphy/react-native-sdk';
 import { useTheme } from '@react-navigation/native';
-import { cameraIcon, galleryIcon } from 'assets/images';
+import { cameraIcon, galleryIcon, gifIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import { CameraType } from 'expo-image-picker';
@@ -10,6 +11,10 @@ import useOpenPictureEditor from 'hooks/useOpenPictureEditor';
 import React from 'react';
 import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
 import useStyles from './useStyles';
+
+GiphyDialog.configure({
+  mediaTypeConfig: [GiphyContentType.Gif],
+});
 
 export type OnImageSelectedCallback = (
   editedPicturePath: string,
@@ -114,6 +119,15 @@ const MediaBottomPanel = ({
               disabled={imageSelected}
               onPress={handlePressCamera}
               image={cameraIcon}
+              style={styles.imageButtonStyle}
+              tintColor={theme.colors.neutralVariants['700']}
+            />
+            <ImageButton
+              accessibilityLabel="choose gif"
+              hitSlopValue={8}
+              disabled={imageSelected}
+              onPress={() => GiphyDialog.show()}
+              image={gifIcon}
               style={styles.imageButtonStyle}
               tintColor={theme.colors.neutralVariants['700']}
             />
