@@ -185,7 +185,7 @@ const PostDetails = () => {
     return (
       <Typography.Semibold16>{isRootPost(post) ? t('post') : t('replies')}</Typography.Semibold16>
     );
-  }, [post]);
+  }, [post, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
