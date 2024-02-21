@@ -60,7 +60,6 @@ const PostHeader = ({ post, commentsCount, handlePressComment, handlePressShare 
         likesCounter={likesCount}
         commentsCounter={commentsCount}
         handlePressCounters={() => handlePressCounters(post!)}
-        interactionAuthors={[]}
       />
       <PostActionButtonsBar
         postLiked={liked}

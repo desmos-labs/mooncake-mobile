@@ -3,12 +3,10 @@ import { Skeleton } from 'moti/skeleton';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
 type Props = {
   loading: boolean;
-  interactionAuthors: DesmosProfile[];
   likesCounter: number;
   commentsCounter: number;
   handlePressCounters: () => void;

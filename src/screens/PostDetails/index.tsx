@@ -1,6 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { CompositeScreenProps, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { usePostCommentsCount } from '@recoil/commentsCount';
 import { useActiveProfile } from '@recoil/profiles';
@@ -62,7 +62,6 @@ const PostDetails = () => {
   const { t } = useTranslation('postDetails');
   const styles = useStyles();
   const theme = useTheme();
-  const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
   const { postId, commentId, initialPostData } = params;
