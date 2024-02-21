@@ -6,6 +6,7 @@ import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import React from 'react';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
+import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import { useHandlePressCounters } from 'screens/PostDetails/hooks';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
@@ -47,6 +48,7 @@ const PostHeader = ({ post, commentsCount, handlePressComment, handlePressShare 
 
   return (
     <>
+      <PostTopBar post={post} />
       <PostData post={post!} />
       <Spacer paddingBottom="m" />
       <Typography.Regular12 style={styles.date}>

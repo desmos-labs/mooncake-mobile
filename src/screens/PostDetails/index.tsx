@@ -20,7 +20,6 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
-import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
@@ -233,8 +232,6 @@ const PostDetails = () => {
       edges={['top']}
       style={styles.root}
       topBar={<TopBar centerElement={centerElement} style={styles.topBar} />}>
-      {/* List of comments */}
-      <PostTopBar post={post} onBackButtonPress={goBack} />
       <FlashList
         estimatedItemSize={140}
         ref={scrollViewRef}

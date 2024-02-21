@@ -1,5 +1,6 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Entypo } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { block, hidePost, reportIcon, unblock } from 'assets/images';
 import PopupMenu from 'components/PopupMenu';
 import { useHandlePressReport } from 'components/PostCard/hooks';
@@ -19,7 +20,6 @@ import useStyles from './useStyles';
 
 interface Props {
   readonly post: Post;
-  readonly onBackButtonPress: () => void;
   readonly handlePressMore?: () => void;
 }
 
@@ -28,10 +28,10 @@ interface Props {
  * @param post - Post to render
  * @param commentsCount - Number of comments of the post
  * @param handlePressMore - Handler for pressing the more button
- * @param onBackButtonPress - Handler for pressing the back button
  * @constructor
  */
-const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
+const PostTopBar = ({ post, handlePressMore }: Props) => {
+  const navigation = useNavigation();
   const styles = useStyles();
   const { t } = useTranslation('postDetails');
 
@@ -78,7 +78,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
           await handlePressHidePost(post.id);
 
           // just reuse the default back button press behavior here and goBack one screen in the stack.
-          onBackButtonPress();
+          navigation.goBack();
         },
         icon: hidePost,
       },
@@ -116,7 +116,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     post,
     handlePressReport,
     handlePressHidePost,
-    onBackButtonPress,
     handlePressBlockOrUnblock,
   ]);
 

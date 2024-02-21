@@ -37,7 +37,6 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: theme.spacings.m,
     paddingVertical: theme.spacings.s,
   },
   customTopBarInnerContainer: {
