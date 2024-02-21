@@ -8,9 +8,13 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    justifyContent: 'space-between',
+    gap: theme.spacings.l,
+  },
+  textBold: {
+    color: theme.colors.neutralVariants['900'],
   },
   text: {
+    color: theme.colors.neutralVariants['900'],
     marginLeft: theme.spacings.xs,
   },
   button: {

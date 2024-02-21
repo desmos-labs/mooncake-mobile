@@ -9,7 +9,7 @@ const useStyles = makeStyle(theme => ({
     marginVertical: theme.spacings.m,
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   text: {
     color: theme.colors.neutralVariants['700'],
@@ -23,12 +23,12 @@ const useStyles = makeStyle(theme => ({
   icon: {
     marginRight: theme.spacings.xs,
     tintColor: theme.colors.neutralVariants['700'],
-    width: 25,
-    height: 25,
+    width: 24,
+    height: 24,
     resizeMode: 'contain',
   },
   divider: {
-    borderColor: 'rgba(239, 239, 239, 1)',
+    borderColor: theme.colors.neutralVariants['200'],
     borderWidth: 0.5,
   },
   orangeIconAndText: {

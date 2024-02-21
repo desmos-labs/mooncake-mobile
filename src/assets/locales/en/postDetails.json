@@ -11,5 +11,6 @@
   "failed to post comment": "Failed to post comment",
   "likes counter": "{{likesCounter}} Likes",
   "replies": "Replies",
+  "post": "Post",
   "no likes": "No likes"
 }

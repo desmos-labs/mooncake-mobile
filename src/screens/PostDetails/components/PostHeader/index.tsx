@@ -1,27 +1,31 @@
-import Divider from 'components/Divider';
+import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import PostData from 'components/PostData';
 import Spacer from 'components/Spacer';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import React from 'react';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import { useHandlePressCounters } from 'screens/PostDetails/hooks';
-import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import { isRootPost, Post } from 'types/posts';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface Props {
   post: Post;
+  commentsCount: number;
   handlePressComment: () => void;
+  handlePressShare: () => void;
 }
 
 /**
  * Component that renders the header of the post details screen.
  * @param post - Post to render
+ * @param commentsCount - Number of comments of the post
  * @param handlePressComment - What to do when the Comment button is pressed. (i.e focus on the text input)
+ * @param handlePressShare - What to do when the Share button is pressed.
  * @constructor
  */
-const PostHeader = ({ post, handlePressComment }: Props) => {
+const PostHeader = ({ post, commentsCount, handlePressComment, handlePressShare }: Props) => {
   const styles = useStyles();
 
   // -------------------------------------------------------------------------------------
@@ -29,6 +33,7 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
   // -------------------------------------------------------------------------------------
 
   const { liked, addOrRemoveLike, likesCount } = useAddOrRemoveLike(post);
+  const formatDate = useFormatTimeForPostDetails();
 
   // -------------------------------------------------------------------------------------
   // --- Handlers
@@ -42,35 +47,25 @@ const PostHeader = ({ post, handlePressComment }: Props) => {
 
   return (
     <>
-      {/* Top Component */}
-      {isRootPost(post) ? (
-        <>
-          <PostData post={post!} />
-          <PostActionButtonsBar
-            postLiked={liked}
-            handleLikePress={() => addOrRemoveLike(post!)}
-            handleCommentPress={handlePressComment}
-          />
-        </>
-      ) : (
-        <>
-          <CommentItem comment={post!} renderedAsMainPost />
-          <Spacer paddingVertical={16} />
-          <Divider style={styles.divider} />
-        </>
-      )}
-
-      <Spacer paddingVertical={16}>
-        {/* Like, Comment and Tips bar */}
-        <InteractionCountersBar
-          loading={false}
-          likesCounter={likesCount}
-          handlePressCounters={() => handlePressCounters(post!)}
-          interactionAuthors={[]}
-        />
-      </Spacer>
-
-      <Divider style={styles.divider} />
+      <PostData post={post!} />
+      <Spacer paddingBottom="m" />
+      <Typography.Regular12 style={styles.date}>
+        {formatDate(post.creationDate)}
+      </Typography.Regular12>
+      <Spacer paddingBottom="m" />
+      <InteractionCountersBar
+        loading={false}
+        likesCounter={likesCount}
+        commentsCounter={commentsCount}
+        handlePressCounters={() => handlePressCounters(post!)}
+        interactionAuthors={[]}
+      />
+      <PostActionButtonsBar
+        postLiked={liked}
+        handleLikePress={() => addOrRemoveLike(post!)}
+        handleCommentPress={handlePressComment}
+        handlePressShare={handlePressShare}
+      />
       <Spacer paddingBottom={16} />
     </>
   );

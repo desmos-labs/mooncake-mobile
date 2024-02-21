@@ -10,19 +10,21 @@ import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import CommentContentLoader from 'components/Loaders/CommentContentLoader';
 import MooncakeLoader from 'components/Loaders/MooncakeLoader';
+import TopBar from 'components/TopBar';
 import usePostComments from 'hooks/posts/usePostComments';
+import useSharePost from 'hooks/posts/useSharePost';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PostHeader from 'screens/PostDetails/components/PostHeader';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import { isCommentReply, Post } from 'types/posts';
+import { isCommentReply, isRootPost, Post } from 'types/posts';
 import { useHandleCreateComment, useHandleExpandCommentView, usePostData } from './hooks';
 import useStyles from './useStyles';
 
@@ -110,7 +112,7 @@ const PostDetails = () => {
   const commentsCount = usePostCommentsCount(postData.id);
 
   const handleCreateComment = useHandleCreateComment();
-
+  const handlePressShare = useSharePost(postData.id);
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
@@ -176,6 +178,15 @@ const PostDetails = () => {
     [commentId],
   );
 
+  const centerElement = useMemo(() => {
+    if (!post) {
+      return undefined;
+    }
+    return (
+      <Typography.Semibold16>{isRootPost(post) ? t('post') : t('replies')}</Typography.Semibold16>
+    );
+  }, [post]);
+
   // -------------------------------------------------------------------------------------
   // --- Conditional rendering
   // -------------------------------------------------------------------------------------
@@ -221,15 +232,23 @@ const PostDetails = () => {
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
-      topBar={<PostTopBar post={post} commentsCount={commentsCount} onBackButtonPress={goBack} />}>
+      topBar={<TopBar centerElement={centerElement} style={styles.topBar} />}>
       {/* List of comments */}
+      <PostTopBar post={post} onBackButtonPress={goBack} />
       <FlashList
         estimatedItemSize={140}
         ref={scrollViewRef}
         // Only show the loading indicator on the flatList if the user manually drags down on it
         refreshing={pageRefreshing}
         onRefresh={refreshPage}
-        ListHeaderComponent={<PostHeader handlePressComment={focusTextInputRef} post={post} />}
+        ListHeaderComponent={
+          <PostHeader
+            handlePressComment={focusTextInputRef}
+            handlePressShare={handlePressShare}
+            post={post}
+            commentsCount={commentsCount}
+          />
+        }
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}

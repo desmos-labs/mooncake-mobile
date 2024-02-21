@@ -45,7 +45,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   subtitle: {
-    color: theme.colors.neutralVariants['600'],
+    color: theme.colors.neutralVariants['700'],
   },
 }));
 

@@ -5,6 +5,8 @@ import {
   useHandlePressHidePost,
   useHandlePressReport,
 } from 'components/PostCard/hooks';
+import PostData from 'components/PostData';
+import Spacer from 'components/Spacer';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useSharePost from 'hooks/posts/useSharePost';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
@@ -14,7 +16,6 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import PostCardBottomBar from 'screens/Home/components/PostCardBottomBar';
 import PostCardProfileInfo from 'screens/Home/components/PostCardProfileInfo';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
-import PostData from 'components/PostData';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -109,6 +110,7 @@ const PostCard = (props: PostCardProps) => {
           onPressHide={onPressHide}
           onPressBlock={onPressBlock}
         />
+        <Spacer paddingBottom="s" />
 
         {/* Post data */}
         <PostData post={post} />
