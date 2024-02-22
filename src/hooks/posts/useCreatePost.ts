@@ -155,6 +155,8 @@ const useCreatePost = () => {
         lastUpdatedDate: creationDate,
         hasUserLiked: false,
         likesCount: 0,
+        commentsCount: 0,
+        urls: [],
       };
 
       // If the post has parent AKA is a comment/reply we should reset the recoil associated with the comment text box value

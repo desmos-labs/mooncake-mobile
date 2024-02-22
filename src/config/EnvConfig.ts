@@ -2,6 +2,7 @@
 /* eslint-disable import/no-unresolved */
 import {
   APP_SUBSPACE_ID,
+  GIPHY_API_KEY,
   POSTHOG_API_KEY,
   SENTRY_AUTH_TOKEN,
   SENTRY_DSN,
@@ -16,6 +17,7 @@ const EnvConfig = {
   WEB3_AUTH_CLIENT_ID_MAINNET,
   WEB3_AUTH_CLIENT_ID_TESTNET,
   POSTHOG_API_KEY,
+  GIPHY_API_KEY,
 };
 
 export default EnvConfig;

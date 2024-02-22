@@ -34,6 +34,7 @@
     "@desmoslabs/desmos-kit-ui": "^1.0.1",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/vector-icons": "^14.0.0",
+    "@giphy/react-native-sdk": "^3.2.2",
     "@gorhom/bottom-sheet": "4.4.8",
     "@habx/apollo-multi-endpoint-link": "^2.9.0",
     "@react-native-async-storage/async-storage": "1.21.0",

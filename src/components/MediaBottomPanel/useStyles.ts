@@ -16,10 +16,10 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'contain',
   },
   leftGroup: {
-    flex: 0.2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: theme.spacings.l,
   },
   rightGroup: {
     flex: 1,

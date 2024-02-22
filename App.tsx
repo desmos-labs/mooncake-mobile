@@ -1,3 +1,4 @@
+import { GiphySDK } from '@giphy/react-native-sdk';
 import * as Sentry from '@sentry/react-native';
 import BProvider from 'components/BProvider';
 import EnvConfig from 'config/EnvConfig';
@@ -11,6 +12,10 @@ Sentry.init({
   dsn: EnvConfig.SENTRY_DSN,
   debug: false,
   tracesSampleRate: 1.0,
+});
+
+GiphySDK.configure({
+  apiKey: EnvConfig.GIPHY_API_KEY,
 });
 
 export default function App() {

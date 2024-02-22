@@ -30,6 +30,8 @@ export const galleryIcon = require('./images/galleryIcon.png');
 
 export const cameraIcon = require('./images/cameraIcon.png');
 
+export const gifIcon = require('./images/gifIcon.png');
+
 export const deleteButton = require('./images/delete.png');
 
 export const expandCommentIcon = require('./images/expandComment.png');

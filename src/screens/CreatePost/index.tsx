@@ -1,4 +1,9 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
+import {
+  GiphyDialog,
+  GiphyDialogEvent,
+  GiphyDialogMediaSelectEventHandler,
+} from '@giphy/react-native-sdk';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -25,7 +30,14 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  View,
+} from 'react-native';
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
@@ -209,6 +221,26 @@ const CreatePost = () => {
       height.value = withTiming(bottom, { easing: Easing.linear });
     }
   }, [bottom, height, keyboardVisible]);
+
+  // Handling GIFs selection in GiphyDialog
+  useEffect(() => {
+    const handler: GiphyDialogMediaSelectEventHandler = e => {
+      const gifWidth = Dimensions.get('window').width - 32;
+      const gifHeight = gifWidth / e.media.aspectRatio;
+
+      addPostAttachment({
+        uri: e.media.url,
+        width: gifWidth,
+        height: gifHeight,
+        type: 'image/gif',
+      });
+      GiphyDialog.hide();
+    };
+    const listener = GiphyDialog.addListener(GiphyDialogEvent.MediaSelected, handler);
+    return () => {
+      listener.remove();
+    };
+  }, [addPostAttachment]);
 
   return (
     <View style={styles.root}>
