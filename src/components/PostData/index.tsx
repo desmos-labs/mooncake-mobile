@@ -50,7 +50,7 @@ const PostData = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      {post.text && <PostText style={styles.textContainer}>{post.text}</PostText>}
+      {post.text && <PostText>{post.text}</PostText>}
       {Attachment && <View style={styles.attachmentContainer}>{Attachment}</View>}
     </View>
   );

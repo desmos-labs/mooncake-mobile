@@ -167,13 +167,6 @@ export const isRootPost = (post: Post): boolean => {
 };
 
 /**
- * Tells whether the given {@param post} is a comment or not.
- */
-export const isComment = (post: Post): boolean => {
-  return post.conversationId !== 0 && post.conversationId === getReplyId(post);
-};
-
-/**
  * Tells whether the given {@param post} is a comment to the post with the provided {@param parentId}.
  */
 export const isCommentTo = (post: Post, parentId: number): boolean => {

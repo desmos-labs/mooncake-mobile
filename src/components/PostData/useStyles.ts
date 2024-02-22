@@ -8,9 +8,6 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
-  textContainer: {
-    marginTop: theme.spacings.m,
-  },
   attachmentContainer: {
     width: '100%',
     alignItems: 'center',

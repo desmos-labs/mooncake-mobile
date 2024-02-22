@@ -37,7 +37,6 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: theme.spacings.m,
     paddingVertical: theme.spacings.s,
   },
   customTopBarInnerContainer: {
@@ -45,7 +44,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   subtitle: {
-    color: theme.colors.neutralVariants['600'],
+    color: theme.colors.neutralVariants['700'],
   },
 }));
 

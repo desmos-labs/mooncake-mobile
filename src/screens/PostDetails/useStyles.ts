@@ -4,6 +4,9 @@ const useStyles = makeStyle(theme => ({
   root: {
     backgroundColor: theme.colors.white,
   },
+  topBar: {
+    paddingHorizontal: theme.spacings.m,
+  },
   sceneContainerStyle: {
     backgroundColor: theme.colors.white,
   },

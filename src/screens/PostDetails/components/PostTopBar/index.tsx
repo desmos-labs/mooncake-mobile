@@ -1,42 +1,25 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { Entypo } from '@expo/vector-icons';
-import { useTheme } from '@react-navigation/native';
-import {
-  block,
-  followBlackIcon,
-  hidePost,
-  reportIcon,
-  share,
-  unblock,
-  unfollowBlackIcon,
-} from 'assets/images';
-import BackButton from 'components/BackButton';
+import { useNavigation } from '@react-navigation/native';
+import { block, hidePost, reportIcon, unblock } from 'assets/images';
 import PopupMenu from 'components/PopupMenu';
 import { useHandlePressReport } from 'components/PostCard/hooks';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
-import TopBar from 'components/TopBar';
-import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import ToggleFollowageButton from 'components/ToggleFollowageButton';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useHidePost from 'hooks/posts/useHidePost';
-import useSharePost from 'hooks/posts/useSharePost';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import {
-  useHandlePressBlockOrUnblock,
-  useHandlePressFollowOrUnfollow,
-} from 'screens/PostDetails/hooks';
-import { isComment, Post } from 'types/posts';
+import { useHandlePressBlockOrUnblock } from 'screens/PostDetails/hooks';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
 interface Props {
   readonly post: Post;
-  readonly commentsCount: number;
-  readonly onBackButtonPress: () => void;
   readonly handlePressMore?: () => void;
 }
 
@@ -45,21 +28,18 @@ interface Props {
  * @param post - Post to render
  * @param commentsCount - Number of comments of the post
  * @param handlePressMore - Handler for pressing the more button
- * @param onBackButtonPress - Handler for pressing the back button
  * @constructor
  */
-const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }: Props) => {
+const PostTopBar = ({ post, handlePressMore }: Props) => {
+  const navigation = useNavigation();
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation('postDetails');
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
   const [menuOpened, setMenuOpened] = useState(false);
-  const formatDate = useFormatTimeForPostDetails();
 
-  const isFollowing = useIsFollowing(post.author);
   const isAuthorActiveUser = useIsAuthorActiveUser(post.author.address);
 
   // -------------------------------------------------------------------------------------
@@ -67,11 +47,9 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
   // -------------------------------------------------------------------------------------
 
   const handleNavigateToProfile = useNavigateToProfile();
-  const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
   const handlePressReport = useHandlePressReport();
   const handlePressHidePost = useHidePost();
   const handlePressBlockOrUnblock = useHandlePressBlockOrUnblock();
-  const sharePost = useSharePost(post.id);
 
   // -------------------------------------------------------------------------------------
   // --- Popup menu
@@ -90,18 +68,6 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
 
     const menuItems = [
       {
-        label: isFollowing
-          ? t('unfollow', { ns: 'relationships' })
-          : t('follow', { ns: 'relationships' }),
-        onPress: () => handlePressFollowOrUnfollow(post.author),
-        icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
-      },
-      {
-        label: t('share', { ns: 'postOperations' }),
-        onPress: sharePost,
-        icon: share,
-      },
-      {
         label: t('report', { ns: 'postOperations' }),
         onPress: () => handlePressReport(post),
         icon: reportIcon,
@@ -112,7 +78,7 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
           await handlePressHidePost(post.id);
 
           // just reuse the default back button press behavior here and goBack one screen in the stack.
-          onBackButtonPress();
+          navigation.goBack();
         },
         icon: hidePost,
       },
@@ -146,14 +112,10 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
     menuOpened,
     setMenuOpened,
     isAuthorActiveUser,
-    isFollowing,
     t,
-    sharePost,
-    handlePressFollowOrUnfollow,
     post,
     handlePressReport,
     handlePressHidePost,
-    onBackButtonPress,
     handlePressBlockOrUnblock,
   ]);
 
@@ -161,26 +123,9 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
   // --- View rendering
   // -------------------------------------------------------------------------------------
 
-  if (isComment(post!)) {
-    return (
-      <TopBar
-        style={styles.topBar}
-        centerElement={
-          <View style={styles.rightContainer}>
-            <Typography.Semibold16 numberOfLines={1}>
-              {commentsCount} {t('replies')}
-            </Typography.Semibold16>
-          </View>
-        }
-      />
-    );
-  }
-
   return (
     <View style={styles.customTopBarContainer}>
       <View style={styles.customTopBarInnerContainer}>
-        <BackButton onPress={onBackButtonPress} />
-        <Spacer paddingLeft={theme.spacings.m} />
         <View style={styles.rightContainer}>
           <ProfileHeaderButton
             profile={post!.author}
@@ -190,14 +135,13 @@ const PostTopBar = ({ post, commentsCount, handlePressMore, onBackButtonPress }:
             <Typography.Semibold14 numberOfLines={1}>
               {getProfileDisplayName(post!.author)}
             </Typography.Semibold14>
-            <Typography.Regular12 style={styles.subtitle}>
-              {formatDate(post!.creationDate)}
-            </Typography.Regular12>
+            <Typography.Regular12 style={styles.subtitle}>@{post.author.dTag}</Typography.Regular12>
           </View>
         </View>
       </View>
       <View style={styles.rightContainer}>
-        <Spacer paddingHorizontal="xs" />
+        <ToggleFollowageButton user={post.author} buttonStyle={{ borderRadius: 8 }} />
+        <Spacer paddingHorizontal="s" />
         {PressMoreComponent}
       </View>
     </View>
