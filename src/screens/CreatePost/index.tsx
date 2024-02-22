@@ -232,7 +232,7 @@ const CreatePost = () => {
         uri: e.media.url,
         width,
         height,
-        type: e.media.data.type ?? '',
+        type: 'image/gif',
       });
       GiphyDialog.hide();
     };
@@ -240,7 +240,7 @@ const CreatePost = () => {
     return () => {
       listener.remove();
     };
-  }, []);
+  }, [addPostAttachment]);
 
   return (
     <View style={styles.root}>

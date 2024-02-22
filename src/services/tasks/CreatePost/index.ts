@@ -1,3 +1,4 @@
+import { isPictureLocal } from 'lib/AssetsUtils';
 import { getTaskContext } from 'lib/BackgroundTaskUtils';
 import { TaskJob } from 'lib/BackgroundTaskUtils/types';
 import { convertPostToMsgCreatePost } from 'lib/PostsUtils';
@@ -23,11 +24,19 @@ const uploadAttachment = async (
   attachment: PostAttachment,
   bearerToken: string,
 ): Promise<Result<PostAttachment, Error>> => {
-  if (attachment.content.type !== PostAttachmentType.MEDIA) {
+  const attachmentContent = attachment.content;
+
+  // Do not upload polls or other attachments
+  if (attachmentContent.type !== PostAttachmentType.MEDIA) {
     return ok(attachment);
   }
 
-  const result = await uploadPicture(attachment.content.uri, bearerToken);
+  // Do not upload attachments that are already stored remotely
+  if (!isPictureLocal(attachmentContent.uri)) {
+    return ok(attachment);
+  }
+
+  const result = await uploadPicture(attachmentContent.uri, bearerToken);
   if (result.isErr()) {
     return err(result.error);
   }
@@ -38,9 +47,8 @@ const uploadAttachment = async (
     content: {
       type: PostAttachmentType.MEDIA,
       uri: url,
-      mimeType: attachment.content.mimeType,
+      mimeType: attachmentContent.mimeType,
     },
-    size: undefined,
   });
 };
 

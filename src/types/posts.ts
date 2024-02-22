@@ -212,8 +212,8 @@ export type PostAttachmentContent = PostMediaAttachment;
 export interface PostAttachment {
   readonly id: number;
   readonly content: PostAttachmentContent;
-  readonly size: PostAttachmentSize | undefined;
-  readonly contentHash: string | undefined;
+  readonly size?: PostAttachmentSize;
+  readonly contentHash?: string;
 }
 
 export interface PostTransaction {

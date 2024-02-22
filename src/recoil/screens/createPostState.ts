@@ -1,8 +1,8 @@
 import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
 import React from 'react';
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Post } from 'types/posts';
 import { UploadAssetType } from 'types/media';
+import { Post } from 'types/posts';
 
 /**
  * Represents the state of the screen that allows to create a post.
@@ -24,6 +24,8 @@ interface CreatePostState
     | 'hasUserLiked'
     | 'likesCount'
     | 'lastUpdatedDate'
+    | 'commentsCount'
+    | 'urls'
   > {
   /**
    * ID of the subspace section inside which this post has been created.

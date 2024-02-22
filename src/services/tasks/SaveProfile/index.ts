@@ -1,4 +1,5 @@
 import { DoNotModify, Profiles } from '@desmoslabs/desmjs';
+import { isPictureLocal } from 'lib/AssetsUtils';
 import { getTaskContext, TaskJob } from 'lib/BackgroundTaskUtils';
 import { unwrapResult } from 'lib/NeverThrowUtils';
 import { uploadPicture } from 'lib/UploadUtils';
@@ -23,10 +24,6 @@ interface ProfilePictureUploadResults {
   readonly profilePictureUrl?: string;
   readonly coverPictureUrl?: string;
 }
-
-const isPictureLocal = (picture: string | undefined): picture is string => {
-  return picture !== undefined && (picture.startsWith('file://') || picture.startsWith('/'));
-};
 
 /**
  * Uploads the given pictures to the Desmos media server.

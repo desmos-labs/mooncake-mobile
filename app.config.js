@@ -55,6 +55,7 @@ export default {
     },
     scheme: ['mooncakeweb3auth', 'mooncake'],
     plugins: [
+      '@giphy/react-native-sdk',
       'expo-font',
       'expo-secure-store',
       [
