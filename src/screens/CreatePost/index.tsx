@@ -225,13 +225,13 @@ const CreatePost = () => {
   // Handling GIFs selection in GiphyDialog
   useEffect(() => {
     const handler: GiphyDialogMediaSelectEventHandler = e => {
-      const width = Dimensions.get('window').width - 32;
-      const height = width / e.media.aspectRatio;
+      const gifWidth = Dimensions.get('window').width - 32;
+      const gifHeight = gifWidth / e.media.aspectRatio;
 
       addPostAttachment({
         uri: e.media.url,
-        width,
-        height,
+        width: gifWidth,
+        height: gifHeight,
         type: 'image/gif',
       });
       GiphyDialog.hide();
