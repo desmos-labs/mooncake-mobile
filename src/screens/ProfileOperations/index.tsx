@@ -1,18 +1,21 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useActiveProfile } from '@recoil/profiles';
 import { emptyListPlaceholder } from 'assets/images';
-import Divider from 'components/Divider';
+import AvatarImage from 'components/AvatarImage';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatCoins, formatCurrencyAmount } from 'lib/FormatUtils';
+import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo } from 'react';
@@ -43,6 +46,7 @@ const ProfileOperations = () => {
 
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
+  const activeProfile = useActiveProfile();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -98,14 +102,9 @@ const ProfileOperations = () => {
     (info: { section: SectionListData<PastTransactionMessage> }) => {
       const header = formatDate(info.section.title, true);
       return (
-        <>
-          {sections.findIndex(item => item === info.section) !== 0 && (
-            <Divider style={styles.divider} />
-          )}
-          <View style={styles.sectionHeader}>
-            <Typography.Semibold14>{header}</Typography.Semibold14>
-          </View>
-        </>
+        <View style={styles.sectionHeader}>
+          <Typography.Semibold14>{header}</Typography.Semibold14>
+        </View>
       );
     },
     [formatDate, sections, styles.divider, styles.sectionHeader],
@@ -137,7 +136,7 @@ const ProfileOperations = () => {
     return (
       <View style={[CommonStyles.flex['1'], CommonStyles.center]}>
         <Image contentFit="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
-        <Typography.Regular14>{t('no operations')}</Typography.Regular14>
+        <Typography.Regular14>{t('no transactions')}</Typography.Regular14>
       </View>
     );
   }, [balanceLoading, isDataLoading, styles.emptyIcon, t]);
@@ -157,36 +156,51 @@ const ProfileOperations = () => {
     );
   }, [fetchingMore]);
 
+  const CenterElement = useMemo(() => {
+    return (
+      <View style={styles.centerElement}>
+        <AvatarImage imageSource={activeProfile} size={28} />
+        <Typography.Semibold16>{getProfileDisplayName(activeProfile!)}</Typography.Semibold16>
+      </View>
+    );
+  }, [activeProfile]);
+
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
   return (
     <DView
-      topBar={<TopBar />}
+      topBar={<TopBar centerElement={CenterElement} />}
       disableHideKeyboardTouchable={true}
-      backgroundColor={theme.colors.white}
       style={styles.container}>
       {/* Balance section title */}
+      <LinearGradient style={styles.gradient} colors={['#fed792', 'rgba(254, 215, 146, 0)']} />
       <View>
-        <Spacer paddingTop="s" />
-        <Typography.Regular16>{t('balance')}</Typography.Regular16>
-        {/* Balance amount (in coins) */}
-        {/* TODO: Show something if the balance is still loading */}
-        <Typography.Semibold30>{formatCoins(balance, ', ')}</Typography.Semibold30>
-        {/* Balance amount (in fiat) */}
-        {/* TODO: Show something if the balance is still loading */}
-        {balanceLoading ? (
-          <StyledSpinner />
-        ) : (
-          <Typography.Semibold30>
-            {symbol}
-            {formatCurrencyAmount(fiatAmount)}
-          </Typography.Semibold30>
-        )}
+        <View style={styles.addressView}>
+          <View style={styles.address}>
+            <Typography.Regular14 numberOfLines={1}>{activeProfile?.address}</Typography.Regular14>
+          </View>
+        </View>
+        <View style={styles.balanceView}>
+          <Typography.Regular14>{t('total balance')}</Typography.Regular14>
+          {balanceLoading ? (
+            <View style={styles.flexCenter}>
+              <StyledSpinner />
+            </View>
+          ) : (
+            <Typography.Semibold30>
+              {symbol}
+              {formatCurrencyAmount(fiatAmount)}
+            </Typography.Semibold30>
+          )}
+          <Typography.Regular14 style={styles.balanceSubtitle}>
+            {formatCoins(balance, ', ')}
+          </Typography.Regular14>
+        </View>
         <Spacer paddingVertical={theme.spacings.m} />
         {/* Past operations section title */}
-        <Typography.H5 style={styles.subtitle}>{t('operations')}</Typography.H5>
+        <Typography.Semibold16 style={styles.subtitle}>{t('transactions')}</Typography.Semibold16>
         {/* Loading indicator */}
       </View>
       {/* Messages list TODO: move to Flashlist */}

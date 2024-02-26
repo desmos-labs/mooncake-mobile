@@ -46,18 +46,18 @@ const MessageListItem = (props: MessageListItemProps) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: 'center' }}>
+      <View style={styles.leftSide}>
         <Image style={styles.avatar} source={image} />
         <View style={styles.profileView}>
-          <Typography.Semibold14>{title}</Typography.Semibold14>
-          <Typography.Regular12 style={styles.formattedDate}>{formattedDate}</Typography.Regular12>
+          <Typography.Regular12>{title}</Typography.Regular12>
+          <Typography.Regular10 style={styles.formattedDate}>{formattedDate}</Typography.Regular10>
         </View>
-        {!hideFees && (
-          <Typography.Semibold14 numberOfLines={1} style={styles.feesText}>
-            -{formatCoins(fees, ', ')}
-          </Typography.Semibold14>
-        )}
       </View>
+      {!hideFees ? (
+        <Typography.Semibold12 numberOfLines={1}>-{formatCoins(fees, ', ')}</Typography.Semibold12>
+      ) : (
+        <Typography.Semibold14 numberOfLines={1}>. . . .</Typography.Semibold14>
+      )}
     </View>
   );
 };

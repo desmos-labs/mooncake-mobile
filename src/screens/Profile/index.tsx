@@ -59,6 +59,7 @@ import AnimatedProfilePicture from 'screens/Profile/components/AnimatedProfilePi
 import Biography from 'screens/Profile/components/Biography';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
+import WalletButton from 'screens/Profile/components/WalletButton';
 import useStyles, { PROFILE_HEADER_HEIGHT, PROFILE_HEADER_HEIGHT_COMPACT } from './useStyles';
 
 const AnimatedView = Reanimated.createAnimatedComponent(View);
@@ -411,6 +412,17 @@ const Profile = () => {
         scrollEventThrottle={16}>
         <View style={styles.contentView}>
           <View style={styles.innerContainer}>
+            {isActiveAccount ? (
+              <WalletButton
+                onPressButton={() =>
+                  navigate(ROUTES.PROFILE_OPERATIONS, {
+                    userAddress: address,
+                  })
+                }
+              />
+            ) : (
+              <Spacer paddingTop={32} />
+            )}
             {/* Posts, following and followers counters */}
             <View style={styles.innerTopSection}>
               <View style={CommonStyles.flex['1']}>
