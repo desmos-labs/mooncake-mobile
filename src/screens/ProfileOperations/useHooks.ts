@@ -1,10 +1,11 @@
 import { Bank, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
 import {
-  addReactionTxIcon,
+  blockUserTx,
   createPostTxIcon,
   editProfileTxIcon,
-  sendReportTxIcon,
+  followUserTx,
   tipTxIcon,
+  unfollowUserTx,
   unknownTxIcon,
 } from 'assets/images';
 import { getDate } from 'date-fns';
@@ -68,6 +69,8 @@ export const useGetOperationImage = () => {
       case Posts.v3.MsgCancelPostOwnerTransferRequestTypeUrl:
       case Posts.v3.MsgAcceptPostOwnerTransferRequestTypeUrl:
       case Posts.v3.MsgRefusePostOwnerTransferRequestTypeUrl:
+      case Reactions.v1.MsgAddReactionTypeUrl:
+      case Reactions.v1.MsgRemoveReactionTypeUrl:
         return createPostTxIcon;
 
       // Profiles module.
@@ -83,22 +86,15 @@ export const useGetOperationImage = () => {
       case Profiles.v3.MsgUnlinkChainAccountTypeUrl:
         return editProfileTxIcon;
 
-      // Reactions module.
-      case Reactions.v1.MsgAddReactionTypeUrl:
-      case Reactions.v1.MsgRemoveReactionTypeUrl:
-        return addReactionTxIcon;
-
       // Relationships module.
       case Relationships.v1.MsgCreateRelationshipTypeUrl:
+        return followUserTx;
       case Relationships.v1.MsgDeleteRelationshipTypeUrl:
+        return unfollowUserTx;
+
       case Relationships.v1.MsgBlockUserTypeUrl:
       case Relationships.v1.MsgUnblockUserTypeUrl:
-        return editProfileTxIcon;
-
-      // Reports module.
-      case Reports.v1.MsgCreateReportTypeUrl:
-      case Reports.v1.MsgDeleteReportTypeUrl:
-        return sendReportTxIcon;
+        return blockUserTx;
 
       default:
         console.warn(`No image found for message type ${formattedMessage}`);
@@ -204,21 +200,15 @@ export const useGetOperationTitle = (userAddress: string) => {
  * Hook that returns the list of past actions of a user, grouped by date.
  */
 export const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
-  const {
-    transactions,
-    loading,
-    fetchMore: fetchMoreTransactions,
-    fetchingMore,
-    refetch: refetchTransactions,
-    refreshing,
-  } = usePastTransactions(address, transactionsPerPage);
+  const { transactions, loading, fetchMore, fetchingMore, refresh, refreshing } =
+    usePastTransactions(address, transactionsPerPage);
 
   return {
     sections: groupMessagesByDate(transactions),
     loading,
     refreshing,
-    fetchMore: fetchMoreTransactions,
+    fetchMore,
     fetchingMore,
-    refetch: refetchTransactions,
+    refetch: refresh,
   };
 };

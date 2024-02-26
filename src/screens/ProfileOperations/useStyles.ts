@@ -19,12 +19,29 @@ const useStyles = makeStyle(theme => ({
   },
   addressView: {
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: theme.spacings.m,
     paddingHorizontal: 66,
+    gap: 4,
+  },
+  button: {
+    padding: theme.spacings.s,
+    backgroundColor: theme.colors.primaryVariants['100'],
+    borderRadius: 8,
+  },
+  roundedButton: {
+    padding: theme.spacings.s,
+    backgroundColor: theme.colors.primaryVariants['100'],
+    borderRadius: 20,
+  },
+  titleView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   balanceView: {
-    marginTop: theme.spacings.xl,
+    marginTop: theme.spacings.m,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -74,6 +91,14 @@ const useStyles = makeStyle(theme => ({
     left: 0,
     right: 0,
     height: 380,
+  },
+  icon: {
+    height: 20,
+    width: 20,
+  },
+  roundedIcon: {
+    height: 20,
+    width: 20,
   },
 }));
 
