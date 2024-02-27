@@ -1,43 +1,9 @@
-import { useApolloClient } from '@apollo/client';
 import { useUserPendingTransactions } from '@recoil/transactions';
-import { FetchDataFunction, usePaginatedData } from 'hooks/usePaginatedData';
+import usePaginatedQuery from 'hooks/usePaginatedQuery';
 import { convertGraphQLTransactionMessage } from 'lib/GraphQLUtils/transactions';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
 import { PastTransactionMessage, PendingTransaction } from 'types/transactions';
-
-const useFetchPastTransactions = (userAddress: string) => {
-  // Here we use the useApolloClient hook instead of the useLazyQuery hook because
-  // that hook dont behaves correctly if in the future we may want to implement
-  // the possibility to switch between mainnet and testnet.
-  const apollo = useApolloClient();
-
-  return React.useCallback<FetchDataFunction<PastTransactionMessage>>(
-    async (offset, limit) => {
-      const { data, error } = await apollo.query({
-        query: GetTransactionsByAddress,
-        variables: {
-          address: `{${userAddress}}`,
-          types: '{}',
-          limit,
-          offset,
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      const fetchedData = data?.messages ?? [];
-      const converted = fetchedData.map(convertGraphQLTransactionMessage);
-      return {
-        data: converted,
-        endReached: fetchedData.length < limit,
-      };
-    },
-    [apollo, userAddress],
-  );
-};
 
 /**
  * Function that converts a {@link PendingTransaction} into a list of {@link PastTransactionMessage}
@@ -93,25 +59,35 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 20) 
     return pendingTransactions.flatMap(convertPendingTransaction);
   }, [pendingTransactions]);
 
-  const { data, loading, fetchMore, refresh, refreshing, error } = usePaginatedData(
-    useFetchPastTransactions(address),
+  const convertTransactionsData = useCallback((data: any): PastTransactionMessage[] => {
+    return (data?.messages ?? []).map(convertGraphQLTransactionMessage);
+  }, []);
+
+  const { items, loading, fetchMore, fetchingMore, refresh, refreshing, error } = usePaginatedQuery(
     {
-      itemsPerPage: transactionsPerPage,
-      extraDelay: 500,
+      query: GetTransactionsByAddress,
+      convertData: convertTransactionsData,
+      variables: {
+        address: `{${address}}`,
+        types: '{}',
+      },
+      queryOptions: {
+        itemsPerPage: transactionsPerPage,
+      },
     },
   );
 
   // Merge the pending tx with the tx from the chain
   const transactions = React.useMemo(() => {
-    return mergeTransactions(data, pendingMessages);
-  }, [data, pendingMessages]);
+    return mergeTransactions(items, pendingMessages);
+  }, [items, pendingMessages]);
 
   return {
     transactions,
     loading,
     fetchMore,
-    fetchingMore: loading,
-    refetch: refresh,
+    fetchingMore,
+    refresh,
     refreshing,
     error,
   };

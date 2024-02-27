@@ -45,6 +45,8 @@ export const bgonboarding = require('./images/onboarding/backgroundOnboarding.pn
 export const profileBack = require('./images/profileBack.png');
 
 export const eyeOpen = require('./images/eyeOpen.png');
+export const eyeOpenWallet = require('./images/eyeOpenWallet.png');
+export const eyeClosedWallet = require('./images/eyeClosedWallet.png');
 
 export const emptyPostsIcon = require('./images/emptyPosts.png');
 
@@ -67,14 +69,20 @@ export const successfulOperation = require('./images/successufulOpearation.gif')
 export const mooncakeTextWhite = require('./images/mooncakeTextWhite.png');
 export const mooncakeTextAndLogo = require('./images/mooncakeTextAndLogo.png');
 export const hidePost = require('./images/hidePost.png');
+export const walletIcon = require('./images/walletIcon.png');
+export const copyIcon = require('./images/copyIcon.png');
 
 // Transactions
 export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');
 export const createPostTxIcon = require('./images/txIcons/createPostTx.png');
-export const addReactionTxIcon = require('./images/txIcons/addReactionTx.png');
-export const sendReportTxIcon = require('./images/txIcons/sendReportTx.png');
-export const tipTxIcon = require('./images/txIcons/tipTx.png');
+export const blockUserTx = require('./images/txIcons/blockUserTx.png');
+export const followUserTx = require('./images/txIcons/followUserTx.png');
+export const unfollowUserTx = require('./images/txIcons/unfollowUserTx.png');
+export const tipTxIcon = require('./images/txIcons/sendTipTx.png');
 export const unknownTxIcon = require('./images/txIcons/unknownTx.png');
+export const likePostTx = require('./images/txIcons/likePostTx.png');
+export const unlikePostTx = require('./images/txIcons/unlikePostTx.png');
+export const createReportTx = require('./images/txIcons/createReportTx.png');
 
 
 // Bottom tabs bar

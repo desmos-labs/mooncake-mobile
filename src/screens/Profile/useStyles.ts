@@ -49,7 +49,6 @@ const useStyles = makeStyleWithProps(
     },
     contentView: {
       flex: 1,
-      marginTop: theme.spacings.s,
       paddingHorizontal: theme.spacings.m,
       backgroundColor: theme.colors.background,
       paddingBottom: Platform.OS == 'ios' ? verticalScale(80) : verticalScale(116),
@@ -63,11 +62,12 @@ const useStyles = makeStyleWithProps(
     topViewButton: { justifyContent: 'center', alignItems: 'center' },
     innerContainer: {
       flex: 1,
-      marginTop: 32,
+      marginTop: theme.spacings.m,
     },
     innerTopSection: {
       flexDirection: 'column',
       justifyContent: 'space-between',
+      marginTop: -theme.spacings.s,
     },
     organizedEventsIcon: {
       width: 20,

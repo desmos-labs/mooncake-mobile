@@ -1,23 +1,37 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { emptyListPlaceholder } from 'assets/images';
-import Divider from 'components/Divider';
+import { useActiveProfile } from '@recoil/profiles';
+import { copyIcon, emptyListPlaceholder, eyeClosedWallet, eyeOpenWallet } from 'assets/images';
+import AvatarImage from 'components/AvatarImage';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import StyledSpinner from 'components/StyledSpinner';
 import TopBar from 'components/TopBar';
 import CommonStyles from 'config/theme/CommonStyles';
+import { ToastType } from 'config/toast/toastConfig';
+import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import useToast from 'hooks/toasts/useToast';
 import { formatCoins, formatCurrencyAmount } from 'lib/FormatUtils';
+import { getProfileDisplayName } from 'lib/ProfileUtils';
+import SkeletonExpo from 'moti/build/skeleton/expo';
+import { Skeleton } from 'moti/skeleton';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
+import {
+  ListRenderItemInfo,
+  SectionList,
+  SectionListData,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { PastTransactionMessage } from 'types/transactions';
 import MessageListItem from './components/MessageListItem';
 import { useGetOperationImage, useGetOperationTitle, usePastActionsSections } from './useHooks';
@@ -40,13 +54,16 @@ const ProfileOperations = () => {
   const { t } = useTranslation('operations');
   const theme = useTheme();
   const styles = useStyles();
-
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
+  const activeProfile = useActiveProfile();
+  const showToast = useToast();
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
+
+  const [balanceVisible, setBalanceVisible] = useState(true);
 
   const {
     balance,
@@ -98,17 +115,12 @@ const ProfileOperations = () => {
     (info: { section: SectionListData<PastTransactionMessage> }) => {
       const header = formatDate(info.section.title, true);
       return (
-        <>
-          {sections.findIndex(item => item === info.section) !== 0 && (
-            <Divider style={styles.divider} />
-          )}
-          <View style={styles.sectionHeader}>
-            <Typography.Semibold14>{header}</Typography.Semibold14>
-          </View>
-        </>
+        <View style={styles.sectionHeader}>
+          <Typography.Semibold14>{header}</Typography.Semibold14>
+        </View>
       );
     },
-    [formatDate, sections, styles.divider, styles.sectionHeader],
+    [formatDate, styles.sectionHeader],
   );
 
   // Callback used to render the items of the list
@@ -121,12 +133,21 @@ const ProfileOperations = () => {
           fees={item.fees}
           title={getTitle(item)}
           image={getImage(item.type)}
-          hideFees={hideFees}
+          hideFees={hideFees || !balanceVisible}
         />
       );
     },
-    [getImage, getTitle, userAddress],
+    [getImage, getTitle, userAddress, balanceVisible],
   );
+
+  const copyAddress = useCallback(async () => {
+    await Clipboard.setStringAsync(activeProfile?.address ?? '');
+    showToast({
+      toastType: ToastType.info,
+      title: 'Address copied!',
+      message: 'The address has been copied to the clipboard',
+    });
+  }, [activeProfile?.address, showToast]);
 
   // Component used to render an empty list
   const EmptyOperations = useMemo(() => {
@@ -137,14 +158,14 @@ const ProfileOperations = () => {
     return (
       <View style={[CommonStyles.flex['1'], CommonStyles.center]}>
         <Image contentFit="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
-        <Typography.Regular14>{t('no operations')}</Typography.Regular14>
+        <Typography.Regular14>{t('no transactions')}</Typography.Regular14>
       </View>
     );
   }, [balanceLoading, isDataLoading, styles.emptyIcon, t]);
 
   // Component displayed at the bottom of the list
   const FooterComponent = useMemo(() => {
-    if (!fetchingMore) {
+    if (!fetchingMore && !isDataLoading) {
       return undefined;
     }
 
@@ -155,7 +176,16 @@ const ProfileOperations = () => {
         </Spacer>
       </View>
     );
-  }, [fetchingMore]);
+  }, [fetchingMore, isDataLoading]);
+
+  const CenterElement = useMemo(() => {
+    return (
+      <View style={styles.centerElement}>
+        <AvatarImage imageSource={activeProfile} size={28} />
+        <Typography.Semibold16>{getProfileDisplayName(activeProfile!)}</Typography.Semibold16>
+      </View>
+    );
+  }, [activeProfile, styles.centerElement]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -163,30 +193,64 @@ const ProfileOperations = () => {
 
   return (
     <DView
-      topBar={<TopBar />}
+      topBar={<TopBar centerElement={CenterElement} />}
       disableHideKeyboardTouchable={true}
-      backgroundColor={theme.colors.white}
       style={styles.container}>
       {/* Balance section title */}
+      <LinearGradient style={styles.gradient} colors={['#fed792', 'rgba(254, 215, 146, 0)']} />
       <View>
-        <Spacer paddingTop="s" />
-        <Typography.Regular16>{t('balance')}</Typography.Regular16>
-        {/* Balance amount (in coins) */}
-        {/* TODO: Show something if the balance is still loading */}
-        <Typography.Semibold30>{formatCoins(balance, ', ')}</Typography.Semibold30>
-        {/* Balance amount (in fiat) */}
-        {/* TODO: Show something if the balance is still loading */}
-        {balanceLoading ? (
-          <StyledSpinner />
-        ) : (
-          <Typography.Semibold30>
-            {symbol}
-            {formatCurrencyAmount(fiatAmount)}
-          </Typography.Semibold30>
-        )}
-        <Spacer paddingVertical={theme.spacings.m} />
+        <View style={styles.addressView}>
+          <View style={styles.address}>
+            <Typography.Regular14 numberOfLines={1} ellipsizeMode="middle">
+              {activeProfile?.address}
+            </Typography.Regular14>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={copyAddress}>
+            <Image source={copyIcon} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.balanceView}>
+          <View style={styles.titleView}>
+            <Typography.Regular14>{t('total balance')}</Typography.Regular14>
+            <TouchableOpacity
+              style={styles.roundedButton}
+              onPress={() => setBalanceVisible(prev => !prev)}>
+              <Image
+                source={balanceVisible ? eyeClosedWallet : eyeOpenWallet}
+                style={styles.roundedIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          {balanceLoading ? (
+            <View style={styles.flexCenter}>
+              <Skeleton height={30} width={100} colors={['#fed792', 'white']} />
+            </View>
+          ) : balanceVisible ? (
+            <Typography.Semibold30>
+              {symbol}
+              {formatCurrencyAmount(fiatAmount)}
+            </Typography.Semibold30>
+          ) : (
+            <Typography.Semibold30>....</Typography.Semibold30>
+          )}
+          {balanceLoading ? (
+            <SkeletonExpo
+              height={18}
+              width={130}
+              colorMode={theme.dark ? 'dark' : 'light'}
+              colors={['#fed792', 'white']}
+            />
+          ) : balanceVisible ? (
+            <Typography.Regular14 style={styles.balanceSubtitle}>
+              {formatCoins(balance, ', ')}
+            </Typography.Regular14>
+          ) : (
+            <Typography.Regular14 style={styles.balanceSubtitle}>....</Typography.Regular14>
+          )}
+        </View>
+        <Spacer paddingVertical={theme.spacings.l} />
         {/* Past operations section title */}
-        <Typography.H5 style={styles.subtitle}>{t('operations')}</Typography.H5>
+        <Typography.Semibold16 style={styles.subtitle}>{t('transactions')}</Typography.Semibold16>
         {/* Loading indicator */}
       </View>
       {/* Messages list TODO: move to Flashlist */}

@@ -1,5 +1,5 @@
-import React from 'react';
 import { useSetAppStateValue } from '@recoil/appState';
+import React from 'react';
 import axiosInstance from 'services/axios';
 
 /**

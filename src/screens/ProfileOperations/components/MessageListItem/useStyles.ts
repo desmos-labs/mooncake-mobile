@@ -5,11 +5,18 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     paddingVertical: theme.spacings.m,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   avatar: {
-    width: scale(40),
-    height: scale(40),
-    borderRadius: scale(20),
+    width: scale(32),
+    height: scale(32),
+    borderRadius: scale(16),
+  },
+  leftSide: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   profileView: {
     marginLeft: theme.spacings.s,
@@ -18,13 +25,8 @@ const useStyles = makeStyle(theme => ({
     maxWidth: '50%',
   },
   formattedDate: {
-    color: theme.colors.grey02,
     marginTop: theme.spacings.s,
-  },
-  feesText: {
-    right: 0,
-    marginLeft: 'auto',
-    color: theme.colors.red01,
+    color: theme.colors.neutralVariants['600'],
   },
 }));
 

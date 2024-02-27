@@ -1,8 +1,8 @@
 {
-  "balance": "Balance",
-  "operations": "Operations",
-  "no operations": "No operations",
-  
+  "total balance": "Total Balance",
+  "transactions": "Transactions",
+  "no transactions": "No transactions",
+
   "send tip": "Send tip",
   "receive tip": "Receive tip",
 
@@ -17,7 +17,7 @@
   "cancel post owner transfer request": "Cancel post owner transfer request",
   "accept post owner transfer request": "Accept post owner transfer request",
   "refuse post owner transfer request": "Refuse post owner transfer request",
-  
+
   "edit profile": "Edit profile",
   "delete profile": "Delete profile",
   "request dtag transfer": "Request dtag transfer",
@@ -28,15 +28,15 @@
   "unlink application": "Unlink application",
   "link chain account": "Link chain account",
   "unlink chain account": "Unlink chain account",
-  
+
   "add reaction": "Add reaction",
   "remove reaction": "Remove reaction",
-  
+
   "follow user": "Follow an user",
   "unfollow user": "Unfollow an user",
   "block user": "Block user",
   "unblock user": "Unblock user",
-  
+
   "create report": "Create report",
   "delete report": "Delete report"
 }
