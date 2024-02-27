@@ -183,7 +183,7 @@ const ProfileOperations = () => {
         <Typography.Semibold16>{getProfileDisplayName(activeProfile!)}</Typography.Semibold16>
       </View>
     );
-  }, [activeProfile]);
+  }, [activeProfile, styles.centerElement]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -199,7 +199,9 @@ const ProfileOperations = () => {
       <View>
         <View style={styles.addressView}>
           <View style={styles.address}>
-            <Typography.Regular14 numberOfLines={1}>{activeProfile?.address}</Typography.Regular14>
+            <Typography.Regular14 numberOfLines={1} ellipsizeMode="middle">
+              {activeProfile?.address}
+            </Typography.Regular14>
           </View>
           <TouchableOpacity style={styles.button} onPress={copyAddress}>
             <Image source={copyIcon} style={styles.icon} />

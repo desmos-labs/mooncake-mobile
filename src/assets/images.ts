@@ -81,6 +81,9 @@ export const followUserTx = require('./images/txIcons/followUserTx.png');
 export const unfollowUserTx = require('./images/txIcons/unfollowUserTx.png');
 export const tipTxIcon = require('./images/txIcons/sendTipTx.png');
 export const unknownTxIcon = require('./images/txIcons/unknownTx.png');
+export const likePostTx = require('./images/txIcons/likePostTx.png');
+export const unlikePostTx = require('./images/txIcons/unlikePostTx.png');
+export const createReportTx = require('./images/txIcons/createReportTx.png');
 
 
 // Bottom tabs bar

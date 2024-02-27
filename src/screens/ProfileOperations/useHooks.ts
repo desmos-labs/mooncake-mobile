@@ -2,11 +2,14 @@ import { Bank, Posts, Profiles, Reactions, Relationships, Reports } from '@desmo
 import {
   blockUserTx,
   createPostTxIcon,
+  createReportTx,
   editProfileTxIcon,
   followUserTx,
+  likePostTx,
   tipTxIcon,
   unfollowUserTx,
   unknownTxIcon,
+  unlikePostTx,
 } from 'assets/images';
 import { getDate } from 'date-fns';
 import usePastTransactions from 'hooks/transactions/usePastTransactions';
@@ -69,9 +72,17 @@ export const useGetOperationImage = () => {
       case Posts.v3.MsgCancelPostOwnerTransferRequestTypeUrl:
       case Posts.v3.MsgAcceptPostOwnerTransferRequestTypeUrl:
       case Posts.v3.MsgRefusePostOwnerTransferRequestTypeUrl:
-      case Reactions.v1.MsgAddReactionTypeUrl:
-      case Reactions.v1.MsgRemoveReactionTypeUrl:
         return createPostTxIcon;
+
+      // Reactions module.
+      case Reactions.v1.MsgAddReactionTypeUrl:
+        return likePostTx;
+      case Reactions.v1.MsgRemoveReactionTypeUrl:
+        return unlikePostTx;
+
+      case Reports.v1.MsgCreateReportTypeUrl:
+      case Reports.v1.MsgDeleteReportTypeUrl:
+        return createReportTx;
 
       // Profiles module.
       case Profiles.v3.MsgSaveProfileTypeUrl:
@@ -91,7 +102,6 @@ export const useGetOperationImage = () => {
         return followUserTx;
       case Relationships.v1.MsgDeleteRelationshipTypeUrl:
         return unfollowUserTx;
-
       case Relationships.v1.MsgBlockUserTypeUrl:
       case Relationships.v1.MsgUnblockUserTypeUrl:
         return blockUserTx;
