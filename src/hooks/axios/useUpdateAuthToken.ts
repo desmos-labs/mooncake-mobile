@@ -13,7 +13,6 @@ const useUpdateAuthToken = () => {
    * @param token string - Token that should be used for the authorization.
    */
   const setAuthorizationToken = (token: string) => {
-    console.log(token);
     if (token && token.trim() !== '') {
       axiosInstance.defaults.headers.common = {
         Authorization: `Bearer ${token}`,
