@@ -19,6 +19,8 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import useToast from 'hooks/toasts/useToast';
 import { formatCoins, formatCurrencyAmount } from 'lib/FormatUtils';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
+import SkeletonExpo from 'moti/build/skeleton/expo';
+import { Skeleton } from 'moti/skeleton';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -145,7 +147,7 @@ const ProfileOperations = () => {
       title: 'Address copied!',
       message: 'The address has been copied to the clipboard',
     });
-  }, [activeProfile?.address]);
+  }, [activeProfile?.address, showToast]);
 
   // Component used to render an empty list
   const EmptyOperations = useMemo(() => {
@@ -174,7 +176,7 @@ const ProfileOperations = () => {
         </Spacer>
       </View>
     );
-  }, [fetchingMore]);
+  }, [fetchingMore, isDataLoading]);
 
   const CenterElement = useMemo(() => {
     return (
@@ -221,7 +223,7 @@ const ProfileOperations = () => {
           </View>
           {balanceLoading ? (
             <View style={styles.flexCenter}>
-              <StyledSpinner />
+              <Skeleton height={30} width={100} colors={['#fed792', 'white']} />
             </View>
           ) : balanceVisible ? (
             <Typography.Semibold30>
@@ -231,7 +233,14 @@ const ProfileOperations = () => {
           ) : (
             <Typography.Semibold30>....</Typography.Semibold30>
           )}
-          {balanceVisible ? (
+          {balanceLoading ? (
+            <SkeletonExpo
+              height={18}
+              width={130}
+              colorMode={theme.dark ? 'dark' : 'light'}
+              colors={['#fed792', 'white']}
+            />
+          ) : balanceVisible ? (
             <Typography.Regular14 style={styles.balanceSubtitle}>
               {formatCoins(balance, ', ')}
             </Typography.Regular14>
