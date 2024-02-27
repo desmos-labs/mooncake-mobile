@@ -20,8 +20,8 @@ export interface DeletePostOptions {
 }
 
 /**
- * Hook that allows to create a post.
- * The details to create the post will be taken from the Recoil atom that is holding the createPostState.
+ * Hook that allows to delete a post.
+ * The post will be deleted from the user's timeline.
  */
 const useDeletePost = () => {
   const { t } = useTranslation('createPost');

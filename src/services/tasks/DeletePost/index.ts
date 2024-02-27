@@ -10,8 +10,8 @@ interface DeletePostTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'
 }
 
 /**
- * Task that can be executed in the background in order to create a post.
- * @param params - Parameters required to create the post.
+ * Task that can be executed in the background in order to delete a post.
+ * @param params - Parameters required to delete the post.
  * @constructor
  */
 const DeletePostTask: TaskJob<DeletePostTaskParams, { transactionHash: string }> = async (
@@ -19,10 +19,6 @@ const DeletePostTask: TaskJob<DeletePostTaskParams, { transactionHash: string }>
 ) => {
   const { desmosClient, signer, memo, post } = params;
   const { apiBearerToken, broadcastTx } = getTaskContext();
-
-  console.log(signer);
-  console.log(memo);
-  console.log(post.id);
 
   if (apiBearerToken === undefined) {
     throw new Error('You are not authenticated');

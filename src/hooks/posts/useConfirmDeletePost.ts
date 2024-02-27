@@ -7,6 +7,9 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ButtonsLayout } from 'screens/Modals/ConfirmModal';
 
+/**
+ * Hook that allows to confirm the deletion of a post.
+ */
 const useConfirmDeletePost = () => {
   const { t } = useTranslation('createPost');
   const deletePost = useDeletePost();
