@@ -170,10 +170,11 @@ const PostDetails = () => {
           comment={item}
           disableInnerComment={disabled}
           highlighted={item.id === commentId}
+          parentPost={post}
         />
       );
     },
-    [commentId],
+    [commentId, post],
   );
 
   const centerElement = useMemo(() => {

@@ -9,6 +9,7 @@ import {
   hidePost,
   reportIcon,
   share,
+  trashIcon,
   unblock,
   unfollowBlackIcon,
 } from 'assets/images';
@@ -17,6 +18,7 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import CommonStyles from 'config/theme/CommonStyles';
 import { Image } from 'expo-image';
 import useTimePassedDate from 'hooks/formatting/useTimePassedDate';
+import { DeletePostOptions } from 'hooks/posts/useDeletePost';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useMemo, useState } from 'react';
@@ -33,6 +35,7 @@ interface PostCardProfileInfoProps {
   readonly onPressHide: () => void;
   readonly onPressBlock: () => void;
   readonly onPressShare?: () => void;
+  readonly onPressDelete?: (options: DeletePostOptions) => void;
 }
 
 /**
@@ -52,6 +55,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
     onPressHide,
     onPressBlock,
     onPressShare,
+    onPressDelete,
   } = props;
 
   // -------------------------------------------------------------------------------------
@@ -74,6 +78,21 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const isPending = useMemo(() => isPostPending(post), [post]);
 
   // TODO: Replace this with https://day.js.org/docs/en/display/from-now
+
+  const popupOwnMenuItems = useMemo(
+    () => [
+      {
+        label: t('delete post', { ns: 'createPost' }),
+        onPress: () =>
+          onPressDelete &&
+          onPressDelete({
+            post,
+          }),
+        icon: trashIcon,
+      },
+    ],
+    [t, onPressDelete, post],
+  );
 
   const popupMenuItems = useMemo(
     () => [
@@ -126,7 +145,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
   const PendingIndicator = useMemo(() => {
     if (isPending) {
       return <ThemedLottieView source={squaresAnimation} autoPlay style={styles.pendingIcon} />;
-    } else if (!isCurrentUserAuthor) {
+    } else {
       return (
         <>
           <Entypo
@@ -139,7 +158,7 @@ const PostCardProfileInfo = (props: PostCardProfileInfoProps) => {
           <PopupMenu
             popupMenuOpened={menuOpened}
             setPopupMenuOpened={setMenuOpened}
-            menuItems={popupMenuItems}
+            menuItems={isCurrentUserAuthor ? popupOwnMenuItems : popupMenuItems}
           />
         </>
       );

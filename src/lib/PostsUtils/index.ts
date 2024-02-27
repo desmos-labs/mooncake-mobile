@@ -4,7 +4,7 @@ import {
   PostReference as DesmJSPostReference,
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v3/models';
-import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v3/msgs';
+import { MsgCreatePost, MsgDeletePost } from '@desmoslabs/desmjs-types/desmos/posts/v3/msgs';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
 import Long from 'long';
 import {
@@ -76,6 +76,17 @@ export const convertPostToMsgCreatePost = (post: Post): Posts.v3.MsgCreatePostEn
       referencedPosts: post.references.map(convertPostReference),
     }),
   } as Posts.v3.MsgCreatePostEncodeObject;
+};
+
+export const convertPostToMsgDeletePost = (post: Post): Posts.v3.MsgDeletePostEncodeObject => {
+  return {
+    typeUrl: Posts.v3.MsgDeletePostTypeUrl,
+    value: MsgDeletePost.fromPartial({
+      subspaceId: Long.fromNumber(post.subspaceId),
+      postId: Long.fromNumber(post.id),
+      signer: post.author.address,
+    }),
+  } as Posts.v3.MsgDeletePostEncodeObject;
 };
 
 /**

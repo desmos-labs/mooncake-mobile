@@ -8,6 +8,7 @@ import {
 import PostData from 'components/PostData';
 import Spacer from 'components/Spacer';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import useConfirmDeletePost from 'hooks/posts/useConfirmDeletePost';
 import useSharePost from 'hooks/posts/useSharePost';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import React, { useMemo } from 'react';
@@ -40,6 +41,7 @@ const PostCard = (props: PostCardProps) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
   const navigateToProfile = useNavigateToProfile();
+  const deletePost = useConfirmDeletePost();
   const followOrUnfollowUser = useFollowOrUnfollowUser();
   const handlePressDetails = useHandlePressDetails();
   const handlePressHidePost = useHandlePressHidePost();
@@ -109,6 +111,7 @@ const PostCard = (props: PostCardProps) => {
           onPressReport={onPressReport}
           onPressHide={onPressHide}
           onPressBlock={onPressBlock}
+          onPressDelete={deletePost}
         />
         <Spacer paddingBottom="s" />
 
