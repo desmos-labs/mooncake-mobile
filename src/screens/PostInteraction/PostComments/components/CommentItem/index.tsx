@@ -11,6 +11,7 @@ import {
   postToCommentIcon,
   postToLikeIcon,
   reportIcon,
+  trashIcon,
   unblock,
   unfollowBlackIcon,
 } from 'assets/images';
@@ -27,6 +28,7 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import { Image } from 'expo-image';
 import useTimePassedDate from 'hooks/formatting/useTimePassedDate';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import useConfirmDeletePost from 'hooks/posts/useConfirmDeletePost';
 import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useIsAuthorActiveUser from 'hooks/useIsAuthorActiveUser';
@@ -66,6 +68,8 @@ export interface CommentItemProps {
    */
   readonly highlighted?: boolean;
 
+  readonly parentPost?: Post;
+
   // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
   // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
   readonly handlePressMore?: () => void;
@@ -81,7 +85,14 @@ const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
   const theme = useTheme();
-  const { comment, handlePressMore, disableInnerComment, renderedAsMainPost, highlighted } = props;
+  const {
+    comment,
+    handlePressMore,
+    disableInnerComment,
+    renderedAsMainPost,
+    highlighted,
+    parentPost,
+  } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -110,6 +121,7 @@ const CommentItem = (props: CommentItemProps) => {
   const handleHidePost = useHandlePressHidePost();
   const returnToRootPost = useReturnToRootPost();
   const handlePressBlock = useHandlePressBlock();
+  const deletePost = useConfirmDeletePost();
 
   const openPopupMenu = () => {
     setMenuOpened(true);
@@ -182,9 +194,17 @@ const CommentItem = (props: CommentItemProps) => {
    */
   const PressMoreComponent = React.useMemo(() => {
     // The context menu should not be visible if the user is the author of the comment
-    if (isAuthorActiveUser) {
-      return undefined;
-    }
+    const ownMenuItems = [
+      {
+        label: t('delete post', { ns: 'createPost' }),
+        onPress: () =>
+          deletePost({
+            post: comment,
+            parent: parentPost,
+          }),
+        icon: trashIcon,
+      },
+    ];
 
     const menuItems = [
       {
@@ -215,21 +235,22 @@ const CommentItem = (props: CommentItemProps) => {
 
     return (
       <PopupMenu
-        menuItems={menuItems}
+        menuItems={isAuthorActiveUser ? ownMenuItems : menuItems}
         popupMenuOpened={menuOpened}
         setPopupMenuOpened={setMenuOpened}
       />
     );
   }, [
-    menuOpened,
-    setMenuOpened,
-    isAuthorActiveUser,
-    comment,
-    handlePressFollow,
-    handlePressHidePost,
-    handlePressReport,
-    isFollowing,
     t,
+    isFollowing,
+    comment,
+    isAuthorActiveUser,
+    menuOpened,
+    deletePost,
+    parentPost,
+    handlePressFollow,
+    handlePressReport,
+    handlePressHidePost,
     handlePressBlock,
   ]);
 
@@ -265,7 +286,7 @@ const CommentItem = (props: CommentItemProps) => {
           </TouchableOpacity>
           {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={squaresAnimation} style={styles.loadingAnim} />
-          ) : !isAuthorActiveUser ? (
+          ) : (
             <Entypo
               name="dots-three-horizontal"
               size={24}
@@ -273,7 +294,7 @@ const CommentItem = (props: CommentItemProps) => {
               suppressHighlighting
               onPress={openPopupMenu}
             />
-          ) : null}
+          )}
         </View>
         {PressMoreComponent}
         {/* Comment content */}

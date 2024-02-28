@@ -1,11 +1,11 @@
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { findSamePost } from 'lib/PostsUtils';
+import { useSetRecoilRecordItem } from 'lib/RecoilUtils';
+import _ from 'lodash';
 import React from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DesmosProfile } from 'types/desmos';
 import { isRootPost, Post } from 'types/posts';
-import _ from 'lodash';
-import { useSetRecoilRecordItem } from 'lib/RecoilUtils';
 
 /**
  * Atom that holds all the posts that are somehow related to a user.
@@ -79,6 +79,31 @@ export const useStorePost = () => {
         } else {
           return posts;
         }
+      });
+    },
+    [setPosts],
+  );
+};
+
+/**
+ * Hook that allows to delete a given post.
+ * The post will be deleted from the user's timeline.
+ */
+export const useDeleteStoredPost = () => {
+  const setPosts = useSetRecoilState(postsState);
+
+  return React.useCallback(
+    (user: string, post: Post) => {
+      setPosts(currentTimeline => {
+        const updatedPosts: Record<string, Post[]> = {
+          ...currentTimeline,
+        };
+
+        // Update the user posts by filtering out the post to delete
+        const userPosts = updatedPosts[user] ?? [];
+        updatedPosts[user] = userPosts.filter(p => p.id !== post.id);
+
+        return updatedPosts;
       });
     },
     [setPosts],

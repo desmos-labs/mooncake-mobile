@@ -71,6 +71,7 @@ export const mooncakeTextAndLogo = require('./images/mooncakeTextAndLogo.png');
 export const hidePost = require('./images/hidePost.png');
 export const walletIcon = require('./images/walletIcon.png');
 export const copyIcon = require('./images/copyIcon.png');
+export const trashIcon = require('./images/trashIcon.png');
 
 // Transactions
 export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');

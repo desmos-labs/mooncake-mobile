@@ -1,7 +1,11 @@
 {
   "text": "Text",
   "creating post": "Your post is being created...",
+  "deleting post": "Your post is being deleted...",
   "post created": "Your post has been created!",
+  "post deleted": "Your post has been deleted!",
+  "delete post": "Delete Post",
+  "sure to delete": "Are you sure you want to delete the post?",
   "post": "Post",
   "write a comment": "Write a comment...",
   "reply to": "Reply to {{name}}",
