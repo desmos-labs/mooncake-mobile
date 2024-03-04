@@ -64,7 +64,7 @@ const Settings = (props: NavProps) => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
   const { navigation } = props;
-  const { navigate, goBack } = navigation;
+  const { navigate } = navigation;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks

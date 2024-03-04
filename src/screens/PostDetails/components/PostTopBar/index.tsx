@@ -108,14 +108,14 @@ const PostTopBar = ({ post, handlePressMore }: Props) => {
       </>
     );
   }, [
-    onSetMenuOpened,
-    menuOpened,
-    setMenuOpened,
     isAuthorActiveUser,
     t,
     post,
+    onSetMenuOpened,
+    menuOpened,
     handlePressReport,
     handlePressHidePost,
+    navigation,
     handlePressBlockOrUnblock,
   ]);
 

@@ -126,6 +126,7 @@ const useDeletePost = () => {
       prepareDesmosClientAndWallet,
       setPostCommentsCount,
       showToast,
+      storePost,
       subspaceId,
       t,
     ],
