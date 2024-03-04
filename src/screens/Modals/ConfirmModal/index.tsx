@@ -1,17 +1,15 @@
-// dismiss button
-// import {iconCross} from 'assets/images';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import CommonStyles from 'config/theme/CommonStyles';
+import { Image } from 'expo-image';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { ReactNode } from 'react';
 import { Trans } from 'react-i18next';
 import {
-  Image,
   ImageSourcePropType,
   StyleProp,
   StyleSheet,
@@ -195,8 +193,8 @@ const ConfirmModal = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.innerContainer}>
-        {image && <Image source={image} style={styles.imageStyle} resizeMode="center" />}
-        <Spacer paddingBottom={16}>
+        {image && <Image source={image} style={styles.imageStyle} />}
+        <Spacer paddingVertical={16}>
           <Typography.Semibold18 style={CommonStyles.textAlign.center}>
             {title}
           </Typography.Semibold18>
