@@ -6,11 +6,32 @@ import {
   getSignedBytes,
 } from '@desmoslabs/desmjs';
 import useUpdateAuthToken from 'hooks/axios/useUpdateAuthToken';
-import { ResultAsync } from 'neverthrow';
+import useRootNavigator from 'hooks/navigation/useRootNavigator';
+import ROUTES from 'navigation/routes';
+import { Result, ResultAsync, err } from 'neverthrow';
 import React from 'react';
 import GetNonce from 'services/axios/requests/GetNonce';
 import Login, { LoginParams } from 'services/axios/requests/Login';
-import { Wallet } from 'types/wallet';
+import { Wallet, WalletType } from 'types/wallet';
+
+const usePromptSignLoginTransaction = () => {
+  const navigation = useRootNavigator();
+
+  return React.useCallback((): Promise<boolean> => {
+    return new Promise(resolve => {
+      navigation.navigate(ROUTES.CONFIRM_MODAL, {
+        title: 'Sign login tx',
+        subtitle: 'Sign the login transaction',
+        removeModalAfterButtonPress: true,
+        onPressPrimary: () => resolve(true),
+        onDismiss: () => {
+          navigation.goBack();
+          resolve(false);
+        },
+      });
+    });
+  }, [navigation]);
+};
 
 /**
  * Generate the params to be used when performing the login on the APIs.
@@ -52,19 +73,30 @@ const generateLoginParams = (nonce: string, wallet: Wallet): ResultAsync<LoginPa
  */
 const usePerformLogin = () => {
   const updateAuthToken = useUpdateAuthToken();
+  const promptSignLoginTransaction = usePromptSignLoginTransaction();
+
   return React.useCallback(
-    (account: Wallet): ResultAsync<string, Error> => {
-      return GetNonce(account.address)
-        .andThen(nonce => generateLoginParams(nonce, account))
-        .andThen(params => Login(params))
-        .map(result => {
-          // Update the Axios auth token for future requests
-          updateAuthToken(result);
-          // Return the token for other usages
-          return result;
-        });
+    async (account: Wallet): Promise<Result<string, Error>> => {
+      let allowed = true;
+      if (account.type === WalletType.WalletConnect) {
+        allowed = await promptSignLoginTransaction();
+      }
+
+      if (allowed) {
+        return GetNonce(account.address)
+          .andThen(nonce => generateLoginParams(nonce, account))
+          .andThen(params => Login(params))
+          .map(result => {
+            // Update the Axios auth token for future requests
+            updateAuthToken(result);
+            // Return the token for other usages
+            return result;
+          });
+      } else {
+        return err(new Error('User rejected the login transaction'));
+      }
     },
-    [updateAuthToken],
+    [promptSignLoginTransaction, updateAuthToken],
   );
 };
 

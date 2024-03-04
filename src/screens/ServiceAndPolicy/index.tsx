@@ -71,7 +71,6 @@ const ServiceAndPolicy = () => {
     if (params?.loginMethod?.type === LoginMethodType.Web3Auth) {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
     } else if (params?.loginMethod?.type === LoginMethodType.WalletConnect) {
-      // TODO: Implement login through WalletConnect.
       await loginWithWalletConnect(params?.loginMethod?.app);
     } else {
       // Otherwise, navigate to the screen that allows to use the private key
