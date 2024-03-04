@@ -35,6 +35,22 @@ const useStyles = makeStyle(theme => ({
     height: 36,
     resizeMode: 'contain',
   },
+  emptyImage: {
+    width: 120,
+    height: 120,
+    marginBottom: theme.spacings.l,
+  },
+  emptySearchContainer: {
+    position: 'absolute',
+    top: 120,
+    left: 0,
+    right: 0,
+    bottom: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 5,
+    backgroundColor: theme.colors.white,
+  },
 }));
 
 export default useStyles;

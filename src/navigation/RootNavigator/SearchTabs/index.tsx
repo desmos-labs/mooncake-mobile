@@ -5,14 +5,16 @@ import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/
 import { CompositeScreenProps, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
+import { emptyListPlaceholder } from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { EventEmitter } from 'events';
+import { Image } from 'expo-image';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import SearchTabBar from 'navigation/RootNavigator/SearchTabs/components/SearchTabBar';
 import ROUTES from 'navigation/routes';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, StatusBar, TouchableOpacity, View } from 'react-native';
 import Animated, {
@@ -78,6 +80,7 @@ const SearchTabs = () => {
   const setListState = useSetPostsListState();
   const listState = usePostsListState();
   const eventEmitter = useRef(new EventEmitter());
+  const [isSearchFieldEmpty, setIsSearchFieldEmpty] = useState(true);
 
   // Animations
   const searchBarWidth = useSharedValue(windowWidth - 32);
@@ -128,6 +131,32 @@ const SearchTabs = () => {
     [],
   );
 
+  const handleInputChanges = useCallback(
+    (value: string) => {
+      if (isSearchFieldEmpty && value !== '') {
+        setIsSearchFieldEmpty(false);
+        setTimeout(() => {
+          eventEmitter.current.emit('valueChange', value);
+        }, 100);
+        setFocused(true);
+      } else if (value === '') {
+        setIsSearchFieldEmpty(true);
+      } else {
+        eventEmitter.current.emit('valueChange', value);
+      }
+    },
+    [isSearchFieldEmpty],
+  );
+
+  const EmptySearchComponent = useMemo(() => {
+    return (
+      <View style={styles.emptySearchContainer}>
+        <Image source={emptyListPlaceholder} style={styles.emptyImage} />
+        <Typography.Regular14>{t('nothing to show', { ns: 'search' })}</Typography.Regular14>
+      </View>
+    );
+  }, []);
+
   return (
     <View
       style={{
@@ -141,7 +170,7 @@ const SearchTabs = () => {
           <HomeSearchBar
             focused={focused}
             searchPlaceHolder={t('search user')}
-            handleChange={value => eventEmitter.current.emit('valueChange', value)}
+            handleChange={value => handleInputChanges(value)}
             onFocus={() => {
               searchBarWidth.value = withTiming(windowWidth - 72 - 24, {
                 duration: ANIMATION_DURATION,
@@ -156,15 +185,18 @@ const SearchTabs = () => {
           <TouchableOpacity
             onPress={() => {
               setListState({ ...listState, searchBarFocused: false });
+              eventEmitter.current.emit('valueChange', '');
+              setIsSearchFieldEmpty(true);
               setFocused(false);
             }}>
             <Typography.Regular14>Cancel</Typography.Regular14>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
+      {isSearchFieldEmpty && EmptySearchComponent}
       <Tab.Navigator
         tabBar={renderTabBar}
-        screenOptions={{ swipeEnabled: false, lazy: true }}
+        screenOptions={{ swipeEnabled: false, lazy: true, animationEnabled: false }}
         initialRouteName={initialRouteName}>
         <Tab.Screen
           name={ROUTES.SEARCH_TAB_USERS}

@@ -1,4 +1,7 @@
 {
   "total results": "{{number}} total results",
-  "no results": "No results"
+  "no results": "No results",
+  "nothing to show": "Nothing to show here yet",
+  "clear all": "Clear all",
+  "recent": "Recent"
 }
