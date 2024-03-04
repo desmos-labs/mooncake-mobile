@@ -1,7 +1,7 @@
 import { useAppStateValue } from '@recoil/appState';
 import { useRemoveCommentByID } from '@recoil/comments';
 import { useSetPostCommentsCount } from '@recoil/commentsCount';
-import { useDeleteStoredPost } from '@recoil/posts';
+import { useDeleteStoredPost, useStorePost } from '@recoil/posts';
 import { useActiveProfile } from '@recoil/profiles';
 import { ToastType } from 'config/toast/toastConfig';
 import useToast from 'hooks/toasts/useToast';
@@ -11,7 +11,7 @@ import { err, ok, Result } from 'neverthrow';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import DeletePostTask from 'services/tasks/DeletePost';
-import { Post } from 'types/posts';
+import { Post, PostStatus } from 'types/posts';
 
 export interface DeletePostOptions {
   readonly post: Post;
@@ -28,6 +28,7 @@ const useDeletePost = () => {
   const showToast = useToast();
   const subspaceId = useAppStateValue('subspaceId');
   const activeProfile = useActiveProfile();
+  const storePost = useStorePost();
   const deleteStoredPost = useDeleteStoredPost();
   const deleteStoredComment = useRemoveCommentByID();
   const setPostCommentsCount = useSetPostCommentsCount();
@@ -73,6 +74,13 @@ const useDeletePost = () => {
 
       taskReference
         .onStart(() => {
+          // Update the post status to broadcasting
+          // This way the UI will show the loading spinner and the user will not be able to interact with the post
+          const postToDelete = {
+            ...post,
+            status: PostStatus.BROADCASTING,
+          };
+          storePost(activeProfile.address, postToDelete);
           showToast({
             toastType: ToastType.loading,
             message: t('deleting post'),
@@ -113,6 +121,7 @@ const useDeletePost = () => {
     },
     [
       activeProfile,
+      deleteStoredComment,
       deleteStoredPost,
       prepareDesmosClientAndWallet,
       setPostCommentsCount,
