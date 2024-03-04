@@ -139,11 +139,13 @@ const PostTopBar = ({ post, handlePressMore }: Props) => {
           </View>
         </View>
       </View>
-      <View style={styles.rightContainer}>
-        <ToggleFollowageButton user={post.author} buttonStyle={{ borderRadius: 8 }} />
-        <Spacer paddingHorizontal="s" />
-        {PressMoreComponent}
-      </View>
+      {!isAuthorActiveUser && (
+        <View style={styles.rightContainer}>
+          <ToggleFollowageButton user={post.author} buttonStyle={{ borderRadius: 8 }} />
+          <Spacer paddingHorizontal="s" />
+          {PressMoreComponent}
+        </View>
+      )}
     </View>
   );
 };

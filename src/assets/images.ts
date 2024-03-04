@@ -72,6 +72,7 @@ export const hidePost = require('./images/hidePost.png');
 export const walletIcon = require('./images/walletIcon.png');
 export const copyIcon = require('./images/copyIcon.png');
 export const trashIcon = require('./images/trashIcon.png');
+export const logoutIcon = require('./images/logoutIcon.png');
 
 // Transactions
 export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');

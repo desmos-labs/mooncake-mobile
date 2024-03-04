@@ -1,9 +1,11 @@
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useStoredAccountInfo } from '@recoil/accountInfo';
 import { useActiveAccount, useActiveAccountAddress, useStoredAccounts } from '@recoil/accounts';
 import { useActiveProfile } from '@recoil/profiles';
 import { useSetSetting, useSetting } from '@recoil/settings';
 import {
+  logoutIcon,
   settingsAnalyticsIcon,
   settingsDataIcon,
   settingsFaceIdIcon,
@@ -37,11 +39,11 @@ import React, { useCallback } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 import { getVersion } from 'react-native-device-info';
+import { ButtonsLayout } from 'screens/Modals/ConfirmModal';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation/useHooks';
 import useStyles from 'screens/Settings/useStyles';
 import { AccountWithWallet } from 'types/account';
 import { Wallet } from 'types/wallet';
-import { useStoredAccountInfo } from '@recoil/accountInfo';
 import {
   useDeleteAccountData,
   useDeleteProfile,
@@ -62,7 +64,7 @@ const Settings = (props: NavProps) => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
   const { navigation } = props;
-  const { navigate } = navigation;
+  const { navigate, goBack } = navigation;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -110,10 +112,13 @@ const Settings = (props: NavProps) => {
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('sign out'),
+        image: logoutIcon,
         subtitle: <Typography.Regular16>{t('sign out private key warning')}</Typography.Regular16>,
         primaryButtonLabel: t('sign out'),
+        secondaryButtonLabel: t('cancel', { ns: 'common' }),
         onPressPrimary: signOut,
         removeModalAfterButtonPress: true,
+        buttonsLayout: ButtonsLayout.Row,
       },
     });
   }, [navigate, t, signOut]);

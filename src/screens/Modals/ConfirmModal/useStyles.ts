@@ -1,4 +1,5 @@
 import { makeStyle } from 'config/theme';
+import { scale } from 'react-native-size-matters';
 
 /**
  * Style hook for the ResultModal screen
@@ -43,8 +44,8 @@ const useStyles = makeStyle(theme => ({
     marginBottom: theme.spacings.s,
   },
   imageStyle: {
-    width: 150,
-    height: 180,
+    width: scale(120),
+    height: scale(120),
     resizeMode: 'cover',
     alignSelf: 'center',
     paddingBottom: theme.spacings.xl,
