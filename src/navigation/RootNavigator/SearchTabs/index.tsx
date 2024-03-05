@@ -5,18 +5,19 @@ import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/
 import { CompositeScreenProps, useRoute, useTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
-import { emptyListPlaceholder } from 'assets/images';
+import { useStoreSearchHistory } from '@recoil/searchHistory';
 import HomeSearchBar from 'components/HomeSearchBar';
 import CommonStyles from 'config/theme/CommonStyles';
 import { EventEmitter } from 'events';
-import { Image } from 'expo-image';
+import { debounce } from 'lodash';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import SearchTabBar from 'navigation/RootNavigator/SearchTabs/components/SearchTabBar';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, StatusBar, TouchableOpacity, View } from 'react-native';
+import { uuidv4 } from 'react-native-compressor';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -24,8 +25,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import SearchHistory from 'screens/SearchHistory';
 import SearchPostsTab from 'screens/SearchPosts';
 import SearchUsersTab from 'screens/SearchUsers';
+import { SearchItem } from 'types/searchHistory';
 import useStyles from './useStyles';
 
 const ANIMATION_DURATION = 200;
@@ -80,6 +83,7 @@ const SearchTabs = () => {
   const setListState = useSetPostsListState();
   const listState = usePostsListState();
   const eventEmitter = useRef(new EventEmitter());
+  const storeSearchHistory = useStoreSearchHistory();
   const [isSearchFieldEmpty, setIsSearchFieldEmpty] = useState(true);
 
   // Animations
@@ -131,6 +135,18 @@ const SearchTabs = () => {
     [],
   );
 
+  const setDebouncedHistory = debounce((value: string) => {
+    if (value === '' || value.length < 3) {
+      return;
+    }
+    const searchItem: SearchItem = {
+      id: uuidv4(),
+      value,
+      searchDate: new Date(),
+    };
+    storeSearchHistory(prev => [...prev, searchItem]);
+  }, 1000);
+
   const handleInputChanges = useCallback(
     (value: string) => {
       if (isSearchFieldEmpty && value !== '') {
@@ -144,18 +160,11 @@ const SearchTabs = () => {
       } else {
         eventEmitter.current.emit('valueChange', value);
       }
-    },
-    [isSearchFieldEmpty],
-  );
 
-  const EmptySearchComponent = useMemo(() => {
-    return (
-      <View style={styles.emptySearchContainer}>
-        <Image source={emptyListPlaceholder} style={styles.emptyImage} />
-        <Typography.Regular14>{t('nothing to show', { ns: 'search' })}</Typography.Regular14>
-      </View>
-    );
-  }, []);
+      setDebouncedHistory(value);
+    },
+    [isSearchFieldEmpty, setDebouncedHistory],
+  );
 
   return (
     <View
@@ -193,7 +202,7 @@ const SearchTabs = () => {
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
-      {isSearchFieldEmpty && EmptySearchComponent}
+      {isSearchFieldEmpty && <SearchHistory />}
       <Tab.Navigator
         tabBar={renderTabBar}
         screenOptions={{ swipeEnabled: false, lazy: true, animationEnabled: false }}

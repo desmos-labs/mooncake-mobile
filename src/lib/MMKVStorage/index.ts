@@ -23,6 +23,9 @@ export enum MMKVKEYS {
 
   // Tour guide
   TOUR_GUIDE = 'TOUR_GUIDE',
+
+  // Search history
+  SEARCH_HISTORY = 'SEARCH_HISTORY',
 }
 
 const MMKVStorage = new MMKV({
