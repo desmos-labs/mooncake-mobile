@@ -40,12 +40,12 @@ const useStyles = makeStyle(theme => ({
   },
   signinWithDivider: {
     flex: 1,
-    backgroundColor: theme.colors.neutral['100'],
+    backgroundColor: theme.colors.neutralVariants['100'],
     height: 1,
   },
   signinWithText: {
     marginHorizontal: 23.5,
-    color: theme.colors.neutral['100'],
+    color: theme.colors.neutralVariants['100'],
   },
   appsContainer: {
     flexDirection: 'row',

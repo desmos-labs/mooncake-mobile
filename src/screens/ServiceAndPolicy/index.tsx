@@ -19,8 +19,6 @@ import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
-import useOpenTermsAndConditions from 'hooks/urls/useOpenTermsAndConditions';
-import useOpenPrivacyPolicy from 'hooks/urls/useOpenPrivacyPolicy';
 import useLoginWithWalletConnect from 'hooks/walletconnect/useLoginWithWalletConnect';
 import useStyles from './useStyles';
 
