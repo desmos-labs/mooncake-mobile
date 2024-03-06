@@ -1,5 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 import { decryptData, encryptData, EncryptedData } from 'lib/EncryptionUtils';
+import MooncakeJsonSerializer from 'lib/JsonSerializer';
 import {
   CorruptedDataError,
   SecureStorageError,
@@ -76,7 +77,7 @@ async function getItem<T>(
   // Password provided, decrypt the data
   if (options?.password !== undefined) {
     // Get the password to be used to decrypt the data
-    const jsonValueNew = JSON.parse(data);
+    const jsonValueNew = MooncakeJsonSerializer.deserialize(data);
     if (typeof jsonValueNew.iv !== 'string' && typeof jsonValueNew.cipher !== 'string') {
       return err(new CorruptedDataError());
     }
@@ -93,7 +94,7 @@ async function getItem<T>(
   }
 
   // Deserialize the data
-  return ok(JSON.parse(serializedData));
+  return ok(MooncakeJsonSerializer.deserialize(serializedData));
 }
 
 /**
@@ -109,12 +110,12 @@ async function setItem<T>(
 ): Promise<void> {
   const moreOptions = options?.biometrics === true ? { ...defaultOptions } : undefined;
 
-  let data = JSON.stringify(value);
+  let data = MooncakeJsonSerializer.serialize(value);
 
   // Password provided, encrypt the data.
   if (options?.password !== undefined) {
     const encryptedData = await encryptData(data, options.password);
-    data = JSON.stringify(encryptedData);
+    data = MooncakeJsonSerializer.serialize(encryptedData);
   }
 
   return SecureStore.setItemAsync(key, data, moreOptions);

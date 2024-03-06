@@ -1,9 +1,9 @@
-import { SerializedObject } from 'lib/MMKVStorage/encoding/types';
+import { SerializedObject } from './types';
 import Deserializers from './deserializers';
 import Serializers from './serializers';
 
 /**
- * Custom JSON serialization for MMKV.
+ * Custom JSON serialization algorithm.
  */
 function jsonReplacer(key: string, value: any): any {
   // Safe to ignore with ts-ignore since "this" is the object that we are currently
@@ -18,9 +18,9 @@ function jsonReplacer(key: string, value: any): any {
 }
 
 /**
- * Custom JSON deserialization for MMKV.
+ * Custom JSON deserialization algorithm.
  */
-const jsonReviver = (key: string, value: any) => {
+const jsonReviver = (_key: string, value: any) => {
   if (value !== null && value !== undefined && value[0] === '{') {
     // We have a serialized object, try to deserialize it to see if it's one
     // of our custom serialized types.
@@ -44,11 +44,23 @@ const jsonReviver = (key: string, value: any) => {
  * algorithm that preserves the type of the object.
  * @param obj - The object to serialize.
  */
-export const serializeObject = (obj: any) => JSON.stringify(obj, jsonReplacer);
+const serializeObject = (obj: any) => JSON.stringify(obj, jsonReplacer);
 
 /**
  * Function that deserializes a JSON string into an object using a custom deserialization
  * algorithm that decodes the types of the object.
  * @param obj - The object to deserialize.
  */
-export const deserializeObject = (obj: any) => JSON.parse(obj, jsonReviver);
+const deserializeObject = (obj: any) => JSON.parse(obj, jsonReviver);
+
+/**
+ * A custom JSON serializer that supports serializing and deserializing objects
+ * using a custom serialization algorithm that preserves the type of the object.
+ * This can be used when storing data into the device storage.
+ */
+const MooncakeJsonSerializer = {
+  serialize: serializeObject,
+  deserialize: deserializeObject,
+};
+
+export default MooncakeJsonSerializer;
