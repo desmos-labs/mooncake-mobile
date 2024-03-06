@@ -148,6 +148,7 @@ const PasswordManipulation = () => {
                     )}
                   </View>
                   <DSecureTextInput
+                    textContentType="newPassword"
                     error={errors.newPassword !== undefined}
                     testID="newPasswordField"
                     value={values.newPassword}
@@ -167,6 +168,7 @@ const PasswordManipulation = () => {
                     {t('confirm password')}
                   </Typography.Regular16>
                   <DSecureTextInput
+                    textContentType="password"
                     error={errors.confirmPassword !== undefined}
                     testID="confirmPasswordField"
                     inputRef={confirmPasswordRef}

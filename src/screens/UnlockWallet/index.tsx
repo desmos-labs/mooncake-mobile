@@ -246,6 +246,7 @@ const UnlockWallet = () => {
                 </>
               )}
               <DSecureTextInput
+                textContentType="password"
                 style={styles.textInput}
                 autoFocus={!unlockWalletWithBiometrics}
                 placeholder={t('enter password')}

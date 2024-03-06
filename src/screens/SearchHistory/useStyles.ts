@@ -16,7 +16,7 @@ const useStyles = makeStyle(theme => ({
     top: 120,
     left: 0,
     right: 0,
-    bottom: 100,
+    bottom: 40,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 5,

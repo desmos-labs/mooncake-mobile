@@ -264,6 +264,7 @@ const SaveProfile = (props: NavProps) => {
                     {t('nickname')}
                   </Typography.Regular16>
                   <DTextInput
+                    textContentType="name"
                     inputRef={nicknameInputRef}
                     value={values.nickname}
                     placeholder={t('enter nickname')}
@@ -298,6 +299,7 @@ const SaveProfile = (props: NavProps) => {
                     </View>
 
                     <DTextInput
+                      textContentType="nickname"
                       value={values.dTag}
                       placeholder={t('enter handle')}
                       onChangeText={async value => {
@@ -334,6 +336,7 @@ const SaveProfile = (props: NavProps) => {
                   )}
                   <Typography.Regular16 style={styles.inputLabel}>{t('bio')}</Typography.Regular16>
                   <DTextInput
+                    textContentType="none"
                     onFocus={() => {
                       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 500);
                     }}
