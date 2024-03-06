@@ -32,7 +32,7 @@ const HomeSearchBar = ({ handleChange, searchPlaceHolder, onFocus, onBlur, focus
       <Image style={styles.magnifyingGlass} source={magnifyingGlass} />
       <TextInput
         textAlign="left"
-        autoCorrect={true}
+        autoCorrect={false}
         disableFullscreenUI={true}
         allowFontScaling={true}
         clearButtonMode="while-editing"
