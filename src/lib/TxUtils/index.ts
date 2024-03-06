@@ -71,7 +71,7 @@ export const queryUserBalance = async (
  * @param userBalance - The user's balance.
  * @param txFeeDenom - Denom of the coin should be used to broadcast a transaction.
  */
-export const userCanUseOurFeeGranter = (userBalance: Coin[], txFeeDenom: string): boolean => {
+export const canUseFeeGranter = (userBalance: Coin[], txFeeDenom: string): boolean => {
   const coin = userBalance.find(c => c.denom === txFeeDenom);
   if (coin === undefined) {
     return true;

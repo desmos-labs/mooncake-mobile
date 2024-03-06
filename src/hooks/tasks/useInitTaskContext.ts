@@ -5,11 +5,7 @@ import { useCurrentChainInfo } from '@recoil/settings';
 import { setTaskContext } from 'lib/BackgroundTaskUtils';
 import { getFeeGrantAllowanceForMessages, getOnChainGrants } from 'lib/grantsUtils';
 import { unwrapResult } from 'lib/NeverThrowUtils';
-import {
-  queryUserBalance,
-  signAndBroadcastWithGranter,
-  userCanUseOurFeeGranter,
-} from 'lib/TxUtils';
+import { canUseFeeGranter, queryUserBalance, signAndBroadcastWithGranter } from 'lib/TxUtils';
 import { usePostHog } from 'posthog-react-native';
 import React from 'react';
 
@@ -29,9 +25,7 @@ const useInitTaskContext = () => {
       // Check if the user have enough balance to perform the transaction.
       const useFeeGranter = await queryUserBalance(apolloClient, signer)
         .then(unwrapResult)
-        .then(balance =>
-          userCanUseOurFeeGranter(balance, chainInfo!.stakeCurrency.coinMinimalDenom),
-        );
+        .then(balance => canUseFeeGranter(balance, chainInfo!.stakeCurrency.coinMinimalDenom));
 
       if (useFeeGranter) {
         // Get the feeGranter from the chain.
