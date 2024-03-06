@@ -14,7 +14,7 @@ const searchHistory = atom<SearchItem[]>({
   ],
 });
 
-export const useSearchHistory = () => useRecoilValue(searchHistory);
+const useSearchHistory = () => useRecoilValue(searchHistory);
 
 export const useStoreSearchHistory = () => useSetRecoilState(searchHistory);
 
