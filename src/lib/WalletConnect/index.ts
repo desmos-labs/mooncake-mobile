@@ -17,6 +17,7 @@ import { MsgGrant } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/tx';
 import { GenericAuthorization } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrantAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
+import { toTimestamp } from '@desmoslabs/desmjs-types/helpers';
 import { initDPMWalletConnectSession } from './dpm';
 
 /**
@@ -98,9 +99,7 @@ export const getWalletConnectPermissionMessages = (
             }),
           ).finish(),
         },
-        expiration: {
-          seconds: Math.ceil(expiration.getTime() / 1000),
-        },
+        expiration: toTimestamp(expiration),
       },
     }),
   }));
@@ -120,11 +119,11 @@ export const getWalletConnectPermissionMessages = (
               typeUrl: Feegrant.v1beta1.BasicAllowanceTypeUrl,
               value: BasicAllowance.encode(
                 BasicAllowance.fromPartial({
-                  expiration: { seconds: Math.ceil(expiration.getTime() / 1000) },
+                  expiration: toTimestamp(expiration),
                 }),
               ).finish(),
             },
-            allowedMessages: MooncakePermissionMessages,
+            allowedMessages: ['/cosmos.authz.v1beta1.MsgExec'],
           }),
         ).finish(),
       },
