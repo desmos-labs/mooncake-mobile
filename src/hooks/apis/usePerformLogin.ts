@@ -10,27 +10,33 @@ import useRootNavigator from 'hooks/navigation/useRootNavigator';
 import ROUTES from 'navigation/routes';
 import { Result, ResultAsync, err } from 'neverthrow';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import GetNonce from 'services/axios/requests/GetNonce';
 import Login, { LoginParams } from 'services/axios/requests/Login';
-import { Wallet, WalletType } from 'types/wallet';
+import { Wallet, WalletConnectWalletApp, WalletType } from 'types/wallet';
 
 const usePromptSignLoginTransaction = () => {
   const navigation = useRootNavigator();
+  const { t } = useTranslation('onboarding');
 
-  return React.useCallback((): Promise<boolean> => {
-    return new Promise(resolve => {
-      navigation.navigate(ROUTES.CONFIRM_MODAL, {
-        title: 'Sign login tx',
-        subtitle: 'Sign the login transaction',
-        removeModalAfterButtonPress: true,
-        onPressPrimary: () => resolve(true),
-        onDismiss: () => {
-          navigation.goBack();
-          resolve(false);
-        },
+  return React.useCallback(
+    (_app: WalletConnectWalletApp): Promise<boolean> => {
+      return new Promise(resolve => {
+        navigation.navigate(ROUTES.CONFIRM_MODAL, {
+          title: t('proof of account ownership'),
+          subtitle: t('proof of account ownership description'),
+          removeModalAfterButtonPress: true,
+          primaryButtonLabel: 'Sign',
+          onPressPrimary: () => resolve(true),
+          onDismiss: () => {
+            navigation.goBack();
+            resolve(false);
+          },
+        });
       });
-    });
-  }, [navigation]);
+    },
+    [navigation, t],
+  );
 };
 
 /**
@@ -77,24 +83,26 @@ const usePerformLogin = () => {
 
   return React.useCallback(
     async (account: Wallet): Promise<Result<string, Error>> => {
-      let allowed = true;
+      let authorized = false;
       if (account.type === WalletType.WalletConnect) {
-        allowed = await promptSignLoginTransaction();
+        authorized = await promptSignLoginTransaction(account.walletApp);
+      } else {
+        authorized = true;
       }
 
-      if (allowed) {
-        return GetNonce(account.address)
-          .andThen(nonce => generateLoginParams(nonce, account))
-          .andThen(params => Login(params))
-          .map(result => {
-            // Update the Axios auth token for future requests
-            updateAuthToken(result);
-            // Return the token for other usages
-            return result;
-          });
-      } else {
-        return err(new Error('User rejected the login transaction'));
+      if (!authorized) {
+        return err(new Error('User not authorized'));
       }
+
+      return GetNonce(account.address)
+        .andThen(nonce => generateLoginParams(nonce, account))
+        .andThen(params => Login(params))
+        .map(result => {
+          // Update the Axios auth token for future requests
+          updateAuthToken(result);
+          // Return the token for other usages
+          return result;
+        });
     },
     [promptSignLoginTransaction, updateAuthToken],
   );
