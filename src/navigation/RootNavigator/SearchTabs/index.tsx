@@ -154,7 +154,6 @@ const SearchTabs = () => {
         setTimeout(() => {
           eventEmitter.current.emit('valueChange', value);
         }, 100);
-        setFocused(true);
       } else if (value === '') {
         setIsSearchFieldEmpty(true);
       } else {
