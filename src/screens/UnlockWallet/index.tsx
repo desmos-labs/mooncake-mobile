@@ -1,6 +1,6 @@
 import { SigningMode } from '@desmoslabs/desmjs';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useRoute, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSetting } from '@recoil/settings';
 import Button from 'components/Button';
