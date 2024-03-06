@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
 import { buildDesmosClient } from 'lib/TxUtils';
 import { err, ok, Result } from 'neverthrow';
-import { DesmosClient } from '@desmoslabs/desmjs';
+import { DesmosClient, PrivateKeySigner, Signer, SigningMode } from '@desmoslabs/desmjs';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import { Wallet } from 'types/wallet';
+import { Wallet, WalletType } from 'types/wallet';
 
 interface DesmosClientResult {
   readonly desmosClient: DesmosClient;
@@ -38,8 +38,19 @@ const usePrepareDesmosClientAndWallet = () => {
         wallet = walletOverride;
       }
 
+      let signer: Signer;
+      if (wallet.type === WalletType.WalletConnect && wallet.tempWallet !== undefined) {
+        // We have a WalletConnect wallet with an authorized internal
+        // wallet, let's use our signer to build the client so we can
+        // broadcast a MsgExec on behalf of the user.
+        signer = PrivateKeySigner.fromSecp256k1(wallet.tempWallet.privateKey, SigningMode.DIRECT);
+        await signer.connect();
+      } else {
+        signer = wallet.signer;
+      }
+
       // Prepare the desmos client
-      const result = await buildDesmosClient(chainInfo.rpcUrl, wallet.signer, chainGasPrice);
+      const result = await buildDesmosClient(chainInfo.rpcUrl, signer, chainGasPrice);
       if (result.isErr()) {
         return err(result.error);
       }
