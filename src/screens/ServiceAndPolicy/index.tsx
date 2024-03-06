@@ -20,6 +20,7 @@ import { TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
 import useLoginWithWalletConnect from 'hooks/walletconnect/useLoginWithWalletConnect';
+import useErrorModal from 'hooks/modals/useErrorModal';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -56,6 +57,7 @@ const ServiceAndPolicy = () => {
   const trackAcceptedLegalTerms = useTrackAcceptedLegalTerms();
   const openTermsAndConditions = useOpenTermsAndConditions();
   const openPrivacyPolicy = useOpenPrivacyPolicy();
+  const showErrorMessage = useErrorModal();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -69,7 +71,10 @@ const ServiceAndPolicy = () => {
     if (params?.loginMethod?.type === LoginMethodType.Web3Auth) {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
     } else if (params?.loginMethod?.type === LoginMethodType.WalletConnect) {
-      await loginWithWalletConnect(params?.loginMethod?.app);
+      const loginResult = await loginWithWalletConnect(params?.loginMethod?.app);
+      if (loginResult.isErr()) {
+        showErrorMessage(loginResult.error.message);
+      }
     } else {
       // Otherwise, navigate to the screen that allows to use the private key
       navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
@@ -79,6 +84,7 @@ const ServiceAndPolicy = () => {
     loginWithWalletConnect,
     loginWithWeb3Auth,
     navigate,
+    showErrorMessage,
     params?.loginMethod,
     trackAcceptedLegalTerms,
   ]);

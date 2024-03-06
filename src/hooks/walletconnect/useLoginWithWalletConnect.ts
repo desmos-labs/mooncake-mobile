@@ -11,9 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
 import { buildDesmosClient } from 'lib/TxUtils';
 import { PrivateKeySigner, Signer, SigningMode, TxRaw } from '@desmoslabs/desmjs';
-import { err, ok } from 'neverthrow';
+import { Result, err, ok } from 'neverthrow';
 import { promiseToResult } from 'lib/NeverThrowUtils';
-import useErrorModal from 'hooks/modals/useErrorModal';
 import { generateWalletConnectWallet } from 'lib/WalletUtils';
 import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAndCreateProfile';
 import { AccountWithWallet } from 'types/account';
@@ -101,28 +100,24 @@ const useSignAndBroadcastGrants = () => {
  * login through WalletConnect.
  */
 const useLoginWithWalletConnect = () => {
-  const { t } = useTranslation('landing');
   const connectWalletConnectClient = useConnectWalletConnect();
   const promptGrantsRequest = usePromptGrantsRequest();
   const signAndBroadcastGrants = useSignAndBroadcastGrants();
-  const showErrorMessage = useErrorModal();
   const startSaveAccountAndCreateProfileFlow = useSaveAccountAndCreateProfileFlow();
 
   return useCallback(
-    async (app: WalletConnectWalletApp) => {
+    async (app: WalletConnectWalletApp): Promise<Result<void, Error>> => {
       // Initialize the WalletConnect client.
       const connectionResult = await connectWalletConnectClient();
       if (connectionResult.isErr()) {
-        showErrorMessage(connectionResult.error.message);
-        return;
+        return err(connectionResult.error);
       }
 
       // Start the session by sending the request to the external wallet.
       const client = connectionResult.value;
       const sessionInitializationResult = await initWalletConnectSession(client, app);
       if (sessionInitializationResult.isErr()) {
-        showErrorMessage(sessionInitializationResult.error.message);
-        return;
+        return err(sessionInitializationResult.error);
       }
 
       // Session established, get the account.
@@ -148,9 +143,8 @@ const useLoginWithWalletConnect = () => {
         const signResult = await signAndBroadcastGrants(signer, account.address, grantee);
 
         if (signResult.isErr()) {
-          showErrorMessage(t('grant transaction failed', { message: signResult.error.message }));
           signer.disconnect();
-          return;
+          return err(signResult.error);
         }
         walletConnectAccount = await generateWalletConnectWallet(app, signer, {
           signer: tempWalletSigner,
@@ -169,14 +163,13 @@ const useLoginWithWalletConnect = () => {
       if (startLoginResult.isErr()) {
         signer.disconnect();
       }
+      return ok(undefined);
     },
     [
       connectWalletConnectClient,
       promptGrantsRequest,
-      showErrorMessage,
       signAndBroadcastGrants,
       startSaveAccountAndCreateProfileFlow,
-      t,
     ],
   );
 };
