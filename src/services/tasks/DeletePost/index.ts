@@ -17,7 +17,7 @@ interface DeletePostTaskParams extends Omit<SignAndBroadcastTxParams, 'messages'
 const DeletePostTask: TaskJob<DeletePostTaskParams, { transactionHash: string }> = async (
   params: DeletePostTaskParams,
 ) => {
-  const { desmosClient, signer, memo, post } = params;
+  const { desmosClient, signer, memo, feeGranter, post } = params;
   const { apiBearerToken, broadcastTx } = getTaskContext();
 
   if (apiBearerToken === undefined) {
@@ -26,7 +26,10 @@ const DeletePostTask: TaskJob<DeletePostTaskParams, { transactionHash: string }>
 
   // Build the message
   const msgDeletePost = convertPostToMsgDeletePost(post);
-  const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgDeletePost], memo);
+  const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgDeletePost], {
+    memo,
+    feeGranter,
+  });
 
   return {
     transactionHash: broadcastTxResult.transactionHash,

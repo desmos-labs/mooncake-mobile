@@ -1,8 +1,8 @@
 import { useApolloClient } from '@apollo/client';
-import { DesmosClient, EncodeObject } from '@desmoslabs/desmjs';
 import { useAppStateValue } from '@recoil/appState';
 import { useCurrentChainInfo } from '@recoil/settings';
 import { setTaskContext } from 'lib/BackgroundTaskUtils';
+import { TaskContext } from 'lib/BackgroundTaskUtils/types';
 import { getFeeGrantAllowanceForMessages, getOnChainGrants } from 'lib/grantsUtils';
 import { unwrapResult } from 'lib/NeverThrowUtils';
 import { canUseFeeGranter, queryUserBalance, signAndBroadcastWithGranter } from 'lib/TxUtils';
@@ -19,25 +19,30 @@ const useInitTaskContext = () => {
   const chainInfo = useCurrentChainInfo();
   const postHog = usePostHog();
 
-  const broadcastTx = React.useCallback(
-    async (client: DesmosClient, signer: string, msgs: EncodeObject[], memo?: string) => {
-      let feeGranter: string | undefined;
-      // Check if the user have enough balance to perform the transaction.
-      const useFeeGranter = await queryUserBalance(apolloClient, signer)
-        .then(unwrapResult)
-        .then(balance => canUseFeeGranter(balance, chainInfo!.stakeCurrency.coinMinimalDenom));
+  const broadcastTx = React.useCallback<TaskContext['broadcastTx']>(
+    async (client, signer, msgs, params) => {
+      let { feeGranter } = params ?? {};
 
-      if (useFeeGranter) {
-        // Get the feeGranter from the chain.
-        const feeGrant = await getOnChainGrants(apolloClient, signer)
+      if (feeGranter === undefined) {
+        // Check if the user have enough balance to perform the transaction.
+        const useFeeGranter = await queryUserBalance(apolloClient, signer)
           .then(unwrapResult)
-          .then(grants =>
-            getFeeGrantAllowanceForMessages(
-              grants,
-              msgs.map(m => m.typeUrl),
-            ),
+          .then(balance =>
+            canUseFeeGranter(balance, chainInfo!.stakeCurrency.coinMinimalDenom),
           );
-        feeGranter = feeGrant?.granterAddress;
+
+        if (useFeeGranter) {
+          // Get the feeGranter from the chain.
+          const feeGrant = await getOnChainGrants(apolloClient, signer)
+            .then(unwrapResult)
+            .then(grants =>
+              getFeeGrantAllowanceForMessages(
+                grants,
+                msgs.map(m => m.typeUrl),
+              ),
+            );
+          feeGranter = feeGrant?.granterAddress;
+        }
       }
 
       // Broadcast the messages.
@@ -45,7 +50,7 @@ const useInitTaskContext = () => {
         feeGranter,
         // The memo of the transactions must always contain the "Sent using Mooncake" text to
         // allow the backend logic to know that a transaction has been sent from the app.
-        memo: memo ? `${memo} - Sent using Mooncake` : 'Sent using Mooncake',
+        memo: params.memo ? `${params.memo} - Sent using Mooncake` : 'Sent using Mooncake',
       }).then(unwrapResult);
     },
     [apolloClient, chainInfo, postHog],

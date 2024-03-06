@@ -71,7 +71,7 @@ const uploadPictures = async (
 const SaveProfileTask: TaskJob<SaveProfileTaskParams, string> = async (
   params: SaveProfileTaskParams,
 ) => {
-  const { desmosClient, signer, memo, profile } = params;
+  const { desmosClient, signer, memo, feeGranter, profile } = params;
   const { apiBearerToken, broadcastTx } = getTaskContext();
 
   if (apiBearerToken === undefined) {
@@ -100,7 +100,10 @@ const SaveProfileTask: TaskJob<SaveProfileTaskParams, string> = async (
   };
 
   // Sign and broadcast the transaction
-  const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgSaveProfile], memo);
+  const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgSaveProfile], {
+    memo,
+    feeGranter,
+  });
   return broadcastTxResult.transactionHash;
 };
 

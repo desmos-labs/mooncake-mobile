@@ -22,6 +22,11 @@ export interface SignAndBroadcastTxParams {
    * Optional memo that will be added to the transaction.
    */
   readonly memo?: string;
+
+  /**
+   * Optional fee granter address.
+   */
+  readonly feeGranter?: string;
 }
 
 /**
@@ -32,11 +37,13 @@ export interface SignAndBroadcastTxParams {
 const SignAndBroadcastTxTask: TaskJob<SignAndBroadcastTxParams, string> = async (
   params: SignAndBroadcastTxParams,
 ) => {
-  const { desmosClient, messages, signer, memo } = params;
+  const { desmosClient, messages, signer, memo, feeGranter } = params;
   const { broadcastTx } = getTaskContext();
 
+  console.log('SignAndBroadcastTxTask', signer);
+
   // Sign and broadcast the transaction
-  const broadcastTxResult = await broadcastTx(desmosClient, signer, messages, memo);
+  const broadcastTxResult = await broadcastTx(desmosClient, signer, messages, { memo, feeGranter });
   return broadcastTxResult.transactionHash;
 };
 

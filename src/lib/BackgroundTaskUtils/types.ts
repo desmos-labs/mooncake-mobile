@@ -20,7 +20,10 @@ export interface TaskContext {
     client: DesmosClient,
     signer: string,
     messages: EncodeObject[],
-    memo?: string,
+    params: {
+      memo?: string;
+      feeGranter?: string;
+    },
   ) => Promise<DeliverTxResponse>;
 }
 
