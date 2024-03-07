@@ -1,6 +1,4 @@
-import { EncodeObject, Registry } from '@cosmjs/proto-signing';
-import { DesmosRegistry } from '@desmoslabs/desmjs';
-import { MsgExec } from '@desmoslabs/desmjs-types/cosmos/authz/v1beta1/tx';
+import { EncodeObject } from '@cosmjs/proto-signing';
 import { ToastType } from 'config/toast/toastConfig';
 import useToast from 'hooks/toasts/useToast';
 import usePrepareDesmosClientAndWallet from 'hooks/tx/usePrepareDesmosClientAndWallet';
@@ -10,7 +8,7 @@ import { failedTask } from 'lib/BackgroundTaskUtils/scheduler';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import SignAndBroadcastTxTask from 'services/tasks/SignAndBroadcastTx';
-import { Wallet, WalletType } from 'types/wallet';
+import { Wallet } from 'types/wallet';
 
 const BROADCAST_TX_TASK_NAME = 'Broadcast Transaction';
 
@@ -86,38 +84,15 @@ const useSignAndBroadcastTx = () => {
       }
       const { wallet, desmosClient } = result.value;
 
-      let toBroadcastMessages: EncodeObject[];
-      let signer: string;
-      let feeGranter: string | undefined;
-      if (wallet.type === WalletType.WalletConnect && wallet.tempWallet) {
-        const registry = new Registry(DesmosRegistry);
-        // We have a wallet with the fee grants, convert the messages into
-        // a MsgExec.
-        const msgExec: EncodeObject = {
-          typeUrl: '/cosmos.authz.v1beta1.MsgExec',
-          value: MsgExec.fromPartial({
-            grantee: wallet.tempWallet.address,
-            msgs: messages.map(msg => registry.encodeAsAny(msg)),
-          }),
-        };
-        toBroadcastMessages = [msgExec];
-        signer = wallet.tempWallet.address;
-        feeGranter = wallet.address;
-      } else {
-        toBroadcastMessages = messages;
-        signer = wallet.address;
-      }
-
       // Start the task to sign and broadcast the transaction
       const taskReference = await scheduleTask(
         BROADCAST_TX_TASK_NAME,
         SignAndBroadcastTxTask,
         {
           desmosClient,
-          messages: toBroadcastMessages,
-          signer,
+          messages,
+          signer: wallet,
           memo: options?.memo,
-          feeGranter,
         },
         {
           title: options?.onLoading?.popup?.title ?? t('performing transaction'),

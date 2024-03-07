@@ -134,3 +134,5 @@ export interface GqlPostReaction {
 export interface GqlPostReactions {
   readonly reactions: GqlPostReaction[];
 }
+
+export const MsgExecTypeUrl = '/cosmos.authz.v1beta1.MsgExec';

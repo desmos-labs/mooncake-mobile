@@ -61,7 +61,7 @@ const CreatePostTask: TaskJob<
   CreatePostTaskParams,
   { transactionHash: string; postId: number }
 > = async (params: CreatePostTaskParams) => {
-  const { desmosClient, signer, memo, post, feeGranter } = params;
+  const { desmosClient, signer, memo, post } = params;
   const { apiBearerToken, broadcastTx } = getTaskContext();
 
   if (apiBearerToken === undefined) {
@@ -92,10 +92,7 @@ const CreatePostTask: TaskJob<
 
   // Build the message
   const msgCreatePost = convertPostToMsgCreatePost(postToConvert);
-  const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgCreatePost], {
-    memo,
-    feeGranter,
-  });
+  const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgCreatePost], memo);
   const postIdAttribute = broadcastTxResult.events
     .find(e => e.type === 'create_post')
     ?.attributes.find(a => a.key === 'post_id');

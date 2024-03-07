@@ -1,4 +1,3 @@
-import { useActiveAccountAddress } from '@recoil/accounts';
 import { err, ok } from 'neverthrow';
 import React from 'react';
 import { AccountWithWallet } from 'types/account';
@@ -33,8 +32,6 @@ const useSaveProfile = () => {
   const { t } = useTranslation('createProfile');
   const showToast = useToast();
   const navigation = useRootNavigator();
-
-  const activeAccountAddress = useActiveAccountAddress()!;
   const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
   return React.useCallback(
@@ -43,19 +40,13 @@ const useSaveProfile = () => {
       providedAccount: AccountWithWallet | undefined,
       options?: SaveProfileOptions,
     ) => {
-      // Get the address to be used in order to save the profile
-      const addressToUse = providedAccount?.account?.address ?? activeAccountAddress;
-      if (addressToUse === undefined) {
-        return err(new Error('Cannot save a profile without an active account or address'));
-      }
-
       // Get the Desmos client
-      const clientAndWalletResult = await prepareDesmosClientAndWallet();
+      const clientAndWalletResult = await prepareDesmosClientAndWallet(providedAccount?.wallet);
       if (clientAndWalletResult.isErr()) {
         return err(clientAndWalletResult.error);
       }
 
-      const { desmosClient } = clientAndWalletResult.value;
+      const { wallet, desmosClient } = clientAndWalletResult.value;
 
       const header = options?.customHeader ?? t('saving profile');
       const body = options?.customBody ?? t('saving profile body');
@@ -65,7 +56,7 @@ const useSaveProfile = () => {
         {
           desmosClient,
           profile,
-          signer: addressToUse,
+          signer: wallet,
         },
         {
           title: header,
@@ -126,7 +117,7 @@ const useSaveProfile = () => {
         });
       return ok(taskReference);
     },
-    [activeAccountAddress, navigation, prepareDesmosClientAndWallet, showToast, t],
+    [navigation, prepareDesmosClientAndWallet, showToast, t],
   );
 };
 

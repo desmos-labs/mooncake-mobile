@@ -178,7 +178,7 @@ const useCreatePost = () => {
           subspaceId,
           parent,
           post,
-          signer: wallet.address,
+          signer: wallet,
         },
         // TODO: Use localized messages here
         {

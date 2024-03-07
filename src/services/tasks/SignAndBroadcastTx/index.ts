@@ -1,6 +1,7 @@
 import { DesmosClient } from '@desmoslabs/desmjs';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { getTaskContext, TaskJob } from 'lib/BackgroundTaskUtils';
+import { Wallet } from 'types/wallet';
 
 export interface SignAndBroadcastTxParams {
   /**
@@ -14,19 +15,14 @@ export interface SignAndBroadcastTxParams {
   readonly messages: EncodeObject[];
 
   /**
-   * Address of the signer that will sign the transaction.
+   * Wallet of the user that is broadcasting the transaction.
    */
-  readonly signer: string;
+  readonly signer: Wallet;
 
   /**
    * Optional memo that will be added to the transaction.
    */
   readonly memo?: string;
-
-  /**
-   * Optional fee granter address.
-   */
-  readonly feeGranter?: string;
 }
 
 /**
@@ -37,13 +33,11 @@ export interface SignAndBroadcastTxParams {
 const SignAndBroadcastTxTask: TaskJob<SignAndBroadcastTxParams, string> = async (
   params: SignAndBroadcastTxParams,
 ) => {
-  const { desmosClient, messages, signer, memo, feeGranter } = params;
+  const { desmosClient, messages, signer, memo } = params;
   const { broadcastTx } = getTaskContext();
 
-  console.log('SignAndBroadcastTxTask', signer);
-
   // Sign and broadcast the transaction
-  const broadcastTxResult = await broadcastTx(desmosClient, signer, messages, { memo, feeGranter });
+  const broadcastTxResult = await broadcastTx(desmosClient, signer, messages, memo);
   return broadcastTxResult.transactionHash;
 };
 
