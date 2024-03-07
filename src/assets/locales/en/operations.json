@@ -38,5 +38,9 @@
   "unblock user": "Unblock user",
 
   "create report": "Create report",
-  "delete report": "Delete report"
+  "delete report": "Delete report",
+
+  "grant permission": "Grant permission",
+  "grant fee allowance": "Grant fee allowance",
+  "execute": "Execute",
 }
