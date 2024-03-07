@@ -56,9 +56,7 @@ const useInitTaskContext = () => {
         // Check if the user have enough balance to perform the transaction.
         const useFeeGranter = await queryUserBalance(apolloClient, signer)
           .then(unwrapResult)
-          .then(balance =>
-            canUseFeeGranter(balance, chainInfo!.stakeCurrency.coinMinimalDenom),
-          );
+          .then(balance => canUseFeeGranter(balance, chainInfo!.stakeCurrency.coinMinimalDenom));
 
         if (useFeeGranter) {
           // Get the feeGranter from the chain.
