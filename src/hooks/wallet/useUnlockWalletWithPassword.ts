@@ -1,5 +1,6 @@
 import { fromHex } from '@cosmjs/encoding';
 import { PrivateKeySigner, SigningMode } from '@desmoslabs/desmjs';
+import useReconnectWalletConnectWallet from 'hooks/walletconnect/useReconnectWalletConnectWallet';
 import { getWallet } from 'lib/SecureStorage';
 import { err, ok, Result } from 'neverthrow';
 import { useCallback } from 'react';
@@ -97,6 +98,7 @@ const useInitPrivateKeyWallet = () => {
 const useUnlockWalletWithPassword = () => {
   const { initWeb3AuthWallet } = useInitWeb3AuthWallet();
   const { initPrivateKeyWallet } = useInitPrivateKeyWallet();
+  const initWalletConnectWallet = useReconnectWalletConnectWallet();
 
   return useCallback(
     async (
@@ -114,6 +116,8 @@ const useUnlockWalletWithPassword = () => {
           return initWeb3AuthWallet(serializedWallet.value, signingMode);
         case WalletType.PrivateKey:
           return initPrivateKeyWallet(serializedWallet.value, signingMode);
+        case WalletType.WalletConnect:
+          return initWalletConnectWallet(serializedWallet.value);
         default:
           // Safe to ignore, this branch should never occur in production
           // but just on development in case we add a new wallet type.
@@ -121,7 +125,7 @@ const useUnlockWalletWithPassword = () => {
           return err(Error(`unsupported wallet type ${serializedWallet.type}`));
       }
     },
-    [initWeb3AuthWallet, initPrivateKeyWallet],
+    [initWeb3AuthWallet, initPrivateKeyWallet, initWalletConnectWallet],
   );
 };
 

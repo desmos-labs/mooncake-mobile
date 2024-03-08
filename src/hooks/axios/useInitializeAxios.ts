@@ -27,7 +27,7 @@ const useInitializeAxios = () => {
         if (activeAccountAddress && error.response?.status === HttpStatusCode.Unauthorized) {
           console.log('[AXIOS]: Unauthorized response, logging out.');
 
-          await performLogout();
+          await performLogout({ deauthenticated: true });
           showToast({
             toastType: ToastType.error,
             title: 'Error',

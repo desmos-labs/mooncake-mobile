@@ -1,3 +1,6 @@
+// WalletConnect polyfill
+import '@walletconnect/react-native-compat';
+
 /* eslint-disable no-restricted-syntax */
 if (typeof __dirname === 'undefined') global.__dirname = '/';
 if (typeof __filename === 'undefined') global.__filename = '';

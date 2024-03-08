@@ -1,6 +1,7 @@
 import { ApolloClient } from '@apollo/client';
 import { ChainInfo, DeliverTxResponse, DesmosClient, EncodeObject } from '@desmoslabs/desmjs';
 import PostHog from 'posthog-react-native';
+import { Wallet } from 'types/wallet';
 
 /**
  * Interface that represents the context of a task.
@@ -18,7 +19,7 @@ export interface TaskContext {
   readonly chainInfo: ChainInfo;
   readonly broadcastTx: (
     client: DesmosClient,
-    signer: string,
+    signer: Wallet,
     messages: EncodeObject[],
     memo?: string,
   ) => Promise<DeliverTxResponse>;

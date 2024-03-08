@@ -3,8 +3,10 @@ import {
   PrivateKeyWallet,
   SerializablePrivateKeyWallet,
   SerializableWallet,
+  SerializableWalletConnectWallet,
   SerializableWeb3AuthWallet,
   Wallet,
+  WalletConnectWallet,
   WalletSerializationVersion,
   WalletType,
   Web3AuthWallet,
@@ -36,6 +38,23 @@ const serializePrivateKeyWallet = (wallet: PrivateKeyWallet): SerializablePrivat
 });
 
 /**
+ * Converts a [WalletConnectWallet] into a [SerializableWalletConnectWallet].
+ * @param wallet - The [WalletConnectWallet] to convert.
+ */
+function serializeWalletConnectWallet(
+  wallet: WalletConnectWallet,
+): SerializableWalletConnectWallet {
+  return {
+    type: WalletType.WalletConnect,
+    version: WalletSerializationVersion.WalletConnect,
+    addressPrefix: wallet.addressPrefix,
+    address: wallet.address,
+    walletApp: wallet.walletApp,
+    tempWallet: wallet.tempWallet,
+  };
+}
+
+/**
  * Convert a [Wallet] into a [SerializableWallet]
  * @param wallet - The [Wallet] to convert.
  */
@@ -50,6 +69,9 @@ export const serializeWallet = (wallet: Wallet): SerializableWallet => {
       break;
     case WalletType.PrivateKey:
       serializableWallet = serializePrivateKeyWallet(wallet);
+      break;
+    case WalletType.WalletConnect:
+      serializableWallet = serializeWalletConnectWallet(wallet);
       break;
     default:
       // @ts-ignore

@@ -1,10 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
 enum SecureStorageErrorType {
-  CorruptedData,
-  WrongPassword,
-  WalletNotFound,
-  InvalidPassword,
-  Unknown,
+  CorruptedData = 'SecureStorageErrorType.CorruptedData',
+  WrongPassword = 'SecureStorageErrorType.WrongPassword',
+  WalletNotFound = 'SecureStorageErrorType.WalletNotFound',
+  InvalidPassword = 'SecureStorageErrorType.InvalidPassword',
+  Unknown = 'SecureStorageErrorType.Unknown',
 }
 
 /**
@@ -18,6 +18,14 @@ export class WrongPasswordError extends Error {
     super(message);
     this.type = SecureStorageErrorType.WrongPassword;
   }
+}
+
+/**
+ * Checks if the provided error is a {@link WrongPasswordError}.
+ */
+export function isWrongPasswordError(error: Error): error is WrongPasswordError {
+  const { type } = error as WrongPasswordError;
+  return type === SecureStorageErrorType.WrongPassword;
 }
 
 /**
@@ -46,18 +54,6 @@ export class WalletNotFoundError extends Error {
 }
 
 /**
- * Secure storage error raised if the provided password is invalid.
- */
-export class InvalidPasswordError extends Error {
-  readonly type: SecureStorageErrorType.InvalidPassword;
-
-  constructor() {
-    super();
-    this.type = SecureStorageErrorType.InvalidPassword;
-  }
-}
-
-/**
  * Secure storage error raised if we can't provide
  * details about the error cause.
  */
@@ -78,5 +74,4 @@ export type SecureStorageError =
   | WrongPasswordError
   | CorruptedDataError
   | WalletNotFoundError
-  | InvalidPasswordError
   | UnknownError;

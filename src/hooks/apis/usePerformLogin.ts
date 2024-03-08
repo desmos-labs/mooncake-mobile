@@ -6,11 +6,38 @@ import {
   getSignedBytes,
 } from '@desmoslabs/desmjs';
 import useUpdateAuthToken from 'hooks/axios/useUpdateAuthToken';
-import { ResultAsync } from 'neverthrow';
+import useRootNavigator from 'hooks/navigation/useRootNavigator';
+import ROUTES from 'navigation/routes';
+import { Result, ResultAsync, err } from 'neverthrow';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import GetNonce from 'services/axios/requests/GetNonce';
 import Login, { LoginParams } from 'services/axios/requests/Login';
-import { Wallet } from 'types/wallet';
+import { Wallet, WalletConnectWalletApp, WalletType } from 'types/wallet';
+
+const usePromptSignLoginTransaction = () => {
+  const navigation = useRootNavigator();
+  const { t } = useTranslation('onboarding');
+
+  return React.useCallback(
+    (_app: WalletConnectWalletApp): Promise<boolean> => {
+      return new Promise(resolve => {
+        navigation.navigate(ROUTES.CONFIRM_MODAL, {
+          title: t('proof of account ownership'),
+          subtitle: t('proof of account ownership description'),
+          removeModalAfterButtonPress: true,
+          primaryButtonLabel: 'Sign',
+          onPressPrimary: () => resolve(true),
+          onDismiss: () => {
+            navigation.goBack();
+            resolve(false);
+          },
+        });
+      });
+    },
+    [navigation, t],
+  );
+};
 
 /**
  * Generate the params to be used when performing the login on the APIs.
@@ -52,8 +79,21 @@ const generateLoginParams = (nonce: string, wallet: Wallet): ResultAsync<LoginPa
  */
 const usePerformLogin = () => {
   const updateAuthToken = useUpdateAuthToken();
+  const promptSignLoginTransaction = usePromptSignLoginTransaction();
+
   return React.useCallback(
-    (account: Wallet): ResultAsync<string, Error> => {
+    async (account: Wallet): Promise<Result<string, Error>> => {
+      let authorized = false;
+      if (account.type === WalletType.WalletConnect) {
+        authorized = await promptSignLoginTransaction(account.walletApp);
+      } else {
+        authorized = true;
+      }
+
+      if (!authorized) {
+        return err(new Error('User not authorized'));
+      }
+
       return GetNonce(account.address)
         .andThen(nonce => generateLoginParams(nonce, account))
         .andThen(params => Login(params))
@@ -64,7 +104,7 @@ const usePerformLogin = () => {
           return result;
         });
     },
-    [updateAuthToken],
+    [promptSignLoginTransaction, updateAuthToken],
   );
 };
 

@@ -29,6 +29,14 @@ export class CanceledOperationError extends Error {
   }
 }
 
+/**
+ * Checks if an error is a {@link CanceledOperationError}.
+ */
+export function isCanceledOperationError(e: Error): e is CanceledOperationError {
+  const { type } = e as CanceledOperationError;
+  return type === 'CanceledOperationError';
+}
+
 export class CanceledBlockError extends Error {
   readonly type: 'CanceledBlockError';
 

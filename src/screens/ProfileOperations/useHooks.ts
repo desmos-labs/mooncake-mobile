@@ -1,4 +1,13 @@
-import { Bank, Posts, Profiles, Reactions, Relationships, Reports } from '@desmoslabs/desmjs';
+import {
+  Authz,
+  Bank,
+  Feegrant,
+  Posts,
+  Profiles,
+  Reactions,
+  Relationships,
+  Reports,
+} from '@desmoslabs/desmjs';
 import {
   blockUserTx,
   createPostTxIcon,
@@ -16,6 +25,7 @@ import usePastTransactions from 'hooks/transactions/usePastTransactions';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { SectionBase } from 'react-native';
+import { MsgExecTypeUrl } from 'types/desmos';
 import { PastTransactionMessage } from 'types/transactions';
 
 /**
@@ -106,6 +116,11 @@ export const useGetOperationImage = () => {
       case Relationships.v1.MsgUnblockUserTypeUrl:
         return blockUserTx;
 
+      case MsgExecTypeUrl:
+      case Authz.v1beta1.MsgGrantTypeUrl:
+      case Feegrant.v1beta1.MsgGrantAllowanceTypeUrl:
+        return unknownTxIcon;
+
       default:
         console.warn(`No image found for message type ${formattedMessage}`);
         return unknownTxIcon;
@@ -195,6 +210,13 @@ export const useGetOperationTitle = (userAddress: string) => {
           return t('create report');
         case Reports.v1.MsgDeleteReportTypeUrl:
           return t('delete report');
+
+        case Authz.v1beta1.MsgGrantTypeUrl:
+          return t('grant permission');
+        case Feegrant.v1beta1.MsgGrantAllowanceTypeUrl:
+          return t('grant fee allowance');
+        case MsgExecTypeUrl:
+          return t('execute');
 
         default:
           console.warn(`No title found for message type ${formattedMessage}`);

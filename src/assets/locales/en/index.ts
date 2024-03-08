@@ -25,6 +25,7 @@ import selectProfile from './selectProfile.json';
 import settings from './settings.json';
 import sendTips from './tips.json';
 import tips from './tips.json';
+import walletconnect from './walletconnect.json';
 
 const en = {
   about,
@@ -54,6 +55,7 @@ const en = {
   sendTips,
   settings,
   tips,
+  walletconnect,
 };
 
 export default en;

@@ -5,7 +5,7 @@ import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAnd
 import sleep from 'lib/sleep';
 import { generateWeb3AuthWallet } from 'lib/WalletUtils';
 import { newWeb3AuthClient, web3AuthLoginParams } from 'lib/Web3AuthUtils';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { SupportedChain } from 'types/chains';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
@@ -15,17 +15,15 @@ import { Web3AuthLoginProvider } from 'types/web3auth';
  */
 const useLoginWithWeb3Auth = (chain: SupportedChain) => {
   const startSaveAccountAndCreateProfileFlow = useSaveAccountAndCreateProfileFlow();
-  const [loginLoading, setLoginLoading] = useState(false);
 
   /**
    * Function called when the user wants to log in using the Web3Auth protocol.
    * @param loginProvider the login provider to use (google/apple).
    */
-  const login = useCallback(
+  return useCallback(
     async (loginProvider: Web3AuthLoginProvider) => {
       // Wait a bit to let the button complete its animation.
       await sleep(250);
-      setLoginLoading(true);
       const web3authClient = newWeb3AuthClient();
       await web3authClient.init();
       const keyProvider = new Web3AuthKeyProvider(web3authClient, {
@@ -38,7 +36,6 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
         await sleep(1000);
         await keyProvider.connect();
       } catch (e: any) {
-        setLoginLoading(false);
         return;
       }
 
@@ -50,7 +47,6 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
         //   title: 'Error',
         //   message: 'Unable to connect to the Web3Auth provider, please try again',
         // });
-        setLoginLoading(false);
         return;
       }
       let privateKey;
@@ -64,7 +60,6 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
         //   title: 'Error',
         //   message: 'An error occurred while getting the private key',
         // });
-        setLoginLoading(false);
         return;
       }
 
@@ -81,15 +76,9 @@ const useLoginWithWeb3Auth = (chain: SupportedChain) => {
         //   message: result.error.message,
         // });
       }
-      setLoginLoading(false);
     },
     [chain.prefix, startSaveAccountAndCreateProfileFlow],
   );
-
-  return {
-    login,
-    loginLoading,
-  };
 };
 
 export default useLoginWithWeb3Auth;

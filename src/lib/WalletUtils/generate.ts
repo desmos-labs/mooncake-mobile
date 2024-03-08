@@ -1,6 +1,7 @@
 import { PrivateKeySigner, SigningMode } from '@desmoslabs/desmjs';
-import { AccountWithWallet } from 'types/account';
-import { WalletType } from 'types/wallet';
+import { WalletConnectSigner } from '@desmoslabs/desmjs-walletconnect-v2';
+import { AccountWithWallet, WalletConnectAccount } from 'types/account';
+import { WalletConnectWallet, WalletConnectWalletApp, WalletType } from 'types/wallet';
 
 /**
  * Function allowing to generate a Web3AuthWallet.
@@ -71,5 +72,70 @@ export const generatePrivateKeyWallet = async (
       algo: accountData.algo,
       creationDate: new Date(),
     },
+  };
+};
+
+/**
+ * Function allowing to generate a WalletConnectWallet.
+ * @param walletApp - The application that has been used to import the wallet.
+ * @param externalWalletSigner - The signer associated with the external wallet.
+ * @param tempWalletOptions - Options to create a temporary wallet that can be used
+ * by the application to perform the operations on behalf of the user without leaving
+ * the application.
+ */
+export const generateWalletConnectWallet = async (
+  walletApp: WalletConnectWalletApp,
+  externalWalletSigner: WalletConnectSigner,
+  tempWalletOptions?: {
+    signer: PrivateKeySigner;
+    authorizations: string[];
+    authorizationsExpiration: Date;
+  },
+): Promise<AccountWithWallet> => {
+  const [externalWalletAccount] = await externalWalletSigner.getAccounts();
+  let walletTempWallet: WalletConnectWallet['tempWallet'];
+  let accountTempWallet: WalletConnectAccount['tempWallet'];
+  if (tempWalletOptions) {
+    // Build the tempWallet field for the wallet.
+    await tempWalletOptions.signer.connect();
+    const [tempWalletAccount] = await tempWalletOptions.signer.getAccounts();
+    const tempWalletPrivateKey = tempWalletOptions.signer.privateKey;
+    walletTempWallet = {
+      privateKey: tempWalletPrivateKey.key,
+      address: tempWalletAccount.address,
+    };
+
+    // Build the tempWallet field fro the account.
+    accountTempWallet = {
+      pubKey: tempWalletAccount.pubkey,
+      address: tempWalletAccount.address,
+      authorizationExpiration: tempWalletOptions.authorizationsExpiration,
+      authorizedMessages: tempWalletOptions.authorizations,
+    };
+  }
+
+  const wallet: WalletConnectWallet = {
+    type: WalletType.WalletConnect,
+    walletApp,
+    addressPrefix: 'desmos',
+    address: externalWalletAccount.address,
+    signer: externalWalletSigner,
+    tempWallet: walletTempWallet,
+  };
+
+  const account: WalletConnectAccount = {
+    walletType: WalletType.WalletConnect,
+    walletApp,
+    address: externalWalletAccount.address,
+    sessionTopic: externalWalletSigner.session.topic,
+    pubKey: externalWalletAccount.pubkey,
+    algo: externalWalletAccount.algo,
+    tempWallet: accountTempWallet,
+    creationDate: new Date(),
+  };
+
+  return {
+    account,
+    wallet,
   };
 };

@@ -1,6 +1,7 @@
 import {
   SerializablePrivateKeyWallet,
   SerializableWallet,
+  SerializableWalletConnectWallet,
   SerializableWeb3AuthWallet,
   WalletType,
 } from 'types/wallet';
@@ -70,6 +71,40 @@ const deserializePrivateKeyWallet = (
 };
 
 /**
+ * Deserialize a [SerializableWalletConnectWallet] from a JSON parsed object.
+ * @param value - The JSON parsed value that should be a [SerializableWalletConnectWallet].
+ */
+const deserializeWalletConnectWallet = (
+  value: Partial<SerializableWalletConnectWallet>,
+): SerializableWalletConnectWallet => {
+  if (
+    value.version === undefined ||
+    value.type === undefined ||
+    value.addressPrefix === undefined ||
+    value.address === undefined ||
+    value.walletApp === undefined
+  ) {
+    throw new Error('invalid serialized WalletConnect wallet');
+  }
+
+  // Check if the wallet has a temporary wallet.
+  if (value.tempWallet !== undefined) {
+    if (value.tempWallet.address === undefined || value.tempWallet.privateKey === undefined) {
+      throw new Error('invalid serialized WalletConnect wallet');
+    }
+  }
+
+  return {
+    type: value.type,
+    version: value.version,
+    addressPrefix: value.addressPrefix,
+    address: value.address,
+    walletApp: value.walletApp,
+    tempWallet: value.tempWallet,
+  };
+};
+
+/**
  * Deserialize a [SerializableWallet] from a JSON parsed object.
  * @param value - The JSON parsed value that should be a [SerializableWallet].
  */
@@ -81,6 +116,8 @@ export const deserializeWallet = (value: Partial<SerializableWallet>): Serializa
       return deserializeWeb3AuthWallet(value);
     case WalletType.PrivateKey:
       return deserializePrivateKeyWallet(value);
+    case WalletType.WalletConnect:
+      return deserializeWalletConnectWallet(value);
     default:
       // @ts-ignore
       throw new Error(`can't deserialize wallet with type ${value.type}`);

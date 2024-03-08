@@ -11,4 +11,5 @@ declare module '@env' {
   export const WEB3_AUTH_CLIENT_ID_TESTNET: string;
   export const POSTHOG_API_KEY: string;
   export const GIPHY_API_KEY: string;
+  export const WALLET_CONNECT_PROJECT_ID: string;
 }

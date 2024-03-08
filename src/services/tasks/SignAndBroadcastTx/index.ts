@@ -1,6 +1,7 @@
 import { DesmosClient } from '@desmoslabs/desmjs';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { getTaskContext, TaskJob } from 'lib/BackgroundTaskUtils';
+import { Wallet } from 'types/wallet';
 
 export interface SignAndBroadcastTxParams {
   /**
@@ -14,9 +15,9 @@ export interface SignAndBroadcastTxParams {
   readonly messages: EncodeObject[];
 
   /**
-   * Address of the signer that will sign the transaction.
+   * Wallet of the user that is broadcasting the transaction.
    */
-  readonly signer: string;
+  readonly signer: Wallet;
 
   /**
    * Optional memo that will be added to the transaction.

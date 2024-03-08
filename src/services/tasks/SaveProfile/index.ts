@@ -95,7 +95,7 @@ const SaveProfileTask: TaskJob<SaveProfileTaskParams, string> = async (
       bio: replaceUndefined(profile.bio),
       profilePicture: replaceUndefined(profilePictureUrl),
       coverPicture: replaceUndefined(coverPictureUrl),
-      creator: signer,
+      creator: signer.address,
     },
   };
 

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, selector, useRecoilCallback, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Account } from 'types/account';
 import { deserializeAccounts, serializeAccounts } from 'lib/AccountUtils';
 import { deleteMMKV, getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
@@ -42,6 +42,15 @@ export const useStoreAccount = () => {
   );
 };
 
+/**
+ * Hook that provides a function to get an account stored
+ * in the application state by its address.
+ */
+export const useGetStoredAccount = () => {
+  return useRecoilCallback(({ snapshot }) => async (address: string) => {
+    return snapshot.getPromise(accountsAppState).then(accounts => accounts[address]);
+  });
+};
 /**
  * Hook that allows to get the accounts stored on the device.
  */

@@ -68,7 +68,6 @@ const useSignAndBroadcastTx = () => {
   const { t } = useTranslation('broadcastTx');
   const showToast = useToast();
   const parseError = useParseErrorMessage();
-
   const prepareDesmosClientAndWallet = usePrepareDesmosClientAndWallet();
 
   return useCallback(
@@ -92,7 +91,7 @@ const useSignAndBroadcastTx = () => {
         {
           desmosClient,
           messages,
-          signer: wallet.address,
+          signer: wallet,
           memo: options?.memo,
         },
         {
@@ -137,6 +136,7 @@ const useSignAndBroadcastTx = () => {
           }
 
           if (options?.onError?.popup?.show !== false) {
+            console.error(error.message);
             showToast({
               toastType: ToastType.error,
               title: options?.onError?.popup?.title ?? t('error', { ns: 'common' }),

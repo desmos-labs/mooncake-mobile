@@ -30,9 +30,9 @@ describe('MMKV custom serialization', () => {
   it('test Uint8Array serialization', () => {
     const testArray = Uint8Array.from([1, 2, 3]);
     setMMKV(MMKVKEYS.PROFILES, testArray);
-    const reloadedDate = <Date>getMMKV(MMKVKEYS.PROFILES);
+    const reloadedArray = <Uint8Array>getMMKV(MMKVKEYS.PROFILES);
 
-    expect(testArray).toEqual(reloadedDate);
+    expect(testArray).toEqual(reloadedArray);
   });
 
   it('test nested Uint8Array serialization', () => {

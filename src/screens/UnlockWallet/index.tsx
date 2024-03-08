@@ -1,6 +1,6 @@
 import { SigningMode } from '@desmoslabs/desmjs';
 import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
-import { useRoute, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSetting } from '@recoil/settings';
 import Button from 'components/Button';
@@ -23,6 +23,8 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import { Wallet } from 'types/wallet';
 import * as Yup from 'yup';
+import { isWrongPasswordError } from 'lib/SecureStorage/errors';
+import { isCanceledOperationError } from 'types/error';
 import useStyles from './useStyles';
 
 type NavProps = NativeStackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;
@@ -66,12 +68,11 @@ const initialFormValues = {
  * Screen used to unlock the wallet during a transaction.
  * @constructor
  */
-const UnlockWallet = () => {
+const UnlockWallet: React.FC<NavProps> = ({ navigation, route: { params } }) => {
   const { t } = useTranslation('password');
   const theme = useTheme();
   const styles = useStyles();
 
-  const { params } = useRoute<NavProps['route']>();
   const {
     onSuccess,
     address,
@@ -130,7 +131,13 @@ const UnlockWallet = () => {
 
         if (walletResult.isErr()) {
           setLoading(false);
-          formikHelpers && formikHelpers.setErrors({ password: t('incorrect password') });
+          if (isWrongPasswordError(walletResult.error)) {
+            formikHelpers && formikHelpers.setErrors({ password: t('incorrect password') });
+          } else if (isCanceledOperationError(walletResult.error)) {
+            navigation.goBack();
+          } else {
+            formikHelpers && formikHelpers.setErrors({ password: walletResult.error.message });
+          }
           return;
         }
 
@@ -150,7 +157,7 @@ const UnlockWallet = () => {
       }
       setLoading(false);
     },
-    [unlockWalletWithPassword, address, signingMode, t, onSuccess],
+    [unlockWalletWithPassword, address, signingMode, t, navigation, onSuccess],
   );
 
   /**
@@ -248,7 +255,7 @@ const UnlockWallet = () => {
               <DSecureTextInput
                 textContentType="password"
                 style={styles.textInput}
-                autoFocus={!unlockWalletWithBiometrics}
+                autoFocus={!unlockWithBiometrics}
                 placeholder={t('enter password')}
                 value={biometricsPsw ?? values.password}
                 onChangeText={(text: string) => {

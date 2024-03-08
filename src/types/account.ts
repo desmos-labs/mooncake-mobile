@@ -1,20 +1,21 @@
 import { Algo } from '@cosmjs/amino';
 import { LoginOnboardingStep } from 'types/tourguide';
-import { Wallet, WalletType } from 'types/wallet';
+import { Wallet, WalletConnectWalletApp, WalletType } from 'types/wallet';
 
 export enum AccountSerializationVersion {
   Web3Auth = 1,
   PrivateKey = 1,
+  WalletConnect = 1,
 }
 
 /**
  * Interface representing a base user account.
  */
-interface BaseAccount {
+interface BaseAccount<W extends WalletType> {
   /**
    * Type of the wallet associated with this account.
    */
-  readonly walletType: WalletType;
+  readonly walletType: W;
   /**
    * Account bech32 address.
    */
@@ -36,15 +37,14 @@ interface BaseAccount {
 /**
  * Interface representing an account imported through Web3Auth.
  */
-export interface Web3AuthAccount extends BaseAccount {
-  readonly walletType: WalletType.Web3Auth;
+export interface Web3AuthAccount extends BaseAccount<WalletType.Web3Auth> {
   /**
    * Login provider used to obtain the user's private key.
    */
   readonly loginProvider: string;
 }
 
-export type SerializableWeb3AuthAccount = Omit<Web3AuthAccount, 'pubKey' | 'hdPath'> & {
+export type SerializableWeb3AuthAccount = Omit<Web3AuthAccount, 'pubKey'> & {
   readonly version: AccountSerializationVersion.Web3Auth;
   /**
    * hex encoded public key.
@@ -55,9 +55,7 @@ export type SerializableWeb3AuthAccount = Omit<Web3AuthAccount, 'pubKey' | 'hdPa
 /**
  * Interface representing an account imported with a private key.
  */
-export interface PrivateKeyAccount extends BaseAccount {
-  readonly walletType: WalletType.PrivateKey;
-}
+export interface PrivateKeyAccount extends BaseAccount<WalletType.PrivateKey> {}
 
 /**
  * Interface representing a [PrivateKeyAccount] that can be serialized into JSON
@@ -67,14 +65,67 @@ export type SerializablePrivateKeyAccount = PrivateKeyAccount & {
   readonly version: AccountSerializationVersion.PrivateKey;
 };
 
-export type Account = Web3AuthAccount | PrivateKeyAccount;
+/**
+ * Interface representing an account imported through WalletConnect.
+ */
+export interface WalletConnectAccount extends BaseAccount<WalletType.WalletConnect> {
+  /**
+   * WalletConnect wallet used to import this account.
+   */
+  readonly walletApp: WalletConnectWalletApp;
+  /**
+   * WalletConnect session used to import this account.
+   */
+  readonly sessionTopic: string;
+
+  /**
+   * The temporary wallet to use to perform the operations
+   * without the need to open the external wallet application.
+   * If undefined, we should open the external app wallet to
+   * sign the operations.
+   */
+  readonly tempWallet?: {
+    /**
+     * Temp wallet address.
+     */
+    readonly address: string;
+    /**
+     * Temp wallet public key.
+     */
+    readonly pubKey: Uint8Array;
+    /**
+     * Types of messages that has been authorized
+     * by the user to be signed by our temporary wallet.
+     */
+    readonly authorizedMessages: string[];
+    /**
+     * Expiration date of the authorizations,
+     * after this date the temporary wallet will be
+     * unable to perform operations on behalf of the user.
+     */
+    readonly authorizationExpiration: Date;
+  };
+}
+
+/**
+ * Type that represents a [WalletConnectAccount] that can be serialized
+ * into JSON and stored in the device's storage.
+ */
+export type SerializableWalletConnectAccount = WalletConnectAccount & {
+  readonly version: AccountSerializationVersion.WalletConnect;
+};
+
+export type Account = Web3AuthAccount | PrivateKeyAccount | WalletConnectAccount;
 
 export interface AccountWithWallet {
   readonly account: Account;
   readonly wallet: Wallet;
 }
 
-export type SerializableAccount = SerializableWeb3AuthAccount | SerializablePrivateKeyAccount;
+export type SerializableAccount =
+  | SerializableWeb3AuthAccount
+  | SerializablePrivateKeyAccount
+  | SerializableWalletConnectAccount;
 
 /**
  * Interface that represents the information

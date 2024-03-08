@@ -12,7 +12,7 @@ import ROUTES from 'navigation/routes';
 import { useActiveAccount } from '@recoil/accounts';
 import { CanceledOperationError } from 'types/error';
 import { UnlockWalletParams } from 'screens/UnlockWallet';
-import { useSetUserWallet, useUserWallet } from '@recoil/userWallet';
+import { useGetUserWallet, useSetUserWallet } from '@recoil/userWallet';
 
 interface UnlockWalletResult {
   /**
@@ -59,18 +59,18 @@ const useUnlockWallet = (params?: ReturnToCurrentScreenParams) => {
   const returnToCurrentScreen = useReturnToCurrentScreen(params);
   const navigator = useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
   const activeAccount = useActiveAccount();
-  const userWallet = useUserWallet();
+  const getUserWallet = useGetUserWallet();
   const setUserWallet = useSetUserWallet();
 
   return useCallback(
-    (config?: UnlockWalletConfig): Promise<Result<UnlockWalletResult, Error>> => {
+    async (config?: UnlockWalletConfig): Promise<Result<UnlockWalletResult, Error>> => {
       const address = config?.toUnlockAddress ?? activeAccount!.address;
+      const userWallet = await getUserWallet();
 
       if (address === undefined) {
         return Promise.resolve(err(new Error('no account selected')));
       }
-
-      if (userWallet && config?.forceRequestPassword !== true) {
+      if (userWallet && userWallet.signer.isConnected && config?.forceRequestPassword !== true) {
         // We already have the user wallet instance, lets just return it.
         return Promise.resolve(
           ok({
@@ -102,7 +102,7 @@ const useUnlockWallet = (params?: ReturnToCurrentScreenParams) => {
         });
       });
     },
-    [activeAccount, navigator, returnToCurrentScreen, setUserWallet, userWallet],
+    [activeAccount, getUserWallet, navigator, returnToCurrentScreen, setUserWallet],
   );
 };
 

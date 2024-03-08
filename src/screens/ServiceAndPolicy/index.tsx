@@ -19,6 +19,8 @@ import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import LandingCheckbox from 'screens/ServiceAndPolicy/components/LandingCheckbox';
 import { LoginMethod, LoginMethodType } from 'types/login';
+import useLoginWithWalletConnect from 'hooks/walletconnect/useLoginWithWalletConnect';
+import useErrorModal from 'hooks/modals/useErrorModal';
 import useStyles from './useStyles';
 
 export interface ServiceAndPolicyParams {
@@ -43,33 +45,49 @@ const ServiceAndPolicy = () => {
   // --- State
   // -------------------------------------------------------------------------------------
 
+  const [loginLoading, setLoginLoading] = useState(false);
   const [conditionAndPolicyAccepted, setConditionAndPolicyAccepted] = useState(false);
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { login: loginWithWeb3Auth, loginLoading } = useLoginWithWeb3Auth(DesmosChain);
+  const loginWithWeb3Auth = useLoginWithWeb3Auth(DesmosChain);
+  const loginWithWalletConnect = useLoginWithWalletConnect();
   const trackAcceptedLegalTerms = useTrackAcceptedLegalTerms();
   const openTermsAndConditions = useOpenTermsAndConditions();
   const openPrivacyPolicy = useOpenPrivacyPolicy();
+  const showErrorMessage = useErrorModal();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const loginWithSelectedMethod = useCallback(async () => {
+    setLoginLoading(true);
     trackAcceptedLegalTerms();
 
     // Login the user with the We3Auth method if they selected it.
     if (params?.loginMethod?.type === LoginMethodType.Web3Auth) {
       await loginWithWeb3Auth(params?.loginMethod?.provider);
-      return;
+    } else if (params?.loginMethod?.type === LoginMethodType.WalletConnect) {
+      const loginResult = await loginWithWalletConnect(params?.loginMethod?.app);
+      if (loginResult.isErr()) {
+        showErrorMessage(loginResult.error.message);
+      }
+    } else {
+      // Otherwise, navigate to the screen that allows to use the private key
+      navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
     }
-
-    // Otherwise, navigate to the screen that allows to use the private key
-    navigate(ROUTES.IMPORT_ACCOUNT_PRIVATE_KEY);
-  }, [loginWithWeb3Auth, navigate, params?.loginMethod, trackAcceptedLegalTerms]);
+    setLoginLoading(false);
+  }, [
+    loginWithWalletConnect,
+    loginWithWeb3Auth,
+    navigate,
+    showErrorMessage,
+    params?.loginMethod,
+    trackAcceptedLegalTerms,
+  ]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

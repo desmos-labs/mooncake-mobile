@@ -11,6 +11,7 @@ import { ToastType } from 'config/toast/toastConfig';
 import useUnregistDeviceForNotifications from 'hooks/notifications/useUnregistDeviceForNotifications';
 import useResetToLanding from 'hooks/navigation/useResetToLanding';
 import { deleteBiometricAuthorization, deleteWallet } from 'lib/SecureStorage';
+import useCloseWalletConnectSignerSession from 'hooks/walletconnect/useCloseWalletConnectSignerSession';
 
 interface LogoutParams {
   /**
@@ -24,6 +25,10 @@ interface LogoutParams {
    * If undefined this will default to false.
    */
   readonly keepAuthToken?: boolean;
+  /**
+   * Tells if we are logging out due to a deauthentication.
+   */
+  readonly deauthenticated?: boolean;
 }
 
 /**
@@ -44,10 +49,15 @@ const usePerformLogout = () => {
   const resetTourGuideState = useResetTourGuideState();
   const showToast = useToast();
   const resetNavigationToLanding = useResetToLanding();
+  const closeWalletConnectSession = useCloseWalletConnectSignerSession();
 
   return React.useCallback(
     async (logoutParams?: LogoutParams) => {
-      const { resetToLanding = true, keepAuthToken = false } = logoutParams ?? {};
+      const {
+        resetToLanding = true,
+        keepAuthToken = false,
+        deauthenticated = false,
+      } = logoutParams ?? {};
       try {
         // Clear the Apollo cache
         await client.clearStore();
@@ -62,6 +72,10 @@ const usePerformLogout = () => {
 
         if (resetToLanding) {
           resetNavigationToLanding();
+        }
+
+        if (!deauthenticated) {
+          closeWalletConnectSession();
         }
 
         // Rest the login flow state.
@@ -89,6 +103,7 @@ const usePerformLogout = () => {
     },
     [
       client,
+      closeWalletConnectSession,
       deleteCachedAccounts,
       deleteToken,
       resetNavigationToLanding,

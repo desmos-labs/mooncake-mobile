@@ -4,5 +4,9 @@
   "continue with google": "Continue with Google",
   "continue with apple": "Continue with Apple",
   "incomplete login": "Incomplete Login",
-  "incomplete login description": "Oops! It looks like your login process is incomplete.\nWould you like to resume your login now, or cancel it?"
+  "incomplete login description": "Oops! It looks like your login process is incomplete.\nWould you like to resume your login now, or cancel it?",
+  "or sign in with": "Or sign in with",
+  "authorize mooncake": "Authorize Mooncake",
+  "authorize mooncake description": "To provide a smooth experience in Mooncake, we need to have some grants from your wallet so that you can perform operations without signing the messages with the external app.\nThe account to which the grants will be given will be securely stored inside your device.",
+  "grant transaction failed": "Grant transaction failed, please try again.\nMessage:\n{{ message }}",
 }
