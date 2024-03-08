@@ -103,8 +103,6 @@ export const generateWalletConnectWallet = async (
     walletTempWallet = {
       privateKey: tempWalletPrivateKey.key,
       address: tempWalletAccount.address,
-      authorizedMessages: tempWalletOptions.authorizations,
-      authorizationExpiration: tempWalletOptions.authorizationsExpiration,
     };
 
     // Build the tempWallet field fro the account.

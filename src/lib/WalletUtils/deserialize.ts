@@ -89,12 +89,7 @@ const deserializeWalletConnectWallet = (
 
   // Check if the wallet has a temporary wallet.
   if (value.tempWallet !== undefined) {
-    if (
-      value.tempWallet.address === undefined ||
-      value.tempWallet.privateKey === undefined ||
-      value.tempWallet.authorizedMessages === undefined ||
-      value.tempWallet.authorizationExpiration === undefined
-    ) {
+    if (value.tempWallet.address === undefined || value.tempWallet.privateKey === undefined) {
       throw new Error('invalid serialized WalletConnect wallet');
     }
   }

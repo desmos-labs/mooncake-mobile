@@ -135,17 +135,6 @@ export interface WalletConnectWallet extends BaseWallet<WalletType.WalletConnect
      * Private key.
      */
     readonly privateKey: Uint8Array;
-    /**
-     * Types of messages that has been authorized
-     * by the user to be signed by our temporary wallet.
-     */
-    readonly authorizedMessages: string[];
-    /**
-     * Expiration date of the authorizations,
-     * after this date the temporary wallet will be
-     * unable to perform operations on behalf of the user.
-     */
-    readonly authorizationExpiration: Date;
   };
 }
 
