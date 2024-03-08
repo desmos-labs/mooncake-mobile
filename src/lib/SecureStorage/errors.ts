@@ -41,14 +41,6 @@ export class CorruptedDataError extends Error {
   }
 }
 
-/**
- * Checks if the provided error is a {@link CorruptedDataError}.
- */
-export function isCorruptedDataError(error: Error): error is CorruptedDataError {
-  const { type } = error as CorruptedDataError;
-  return type === SecureStorageErrorType.CorruptedData;
-}
-
 export class WalletNotFoundError extends Error {
   readonly type: SecureStorageErrorType.WalletNotFound;
 
@@ -59,14 +51,6 @@ export class WalletNotFoundError extends Error {
     this.address = address;
     this.type = SecureStorageErrorType.WalletNotFound;
   }
-}
-
-/**
- * Checks if the provided error is a {@link WalletNotFoundError}.
- */
-export function isWalletNotFoundError(error: Error): error is WalletNotFoundError {
-  const { type } = error as WalletNotFoundError;
-  return type === SecureStorageErrorType.WalletNotFound;
 }
 
 /**

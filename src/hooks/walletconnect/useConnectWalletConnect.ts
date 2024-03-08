@@ -10,7 +10,7 @@ import { WalletConnectClientStatus } from 'types/walletconnect';
 import EnvConfig from 'config/EnvConfig';
 import { promiseToResult } from 'lib/NeverThrowUtils';
 import NetInfo from '@react-native-community/netinfo';
-import * as WalletConnectMMKV from 'lib/MMKVStorage/walletconnect';
+import WCMMKVStorage from 'lib/MMKVStorage/walletconnect';
 
 const CONNECTION_RESULT = 'connection_result';
 const ConnectionEventListener = new EventEmitter();
@@ -66,7 +66,7 @@ const useConnectWalletConnect = () => {
           icons: ['https://mooncake.space/favicon.ico'],
         },
         logger: 'silent',
-        storage: WalletConnectMMKV,
+        storage: WCMMKVStorage,
       }),
       'Unknown error while initializing the WalletConnect client',
     ).mapErr(() => new Error('Error while initializing the WalletConnect client'));

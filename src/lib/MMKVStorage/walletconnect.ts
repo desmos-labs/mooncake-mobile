@@ -1,34 +1,45 @@
 import MooncakeJsonSerializer from 'lib/JsonSerializer';
 import { MMKV } from 'react-native-mmkv';
 
-const WCMMKVStorage = new MMKV({
+const WCMMKV = new MMKV({
   id: 'wallet-connect-mmkv-id',
 });
 
-export async function getEntries<T = any>(): Promise<[string, T][]> {
-  return WCMMKVStorage.getAllKeys().map(key => [
+async function getEntries<T = any>(): Promise<[string, T][]> {
+  return WCMMKV.getAllKeys().map(key => [
     key,
-    MooncakeJsonSerializer.deserialize(WCMMKVStorage.getString(key) ?? '{}'),
+    MooncakeJsonSerializer.deserialize(WCMMKV.getString(key) ?? '{}'),
   ]);
 }
 
-export async function getItem<T = any>(key: string): Promise<T | undefined> {
-  const value = WCMMKVStorage.getString(key);
+async function getItem<T = any>(key: string): Promise<T | undefined> {
+  const value = WCMMKV.getString(key);
   return value !== undefined ? MooncakeJsonSerializer.deserialize(value) : undefined;
 }
 
-export async function getKeys(): Promise<string[]> {
-  return WCMMKVStorage.getAllKeys();
+async function getKeys(): Promise<string[]> {
+  return WCMMKV.getAllKeys();
 }
 
-export async function removeItem(key: string): Promise<void> {
-  WCMMKVStorage.delete(key);
+async function removeItem(key: string): Promise<void> {
+  WCMMKV.delete(key);
 }
 
-export async function setItem<T = any>(key: string, value: T): Promise<void> {
-  WCMMKVStorage.set(key, MooncakeJsonSerializer.serialize(value));
+async function setItem<T = any>(key: string, value: T): Promise<void> {
+  WCMMKV.set(key, MooncakeJsonSerializer.serialize(value));
 }
 
-export function clearAll() {
-  WCMMKVStorage.clearAll();
+function clearAll() {
+  WCMMKV.clearAll();
 }
+
+const WCMMKVStorage = {
+  getEntries,
+  getItem,
+  getKeys,
+  removeItem,
+  setItem,
+  clearAll,
+};
+
+export default WCMMKVStorage;

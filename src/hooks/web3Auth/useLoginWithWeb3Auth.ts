@@ -5,7 +5,7 @@ import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAnd
 import sleep from 'lib/sleep';
 import { generateWeb3AuthWallet } from 'lib/WalletUtils';
 import { newWeb3AuthClient, web3AuthLoginParams } from 'lib/Web3AuthUtils';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { SupportedChain } from 'types/chains';
 import { Web3AuthLoginProvider } from 'types/web3auth';
 
