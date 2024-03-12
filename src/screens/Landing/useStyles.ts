@@ -56,6 +56,12 @@ const useStyles = makeStyle(theme => ({
     height: 48,
     borderRadius: 8,
   },
+  whiteBackground: {
+    backgroundColor: theme.colors.white,
+  },
+  appButtonMargin: {
+    marginLeft: 32,
+  },
 }));
 
 export default useStyles;

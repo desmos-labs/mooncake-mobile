@@ -124,3 +124,4 @@ export const settingsAnalyticsIcon = require('./images/settings/settingsAnalytic
 
 // Apps 
 export const dpmIcon = require('./images/dpmIcon.png');
+export const leapWalletIcon = require('./images/leapWalletIcon.png');
