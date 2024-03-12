@@ -134,6 +134,7 @@ const deserializeWalletConnectAccount = (
   }
 
   switch (account.walletApp) {
+    case WalletConnectWalletApp.Leap:
     case WalletConnectWalletApp.DPM:
       return {
         walletType: WalletType.WalletConnect,
@@ -142,7 +143,7 @@ const deserializeWalletConnectAccount = (
         algo: account.algo,
         creationDate: account.creationDate,
         sessionTopic: account.sessionTopic,
-        walletApp: WalletConnectWalletApp.DPM,
+        walletApp: account.walletApp,
         tempWallet: account.tempWallet,
       };
     default:

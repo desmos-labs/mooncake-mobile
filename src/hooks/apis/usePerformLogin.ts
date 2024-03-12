@@ -53,7 +53,7 @@ const generateLoginParams = (nonce: string, wallet: Wallet): ResultAsync<LoginPa
       // Pass an empty array as message, as we just need to sign something
       // to grab the SignatureResult
       return desmosClient.signTx(wallet.address, [], {
-        fee: { amount: [], gas: '0' },
+        fee: { amount: [{ amount: '0', denom: 'udsm' }], gas: '0' },
         memo: nonce,
         signerData: {
           sequence: 0,
