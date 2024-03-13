@@ -94,7 +94,7 @@ const CreatePostTask: TaskJob<
   const msgCreatePost = convertPostToMsgCreatePost(postToConvert);
   const broadcastTxResult = await broadcastTx(desmosClient, signer, [msgCreatePost], memo);
   const postIdAttribute = broadcastTxResult.events
-    .find(e => e.type === 'create_post')
+    .find(e => e.type === 'created_post')
     ?.attributes.find(a => a.key === 'post_id');
 
   return {
