@@ -8,6 +8,7 @@ import ROUTES from 'navigation/routes';
 import { CanceledOperationError } from 'types/error';
 import { useTranslation } from 'react-i18next';
 import { getWalletConnectSigner } from 'lib/WalletConnect';
+import { getSdkError } from '@walletconnect/utils';
 import useConnectWalletConnect from './useConnectWalletConnect';
 
 const useRequestWalletReinitialization = () => {
@@ -95,14 +96,28 @@ const useReconnectWalletConnectWallet = () => {
           sessionTopic: signer.session.topic,
         });
       } else {
-        console.log('reconnecting to session', session.topic);
         // We have a session, try to reconnect to it.
         const connectResult = await promiseToResult(
-          signer.connectToSession(session),
+          new Promise((resolve, reject) => {
+            const timeout = setTimeout(
+              () => reject(new Error('Timeout while connecting to WalletConnect session')),
+              5000,
+            );
+            signer
+              .connectToSession(session)
+              .then(resolve)
+              .catch(reject)
+              .finally(() => {
+                clearTimeout(timeout);
+              });
+          }),
           'Error while connecting to WalletConnect session',
         );
         if (connectResult.isErr()) {
-          console.error('reconnect failed');
+          client.disconnect({
+            topic: session.topic,
+            reason: getSdkError('INVALID_SESSION_SETTLE_REQUEST'),
+          });
           return err(connectResult.error);
         }
       }
