@@ -9,7 +9,6 @@ import SignClient from '@walletconnect/sign-client';
 import { WalletConnectClientStatus } from 'types/walletconnect';
 import EnvConfig from 'config/EnvConfig';
 import { promiseToResult } from 'lib/NeverThrowUtils';
-import NetInfo from '@react-native-community/netinfo';
 import WCMMKVStorage from 'lib/MMKVStorage/walletconnect';
 
 const CONNECTION_RESULT = 'connection_result';
@@ -46,12 +45,6 @@ const useConnectWalletConnect = () => {
           },
         );
       });
-    }
-
-    // Check for internet connection before connecting.
-    const netState = await NetInfo.fetch();
-    if (!netState.isInternetReachable) {
-      return err(new Error('No internet connection'));
     }
 
     setState({ status: WalletConnectClientStatus.Connecting });

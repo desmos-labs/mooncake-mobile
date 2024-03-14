@@ -1,7 +1,7 @@
 import SignClient from '@walletconnect/sign-client';
 import { SessionTypes } from '@walletconnect/types';
 import { WalletConnectWalletApp } from 'types/wallet';
-import { Result } from 'neverthrow';
+import { Result, err } from 'neverthrow';
 import { WalletConnectSigner } from '@desmoslabs/desmjs-walletconnect-v2';
 import {
   Authz,
@@ -18,7 +18,9 @@ import { GenericAuthorization } from '@desmoslabs/desmjs-types/cosmos/authz/v1be
 import { MsgGrantAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import { toTimestamp } from '@desmoslabs/desmjs-types/helpers';
-import { initDPMWalletConnectSession } from './dpm';
+import { promiseToResult } from 'lib/NeverThrowUtils';
+import { initDPMWalletConnectSigner } from './dpm';
+import { initLeapWalletConnectSigner } from './leap';
 
 /**
  * List of messages that the application should
@@ -59,17 +61,35 @@ export const MooncakePermissionMessages = [
   '/cosmwasm.wasm.v1.MsgExecuteContract',
 ];
 
+export const getWalletConnectSigner = (
+  client: SignClient,
+  app: WalletConnectWalletApp,
+): Result<WalletConnectSigner, Error> => {
+  switch (app) {
+    case WalletConnectWalletApp.DPM:
+      return initDPMWalletConnectSigner(client);
+    case WalletConnectWalletApp.Leap:
+      return initLeapWalletConnectSigner(client);
+    default:
+      return err(new Error(`unsupported WalletConnect app ${app}`));
+  }
+};
+
 export const initWalletConnectSession = async (
   client: SignClient,
   app: WalletConnectWalletApp,
   previousSession?: SessionTypes.Struct,
 ): Promise<Result<WalletConnectSigner, Error>> => {
-  switch (app) {
-    case WalletConnectWalletApp.DPM:
-      return initDPMWalletConnectSession(client, previousSession);
-    default:
-      throw new Error(`unsupported WalletConnect app ${app}`);
+  const getSignerResult = getWalletConnectSigner(client, app);
+  if (getSignerResult.isErr()) {
+    return err(getSignerResult.error);
   }
+
+  const signer = getSignerResult.value;
+  return promiseToResult(
+    previousSession ? signer.connectToSession(previousSession) : signer.connect(),
+    'Unkwonwn error while connecting to the Desmos chain',
+  ).map(() => signer);
 };
 
 /**

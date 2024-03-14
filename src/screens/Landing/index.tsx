@@ -2,7 +2,13 @@ import Typography from '@desmoslabs/desmos-kit-ui/components/Typography';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { mooncakeAnimationWhite } from 'assets/animations';
-import { appleLoginIcon, dpmIcon, googleLoginIcon, mooncakeTextWhite } from 'assets/images';
+import {
+  appleLoginIcon,
+  dpmIcon,
+  googleLoginIcon,
+  leapWalletIcon,
+  mooncakeTextWhite,
+} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -65,6 +71,13 @@ const Landing = () => {
     onSignUp({
       type: LoginMethodType.WalletConnect,
       app: WalletConnectWalletApp.DPM,
+    });
+  }, [onSignUp]);
+
+  const signUpWithLeap = useCallback(() => {
+    onSignUp({
+      type: LoginMethodType.WalletConnect,
+      app: WalletConnectWalletApp.Leap,
     });
   }, [onSignUp]);
 
@@ -157,20 +170,30 @@ const Landing = () => {
             )}
           </>
         )}
-        {/* Sign-in with WalletConnect wallets */}
-        <View style={styles.signinWithContainer}>
-          <View style={styles.signinWithDivider} />
-          <Typography.Regular16 style={styles.signinWithText}>
-            {t('or sign in with')}
-          </Typography.Regular16>
-          <View style={styles.signinWithDivider} />
-        </View>
-        {/* Apps buttons */}
-        <View style={styles.appsContainer}>
-          <TouchableOpacity onPress={signUpWithDpm}>
-            <Image source={dpmIcon} style={styles.appButton} />
-          </TouchableOpacity>
-        </View>
+        {(!loginWithPrivateKeyEnabled || __DEV__) && (
+          <>
+            {/* Sign-in with WalletConnect wallets */}
+            <View style={styles.signinWithContainer}>
+              <View style={styles.signinWithDivider} />
+              <Typography.Regular16 style={styles.signinWithText}>
+                {t('or sign in with')}
+              </Typography.Regular16>
+              <View style={styles.signinWithDivider} />
+            </View>
+            {/* Apps buttons */}
+            <View style={styles.appsContainer}>
+              <TouchableOpacity onPress={signUpWithDpm}>
+                <Image source={dpmIcon} style={styles.appButton} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={signUpWithLeap}>
+                <Image
+                  source={leapWalletIcon}
+                  style={[styles.appButton, styles.appButtonMargin, styles.whiteBackground]}
+                />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </DView>
   );

@@ -17,6 +17,8 @@ import { generateWalletConnectWallet } from 'lib/WalletUtils';
 import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAndCreateProfile';
 import { AccountWithWallet } from 'types/account';
 import { WalletConnectSigner } from '@desmoslabs/desmjs-walletconnect-v2';
+import useLoadingModal from 'hooks/modals/useLoadingModal';
+import { PromiseTimeout } from 'lib/PromiseUtils';
 import useConnectWalletConnect from './useConnectWalletConnect';
 
 interface GrantsSignResult {
@@ -107,6 +109,8 @@ const useSignAndBroadcastGrants = () => {
  * login through WalletConnect.
  */
 const useLoginWithWalletConnect = () => {
+  const { t } = useTranslation('login');
+  const { show: showLoadingModal, hide: hideLoadingModal } = useLoadingModal();
   const connectWalletConnectClient = useConnectWalletConnect();
   const promptGrantsRequest = usePromptGrantsRequest();
   const signAndBroadcastGrants = useSignAndBroadcastGrants();
@@ -135,12 +139,27 @@ const useLoginWithWalletConnect = () => {
         }
 
         // Start the session by sending the request to the external wallet.
+        showLoadingModal({
+          message: t('initializing WalletConnect session'),
+          blockBackAction: true,
+        });
         const client = connectionResult.value;
-        const sessionInitializationResult = await initWalletConnectSession(client, app);
-        if (sessionInitializationResult.isErr()) {
-          return err(sessionInitializationResult.error);
+        const sessionInitializationResult = await PromiseTimeout.wrap(
+          initWalletConnectSession(client, app),
+          45000,
+        );
+        hideLoadingModal();
+
+        if (!sessionInitializationResult.isCompleted()) {
+          return err(new Error('Timed out while initializing WalletConnect session'));
         }
-        walletConnectSigner = sessionInitializationResult.value;
+
+        const walletConnectSessionResult = sessionInitializationResult.data;
+
+        if (walletConnectSessionResult.isErr()) {
+          return err(walletConnectSessionResult.error);
+        }
+        walletConnectSigner = walletConnectSessionResult.value;
         cachedWalletConnectSigner.current = walletConnectSigner;
       }
 
@@ -155,6 +174,11 @@ const useLoginWithWalletConnect = () => {
       const authorized = generatedSigner.current !== undefined || (await promptGrantsRequest());
       let walletConnectAccount: AccountWithWallet;
       if (authorized) {
+        showLoadingModal({
+          message: t('generating temporary wallet'),
+          blockBackAction: true,
+        });
+
         // Generate a new private key signer that will be used by the
         // application to sign the transactions without the need to
         // open the external wallet.
@@ -165,8 +189,13 @@ const useLoginWithWalletConnect = () => {
           generatedSigner.current = tempWalletSigner;
         }
         await tempWalletSigner.connect();
+        hideLoadingModal();
 
         if (grantsSignResult.current === undefined) {
+          showLoadingModal({
+            message: t('signing and broadcasting grants'),
+            blockBackAction: true,
+          });
           // Sign and broadcast the authorization messages.
           const grantee = await tempWalletSigner
             .getCurrentAccount()
@@ -176,7 +205,7 @@ const useLoginWithWalletConnect = () => {
             account.address,
             grantee,
           );
-
+          hideLoadingModal();
           if (signResult.isErr()) {
             return err(signResult.error);
           }
@@ -212,9 +241,12 @@ const useLoginWithWalletConnect = () => {
     },
     [
       connectWalletConnectClient,
+      hideLoadingModal,
       promptGrantsRequest,
+      showLoadingModal,
       signAndBroadcastGrants,
       startSaveAccountAndCreateProfileFlow,
+      t,
     ],
   );
 };

@@ -9,6 +9,7 @@ import forgotPassword from './forgotPassword.json';
 import home from './home.json';
 import landing from './landing.json';
 import legal from './legal.json';
+import login from './login.json';
 import modals from './modals.json';
 import notifications from './notifications.json';
 import onboarding from './onboarding.json';
@@ -39,6 +40,7 @@ const en = {
   home,
   landing,
   legal,
+  login,
   modals,
   notifications,
   onboarding,
