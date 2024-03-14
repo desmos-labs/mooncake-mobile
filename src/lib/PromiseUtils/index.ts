@@ -7,7 +7,7 @@ import sleep from 'lib/sleep';
  * Class that represents the result of a completed promise
  * within a specified timeout duration.
  */
-export class CompletedResult<T> implements ResultI<T> {
+class CompletedResult<T> implements ResultI<T> {
   readonly resultData: T;
 
   constructor(data: T) {
@@ -34,7 +34,7 @@ export class CompletedResult<T> implements ResultI<T> {
  * Utility function to construct a `CompletedResult`.
  * @param data - Data that has been computed.
  */
-export function completed<T>(data: T): CompletedResult<T> {
+function completed<T>(data: T): CompletedResult<T> {
   return new CompletedResult(data);
 }
 
@@ -55,7 +55,7 @@ class TimedOutResult<T> implements ResultI<T> {
 /**
  * Utility function to construct a `TimedOutResult`.
  */
-export function timedOut<T>(): TimedOutResult<T> {
+function timedOut<T>(): TimedOutResult<T> {
   return new TimedOutResult();
 }
 
@@ -91,6 +91,7 @@ type TimeoutResult<T> = CompletedResult<T> | TimedOutResult<T>;
  * Class that wraps a promise to implement a timeout logic so that
  * a promise can complete correctly or complete with a timeout.
  */
+// eslint-disable-next-line import/prefer-default-export
 export class PromiseTimeout<T> implements Promise<TimeoutResult<T>> {
   // Field used from the toString function to represent this type.
   [Symbol.toStringTag]: string = 'PromiseTimeout';
@@ -150,4 +151,3 @@ export class PromiseTimeout<T> implements Promise<TimeoutResult<T>> {
     return this.promise.finally(onfinally);
   }
 }
-
