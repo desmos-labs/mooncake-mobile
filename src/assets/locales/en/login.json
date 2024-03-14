@@ -1,4 +1,5 @@
 {
     "signing and broadcasting grants": "Signing and broadcasting grants...",
     "generating temporary wallet": "Generating temporary wallet...",
+    "initializing WalletConnect session": "Initializing WalletConnect session...",
 }

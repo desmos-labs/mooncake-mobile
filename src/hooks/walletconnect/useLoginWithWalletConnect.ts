@@ -18,6 +18,7 @@ import useSaveAccountAndCreateProfileFlow from 'hooks/accounts/useSaveAccountAnd
 import { AccountWithWallet } from 'types/account';
 import { WalletConnectSigner } from '@desmoslabs/desmjs-walletconnect-v2';
 import useLoadingModal from 'hooks/modals/useLoadingModal';
+import { PromiseTimeout } from 'lib/PromiseUtils';
 import useConnectWalletConnect from './useConnectWalletConnect';
 
 interface GrantsSignResult {
@@ -138,12 +139,27 @@ const useLoginWithWalletConnect = () => {
         }
 
         // Start the session by sending the request to the external wallet.
+        showLoadingModal({
+          message: t('initializing WalletConnect session'),
+          blockBackAction: true,
+        });
         const client = connectionResult.value;
-        const sessionInitializationResult = await initWalletConnectSession(client, app);
-        if (sessionInitializationResult.isErr()) {
-          return err(sessionInitializationResult.error);
+        const sessionInitializationResult = await PromiseTimeout.wrap(
+          initWalletConnectSession(client, app),
+          15000,
+        );
+        hideLoadingModal();
+
+        if (!sessionInitializationResult.isCompleted()) {
+          return err(new Error('Timed out while initializing WalletConnect session'));
         }
-        walletConnectSigner = sessionInitializationResult.value;
+
+        const walletConnectSessionResult = sessionInitializationResult.data;
+
+        if (walletConnectSessionResult.isErr()) {
+          return err(walletConnectSessionResult.error);
+        }
+        walletConnectSigner = walletConnectSessionResult.value;
         cachedWalletConnectSigner.current = walletConnectSigner;
       }
 
