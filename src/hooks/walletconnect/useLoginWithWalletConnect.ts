@@ -146,7 +146,7 @@ const useLoginWithWalletConnect = () => {
         const client = connectionResult.value;
         const sessionInitializationResult = await PromiseTimeout.wrap(
           initWalletConnectSession(client, app),
-          15000,
+          45000,
         );
         hideLoadingModal();
 
