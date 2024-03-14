@@ -4,7 +4,6 @@ import { dotsAnimation, squaresAnimation } from 'assets/animations';
 import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { makeStyle } from 'config/theme';
-import { isGoBackEvent } from 'lib/EventUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -62,7 +61,9 @@ const LoadingModal: React.FC<NavProps> = ({
 
   React.useEffect(() => {
     return navigation.addListener('beforeRemove', e => {
-      if (blockBackAction && isGoBackEvent(e)) {
+      // We check only the GO_BACK event because the POP event is used
+      // to programmatically hide the modal.
+      if (blockBackAction && e.data.action.type === 'GO_BACK') {
         e.preventDefault();
       }
     });
