@@ -170,26 +170,30 @@ const Landing = () => {
             )}
           </>
         )}
-        {/* Sign-in with WalletConnect wallets */}
-        <View style={styles.signinWithContainer}>
-          <View style={styles.signinWithDivider} />
-          <Typography.Regular16 style={styles.signinWithText}>
-            {t('or sign in with')}
-          </Typography.Regular16>
-          <View style={styles.signinWithDivider} />
-        </View>
-        {/* Apps buttons */}
-        <View style={styles.appsContainer}>
-          <TouchableOpacity onPress={signUpWithDpm}>
-            <Image source={dpmIcon} style={styles.appButton} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={signUpWithLeap}>
-            <Image
-              source={leapWalletIcon}
-              style={[styles.appButton, styles.appButtonMargin, styles.whiteBackground]}
-            />
-          </TouchableOpacity>
-        </View>
+        {(!loginWithPrivateKeyEnabled || __DEV__) && (
+          <>
+            {/* Sign-in with WalletConnect wallets */}
+            <View style={styles.signinWithContainer}>
+              <View style={styles.signinWithDivider} />
+              <Typography.Regular16 style={styles.signinWithText}>
+                {t('or sign in with')}
+              </Typography.Regular16>
+              <View style={styles.signinWithDivider} />
+            </View>
+            {/* Apps buttons */}
+            <View style={styles.appsContainer}>
+              <TouchableOpacity onPress={signUpWithDpm}>
+                <Image source={dpmIcon} style={styles.appButton} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={signUpWithLeap}>
+                <Image
+                  source={leapWalletIcon}
+                  style={[styles.appButton, styles.appButtonMargin, styles.whiteBackground]}
+                />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </DView>
   );
