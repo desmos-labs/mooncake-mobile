@@ -4,11 +4,11 @@ import { dotsAnimation, squaresAnimation } from 'assets/animations';
 import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import { makeStyle } from 'config/theme';
+import { isGoBackEvent } from 'lib/EventUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { View } from 'react-native';
-import { isGoBackEvent } from 'lib/EventUtils';
 
 export enum LoadingAnimation {
   Squares = 'squares',
@@ -105,6 +105,7 @@ const useStyles = makeStyle(theme => ({
   },
   loadingView: {
     alignSelf: 'center',
-    width: '25%',
+    width: 40,
+    height: 40,
   },
 }));
