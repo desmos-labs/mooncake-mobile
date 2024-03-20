@@ -35,10 +35,6 @@ interface UserPostsListProps {
    * Text to be displayed when the list is empty.
    */
   emptyListText: string;
-  /**
-   * Text to be displayed on the button when the list is empty.
-   */
-  emptyListButtonText: string;
 }
 
 /**
@@ -49,15 +45,7 @@ const UserPostsList = (props: UserPostsListProps) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const {
-    posts,
-    loading,
-    fetchMore,
-    refreshPosts,
-    refreshing,
-    emptyListText,
-    emptyListButtonText,
-  } = props;
+  const { posts, loading, fetchMore, refreshPosts, refreshing, emptyListText } = props;
 
   // const navigateToPost = useNavigateToPost();
 
@@ -79,8 +67,8 @@ const UserPostsList = (props: UserPostsListProps) => {
     if (loading) {
       return <Loading />;
     }
-    return <EmptyPostComponent textLabel={emptyListText} buttonLabel={emptyListButtonText} />;
-  }, [emptyListButtonText, emptyListText, loading]);
+    return <EmptyPostComponent textLabel={emptyListText} />;
+  }, [emptyListText, loading]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

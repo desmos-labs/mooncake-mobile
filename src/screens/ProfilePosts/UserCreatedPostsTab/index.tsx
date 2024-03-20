@@ -42,8 +42,7 @@ const UserPostsTab = () => {
       fetchMore={fetchMore}
       refreshPosts={refreshPosts}
       refreshing={refreshing}
-      emptyListText={t('noUserPosts')}
-      emptyListButtonText={t('createPost')}
+      emptyListText={t('noPosts')}
     />
   );
 };
