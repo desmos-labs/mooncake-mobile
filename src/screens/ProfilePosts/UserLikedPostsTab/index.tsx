@@ -40,8 +40,7 @@ const UserLikedPostsTab = () => {
       fetchMore={fetchMore}
       refreshPosts={refreshPosts}
       refreshing={refreshing}
-      emptyListText={t('noLikesYet')}
-      emptyListButtonText={t('browsePosts')}
+      emptyListText={t('noPosts')}
     />
   );
 };

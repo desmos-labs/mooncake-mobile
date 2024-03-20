@@ -7,15 +7,15 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
   },
   emptyImage: {
-    height: 72,
-    resizeMode: 'contain',
+    height: 120,
+    width: 120,
     marginVertical: theme.spacings.m,
     alignSelf: 'center',
   },
   text: { textAlign: 'center' },
   button: {
-    marginHorizontal: 150,
     justifyContent: 'center',
+    color: theme.colors.neutralVariants['800'],
   },
 }));
 

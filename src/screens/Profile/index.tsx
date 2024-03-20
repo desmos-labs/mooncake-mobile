@@ -468,6 +468,7 @@ const Profile = () => {
             </View>
           </View>
         </View>
+        <Spacer paddingBottom="m" />
       </AnimatedScrollView>
       <ImageView
         presentationStyle="fullScreen"
