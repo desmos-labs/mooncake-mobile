@@ -3,7 +3,7 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   root: {
     position: 'absolute',
-    top: 120,
+    top: 110,
     left: 0,
     right: 0,
     bottom: 0,
@@ -13,7 +13,7 @@ const useStyles = makeStyle(theme => ({
   },
   emptyRoot: {
     position: 'absolute',
-    top: 120,
+    top: 110,
     left: 0,
     right: 0,
     bottom: 0,

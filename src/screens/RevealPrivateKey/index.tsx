@@ -62,7 +62,7 @@ const RevealPrivateKey: React.FC<NavProps> = () => {
       const { password } = values;
       const unlockWalletResult = await unlockWalletWithPassword(activeAccountAddress, password);
       if (unlockWalletResult.isOk()) {
-        const privateKeyBytes = (unlockWalletResult.value as WalletWithPrivateKey).privateKey;
+        const privateKeyBytes = (unlockWalletResult.value as WalletWithPrivateKey<any>).privateKey;
         setPrivateKey(toHex(privateKeyBytes));
       } else {
         helpers.setErrors({
@@ -121,6 +121,8 @@ const RevealPrivateKey: React.FC<NavProps> = () => {
                   <Typography.Regular16>{t('password', { ns: 'password' })}</Typography.Regular16>
                   <Spacer paddingTop="s" />
                   <DSecureTextInput
+                    textContentType="password"
+                    autoFocus={true}
                     value={values.password}
                     style={styles.passwordInput}
                     placeholder={t('enter password', { ns: 'password' })}
