@@ -44,7 +44,7 @@ const ProfileHeaderButton = (props: Props) => {
     <TouchableOpacity style={containerStyle} onPress={onPress}>
       <Image
         recyclingKey={source?.toString()}
-        contentFit="cover"
+        contentFit="contain"
         source={source}
         style={style || styles.defaultStyle}
         tintColor={tintColor}
